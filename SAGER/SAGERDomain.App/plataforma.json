@@ -1,0 +1,15 @@
+{
+    "app": {
+        "type": "domain",
+        "name": "SAGERDomain.App",
+        "version": "1.0",
+        "description": "Domain app do SAGER",
+        "author": "",
+        "id": "aab10103-c7a7-4bb5-afd7-60006d7663d3"
+    },
+    "solution": {
+        "name": "SAGER",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
+    }
+}
