@@ -1,0 +1,15 @@
+{
+    "app": {
+        "type": "process",
+        "name": "CalcularTaxasProcess.App",
+        "version": "1.0",
+        "description": "Process app para o UC02404-Calcular taxas.",
+        "author": "",
+        "id": "ac984eb1-b1e7-4aee-a036-e835eaf0df28"
+    },
+    "solution": {
+        "name": "SAGER",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
+    }
+}
