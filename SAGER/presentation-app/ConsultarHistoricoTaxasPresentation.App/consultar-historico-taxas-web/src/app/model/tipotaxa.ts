@@ -1,0 +1,4 @@
+enum TipoTaxa {
+    TEIFa,
+    TEIP
+}
