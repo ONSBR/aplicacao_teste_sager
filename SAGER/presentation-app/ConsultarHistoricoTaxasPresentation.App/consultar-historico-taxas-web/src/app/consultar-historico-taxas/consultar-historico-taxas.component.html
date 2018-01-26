@@ -1,4 +1,25 @@
+ {{ valor }}
 <h2> Consultar taxas</h2>
-
-<div><span>Data Inicial:<input [(ngModel)]="filtroTaxa.dataInicial"></span></div>
-<div><span>Data Final:<input [(ngModel)]="filtroTaxa.dataFinal"></span></div>
+<div>
+  <span>Data Inicial:
+    <input type="text" [(ngModel)]="filtroConsulta.dataInicial" />
+  </span>
+</div>
+<div>
+  <span>Data Final:
+    <input type="text" [(ngModel)]="filtroConsulta.dataFinal" />
+  </span>
+</div>
+<div>
+  <span>Tipo de taxa:
+    <select [(ngModel)]="filtroConsulta.tipoTaxa">
+      <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
+        {{tipoTaxa}}
+      </option>
+    </select>
+  </span>
+</div>
+<div>
+  <span><button (click)="pesquisar($event)">Pesquisar</button>
+  </span>
+</div>

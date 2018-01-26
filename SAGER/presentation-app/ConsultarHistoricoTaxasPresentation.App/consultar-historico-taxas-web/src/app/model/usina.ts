@@ -1,4 +1,4 @@
 export class Usina {
-    id: number;
-    nome: string;
+    constructor(public id: string, public nome: string, public tipo: string, public agente: string){
+    }
 }

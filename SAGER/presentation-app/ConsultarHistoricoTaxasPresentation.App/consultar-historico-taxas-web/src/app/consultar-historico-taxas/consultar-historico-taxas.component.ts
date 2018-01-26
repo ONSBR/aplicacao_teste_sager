@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FiltroTaxa } from '../model/filtrotaxa';
+import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
+import { TipoTaxa } from '../model/tipotaxa';
+import { Usina } from '../model/usina';
 
 @Component({
   selector: 'app-consultar-historico-taxas',
@@ -8,11 +10,21 @@ import { FiltroTaxa } from '../model/filtrotaxa';
 })
 export class ConsultarHistoricoTaxasComponent implements OnInit {
 
-  filtroTaxa: FiltroTaxa;
-
-  constructor() { }
-
+  valor : string = '!';
+  public filtroConsulta = new FiltroConsulta(null, null, null);
+  public tiposTaxa;
+  public resultadoDePesquisaDeUsinas: Array<Usina>;
+  
+  constructor() {
+  }
+  
   ngOnInit() {
+    this.tiposTaxa = Object.keys(TipoTaxa)
+    this.resultadoDePesquisaDeUsinas = [];
+  }
+
+  pesquisar() {
+
   }
 
 }

@@ -1,4 +1,4 @@
-enum TipoTaxa {
+export enum TipoTaxa {
     TEIFa,
     TEIP
 }

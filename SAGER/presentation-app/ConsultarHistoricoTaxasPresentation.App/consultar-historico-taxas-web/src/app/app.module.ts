@@ -1,21 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-
-
+import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { ConsultarHistoricoTaxasComponent } from './consultar-historico-taxas/consultar-historico-taxas.component';
-import { DateFormatPipe } from './dateformatpipe.pipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConsultarHistoricoTaxasComponent,
-    DateFormatPipe
+    ConsultarHistoricoTaxasComponent
   ],
   imports: [
-    BrowserModule, FormsModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
