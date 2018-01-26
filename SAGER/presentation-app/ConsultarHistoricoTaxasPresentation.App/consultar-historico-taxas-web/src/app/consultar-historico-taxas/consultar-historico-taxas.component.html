@@ -1,6 +1,15 @@
  {{ valor }}
 <h2> Consultar taxas</h2>
 <div>
+  <span>Usina:
+    <select [(ngModel)]="filtroConsulta.usina">
+      <option *ngFor="let usina of usinas" [ngValue]="usina">
+        <!-- {{usina.nome}} -->
+      </option>
+    </select>
+  </span>
+</div>
+<div>
   <span>Data Inicial:
     <input type="text" [(ngModel)]="filtroConsulta.dataInicial" />
   </span>
@@ -20,6 +29,7 @@
   </span>
 </div>
 <div>
-  <span><button (click)="pesquisar($event)">Pesquisar</button>
+  <span>
+    <button (click)="pesquisar($event)">Pesquisar</button>
   </span>
 </div>

@@ -1,7 +1,7 @@
 {
     "app": {
         "type": "domain",
-        "name": "SAGERDomain.App",
+        "name": "sagerdomain.app",
         "version": "1.0",
         "description": "Domain app do SAGER",
         "author": "",

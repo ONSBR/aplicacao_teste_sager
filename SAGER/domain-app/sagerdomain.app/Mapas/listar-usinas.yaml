@@ -1,0 +1,20 @@
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    nome:
+      column: nome
+      required: true
+    tipo:
+      column: tipo
+      required: true
+    agente:
+      column: agente
+      required: true      
+  filters:
+    byName:
+      nome: :nome
+    byId:
+      id: :id  

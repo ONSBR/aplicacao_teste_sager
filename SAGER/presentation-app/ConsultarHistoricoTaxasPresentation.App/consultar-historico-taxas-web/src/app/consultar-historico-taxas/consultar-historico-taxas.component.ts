@@ -10,17 +10,17 @@ import { Usina } from '../model/usina';
 })
 export class ConsultarHistoricoTaxasComponent implements OnInit {
 
-  valor : string = '!';
   public filtroConsulta = new FiltroConsulta(null, null, null);
   public tiposTaxa;
-  public resultadoDePesquisaDeUsinas: Array<Usina>;
-  
+  public usinas: Array<Usina>;
+  itemUsina: Usina = new Usina('1', 'XINGO', 'TIPO', 'AGENTE');
+
   constructor() {
   }
-  
+
   ngOnInit() {
-    this.tiposTaxa = Object.keys(TipoTaxa)
-    this.resultadoDePesquisaDeUsinas = [];
+    this.tiposTaxa = Object.keys(TipoTaxa);
+    this.usinas = [this.itemUsina];
   }
 
   pesquisar() {

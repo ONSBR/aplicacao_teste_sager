@@ -1,0 +1,9 @@
+tb_usina:  
+  id:
+    - integer
+  nome:
+    - string
+  tipo:
+    - string
+  agente:
+    - string
