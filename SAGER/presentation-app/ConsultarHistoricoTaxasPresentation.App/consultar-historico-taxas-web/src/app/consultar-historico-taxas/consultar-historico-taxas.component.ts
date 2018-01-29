@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { TipoTaxa } from '../model/tipotaxa';
 import { Usina } from '../model/usina';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-consultar-historico-taxas',
@@ -13,18 +15,23 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public filtroConsulta = new FiltroConsulta(null, null, null);
   public tiposTaxa;
   public usinas: Array<Usina>;
-  itemUsina: Usina = new Usina('1', 'XINGO', 'TIPO', 'AGENTE');
 
-  constructor() {
+  constructor(private http: HttpClient) {
+    this.listarUsinas();
   }
 
   ngOnInit() {
     this.tiposTaxa = Object.keys(TipoTaxa);
-    this.usinas = [this.itemUsina];
   }
 
   pesquisar() {
+  }
 
+  listarUsinas() {
+    this.http.get(environment.urlServerPresentation).subscribe(data => {
+      console.log('data' + data);
+      this.usinas = <Usina[]> data;
+    });
   }
 
 }

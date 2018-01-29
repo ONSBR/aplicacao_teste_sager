@@ -44,8 +44,6 @@ app.get("/listar-usinas", function (req, res) {
     });
 });
 
-// Listener
-// ===========================================================
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
 });
