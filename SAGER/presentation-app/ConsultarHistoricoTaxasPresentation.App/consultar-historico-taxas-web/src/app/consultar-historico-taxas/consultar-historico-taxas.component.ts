@@ -15,9 +15,12 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public filtroConsulta = new FiltroConsulta(null, null, null);
   public tiposTaxa;
   public usinas: Array<Usina>;
+  public historicoTaxas: Array<Object>;
+  public cenarioSelecionado;
 
   constructor(private http: HttpClient) {
     this.listarUsinas();
+    this.cenarioSelecionado = {'nome': ''};
   }
 
   ngOnInit() {
@@ -25,13 +28,18 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   pesquisar() {
+    this.historicoTaxas = [{'id': 1, 'nome': 'Principal vigente'},
+      {'id': 2, 'nome': 'Cenário 1'}, {'id': 3, 'nome': 'Cenário 2'}];
   }
 
   listarUsinas() {
     this.http.get(environment.urlServerPresentation).subscribe(data => {
-      console.log('data' + data);
       this.usinas = <Usina[]> data;
     });
+  }
+
+  expandirCenario(cenario) {
+    this.cenarioSelecionado = cenario;
   }
 
 }

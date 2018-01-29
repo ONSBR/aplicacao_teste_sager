@@ -30,6 +30,25 @@
 </div>
 <div>
   <span>
-    <button (click)="pesquisar($event)">Pesquisar</button>
+    <button (click)='pesquisar($event)'>Pesquisar</button>
+  </span>
+</div>
+
+<div>
+  <span>
+    <h2>Histórico de taxas:</h2>
+    <ul>
+      <li (click)='expandirCenario(cenario)' *ngFor="let cenario of historicoTaxas">
+        Cenário: {{ cenario.nome }} 
+      </li>
+    </ul>
+  </span>
+</div>
+
+<div>
+  <span>
+    <h2>Cenário: {{ cenarioSelecionado.nome }}</h2>
+    <ul>
+    </ul>
   </span>
 </div>
