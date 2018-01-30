@@ -1,0 +1,12 @@
+ExecucaoCalculoFechamento:
+  model: tb_execucao_calculo_fechamento
+  fields:
+    id:
+      column: id
+  filters:
+    byDataInicioFim:
+      $and:
+        - dataInicio:
+            $eq: :dataInicio
+        - dataFim:
+            $eq: :dataInicio

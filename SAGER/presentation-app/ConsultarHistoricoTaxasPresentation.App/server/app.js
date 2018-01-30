@@ -31,17 +31,33 @@ app.use(function (req, res, next) {
 });
 
 app.get("/listar-usinas", function (req, res) {
-
-    console.log("___LISTAR USINAS___" + req.body.presentationId);
     let client = new Client();
-
     let listarUsinasReq = client.get(config.urlUsinaSAGER, function (data, response) {
-        console.log(data);
         res.send(data);
     });
     listarUsinasReq.on('error', function (err) {
         console.log('request error', err);
+        res.send('');
     });
+});
+
+app.get("/filtro-inicial", function (req, res) {
+    let dataFinal = new Date();
+    let dataInicial = new Date();
+    dataInicial.setMonth(dataInicial.getMonth() - 60);
+    let filtroInicial = {'dataInicial': dataInicial, 
+        'dataFinal': dataFinal};
+    res.send(filtroInicial);
+});
+
+app.post("/pesquisar-historico", function (req, res) {
+    let client = new Client();
+
+    let usina = req.body.filtroConsulta.usina.id;
+    let dataInicial = req.body.filtroConsulta.dataInicial;
+    let dataFinal = req.body.filtroConsulta.dataInicial;
+    let tipoTaxa = req.body.filtroConsulta.tipoTaxa;
+
 });
 
 app.listen(PORT, function () {

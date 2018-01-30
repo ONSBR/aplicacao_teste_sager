@@ -5,5 +5,8 @@
 
 export const environment = {
   production: false,
-  urlServerPresentation: 'http://localhost:8181/listar-usinas'
+  urlServerPresentation: 'http://localhost:8181/',
+  listarUsinas: 'listar-usinas',
+  consultaFiltroInicial: 'filtro-inicial',
+  pesquisarHistorico: 'pesquisar-historico'
 };
