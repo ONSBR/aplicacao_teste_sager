@@ -1,0 +1,7 @@
+tb_taxa:  
+  tipoTaxa:
+    - integer
+  valor:
+    - double
+  idFechamento:
+    - integer

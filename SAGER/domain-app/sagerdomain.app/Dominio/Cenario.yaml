@@ -1,0 +1,9 @@
+tb_cenario:  
+  nome:
+    - string
+  dataInicio:
+    - date    
+  dataFim:
+    - date    
+  dataExecucao:
+    - date    

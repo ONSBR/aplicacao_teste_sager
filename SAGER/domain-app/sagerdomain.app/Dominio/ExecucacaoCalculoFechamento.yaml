@@ -1,0 +1,13 @@
+tb_execucao_calculo_fechamento:  
+  dataInicio:
+    - date
+  dataFim:
+    - date
+  idFechamentoMensal:
+    - integer    
+  idCenario:
+    - integer        
+  idTarefa:
+    - integer        
+  protocolo:
+    - string        

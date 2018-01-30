@@ -1,6 +1,4 @@
 tb_usina:  
-  id:
-    - integer
   nome:
     - string
   tipo:

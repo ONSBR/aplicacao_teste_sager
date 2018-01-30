@@ -1,7 +1,0 @@
-tb_evento:  
-  id:
-    - integer
-  dt_verificacao:
-    - date
-  vl_potencia_disponivel:
-    - double
