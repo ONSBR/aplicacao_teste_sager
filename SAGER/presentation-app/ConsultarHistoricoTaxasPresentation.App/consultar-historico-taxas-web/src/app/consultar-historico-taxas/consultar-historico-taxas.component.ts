@@ -16,8 +16,8 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public filtroConsulta;
   public tiposTaxa;
   public usinas: Array<Usina>;
-  public historicoTaxas: Array<Object>;
-  public cenarioSelecionado;
+  public historicoTaxas;
+  public execucaoSelecionada;
 
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
@@ -25,7 +25,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   ngOnInit() {
     this.listarUsinas();
-    this.cenarioSelecionado = { 'nome': '' };
+    this.execucaoSelecionada = { 'protocolo': '' };
     this.tiposTaxa = Object.keys(TipoTaxa);
     this.preencherFiltroInicial();
   }
@@ -34,8 +34,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     const url = environment.urlServerPresentation + environment.pesquisarHistorico;
     const body = {'filtroConsulta': this.filtroConsulta};
     this.http.post(url, body).subscribe(data => {
-      this.historicoTaxas = [{ 'id': 1, 'nome': 'Principal vigente' },
-      { 'id': 2, 'nome': 'Cenário 1' }, { 'id': 3, 'nome': 'Cenário 2' }];
+      this.historicoTaxas = data;
     });
   }
 
@@ -51,8 +50,8 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     });
   }
 
-  expandirCenario(cenario) {
-    this.cenarioSelecionado = cenario;
+  expandirExecucao(execucaoSelecionada) {
+    this.execucaoSelecionada = execucaoSelecionada;
   }
 
 }

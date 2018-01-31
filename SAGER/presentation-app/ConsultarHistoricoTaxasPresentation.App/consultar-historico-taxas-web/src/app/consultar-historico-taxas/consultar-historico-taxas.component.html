@@ -37,8 +37,8 @@
   <span>
     <h2>Histórico de taxas:</h2>
     <ul>
-      <li (click)='expandirCenario(cenario)' *ngFor="let cenario of historicoTaxas">
-        Cenário: {{ cenario.nome }} 
+      <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of historicoTaxas">
+        Execução: {{ execucao.protocolo }} 
       </li>
     </ul>
   </span>
@@ -46,7 +46,8 @@
 
 <div>
   <span>
-    <h2>Cenário: {{ cenarioSelecionado.nome }}</h2>
+    <h2>Execução: {{ execucaoSelecionada.protocolo }}</h2>
+    <h3>Fechamentos:</h3>
     <ul>
     </ul>
   </span>

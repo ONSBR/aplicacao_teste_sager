@@ -55,9 +55,17 @@ app.post("/pesquisar-historico", function (req, res) {
 
     let usina = req.body.filtroConsulta.usina.id;
     let dataInicial = req.body.filtroConsulta.dataInicial;
-    let dataFinal = req.body.filtroConsulta.dataInicial;
+    let dataFinal = req.body.filtroConsulta.dataFinal;
     let tipoTaxa = req.body.filtroConsulta.tipoTaxa;
 
+    let listarUsinasReq = client.get(config.getUrlFiltroExecucao(dataInicial, dataFinal), function (data, response) {
+        res.send(data);
+    });
+
+    listarUsinasReq.on('error', function (err) {
+        console.log('request error', err);
+        res.send('');
+    }); 
 });
 
 app.listen(PORT, function () {

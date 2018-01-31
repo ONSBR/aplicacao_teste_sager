@@ -17,9 +17,9 @@ execucao-calculo-fechamento:
     byDataInicioFim:
       $and:
         - dataInicio:
-            $eq: :dataInicio
+            $gte: :dataInicio
         - dataFim:
-            $eq: :dataFim
+            $lte: :dataFim
 
 fechamento-mensal:
   model: tb_fechamento_mensal
