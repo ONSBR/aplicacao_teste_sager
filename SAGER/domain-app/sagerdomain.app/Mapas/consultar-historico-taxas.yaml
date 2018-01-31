@@ -3,6 +3,18 @@ execucao-calculo-fechamento:
   fields:
     id:
       column: id
+    dataInicio:
+      column: dataInicio
+    dataFim:
+      column: dataFim
+    idFechamentoMensal:
+      column: idFechamentoMensal
+    idCenario:
+      column: idCenario
+    idTarefa:
+      column: idTarefa
+    protocolo:
+      column: protocolo
   filters:
     byDataInicioFim:
       $and:
@@ -16,10 +28,25 @@ fechamento-mensal:
   fields:
     id:
       column: id
+    mes:
+      column: mes
+    ano:
+      column: ano
   filters:
     byData:
       $and:
         - mes:
             $eq: :mes
         - ano:
-            $eq: :ano            
+            $eq: :ano
+
+tarefa-retificacao:
+  model: tb_tarefa_retificacao
+  fields:
+    id:
+      column: id
+    nome:
+      column: nome
+  filters:
+    byName:
+      nome: :nome                      
