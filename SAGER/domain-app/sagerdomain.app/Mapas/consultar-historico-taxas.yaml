@@ -1,4 +1,4 @@
-ExecucaoCalculoFechamento:
+execucao-calculo-fechamento:
   model: tb_execucao_calculo_fechamento
   fields:
     id:
@@ -9,4 +9,17 @@ ExecucaoCalculoFechamento:
         - dataInicio:
             $eq: :dataInicio
         - dataFim:
-            $eq: :dataInicio
+            $eq: :dataFim
+
+fechamento-mensal:
+  model: tb_fechamento_mensal
+  fields:
+    id:
+      column: id
+  filters:
+    byData:
+      $and:
+        - mes:
+            $eq: :mes
+        - ano:
+            $eq: :ano            
