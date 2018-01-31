@@ -7,8 +7,6 @@ execucao-calculo-fechamento:
       column: dataInicio
     dataFim:
       column: dataFim
-    idFechamentoMensal:
-      column: idFechamentoMensal
     idCenario:
       column: idCenario
     idTarefa:
@@ -32,6 +30,8 @@ fechamento-mensal:
       column: mes
     ano:
       column: ano
+    idExecucaoCalculoFechamento:
+      column: idExecucaoCalculoFechamento
   filters:
     byData:
       $and:
@@ -49,4 +49,16 @@ tarefa-retificacao:
       column: nome
   filters:
     byName:
-      nome: :nome                      
+      nome: :nome
+
+cenario:
+  model: tb_cenario
+  fields:
+    nome:
+      column: nome    
+    dataInicio:
+      column: dataInicio
+    dataFim:
+      column: dataFim
+    dataExecucao:
+      column: dataExecucao

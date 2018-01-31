@@ -4,4 +4,4 @@ tb_taxa:
   valor:
     - double
   idFechamento:
-    - integer
+    - string
