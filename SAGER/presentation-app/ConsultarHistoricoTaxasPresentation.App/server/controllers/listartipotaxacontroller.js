@@ -1,29 +1,28 @@
 const config = require('../config');
 const Client = require('node-rest-client').Client;
 
-class ListarUsinasController {
-
-    constructor(){
-    }
+class ListarTipoTaxaController {
 
     /**
-     * @method listarUsinas
+     * @method listarTipoTaxa
      * @param {Request} request Objeto de request
      * @param {Response} response Objeto de response
-     * @description Lista todas as usinas cadastradas
+     * @description Lista todos os tipos de taxa
      */
-    listarUsinas(request, response) {
-        let client = new Client();
-        let listarUsinasReq = client.get(config.urlUsinaSAGER, function (data) {
+    listarTipoTaxa(request, response) {
+        let client = this.getClient();
+        let listarUsinasReq = client.get(config.urlTipoTaxaSAGER, function (data) {
             response.send(data);
         });
         listarUsinasReq.on('error', function (err) {
             console.log('request error', err);
-            response.send('');
         });
     }
 
+    getClient() {
+        return new Client();    
+    }
 
 }
 
-module.exports = ListarUsinasController
+module.exports = ListarTipoTaxaController

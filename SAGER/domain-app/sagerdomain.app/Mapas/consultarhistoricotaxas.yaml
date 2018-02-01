@@ -33,12 +33,19 @@ fechamento-mensal:
     idExecucaoCalculoFechamento:
       column: idExecucaoCalculoFechamento
   filters:
-    byData:
+    byIdsAndData:
       $and:
+        - id:
+            $in:
+              - ":ids"
         - mes:
-            $eq: :mes
+            $gte: :mesInicial
         - ano:
-            $eq: :ano
+            $gte: :anoInicial
+        - mes:
+            $lte: :mesInicial
+        - ano:
+            $lte: :anoFinal            
 
 tarefa-retificacao:
   model: tb_tarefa_retificacao
@@ -62,3 +69,27 @@ cenario:
       column: dataFim
     dataExecucao:
       column: dataExecucao
+
+taxa:
+  model: tb_taxa
+  fields:
+    tipoTaxa:
+      column: tipoTaxa
+    valor:
+      column: valor
+    idFechamento:
+      column: idFechamento
+    idUsina:
+      column: idUsina
+  filters:
+    byUsinaETipoTaxa:
+      - tipoTaxa:
+          $eq: :tipoTaxa
+      - idUsina:
+          $eq: :idUsina
+
+tipo-taxa:
+  model: tb_tipo_taxa
+  fields:
+    nome:
+      column: nome    

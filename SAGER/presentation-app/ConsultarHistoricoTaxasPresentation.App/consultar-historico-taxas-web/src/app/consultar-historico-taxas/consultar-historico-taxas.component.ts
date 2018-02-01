@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
-import { TipoTaxa } from '../model/tipotaxa';
 import { Usina } from '../model/usina';
 import { environment } from '../../environments/environment';
 import { DatePipe } from '@angular/common';
@@ -26,7 +25,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   ngOnInit() {
     this.listarUsinas();
     this.execucaoSelecionada = { 'protocolo': '' };
-    this.tiposTaxa = Object.keys(TipoTaxa);
+    this.listarTipoTaxa();
     this.preencherFiltroInicial();
   }
 
@@ -41,6 +40,12 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   listarUsinas() {
     this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
       this.usinas = <Usina[]>data;
+    });
+  }
+
+  listarTipoTaxa() {
+    this.http.get(environment.urlServerPresentation + environment.listarTipoTaxa).subscribe(data => {
+      this.tiposTaxa = data;
     });
   }
 

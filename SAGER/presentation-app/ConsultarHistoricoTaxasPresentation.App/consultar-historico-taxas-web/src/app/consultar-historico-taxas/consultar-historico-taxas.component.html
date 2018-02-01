@@ -22,7 +22,7 @@
   <span>Tipo de taxa:
     <select [(ngModel)]="filtroConsulta.tipoTaxa">
       <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
-        {{tipoTaxa}}
+        {{tipoTaxa.nome}}
       </option>
     </select>
   </span>

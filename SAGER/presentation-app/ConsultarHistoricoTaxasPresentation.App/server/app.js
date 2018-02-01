@@ -1,8 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const config = require('./config');
-const PesquisarHistoricoTaxasController = require('./controllers/PesquisarHistoricoTaxasController');
-const ListarUsinasController = require('./controllers/ListarUsinasController');
+const PesquisarHistoricoTaxasController = require('./controllers/pesquisarhistoricotaxascontroller');
+const ListarUsinasController = require('./controllers/listarusinascontroller');
+const ListarTipoTaxaController = require('./controllers/listartipotaxacontroller');
 
 const app = express();
 const PORT = config.PORT;
@@ -16,6 +17,12 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', false);
     next();
+});
+
+let listarTipoTaxaController = new ListarTipoTaxaController();
+
+app.get("/listar-tipo-taxa", (req, res) => {
+    listarTipoTaxaController.listarTipoTaxa(req, res);
 });
 
 let listarUsinasController = new ListarUsinasController();

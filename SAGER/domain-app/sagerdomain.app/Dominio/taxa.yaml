@@ -1,6 +1,6 @@
 tb_taxa:  
   tipoTaxa:
-    - integer
+    - string
   valor:
     - double
   idFechamento:
