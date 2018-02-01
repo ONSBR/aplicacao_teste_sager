@@ -20,10 +20,11 @@ class PesquisarHistoricoTaxasController {
         let dataFinal = request.body.filtroConsulta.dataFinal;
         let tipoTaxa = request.body.filtroConsulta.tipoTaxa;
 
-        let listarUsinasReq = client.get(config.getUrlFiltroExecucao(dataInicial, dataFinal), function (data) {
+        let urlFiltroExecucao = config.getUrlFiltroExecucao(dataInicial, dataFinal);
+
+        let listarUsinasReq = client.get(urlFiltroExecucao, function (data) {
             response.send(data);
         });
-
         listarUsinasReq.on('error', function (err) {
             console.log('request error', err);
             res.send('');
