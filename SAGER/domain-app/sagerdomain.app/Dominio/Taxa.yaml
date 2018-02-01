@@ -5,3 +5,5 @@ tb_taxa:
     - double
   idFechamento:
     - string
+  idUsina:
+    - string    
