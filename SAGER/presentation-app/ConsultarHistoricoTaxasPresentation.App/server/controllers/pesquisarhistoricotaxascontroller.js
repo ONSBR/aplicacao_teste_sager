@@ -45,6 +45,15 @@ class PesquisarHistoricoTaxasController {
         });
     }
 
+    extractIdsFechamentosMensaisFromTaxas(taxas){
+        let idsFechamentos = taxas.map(taxa => taxa.idFechamento);
+        return idsFechamentos;
+    }
+
+    distinct(array) { 
+        return new Set(array);
+    }
+
     getUsinaId(request) {
         return request.body.filtroConsulta.usina.id;
     }

@@ -13,7 +13,7 @@ config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId) {
 }
 
 config.getUrlFiltroFechamentos = function getUrlFiltroFechamentos(idsFechamento) {
-    return `http://localhost:2149/consultarhistoricotaxas/fechamentomensal? +
+    return `http://localhost:2149/consultarhistoricotaxas/fechamento-mensal? +
         filter=byIdsAndData&ids=${idsFechamento}&dataInicio=${dataInicio}&dataInicio=${dataFim}`;
 }
 
