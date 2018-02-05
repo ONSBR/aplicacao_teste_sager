@@ -1,0 +1,5 @@
+add_column:
+  table: "tb_execucao_calculo_fechamento"
+  columns:
+    idFechamento: 
+      type: string

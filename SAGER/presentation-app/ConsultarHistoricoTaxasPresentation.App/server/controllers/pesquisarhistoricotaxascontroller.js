@@ -10,15 +10,11 @@ class PesquisarHistoricoTaxasController {
      * @description Pesquisa histórico de execuções de calculo.
      */
     pesquisarHistorico(request, response) {
-        let taxas;
-        let historicoExecucoes;
         this.pesquisarTaxas(request).
-            then(taxas => { this.pesquisarFechamentos(request, taxas) }).
-            then(fechamentosMensais => { this.pesquisarExecucoesCalculo(fechamentosMensais) }).
-            then(historicoExecucoes => response.send(historicoExecucoes)).
-            catch(e => {
-                console.log(`Erro durante a consulta de histórico de execuções: ${e.toString()}`);
-            });
+            then(taxas => { return this.pesquisarFechamentos(request, taxas); }).
+            then(fechamentosMensais => { return this.pesquisarExecucoesCalculo(fechamentosMensais); }).
+            then(historicoExecucoes => { response.send(historicoExecucoes); }).
+            catch(e => { console.log(`Erro durante a consulta de histórico de execuções: ${e.toString()}`) });
     }
 
     /**
@@ -38,7 +34,7 @@ class PesquisarHistoricoTaxasController {
 
     pesquisarFechamentos(request, taxas) {
         let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request, taxas);
-        console.log(urlFiltroFechamentosMensais);
+        console.log('urlFiltroFechamentosMensais: ' + urlFiltroFechamentosMensais);
         return this.getDomainPromise(urlFiltroFechamentosMensais);
     }
 
@@ -53,10 +49,11 @@ class PesquisarHistoricoTaxasController {
     }
 
     pesquisarExecucoesCalculo(fechamentosMensais) {
+        console.log('fechamentosMensais ' + fechamentosMensais);
         let idsFechamentos = this.extrairIdsFechamentos(fechamentosMensais);
         idsFechamentos = Array.from(this.distinct(idsFechamentos));
-        let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao([]);
-        console.log(urlFiltroExecucoesCalculo);
+        let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao(idsFechamentos);
+        console.log('urlFiltroExecucoesCalculo: ' + urlFiltroExecucoesCalculo);
         return this.getDomainPromise(urlFiltroExecucoesCalculo);
     }
 

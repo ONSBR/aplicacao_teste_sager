@@ -26,7 +26,6 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.listarUsinas();
     this.execucaoSelecionada = { 'protocolo': '' };
     this.listarTipoTaxa();
-    this.preencherFiltroInicial();
   }
 
   pesquisar() {
@@ -46,12 +45,6 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   listarTipoTaxa() {
     this.http.get(environment.urlServerPresentation + environment.listarTipoTaxa).subscribe(data => {
       this.tiposTaxa = data;
-    });
-  }
-
-  preencherFiltroInicial() {
-    this.http.get(environment.urlServerPresentation + environment.consultaFiltroInicial).subscribe(data => {
-      this.filtroConsulta = <FiltroConsulta>data;
     });
   }
 

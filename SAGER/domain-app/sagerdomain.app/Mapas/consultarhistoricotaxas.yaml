@@ -13,13 +13,12 @@ execucao-calculo-fechamento:
       column: idTarefa
     protocolo:
       column: protocolo
+    idFechamento:
+      column: idFechamento
   filters:
-    byDataInicioFim:
-      $and:
-        - dataInicio:
-            $gte: :dataInicio
-        - dataFim:
-            $lte: :dataFim
+    byIdsFechamentos:
+      idFechamento:
+        $in: $idsFechamentos
 
 fechamento-mensal:
   model: tb_fechamento_mensal
