@@ -35,9 +35,6 @@ fechamento-mensal:
   filters:
     byIdsAndData:
       $and:
-        - id:
-            $in: 
-              - ":ids"
         - mes:
             $gte: :mesInicial
         - ano:
@@ -46,7 +43,8 @@ fechamento-mensal:
             $lte: :mesFinal
         - ano:
             $lte: :anoFinal
-
+        - id:
+            $in: ":ids"
 
 tarefa-retificacao:
   model: tb_tarefa_retificacao
