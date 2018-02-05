@@ -7,21 +7,29 @@ class PesquisarHistoricoTaxasController {
      * @method pesquisarHistorico
      * @param {Request} request Objeto de request
      * @param {Response} response Objeto de response
-     * @description Pesquisa histórico de taxas por usina, data inicial, data final e tipo de taxa
+     * @description Pesquisa histórico de execuções de calculo.
      */
     pesquisarHistorico(request, response) {
         let taxas;
         let historicoExecucoes;
         this.pesquisarTaxas(request).
-            then(taxas => { this.pesquisarFechamentos(request, taxas) });
+            then(taxas => { this.pesquisarFechamentos(request, taxas) }).
+            then(fechamentosMensais => { this.pesquisarExecucoesCalculo(fechamentosMensais) }).
+            then(historicoExecucoes => response.send(historicoExecucoes)).
+            catch(e => {
+                console.log(`Erro durante a consulta de histórico de execuções: ${e.toString()}`);
+            });
     }
 
+    /**
+     * @method pesquisarTaxas
+     * @param {Request} request Objeto de request
+     * @description Pesquisa histórico de taxas por usina, data inicial, data final e tipo de taxa
+     */
     pesquisarTaxas(request) {
-        return new Promise((resolve, reject) => {
-            let urlFiltroTaxas = this.getUrlFiltroTaxas(request);
-            console.log('urlFiltroTaxas:' + urlFiltroTaxas);
-            this.getDomain(urlFiltroTaxas);
-        });
+        let urlFiltroTaxas = this.getUrlFiltroTaxas(request);
+        console.log('urlFiltroTaxas:' + urlFiltroTaxas);
+        return this.getDomainPromise(urlFiltroTaxas);
     }
 
     getUrlFiltroTaxas(request) {
@@ -29,24 +37,39 @@ class PesquisarHistoricoTaxasController {
     }
 
     pesquisarFechamentos(request, taxas) {
-        return new Promise((resolve, reject) => {
-            let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request, taxas);
-            console.log(urlFiltroFechamentosMensais);
-            this.getDomain(urlFiltroFechamentosMensais);
-        });
+        let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request, taxas);
+        console.log(urlFiltroFechamentosMensais);
+        return this.getDomainPromise(urlFiltroFechamentosMensais);
     }
 
     getUrlFiltroFechamentosMensais(request, taxas) {
         let dataInicial = new Date(this.getDataInicial(request));
         let dataFinal = new Date(this.getDataFinal(request));
 
-        let idsFechamentos = this.extractIdsFechamentosMensaisFromTaxas(taxas);
+        let idsFechamentos = this.extrairIdsFechamentosMensaisFromTaxas(taxas);
         idsFechamentos = Array.from(this.distinct(idsFechamentos));
         return config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
             dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear(), idsFechamentos.join(';'));
     }
 
-    extractIdsFechamentosMensaisFromTaxas(taxas) {
+    pesquisarExecucoesCalculo(fechamentosMensais) {
+        let idsFechamentos = this.extrairIdsFechamentos(fechamentosMensais);
+        idsFechamentos = Array.from(this.distinct(idsFechamentos));
+        let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao([]);
+        console.log(urlFiltroExecucoesCalculo);
+        return this.getDomainPromise(urlFiltroExecucoesCalculo);
+    }
+
+    extrairIdsFechamentos(fechamentosMensais) {
+        let idsFechamentos = fechamentosMensais.map(fechamentosMensais => fechamentosMensais.id);
+        return idsFechamentos;
+    }
+
+    getUrlFiltroExecucao(idsFechamento) {
+        return config.getUrlFiltroExecucao(idsFechamento);
+    }
+
+    extrairIdsFechamentosMensaisFromTaxas(taxas) {
         let idsFechamentos = taxas.map(taxa => taxa.idFechamento);
         return idsFechamentos;
     }
@@ -71,14 +94,16 @@ class PesquisarHistoricoTaxasController {
         return request.body.filtroConsulta.dataFinal;
     }
 
-    getDomain(url) {
-        let client = new Client();
-        let request = client.get(url, function (data) {
-            resolve(data);
-        });
-        request.on('error', function (err) {
-            console.log('request error', err);
-            reject(err);
+    getDomainPromise(url) {
+        return new Promise((resolve, reject) => {
+            let client = new Client();
+            let request = client.get(url, function (data) {
+                resolve(data);
+            });
+            request.on('error', function (err) {
+                console.log('request error', err);
+                reject(err);
+            });
         });
     }
 

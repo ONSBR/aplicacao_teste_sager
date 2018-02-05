@@ -6,12 +6,6 @@ describe('Pesquisar historico de execuções e taxas', function () {
         pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController();
     });
 
-    it('Deve realizar a pesquisa de taxas', function (done) {
-        let taxasPromise = pesquisarHistoricoTaxasController.pesquisarTaxas();
-        expect(taxasPromise).toBeDefined();
-        done();
-    });
-
     it('Deve realizar o distinct dos valores de um array', function () {
         let idsFechamentos = [1, 1, 3, 3, 4, 5, 6, 7, 3]
         let idsFechamentosDistinct = pesquisarHistoricoTaxasController.distinct(idsFechamentos);
@@ -23,7 +17,7 @@ describe('Pesquisar historico de execuções e taxas', function () {
         let taxas = [{ idFechamento: 1 }, { idFechamento: 2 },
         { idFechamento: 3 }, { idFechamento: 4 }, { idFechamento: 1 }];
 
-        let idsFechamentos = pesquisarHistoricoTaxasController.extractIdsFechamentosMensaisFromTaxas(taxas);
+        let idsFechamentos = pesquisarHistoricoTaxasController.extrairIdsFechamentosMensaisFromTaxas(taxas);
 
         expect(idsFechamentos).toBeDefined();
         expect(idsFechamentos).toEqual([1, 2, 3, 4, 1]);
@@ -64,5 +58,22 @@ describe('Pesquisar historico de execuções e taxas', function () {
 
         expect(urlFiltroTaxas).toEqual('http://localhost:2171/consultarhistoricotaxas/fechamento-mensal?filter=byIdsAndData' +
             '&mesInicial=1&anoInicial=2018&mesFinal=12&anoFinal=2018&ids=324;123');
+    });
+
+    it('Deve retornar a url de pesquisa execuções de calculo a partir dos fechamentos mensais.', function () {
+        let idsFechamento = [1, 5, 7];
+        let urlFiltroExecucoesCalculo = pesquisarHistoricoTaxasController.getUrlFiltroExecucao(idsFechamento);
+
+        expect(urlFiltroExecucoesCalculo).toEqual('http://localhost:2171/consultarhistoricotaxas/execucao-calculo-fechamento?filter=byIdsFechamentos&idsFechamentos=1,5,7');
+    });
+
+    it('Deve retornar um array com os ids a partir dos fechamentos mensais.', function () {
+        let fechamentos = [
+            { id: 1 }, { id: 2 }, { id: 3 }, { id: 4, mes: 12, ano: 2018 }, { id: 1 }
+        ];
+        let idsFechamentos = pesquisarHistoricoTaxasController.extrairIdsFechamentos(fechamentos);
+
+        expect(idsFechamentos).toBeDefined();
+        expect(idsFechamentos).toEqual([1, 2, 3, 4, 1]);
     });
 });
