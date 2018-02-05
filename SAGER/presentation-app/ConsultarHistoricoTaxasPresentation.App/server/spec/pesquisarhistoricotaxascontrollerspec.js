@@ -5,7 +5,7 @@ describe('Pesquisar historico de execuções e taxas', function () {
 
     beforeEach(function () {
         pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController();
-        config.DOMAIN_PORT = 2187;
+        config.DOMAIN_PORT = 2125;
     });
 
     it('Deve realizar o distinct dos valores de um array', function () {
@@ -41,7 +41,7 @@ describe('Pesquisar historico de execuções e taxas', function () {
         };
         let urlFiltroTaxas = pesquisarHistoricoTaxasController.getUrlFiltroTaxas(request);
 
-        expect(urlFiltroTaxas).toEqual('http://localhost:2187/consultarhistoricotaxas/taxa?filter=byUsinaETipoTaxa&idUsina=1&tipoTaxa=2');
+        expect(urlFiltroTaxas).toEqual('http://localhost:2125/consultarhistoricotaxas/taxa?filter=byUsinaETipoTaxa&idUsina=1&tipoTaxa=2');
     });
 
     it('Deve retornar a url de pesquisa de fechamentos mensais com os parâmetros configurados.', function () {
@@ -58,14 +58,14 @@ describe('Pesquisar historico de execuções e taxas', function () {
         let taxas = [{ idFechamento: 324 }, { idFechamento: 123 }];
         let urlFiltroTaxas = pesquisarHistoricoTaxasController.getUrlFiltroFechamentosMensais(request, taxas);
 
-        expect(urlFiltroTaxas).toEqual('http://localhost:2187/consultarhistoricotaxas/fechamento-mensal?filter=byIdsAndData' +
+        expect(urlFiltroTaxas).toEqual('http://localhost:2125/consultarhistoricotaxas/fechamento-mensal?filter=byIdsAndData' +
             '&mesInicial=1&anoInicial=2018&mesFinal=12&anoFinal=2018&ids=324;123');
     });
 
     it('Deve retornar a url de pesquisa execuções de calculo a partir dos fechamentos mensais.', function () {
         let idsFechamento = [1, 5, 7];
         let urlFiltroExecucoesCalculo = pesquisarHistoricoTaxasController.getUrlFiltroExecucao(idsFechamento);
-        expect(urlFiltroExecucoesCalculo).toEqual('http://localhost:2187/consultarhistoricotaxas/execucao-calculo-fechamento?filter=byIdsFechamentos&idsFechamentos=1,5,7');
+        expect(urlFiltroExecucoesCalculo).toEqual('http://localhost:2125/consultarhistoricotaxas/execucao-calculo-fechamento?filter=byIdsFechamentos&idsFechamentos=1,5,7');
     });
 
     it('Deve retornar um array com os ids a partir dos fechamentos mensais.', function () {

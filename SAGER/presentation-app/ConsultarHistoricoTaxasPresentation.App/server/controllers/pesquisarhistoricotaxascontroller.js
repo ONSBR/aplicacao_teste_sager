@@ -1,7 +1,11 @@
 const config = require('../config');
-const Client = require('node-rest-client').Client;
+const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 
 class PesquisarHistoricoTaxasController {
+
+    constructor(domainPromiseHelper) {
+        this.domainPromiseHelper = new DomainPromiseHelper();
+    }
 
     /**
      * @method pesquisarHistorico
@@ -25,7 +29,7 @@ class PesquisarHistoricoTaxasController {
     pesquisarTaxas(request) {
         let urlFiltroTaxas = this.getUrlFiltroTaxas(request);
         console.log('urlFiltroTaxas:' + urlFiltroTaxas);
-        return this.getDomainPromise(urlFiltroTaxas);
+        return this.domainPromiseHelper.getDomainPromise(urlFiltroTaxas);
     }
 
     getUrlFiltroTaxas(request) {
@@ -35,7 +39,7 @@ class PesquisarHistoricoTaxasController {
     pesquisarFechamentos(request, taxas) {
         let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request, taxas);
         console.log('urlFiltroFechamentosMensais: ' + urlFiltroFechamentosMensais);
-        return this.getDomainPromise(urlFiltroFechamentosMensais);
+        return this.domainPromiseHelper.getDomainPromise(urlFiltroFechamentosMensais);
     }
 
     getUrlFiltroFechamentosMensais(request, taxas) {
@@ -54,7 +58,7 @@ class PesquisarHistoricoTaxasController {
         idsFechamentos = Array.from(this.distinct(idsFechamentos));
         let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao(idsFechamentos);
         console.log('urlFiltroExecucoesCalculo: ' + urlFiltroExecucoesCalculo);
-        return this.getDomainPromise(urlFiltroExecucoesCalculo);
+        return this.domainPromiseHelper.getDomainPromise(urlFiltroExecucoesCalculo);
     }
 
     extrairIdsFechamentos(fechamentosMensais) {
@@ -89,19 +93,6 @@ class PesquisarHistoricoTaxasController {
 
     getDataFinal(request) {
         return request.body.filtroConsulta.dataFinal;
-    }
-
-    getDomainPromise(url) {
-        return new Promise((resolve, reject) => {
-            let client = new Client();
-            let request = client.get(url, function (data) {
-                resolve(data);
-            });
-            request.on('error', function (err) {
-                console.log('request error', err);
-                reject(err);
-            });
-        });
     }
 
 }
