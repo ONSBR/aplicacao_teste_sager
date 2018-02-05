@@ -11,7 +11,7 @@ class ListarTipoTaxaController {
      */
     listarTipoTaxa(request, response) {
         let client = this.getClient();
-        let listarUsinasReq = client.get(config.urlTipoTaxaSAGER, function (data) {
+        let listarUsinasReq = client.get(config.URL_TIPO_TAXA_SAGER, function (data) {
             response.send(data);
         });
         listarUsinasReq.on('error', function (err) {

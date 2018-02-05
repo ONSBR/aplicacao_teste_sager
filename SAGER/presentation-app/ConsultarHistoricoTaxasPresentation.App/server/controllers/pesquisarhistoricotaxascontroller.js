@@ -18,40 +18,41 @@ class PesquisarHistoricoTaxasController {
 
     pesquisarTaxas(request) {
         return new Promise((resolve, reject) => {
-            let client = new Client();
-            console.log(config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request)));
-            let taxasRequest = client.get(config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request)),
-                function (taxas) {
-                    resolve(taxas);
-                });
-            taxasRequest.on('error', function (err) {
-                console.log('request error', err);
-                reject(err);
-            });
+            let urlFiltroTaxas = this.getUrlFiltroTaxas(request);
+            console.log('urlFiltroTaxas:' + urlFiltroTaxas);
+            this.getDomain(urlFiltroTaxas);
         });
+    }
+
+    getUrlFiltroTaxas(request) {
+        return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request))
     }
 
     pesquisarFechamentos(request, taxas) {
         return new Promise((resolve, reject) => {
-            let client = new Client();
-            let fechamentosRequest = client.get(config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request)),
-                function (taxas) {
-                    resolve(taxas);
-                });
-            taxasRequest.on('error', function (err) {
-                console.log('request error', err);
-                reject(err);
-            });
+            let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request, taxas);
+            console.log(urlFiltroFechamentosMensais);
+            this.getDomain(urlFiltroFechamentosMensais);
         });
     }
 
-    extractIdsFechamentosMensaisFromTaxas(taxas){
+    getUrlFiltroFechamentosMensais(request, taxas) {
+        let dataInicial = new Date(this.getDataInicial(request));
+        let dataFinal = new Date(this.getDataFinal(request));
+
+        let idsFechamentos = this.extractIdsFechamentosMensaisFromTaxas(taxas);
+        idsFechamentos = Array.from(this.distinct(idsFechamentos));
+        return config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
+            dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear(), idsFechamentos.join(';'));
+    }
+
+    extractIdsFechamentosMensaisFromTaxas(taxas) {
         let idsFechamentos = taxas.map(taxa => taxa.idFechamento);
         return idsFechamentos;
     }
 
-    distinct(array) { 
-        return new Set(array);
+    distinct(values) {
+        return new Set(values).values();
     }
 
     getUsinaId(request) {
@@ -68,6 +69,17 @@ class PesquisarHistoricoTaxasController {
 
     getDataFinal(request) {
         return request.body.filtroConsulta.dataFinal;
+    }
+
+    getDomain(url) {
+        let client = new Client();
+        let request = client.get(url, function (data) {
+            resolve(data);
+        });
+        request.on('error', function (err) {
+            console.log('request error', err);
+            reject(err);
+        });
     }
 
 }

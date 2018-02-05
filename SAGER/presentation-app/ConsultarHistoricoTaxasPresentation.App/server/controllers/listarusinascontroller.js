@@ -11,7 +11,7 @@ class ListarUsinasController {
      */
     listarUsinas(request, response) {
         let client = this.getClient();
-        let listarUsinasReq = client.get(config.urlUsinaSAGER, function (data) {
+        let listarUsinasReq = client.get(config.URL_USINA_SAGER, function (data) {
             response.send(data);
         });
         listarUsinasReq.on('error', function (err) {
