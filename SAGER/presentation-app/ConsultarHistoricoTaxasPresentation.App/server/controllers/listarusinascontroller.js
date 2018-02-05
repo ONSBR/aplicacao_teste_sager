@@ -1,7 +1,11 @@
 const config = require('../config');
-const Client = require('node-rest-client').Client;
+const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 
 class ListarUsinasController {
+
+    constructor(domainPromiseHelper) {
+        this.domainPromiseHelper = new DomainPromiseHelper();
+    }
 
     /**
      * @method listarUsinas
@@ -10,17 +14,9 @@ class ListarUsinasController {
      * @description Lista todas as usinas cadastradas
      */
     listarUsinas(request, response) {
-        let client = this.getClient();
-        let listarUsinasReq = client.get(config.URL_USINA_SAGER, function (data) {
-            response.send(data);
-        });
-        listarUsinasReq.on('error', function (err) {
-            console.log('request error', err);
-        });
-    }
-
-    getClient() {
-        return new Client();    
+        this.domainPromiseHelper.getDomainPromise(config.URL_USINA_SAGER).
+            then(data => { response.send(data) }).
+            catch(e => { console.log(`Erro durante a consulta de usinas: ${e.toString()}`) });
     }
 
 }
