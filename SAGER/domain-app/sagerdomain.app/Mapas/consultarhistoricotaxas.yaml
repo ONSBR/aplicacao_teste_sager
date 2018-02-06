@@ -85,6 +85,9 @@ taxa:
           $eq: :tipoTaxa
       - idUsina:
           $eq: :idUsina
+    byIdFechamento:
+      idFechamento:
+        $eq: :idFechamento
 
 tipo-taxa:
   model: tb_tipo_taxa
