@@ -10,6 +10,11 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "jasmine-node": "^1.14.5"
+        "csvtojson": "^1.1.9",
+        "jasmine-core": "^2.9.1",
+        "jasmine-node": "^1.14.5",
+        "linq": "^3.0.9",
+        "moment": "^2.20.1",
+        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master"
     }
 }
