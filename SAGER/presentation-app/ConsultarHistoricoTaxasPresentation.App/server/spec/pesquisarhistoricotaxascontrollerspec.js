@@ -17,7 +17,7 @@ describe('Pesquisar historico de execuções e taxas', function () {
 
     it('Deve extrair os ids de Fechamentos mensais a partir de uma lista de Taxas', function () {
         let taxas = [{ idFechamento: 1 }, { idFechamento: 2 },
-            { idFechamento: 3 }, { idFechamento: 4 }, { idFechamento: 1 }];
+        { idFechamento: 3 }, { idFechamento: 4 }, { idFechamento: 1 }];
 
         let idsFechamentos = pesquisarHistoricoTaxasController.extrairIdsFechamentosMensaisFromTaxas(taxas);
 
@@ -76,5 +76,11 @@ describe('Pesquisar historico de execuções e taxas', function () {
 
         expect(idsFechamentos).toBeDefined();
         expect(idsFechamentos).toEqual([1, 2, 3, 4, 1]);
+    });
+
+    it('Deve retornar a url de consulta de taxas a partir do id do fechamento mensal.', function () {
+        let idFechamento = 33;
+        let urlFiltroTaxas = pesquisarHistoricoTaxasController.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
+        expect(urlFiltroTaxas).toEqual('http://localhost:2125/consultarhistoricotaxas/taxa?filter=byIdFechamento&idFechamento=33');
     });
 });

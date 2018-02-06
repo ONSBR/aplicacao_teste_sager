@@ -9,5 +9,6 @@ export const environment = {
   listarUsinas: 'listar-usinas',
   listarTipoTaxa: 'listar-tipo-taxa',
   consultaFiltroInicial: 'filtro-inicial',
-  pesquisarHistorico: 'pesquisar-historico'
+  pesquisarHistorico: 'pesquisar-historico',
+  expandirExecucao: 'expandir-execucao'
 };

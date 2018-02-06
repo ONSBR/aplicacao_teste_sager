@@ -15,8 +15,9 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public filtroConsulta;
   public tiposTaxa;
   public usinas: Array<Usina>;
-  public historicoTaxas;
+  public execucoes;
   public execucaoSelecionada;
+  public taxas;
 
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
@@ -32,7 +33,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     const url = environment.urlServerPresentation + environment.pesquisarHistorico;
     const body = {'filtroConsulta': this.filtroConsulta};
     this.http.post(url, body).subscribe(data => {
-      this.historicoTaxas = data;
+      this.execucoes = data;
     });
   }
 
@@ -50,6 +51,10 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   expandirExecucao(execucaoSelecionada) {
     this.execucaoSelecionada = execucaoSelecionada;
+    const body = {'idFechamento': this.execucaoSelecionada.idFechamento};
+    this.http.post(environment.urlServerPresentation + environment.expandirExecucao, body).subscribe(data => {
+      this.taxas = data;
+    });
   }
 
 }

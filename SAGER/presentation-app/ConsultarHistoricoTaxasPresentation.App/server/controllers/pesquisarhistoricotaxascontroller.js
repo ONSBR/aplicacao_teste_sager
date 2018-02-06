@@ -32,6 +32,15 @@ class PesquisarHistoricoTaxasController {
         return this.domainPromiseHelper.getDomainPromise(urlFiltroTaxas);
     }
 
+    pesquisarTaxasAPartirExecucaoCalculo(request, response) {
+        let idFechamento = request.body.idFechamento;
+        let urlFiltroTaxasAPartirIdFechamento = this.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
+        console.log('urlFiltroTaxasAPartirIdFechamento:' + urlFiltroTaxasAPartirIdFechamento);
+        this.domainPromiseHelper.getDomainPromise(urlFiltroTaxasAPartirIdFechamento).
+            then(taxas => { response.send(taxas); }).
+            catch(e => { console.log(`Erro durante a consulta de histórico de taxas a partir das execuções: ${e.toString()}`) });;
+    }
+
     getUrlFiltroTaxas(request) {
         return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request))
     }
@@ -73,6 +82,10 @@ class PesquisarHistoricoTaxasController {
     extrairIdsFechamentosMensaisFromTaxas(taxas) {
         let idsFechamentos = taxas.map(taxa => taxa.idFechamento);
         return idsFechamentos;
+    }
+
+    getUrlFiltroTaxasAPartirIdFechamento(idFechamento) {
+        return config.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
     }
 
     distinct(values) {

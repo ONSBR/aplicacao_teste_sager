@@ -35,10 +35,10 @@
 
 <div>
   <span>
-    <h2>Histórico de taxas:</h2>
+    <h2>Execuções:</h2>
     <ul>
-      <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of historicoTaxas">
-        Execução: {{ execucao.protocolo }} 
+      <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of execucoes">
+        Execução: {{ execucao.protocolo }}
       </li>
     </ul>
   </span>
@@ -46,9 +46,11 @@
 
 <div>
   <span>
-    <h2>Execução: {{ execucaoSelecionada.protocolo }}</h2>
-    <h3>Fechamentos:</h3>
+    <h2>Taxas: </h2>
     <ul>
+      <li *ngFor="let taxa of taxas">
+        Valor: {{ taxa.valor }}
+      </li>
     </ul>
   </span>
 </div>

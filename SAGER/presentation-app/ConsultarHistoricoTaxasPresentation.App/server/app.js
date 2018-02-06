@@ -37,6 +37,10 @@ app.post("/pesquisar-historico", (req, res) => {
     pesquisarHistoricoTaxasController.pesquisarHistorico(req, res);
 });
 
+app.post("/expandir-execucao", (req, res) => {
+    pesquisarHistoricoTaxasController.pesquisarTaxasAPartirExecucaoCalculo(req, res);
+});
+
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
 });
