@@ -18,6 +18,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public execucoes;
   public execucaoSelecionada;
   public taxas;
+  public fechamentoMensal;
 
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
@@ -26,14 +27,16 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   ngOnInit() {
     this.listarUsinas();
     this.execucaoSelecionada = { 'protocolo': '' };
+    this.fechamentoMensal = { 'mes': '', 'ano': '' };
     this.listarTipoTaxa();
   }
 
   pesquisar() {
     const url = environment.urlServerPresentation + environment.pesquisarHistorico;
-    const body = {'filtroConsulta': this.filtroConsulta};
+    const body = { 'filtroConsulta': this.filtroConsulta };
     this.http.post(url, body).subscribe(data => {
       this.execucoes = data;
+      this.taxas = [];
     });
   }
 
@@ -51,10 +54,14 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   expandirExecucao(execucaoSelecionada) {
     this.execucaoSelecionada = execucaoSelecionada;
-    const body = {'idFechamento': this.execucaoSelecionada.idFechamento};
-    this.http.post(environment.urlServerPresentation + environment.expandirExecucao, body).subscribe(data => {
-      this.taxas = data;
+    const body = { 'idFechamentoMensal': this.execucaoSelecionada.idFechamento };
+    this.http.post(environment.urlServerPresentation + environment.pesquisarFechamentoMensalPorId, body).subscribe(fechamentoMensal => {
+      this.fechamentoMensal = fechamentoMensal;
     });
+    this.http.post(environment.urlServerPresentation + environment.pesquisarTaxaPorId, body).subscribe(taxas => {
+      this.taxas = taxas;
+    });
+
   }
 
 }

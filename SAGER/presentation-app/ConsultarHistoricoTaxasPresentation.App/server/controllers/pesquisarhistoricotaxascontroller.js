@@ -32,13 +32,38 @@ class PesquisarHistoricoTaxasController {
         return this.domainPromiseHelper.getDomainPromise(urlFiltroTaxas);
     }
 
-    pesquisarTaxasAPartirExecucaoCalculo(request, response) {
-        let idFechamento = request.body.idFechamento;
+    /**
+     * @method pesquisarTaxasAPartirIdFechamento
+     * @param {Request} request Objeto de request
+     * @param {Response} request Objeto de response
+     * @description Pesquisa taxas a partir do id de fechamento
+     */
+    pesquisarTaxasAPartirIdFechamento(request, response) {
+        let idFechamento = request.body.idFechamentoMensal;
         let urlFiltroTaxasAPartirIdFechamento = this.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
         console.log('urlFiltroTaxasAPartirIdFechamento:' + urlFiltroTaxasAPartirIdFechamento);
         this.domainPromiseHelper.getDomainPromise(urlFiltroTaxasAPartirIdFechamento).
             then(taxas => { response.send(taxas); }).
             catch(e => { console.log(`Erro durante a consulta de histórico de taxas a partir das execuções: ${e.toString()}`) });;
+    }
+
+    /**
+     * @method pesquisarFechamentoMensalPorId
+     * @param {Request} request Objeto de request
+     * @param {Response} request Objeto de response
+     * @description Pesquisa fechamento mensal por id
+     */
+    pesquisarFechamentoMensalPorId(request, response) {
+        let idFechamento = request.body.idFechamentoMensal;
+        let urlFiltroFechamentoMensalPorId = this.getUrlFiltroFechamentoMensalPorId(idFechamento);
+        console.log('urlFiltroFechamentoMensalPorId:' + urlFiltroFechamentoMensalPorId);
+        this.domainPromiseHelper.getDomainPromise(urlFiltroFechamentoMensalPorId).
+            then(fechamentosMensais => { response.send(fechamentosMensais); }).
+            catch(e => { console.log(`Erro durante a consulta de fechamento mensal por id: ${e.toString()}`) });;
+    }
+
+    getUrlFiltroFechamentoMensalPorId(idFechamento) {
+        return config.getUrlFiltroFechamentoMensalPorId(idFechamento);
     }
 
     getUrlFiltroTaxas(request) {

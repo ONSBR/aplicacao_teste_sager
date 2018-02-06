@@ -21,24 +21,28 @@ app.use(function (req, res, next) {
 
 let listarTipoTaxaController = new ListarTipoTaxaController();
 
-app.get("/listar-tipo-taxa", (req, res) => {
+app.get("/listartipotaxa", (req, res) => {
     listarTipoTaxaController.listarTipoTaxa(req, res);
 });
 
 let listarUsinasController = new ListarUsinasController();
 
-app.get("/listar-usinas", (req, res) => {
+app.get("/listarusinas", (req, res) => {
     listarUsinasController.listarUsinas(req, res);
 });
 
 let pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController();
 
-app.post("/pesquisar-historico", (req, res) => {
+app.post("/pesquisarhistorico", (req, res) => {
     pesquisarHistoricoTaxasController.pesquisarHistorico(req, res);
 });
 
-app.post("/expandir-execucao", (req, res) => {
-    pesquisarHistoricoTaxasController.pesquisarTaxasAPartirExecucaoCalculo(req, res);
+app.post("/pesquisartaxaporid", (req, res) => {
+    pesquisarHistoricoTaxasController.pesquisarTaxasAPartirIdFechamento(req, res);
+});
+
+app.post("/pesquisarfechamentomensalporid", (req, res) => {
+    pesquisarHistoricoTaxasController.pesquisarFechamentoMensalPorId(req, res);
 });
 
 app.listen(PORT, function () {

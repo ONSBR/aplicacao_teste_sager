@@ -44,6 +44,9 @@ fechamento-mensal:
             $lte: :anoFinal
         - id:
             $in: $ids
+    byId:
+      id:
+        $eq: :id            
 
 tarefa-retificacao:
   model: tb_tarefa_retificacao

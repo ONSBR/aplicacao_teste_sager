@@ -6,9 +6,10 @@
 export const environment = {
   production: false,
   urlServerPresentation: 'http://localhost:8181/',
-  listarUsinas: 'listar-usinas',
-  listarTipoTaxa: 'listar-tipo-taxa',
-  consultaFiltroInicial: 'filtro-inicial',
-  pesquisarHistorico: 'pesquisar-historico',
-  expandirExecucao: 'expandir-execucao'
+  listarUsinas: 'listarusinas',
+  listarTipoTaxa: 'listartipotaxa',
+  consultaFiltroInicial: 'filtroinicial',
+  pesquisarHistorico: 'pesquisarhistorico',
+  pesquisarTaxaPorId: 'pesquisartaxaporid',
+  pesquisarFechamentoMensalPorId: 'pesquisarfechamentomensalporid'
 };
