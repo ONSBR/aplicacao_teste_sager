@@ -2,14 +2,13 @@ const EventoMudancaEstadoOperativo = require("../entities/eventoMudancaEstadoOpe
 const ContadorParametrosTaxasEvento = require("./parametros/contadorParametrosTaxasEvento");
 const CalculoParametroHP = require("./parametros/calculoParametroHP");
 
-module.exports = class CalculoTaxasMensaisUge {
+module.exports = class CalculoTaxasPeriodoUge {
 
-    constructor(mes, ano, unidadeGeradora, eventosEstadoOperativo) {
+    constructor(periodoCalculo, unidadeGeradora, eventosEstadoOperativo) {
 
-        this.mes = mes;
-        this.ano = ano;
+        this.periodoCalculo = periodoCalculo;
         this.unidadeGeradora = unidadeGeradora;
-        this.eventosEstadoOperativo = CalculoTaxasMensaisUge.orderEventosEstadoOperativo(eventosEstadoOperativo);
+        this.eventosEstadoOperativo = CalculoTaxasPeriodoUge.orderEventosEstadoOperativo(eventosEstadoOperativo);
 
         this.contadorEventos = new ContadorParametrosTaxasEvento(unidadeGeradora);
         this.calculoParametroHP = new CalculoParametroHP(unidadeGeradora);
@@ -30,11 +29,12 @@ module.exports = class CalculoTaxasMensaisUge {
         });
 
         var eventoFinalizacao = new EventoMudancaEstadoOperativo();
-        eventoFinalizacao.dataVerificada = new Date(this.ano, this.mes, 1, 0, 0, 0);
+        eventoFinalizacao.dataVerificada = this.periodoCalculo.dataFim;
+
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(eventoFinalizacao);
         this.contadorEventos.computarQtdHorasEvento(eventoFinalizacao);
 
-        this.calculoParametroHP.calcular(this.mes, this.ano);
+        this.calculoParametroHP.calcular(this.periodoCalculo);
     }
 
 }

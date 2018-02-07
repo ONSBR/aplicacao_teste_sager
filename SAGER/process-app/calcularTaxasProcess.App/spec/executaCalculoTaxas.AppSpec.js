@@ -25,7 +25,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
             context.dataSet.ExecucaoCalculoFechamento = new utilTest.StubDataset();
 
             context.dataSet.Usina = new utilTest.StubDataset();
-            context.dataSet.Usina.insert({ id: idUsina });
+            context.dataSet.Usina.insert({ idUsina: idUsina });
 
             calcularTaxasProcess.executarCalculoTaxas(context);
 

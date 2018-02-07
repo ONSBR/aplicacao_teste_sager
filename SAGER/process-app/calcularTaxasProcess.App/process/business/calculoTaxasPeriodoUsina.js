@@ -1,14 +1,13 @@
 const Enumerable = require('linq');
 const utils = require('../../utils');
 
-module.exports = class CalculoTaxasMensaisUsina {
+module.exports = class CalculoTaxasPeriodoUsina {
 
-    constructor(mes, ano, idUsina, calculosTaxasMensaisUge) {
+    constructor(periodoCalculo, idUsina, calculosTaxasPeriodoUge) {
 
-        this.mes = mes;
-        this.ano = ano;
+        this.periodoCalculo = periodoCalculo;
         this.idUsina = idUsina;
-        this.calculosTaxasMensaisUge = calculosTaxasMensaisUge;
+        this.calculosTaxasPeriodoUge = calculosTaxasPeriodoUge;
 
         this.valorTeip = 0;
         this.valorTeifa = 0;
@@ -69,7 +68,7 @@ module.exports = class CalculoTaxasMensaisUsina {
     calcular() {
 
         // TODO pode paralelizar o calculo das uges
-        this.calculosTaxasMensaisUge.forEach(calculoUge => {
+        this.calculosTaxasPeriodoUge.forEach(calculoUge => {
             calculoUge.calcular();
 
             this.paramHDFEmSegundos += calculoUge.contadorEventos.calculoParametroHDF.qtdHorasEmSegundos;
@@ -99,9 +98,10 @@ module.exports = class CalculoTaxasMensaisUsina {
 
     toString() {
 
-        return "[CalculoTaxasMensaisUsina]: " +
+        return "[CalculoTaxasPeriodoUsina]: " +
             JSON.stringify({
-                idUsina: this.idUsina, mes: this.mes, ano: this.ano, valorTeip: this.valorTeip,
+                idUsina: this.idUsina, mes: this.periodoCalculo.mes, 
+                ano: this.periodoCalculo.ano, valorTeip: this.valorTeip,
                 HDF: this.HDF, HEDF: this.HEDF, HS: this.HS, 
                 HRD: this.HRD, HDCE: this.HDCE, HDP: this.HDP, 
                 HEDP: this.HEDP, HP: this.HP,

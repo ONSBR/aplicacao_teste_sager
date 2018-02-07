@@ -10,6 +10,7 @@ var CalculoParametroHP = require("../process/business/parametros/calculoParametr
 var CalculoParametroHS = require("../process/business/parametros/calculoParametroHS");
 var CalculoParametroHRD = require("../process/business/parametros/calculoParametroHRD");
 var CalculoParametroHDP = require("../process/business/parametros/calculoParametroHDP");
+var PeriodoCalculo = require("../process/business/periodoCalculo");
 var utils = require("../utils");
 var utilTest = require("./utilTest");
 
@@ -105,7 +106,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         uge.dataInicioOperacao = new Date(2016, 0, 1);
 
         var calculo = new CalculoParametroHP(uge);
-        calculo.calcular(mes, ano);
+        calculo.calcular(new PeriodoCalculo(mes, ano));
         
         expect(calculo.qtdHoras).toEqual(744);
 
@@ -120,7 +121,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         uge.dataInicioOperacao = new Date(2017, 0, 2, 16);
 
         var calculo = new CalculoParametroHP(uge);
-        calculo.calcular(mes, ano);
+        calculo.calcular(new PeriodoCalculo(mes, ano));
         
         expect(calculo.qtdHoras).toEqual(704);
 
@@ -135,7 +136,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         uge.dataInicioOperacao = new Date(1994, 4, 30, 0);
 
         var calculo = new CalculoParametroHP(uge);
-        calculo.calcular(mes, ano);
+        calculo.calcular(new PeriodoCalculo(mes, ano));
         
         expect(calculo.qtdHoras).toEqual(720);
 

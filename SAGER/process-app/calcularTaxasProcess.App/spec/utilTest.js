@@ -1,8 +1,9 @@
 const EventoMudancaEstadoOperativo = require("../process/entities/eventoMudancaEstadoOperativo");
 const UnidadeGeradora = require("../process/entities/unidadeGeradora");
 const utils = require("../utils");
-const CalculoTaxasMensaisUge = require("../process/business/calculoTaxasMensaisUge");
-const CalculoTaxasMensaisUsina = require("../process/business/calculoTaxasMensaisUsina");
+const CalculoTaxasPeriodoUge = require("../process/business/calculoTaxasPeriodoUge");
+const CalculoTaxasPeriodoUsina = require("../process/business/calculoTaxasPeriodoUsina");
+const PeriodoCalculo = require("../process/business/periodoCalculo");
 const Enumerable = require('linq');
 const moment = require('moment');
 const extensions = require("../extensions");
@@ -20,7 +21,8 @@ class ItemComparacaoTaxas {
 
 class ComparacaoTaxas {
 
-    constructor() {
+    constructor(label) {
+        this.label = label;
         this.teipiguais = [];
         this.teipdiferentes = [];
         this.teifaiguais = [];
@@ -28,7 +30,7 @@ class ComparacaoTaxas {
     }
 
     toString() {
-        return ("[Estatísticas comparação Taxas] teipiguais: " + this.teipiguais.length
+        return ("[Estatísticas comparação Taxas" + (this.label? " "+this.label: "") + "] teipiguais: " + this.teipiguais.length
             + ", teipdiferentes: " + this.teipdiferentes.length
             + ", teifaiguais: " + this.teifaiguais.length
             + ", teifadiferentes: " + this.teifadiferentes.length);
@@ -65,7 +67,7 @@ module.exports = class UtilTest {
         var listEventos = staticDataMass(uge);
 
         var eventoFinalizacao = new EventoMudancaEstadoOperativo();
-        eventoFinalizacao.dataVerificada = new Date(ano, mes, 1, 0, 0, 0);
+        eventoFinalizacao.dataVerificada = new PeriodoCalculo(mes, ano).dataFim;
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(eventoFinalizacao);
 
         listEventos.push(eventoFinalizacao);
@@ -117,19 +119,23 @@ module.exports = class UtilTest {
     static executarCalculoTaxasMensaisUsinaMesAno(idUsina, mes, ano, uges, eventosEstOper,
         resultadoTeipMes, resultadoTeifaMes, comparacaoTaxas) {
 
-        var mesCompare = mes - 1;
-        eventosEstOper = eventosEstOper.where(it => { return it.dataVerificada && (it.dataVerificada.getYear() + 1900) == ano && it.dataVerificada.getMonth() == mesCompare; });
+        var periodoCalculo = new PeriodoCalculo(mes, ano);
+
+        eventosEstOper = eventosEstOper.where(it => {
+            return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
+                it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
+        });
 
         var calculosUges = [];
         uges.forEach(uge => {
-            var calculoUge = new CalculoTaxasMensaisUge(
-                mes, ano, uge,
-                eventosEstOper.where(it => { return it.idUge == uge.id })
+            var calculoUge = new CalculoTaxasPeriodoUge(
+                periodoCalculo, uge,
+                eventosEstOper.where(it => { return it.idUge == uge.idUge })
             );
             calculosUges.push(calculoUge);
         });
 
-        var calculoUsina = new CalculoTaxasMensaisUsina(mes, ano, idUsina, calculosUges);
+        var calculoUsina = new CalculoTaxasPeriodoUsina(periodoCalculo, idUsina, calculosUges);
         calculoUsina.calcular();
 
         if (resultadoTeipMes) {
@@ -168,31 +174,28 @@ module.exports = class UtilTest {
     static executarCalculoTaxasAcumuladasUsinaMesAno(idUsina, mes, ano, uges, eventosEstOper,
         resultadoTeipMes, resultadoTeifaMes, comparacaoTaxas) {
 
-        var mesCompare = mes - 1;
-        var dataFimCompare = new Date(ano, mesCompare, 1);
-        var dataInicioCompare = moment(dataFimCompare).subtract(59, 'months').toDate()
-        var dataInicioCompareEmSegundos = dataInicioCompare.getTotalSeconds();
-        var dataFimCompareEmSegundos = dataFimCompare.getTotalSeconds();
-        
-        eventosEstOper = eventosEstOper.where(it => { 
-            return it.dataVerificadaEmSegundos >= dataInicioCompareEmSegundos && it.dataVerificadaEmSegundos <= dataFimCompareEmSegundos; 
+        var periodoCalculo = new PeriodoCalculo(mes, ano, 60);
+
+        eventosEstOper = eventosEstOper.where(it => {
+            return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
+                it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
         });
 
-        console.log("eventosEstOper.length: " + eventosEstOper.toArray().length);
+        //console.log("eventosEstOper.length: " + eventosEstOper.toArray().length);
 
         var calculosUges = [];
         uges.forEach(uge => {
-            var calculoUge = new CalculoTaxasMensaisUge(
-                mes, ano, uge,
-                eventosEstOper.where(it => { return it.idUge == uge.id })
+            var calculoUge = new CalculoTaxasPeriodoUge(
+                periodoCalculo, uge,
+                eventosEstOper.where(it => { return it.idUge == uge.idUge })
             );
             calculosUges.push(calculoUge);
         });
 
-        var calculoUsina = new CalculoTaxasMensaisUsina(mes, ano, idUsina, calculosUges);
+        var calculoUsina = new CalculoTaxasPeriodoUsina(periodoCalculo, idUsina, calculosUges);
         calculoUsina.calcular();
 
-        console.log(calculoUsina.toString());
+        //console.log(calculoUsina.toString());
 
         if (resultadoTeipMes) {
             var valorTeip = utils.round(calculoUsina.valorTeip, 7);
@@ -229,7 +232,7 @@ module.exports = class UtilTest {
 
     static testarCalculoTaxasMensaisUsina(idUsina, massUge, massEvents_1, massEvents_2, massResults) {
 
-        var comparacaoTaxas = new ComparacaoTaxas();
+        var comparacaoTaxas = new ComparacaoTaxas("Mensal");
 
         Promise.all([massUge(), massEvents_1(), massEvents_2(), massResults()]).then(results => {
 
@@ -265,7 +268,7 @@ module.exports = class UtilTest {
 
     static testarCalculoTaxasAcumuladasUsina(idUsina, massUge, massEvents_1, massEvents_2, massResults) {
 
-        var comparacaoTaxas = new ComparacaoTaxas();
+        var comparacaoTaxas = new ComparacaoTaxas("Acumulada");
 
         Promise.all([massUge(), massEvents_1(), massEvents_2(), massResults()]).then(results => {
 

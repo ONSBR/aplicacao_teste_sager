@@ -4,8 +4,9 @@ const Taxa = require("./entities/taxa");
 const ParametroTaxa = require("./entities/parametroTaxa");
 const constants = require("./business/constants");
 const eventCatalog = require("../metadados/eventCatalog");
-const CalculoTaxasMensaisUge = require("./business/calculoTaxasMensaisUge");
-const CalculoTaxasMensaisUsina = require("./business/calculoTaxasMensaisUsina");
+const CalculoTaxasPeriodoUge = require("./business/calculoTaxasPeriodoUge");
+const CalculoTaxasPeriodoUsina = require("./business/calculoTaxasPeriodoUsina");
+const PeriodoCalculo = require("./business/periodoCalculo");
 
 module.exports.executarCalculoTaxas = function (contexto) {
 
@@ -33,7 +34,7 @@ module.exports.executarCalculoTaxas = function (contexto) {
 
         contexto.eventoSaida.push({
             name: eventCatalog.calcular_taxas_mensais,
-            payload: { idUsina: it.id, fechamento: fechamento }
+            payload: { idUsina: it.idUsina, fechamento: fechamento }
         });
     });
 
@@ -46,57 +47,67 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
     var mes = evento.payload.fechamento.mes;
     var ano = evento.payload.fechamento.ano;
+    var idFechamento = evento.payload.fechamento.id;
+
     var idUsina = evento.payload.idUsina;
 
     var uges = dataSet.UnidadeGeradora.collection;
     var eventosEstOper = dataSet.EventoMudancaEstadoOperativo.collection;
 
+    var periodoCalculo = new PeriodoCalculo(mes, ano);
+
     var mesCompare = mes - 1;
     eventosEstOper = eventosEstOper.where(it => {
-        return it.dataVerificada && (it.dataVerificada.getYear() + 1900) == ano
-            && it.dataVerificada.getMonth() == mesCompare;
+        return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos && 
+            it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
     });
 
     var calculosUges = [];
     uges.forEach(uge => {
-        var calculoUge = new CalculoTaxasMensaisUge(
-            mes, ano, uge,
-            eventosEstOper.where(it => { return it.idUge == uge.id })
+        var calculoUge = new CalculoTaxasPeriodoUge(
+            periodoCalculo, uge,
+            eventosEstOper.where(it => { return it.idUge == uge.idUge })
         );
         calculosUges.push(calculoUge);
     });
 
-    var calculoUsina = new CalculoTaxasMensaisUsina(mes, ano, idUsina, calculosUges);
+    var calculoUsina = new CalculoTaxasPeriodoUsina(periodoCalculo, idUsina, calculosUges);
     calculoUsina.calcular();
 
-    calculoUsina.calculosTaxasMensaisUge.forEach(calculoUge => {
+    calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
 
         calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
             dataSet.ParametroTaxa.insert(new ParametroTaxa(
-                utils.guid(),
                 calculoParam.qtdHoras,
-                calculoParam.tipoParametro
+                calculoParam.tipoParametro,
+                calculoUge.unidadeGeradora.idUge,
+                idFechamento
             ));
         });
 
         dataSet.ParametroTaxa.insert(new ParametroTaxa(
-            utils.guid(),
             calculoUge.calculoParametroHP.qtdHoras,
-            calculoUge.calculoParametroHP.tipoParametro
+            calculoUge.calculoParametroHP.tipoParametro,
+            calculoUge.unidadeGeradora.idUge,
+            idFechamento
         ));
 
     });
 
     dataSet.Taxa.insert(new Taxa(
-        utils.guid(),
+        undefined,
         calculoUsina.valorTeip,
-        constants.TipoTaxa.TEIP
+        constants.TipoTaxa.TEIP,
+        idFechamento,
+        idUsina
     ));
 
     dataSet.Taxa.insert(new Taxa(
-        utils.guid(),
+        undefined,
         calculoUsina.valorTeifa,
-        constants.TipoTaxa.TEIFA
+        constants.TipoTaxa.TEIFA,
+        idFechamento,
+        idUsina
     ));
 
     contexto.eventoSaida = {
