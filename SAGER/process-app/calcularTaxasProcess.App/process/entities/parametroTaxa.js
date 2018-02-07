@@ -1,10 +1,12 @@
 const BaseEntity = require("./_baseEntity");
 
 module.exports = class ParametroTaxa extends BaseEntity {
-    constructor(id, valorParametro, idTipoParametro) {
-        super();
+    constructor(id, valorParametro, idTipoParametro, idUge, idFechamento) {
+        super("parametro-taxa");
         this.id = id;
         this.valorParametro = valorParametro ? valorParametro: 0;
         this.idTipoParametro = idTipoParametro;
+        this.idUge = idUge;
+        this.idFechamento = idFechamento;
     }
 }

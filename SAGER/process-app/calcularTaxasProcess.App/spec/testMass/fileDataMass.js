@@ -52,7 +52,7 @@ module.exports.file_mass_uge_ALUXG = function () {
 function mapCsvEvento(jsonObject) {
 
     var evtEstOper = new EventoMudancaEstadoOperativo();
-    evtEstOper.id = jsonObject.desger_id;
+    evtEstOper.idEvento = jsonObject.desger_id;
     evtEstOper.idUge = jsonObject.uge_id;
     evtEstOper.idEstadoOperativo = jsonObject.tpestoper_id;
     evtEstOper.idCondicaoOperativa = jsonObject.panocr_id;
@@ -73,7 +73,7 @@ function mapCsvEvento(jsonObject) {
 function mapCsvUge(jsonObject) {
 
     var uge = new UnidadeGeradora();
-    uge.id = jsonObject.uge_id;
+    uge.idUge = jsonObject.uge_id;
     uge.idUsina = jsonObject.usi_id;
     uge.potenciaDisponivel = parseFloat(jsonObject.val_potcalcindisp);
 

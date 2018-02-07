@@ -1,4 +1,6 @@
 tb_usina:  
+  id_usina:
+    - string
   nome:
     - string
   tipo:

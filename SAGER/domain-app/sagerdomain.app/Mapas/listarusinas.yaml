@@ -4,6 +4,9 @@ usina:
     id:
       column: id
       required: true
+    idUsina:
+      column: id_usina
+      required: true
     nome:
       column: nome
       required: true
@@ -15,6 +18,6 @@ usina:
       required: true      
   filters:
     byName:
-      nome: :nome
-    byId:
-      id: :id  
+      nome: :nome 
+    byIdUsina:
+      id: :idUsina  

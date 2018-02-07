@@ -48,29 +48,6 @@ fechamento-mensal:
       id:
         $eq: :id            
 
-tarefa-retificacao:
-  model: tb_tarefa_retificacao
-  fields:
-    id:
-      column: id
-    nome:
-      column: nome
-  filters:
-    byName:
-      nome: :nome
-
-cenario:
-  model: tb_cenario
-  fields:
-    nome:
-      column: nome    
-    dataInicio:
-      column: data_inicio
-    dataFim:
-      column: data_fim
-    dataExecucao:
-      column: data_execucao
-
 taxa:
   model: tb_taxa
   fields:
@@ -92,12 +69,6 @@ taxa:
       idFechamento:
         $eq: :idFechamento
 
-tipo-taxa:
-  model: tb_tipo_taxa
-  fields:
-    nome:
-      column: nome    
-
 usina:
   model: tb_usina
   fields:
@@ -112,7 +83,7 @@ usina:
       required: true
   filters:
     byIdUsina:
-      idUsina: :idUsina
+      idUsina: :id  
 
 unidade-geradora:
   model: tb_unidade_geradora
@@ -127,7 +98,8 @@ unidade-geradora:
       column: id_usina
   filters:
     byIdUsina:
-      idUsina: :idUsina
+      idUsina:
+        $eq: :id_usina
 
 evento-mudanca-estado-operativo: 
   model: tb_evento_mudanca_estado_operativo
@@ -157,4 +129,4 @@ parametro-taxa:
     idUge:
       column: id_uge
     idFechamento:
-      column: id_fechamento 
+      column: id_fechamento    

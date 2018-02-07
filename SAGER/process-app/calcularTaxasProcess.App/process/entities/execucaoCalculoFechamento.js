@@ -6,7 +6,7 @@ const BaseEntity = require("./_baseEntity");
  */
 module.exports = class ExecucaoCalculoFechamento extends BaseEntity {
     constructor(id, dataInicio, dataFim, idFechamento, idCenario, idTarefa, protocolo) {
-        super();
+        super("execucao-calculo-fechamento");
         this.id = id;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;

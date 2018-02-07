@@ -1,8 +1,10 @@
 tb_unidade_geradora:
+  id_uge:
+    - string
   potencia_disponivel:
     - double
   data_inicio_operacao:
     - date
   id_usina:
-    - integer
+    - string
   

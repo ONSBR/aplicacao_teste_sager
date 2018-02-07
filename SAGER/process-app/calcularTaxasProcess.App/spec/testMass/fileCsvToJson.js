@@ -1,13 +1,20 @@
 const csv = require('csvtojson');
 const fs = require('fs');
 
+var PATH_FILES_MASS = "./spec/testMass/filesMass/";
+
 module.exports = class FileCsvToJson {
+
+    static set pathFileMass(pathFilesMass) {
+        PATH_FILES_MASS = pathFilesMass;
+    }
 
     static convert(fileName, mapJson) {
 
         var retorno = [];
 
-        const csvFilePath = "./spec/testMass/filesMass/" + fileName + ".csv";
+        const csvFilePath = PATH_FILES_MASS + fileName + ".csv";
+        console.log(csvFilePath);
         const csv = require("csvtojson");
 
         return new Promise((res, rej) => {

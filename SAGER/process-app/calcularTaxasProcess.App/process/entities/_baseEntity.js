@@ -1,8 +1,10 @@
 module.exports = class BaseEntity {
 
-    constructor() {
+    constructor(typeentity) {
         this._metadata = { 
-            //type: this.constructor.name,  
+            type: typeentity ? typeentity : this.constructor.name,  
+            changeTrack: "create",
+            branch: "master"
         };
     }
 }

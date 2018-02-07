@@ -1,3 +1,5 @@
 tb_tipo_taxa:  
+  id_tipo_taxa:
+    - string
   nome:
     - string

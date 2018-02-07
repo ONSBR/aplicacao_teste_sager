@@ -1,9 +1,10 @@
 const BaseEntity = require("./_baseEntity");
 
 module.exports = class UnidadeGeradora extends BaseEntity {
-    constructor(id, idUsina, potenciaDisponivel, dataInicioOperacao) {
-        super();
+    constructor(id, idUge, idUsina, potenciaDisponivel, dataInicioOperacao) {
+        super("unidade-geradora");
         this.id = id;
+        this.idUge = idUge;
         this.idUsina = idUsina;
         this.potenciaDisponivel = potenciaDisponivel;
         this.dataInicioOperacao = dataInicioOperacao;

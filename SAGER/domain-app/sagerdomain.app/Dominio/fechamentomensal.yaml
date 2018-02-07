@@ -2,6 +2,6 @@ tb_fechamento_mensal:
   mes:
     - integer
   ano:
-    - integer
-  id_execucao_calculo_fechamento:
-    - string    
+    - integer 
+  data_criacao:
+    - date 
