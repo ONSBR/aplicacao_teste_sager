@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2168;
+const DOMAIN_PORT = 2129;
 
 config.PORT = 8181;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
@@ -28,5 +28,12 @@ config.getUrlFiltroFechamentoMensalPorId =
     function getUrlFiltroFechamentosMensaisPorId(idFechamento) {
         return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamento-mensal?filter=byId&id=${idFechamento}`
     }
+
+config.getProcessMemoryUrl =
+    function getProcessMemoryUrl(processInstanceId) {
+        return `http://localhost:9091/${processInstanceId}/head`
+    }
+
+
 
 module.exports = config;
