@@ -69,14 +69,17 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   exportarMemoriaProcessamento(taxa) {
-    const memoriaDeProcessamento = { 'Taxa equivalente de indisponibilidade forçada apurada - Teifa': 'usina' };
+    const memoriaDeProcessamento = {
+      'Taxa equivalente de indisponibilidade forçada apurada - Teifa':
+        ['usina']
+    };
     this.exportAsExcelFile([memoriaDeProcessamento], 'MemoriaDeProcessamento');
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
-    const ws_name = 'Memória de processo';
     const wb: WorkBook = { SheetNames: [], Sheets: {} };
-    const ws: any = utils.aoa_to_sheet(json);
+    const ws: any = utils.json_to_sheet(json);
+    const ws_name = 'Memória de processo';
     wb.SheetNames.push(ws_name);
     wb.Sheets[ws_name] = ws;
     const wbout = write(wb, { bookType: 'xlsx', bookSST: true, type: 'binary' });

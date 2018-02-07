@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2153;
+const DOMAIN_PORT = 2168;
 
 config.PORT = 8181;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
