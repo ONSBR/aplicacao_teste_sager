@@ -1,0 +1,13 @@
+tb_evento_mudanca_estado_operativo:
+  id_uge:
+    - integer
+  id_classificacao_origem:
+    - integer  
+  id_tipo_estado_operativo:
+    - integer  
+  id_condicao_operativa:
+    - integer  
+  data_verificada:
+    - date
+  potencia_disponivel:
+    - double

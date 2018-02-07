@@ -1,9 +1,9 @@
 tb_taxa:  
-  tipoTaxa:
+  id_tipo_taxa:
     - string
   valor:
     - double
-  idFechamento:
+  id_fechamento:
     - string
-  idUsina:
+  id_usina:
     - string    

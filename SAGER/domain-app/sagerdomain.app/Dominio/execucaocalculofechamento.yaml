@@ -1,13 +1,13 @@
 tb_execucao_calculo_fechamento:  
-  dataInicio:
+  data_inicio:
     - date
-  dataFim:
+  data_fim:
     - date
-  idFechamento:
+  id_fechamento:
     - string  
-  idCenario:
+  id_cenario:
     - string        
-  idTarefa:
+  id_tarefa:
     - string        
   protocolo:
     - string        

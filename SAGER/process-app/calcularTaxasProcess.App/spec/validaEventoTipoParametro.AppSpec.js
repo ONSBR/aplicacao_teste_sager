@@ -21,6 +21,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper);
 
+
         var validado = new CalculoParametroHDF().validarEvento(evtEstOper);
 
         expect(validado).toBe(true);

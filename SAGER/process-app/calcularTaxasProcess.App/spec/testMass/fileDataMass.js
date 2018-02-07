@@ -29,11 +29,11 @@ module.exports.file_mass_events_ALUXG_1 = function () {
 }
 
 module.exports.file_mass_events_ALUXG_2 = function () {
-    
-        return FileCsvToJson.convert("mass_events_ALUXG_2", (jsonObject) => {
-            return mapCsvEvento(jsonObject);
-        });
-    }
+
+    return FileCsvToJson.convert("mass_events_ALUXG_2", (jsonObject) => {
+        return mapCsvEvento(jsonObject);
+    });
+}
 
 module.exports.file_mass_results_taxes_ALUXG = function () {
 

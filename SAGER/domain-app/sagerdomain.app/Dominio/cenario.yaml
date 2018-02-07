@@ -1,9 +1,9 @@
 tb_cenario:  
   nome:
     - string
-  dataInicio:
+  data_inicio:
     - date    
-  dataFim:
+  data_fim:
     - date    
-  dataExecucao:
+  data_execucao:
     - date    

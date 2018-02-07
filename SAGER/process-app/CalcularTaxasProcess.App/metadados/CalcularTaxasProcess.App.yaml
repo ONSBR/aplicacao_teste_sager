@@ -1,0 +1,87 @@
+fechamento-mensal:
+  model: tb_fechamento_mensal
+  fields:
+    id:
+      column: id
+    mes:
+      column: mes
+    ano:
+      column: ano
+  filters:
+    byId:
+      id:
+        $eq: :id
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    nome:
+      column: nome
+      required: true
+  filters:
+    byId:
+      id: :id  
+
+taxa:
+  model: tb_taxa
+  fields:
+    idTipoTaxa:
+      column: id_tipo_taxa
+    valorTaxa:
+      column: valor
+    idFechamento:
+      column: id_fechamento
+    idUsina:
+      column: id_usina
+  filters:
+    byIdFechamento:
+      idFechamento:
+        $eq: :id_fechamento
+
+unidade-geradora:
+  model: tb_unidade_geradora
+  fields:
+    potenciaDisponivel:
+      column: potencia_disponivel
+    dataInicioOperacao:
+      column: data_inicio_operacao
+    idUsina:
+      column: id_usina
+  filters:
+    byIdUsina:
+      idUsina:
+        $eq: :id_usina
+
+evento-mudanca-estado-operativo: 
+  model: tb_evento_mudanca_estado_operativo
+  fields:
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_classificacao_origem
+    idTipoEstadoOperativo:
+      column: id_tipo_estado_operativo
+    idCondicaoOperativa:
+      column: id_condicao_operativa
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: potencia_disponivel
+
+parametro-taxa:
+  model: tb_parametro_taxa
+  fields:
+    idTipoTaxa:
+      column: id_tipo_taxa
+    valorParametro:
+      column: valor_parametro
+    idTipoParametro:
+      column: id_tipo_parametro
+    idUge:
+      column: id_uge
+
+
+        

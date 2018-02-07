@@ -1,0 +1,8 @@
+tb_unidade_geradora:
+  potencia_disponivel:
+    - double
+  data_inicio_operacao:
+    - date
+  id_usina:
+    - integer
+  

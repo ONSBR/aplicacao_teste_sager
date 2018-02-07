@@ -3,5 +3,5 @@ tb_fechamento_mensal:
     - integer
   ano:
     - integer
-  idExecucaoCalculoFechamento:
+  id_execucao_calculo_fechamento:
     - string    
