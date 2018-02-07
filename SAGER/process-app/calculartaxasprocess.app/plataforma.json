@@ -1,0 +1,10 @@
+{
+    "app": {
+        "type": "process",
+        "name": "calculartaxasprocess.app",
+        "version": "1.0",
+        "description": "Calcular taxas process app",
+        "author": "Fernando Andrade",
+        "id": "591bb393-41a3-4634-8216-aa1281856fdb"
+    }
+}
