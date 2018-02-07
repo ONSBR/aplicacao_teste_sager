@@ -252,10 +252,12 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
+                if (resultado.ano >= 2014) {
                 UtilTest.executarCalculoTaxasMensaisUsinaMesAno(
                     idUsina, resultado.mes, resultado.ano,
                     uges, eventos, resultado.teipmes, resultado.teifames,
                     comparacaoTaxas);
+                }
             });
 
             console.log(comparacaoTaxas.toString());

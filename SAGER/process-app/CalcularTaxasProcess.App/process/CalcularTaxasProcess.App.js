@@ -1,4 +1,4 @@
-const utils = require("../utils");
+/*const utils = require("../utils");
 const ExecucaoCalculoFechamento = require("./entities/execucaoCalculoFechamento");
 const Taxa = require("./entities/taxa");
 const ParametroTaxa = require("./entities/parametroTaxa");
@@ -6,40 +6,65 @@ const constants = require("./business/constants");
 const eventCatalog = require("../metadados/eventCatalog");
 const CalculoTaxasPeriodoUge = require("./business/calculoTaxasPeriodoUge");
 const CalculoTaxasPeriodoUsina = require("./business/calculoTaxasPeriodoUsina");
-const PeriodoCalculo = require("./business/periodoCalculo");
+const PeriodoCalculo = require("./business/periodoCalculo");*/
 
-module.exports.executarCalculoTaxas = function (contexto) {
+function executarCalculoTaxas(contexto) {
+
+    console.log("Início de execução do serviço: executarCalculoTaxas.")
 
     // TODO e a função agregada, por exemplo, se existem as taxas já
-    var evento = contexto.evento;
+    /*var evento = contexto.evento;
     var dataSet = contexto.dataSet;
+    var payload = evento.payload;
+*/
+    /*var fechamento = dataSet.FechamentoMensal.collection.firstOrDefault(
+        it => { return payload.mesFechamento == it.mes && payload.anoFechamento == it.ano });
 
-    var idFechamento = evento.payload.idFechamento;
-    var fechamento = dataSet.FechamentoMensal.collection.firstOrDefault();
+    console.log("Lista de fechamento: " + dataSet.FechamentoMensal.collection.toArray().length);
+*/
+    //var dataAtual = new Date();
 
-    if (!fechamento) {
-        throw new Error("Não informado o fechamento mensal para execução das taxas.");
-    }
+    /*if (!fechamento) {
+        fechamento = new FechamentoMensal();
+        fechamento.mes = payload.mesFechamento;
+        fechamento.ano = payload.anoFechamento;
+        fechamento.dataCriacao = dataAtual;
+        console.log("Insert: 1");
+        dataSet.FechamentoMensal.insert(fechamento);
+    }*/
 
-    var execucaoCalculo = new ExecucaoCalculoFechamento();
-    execucaoCalculo.id = utils.guid();
-    execucaoCalculo.idFechamento = idFechamento;
-    execucaoCalculo.dataInicio = Date.now;
+    //console.log("Insert: 2");
+    //var execucaoCalculo = new ExecucaoCalculoFechamento();
+    //execucaoCalculo.idFechamento = fechamento.id;
+    /*execucaoCalculo.idFechamento = "1";
+    execucaoCalculo.dataInicio = dataAtual;
 
     dataSet.ExecucaoCalculoFechamento.insert(execucaoCalculo);
 
-    var usinas = dataSet.Usina.collection;
-    contexto.eventoSaida = [];
+    console.log("Insert: 3");
+
+    var usinas = dataSet.Usina.collection.firstOrDefault();
+    contexto.eventoSaida = {
+        name: eventCatalog.calcular_taxas_mensais,
+        payload: { idUsina: payload.idUsina, fechamento: fechamento }
+    };
+
+    console.log("Insert: 4");*/
+
+    /*contexto.eventoSaida = [];
     usinas.forEach(it => {
 
         contexto.eventoSaida.push({
             name: eventCatalog.calcular_taxas_mensais,
             payload: { idUsina: it.idUsina, fechamento: fechamento }
         });
-    });
+    });*/
 
 }
 
+module.exports.executarCalculoTaxas = executarCalculoTaxas;
+
+/*
 module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
     var evento = contexto.evento;
@@ -58,7 +83,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
     var mesCompare = mes - 1;
     eventosEstOper = eventosEstOper.where(it => {
-        return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos && 
+        return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
             it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
     });
 
@@ -118,4 +143,4 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
 module.exports.calcularTaxasAcumuladasPorUsina = function (contexto) {
 
-}
+}*/

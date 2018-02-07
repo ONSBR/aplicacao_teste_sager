@@ -17,8 +17,8 @@ execucao-calculo-fechamento:
       column: id_fechamento
   filters:
     byIdsFechamentos:
-      idFechamento:
-        $in: $idsFechamentos
+      - idFechamento:
+          $in: $idsFechamentos
 
 fechamento-mensal:
   model: tb_fechamento_mensal
@@ -35,23 +35,17 @@ fechamento-mensal:
     byIdsAndData:
       $and:
         - mes:
-            $gte: :mesInicial
+            $eq: :mesFechamento
         - ano:
-            $gte: :anoInicial
-        - mes:
-            $lte: :mesFinal
-        - ano:
-            $lte: :anoFinal
-        - id:
-            $in: $ids
+            $eq: :anoFechamento
     byId:
-      id:
-        $eq: :id            
+      - id:
+          $eq: :filterIdFechamento
 
 taxa:
   model: tb_taxa
   fields:
-    tipoTaxa:
+    idTipoTaxa:
       column: id_tipo_taxa
     valor:
       column: valor
@@ -60,14 +54,11 @@ taxa:
     idUsina:
       column: id_usina
   filters:
-    byUsinaETipoTaxa:
-      - tipoTaxa:
-          $eq: :tipoTaxa
+    byUsinaEFechamento:
       - idUsina:
-          $eq: :idUsina
-    byIdFechamento:
-      idFechamento:
-        $eq: :idFechamento
+          $eq: :filterIdUsina
+      - idFechamento:
+          $eq: :filterIdFechamento
 
 usina:
   model: tb_usina
@@ -83,7 +74,7 @@ usina:
       required: true
   filters:
     byIdUsina:
-      idUsina: :id  
+      - idUsina: :filterIdUsina
 
 unidade-geradora:
   model: tb_unidade_geradora
@@ -98,8 +89,8 @@ unidade-geradora:
       column: id_usina
   filters:
     byIdUsina:
-      idUsina:
-        $eq: :id_usina
+      - idUsina:
+          $eq: :filterIdUsina
 
 evento-mudanca-estado-operativo: 
   model: tb_evento_mudanca_estado_operativo
@@ -118,6 +109,12 @@ evento-mudanca-estado-operativo:
       column: data_verificada
     potenciaDisponivel:
       column: potencia_disponivel
+  byIntervaloDatas:
+      $and:
+        - dataVerificada:
+            $gte: :filterDataInicialEvento
+        - dataVerificada:
+            $lte: :filterDataFinalEvento
 
 parametro-taxa:
   model: tb_parametro_taxa
@@ -130,3 +127,6 @@ parametro-taxa:
       column: id_uge
     idFechamento:
       column: id_fechamento    
+  byUsinaEFechamento:
+      - idFechamento:
+          $eq: :filterIdFechamento

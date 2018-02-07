@@ -1,5 +1,5 @@
 
 FROM node:carbon
-WORKDIR /usr/src/CalcularTaxasProcess.App
+WORKDIR /usr/src/calcularTaxasProcess.App
 COPY . .
-CMD [ "node", "process/CalcularTaxasProcess.App.js" ]
+CMD [ "node", "process/calcularTaxasProcess.App.js" ]
