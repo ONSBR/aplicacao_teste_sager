@@ -1,0 +1,132 @@
+execucao-calculo-fechamento:
+  model: tb_execucao_calculo_fechamento
+  fields:
+    id:
+      column: id
+    dataInicio:
+      column: data_inicio
+    dataFim:
+      column: data_fim
+    idCenario:
+      column: id_cenario
+    idTarefa:
+      column: id_tarefa
+    protocolo:
+      column: protocolo
+    idFechamento:
+      column: id_fechamento
+  filters:
+    byIdsFechamentos:
+      - idFechamento:
+          $in: $idsFechamentos
+
+fechamento-mensal:
+  model: tb_fechamento_mensal
+  fields:
+    id:
+      column: id
+    mes:
+      column: mes
+    ano:
+      column: ano
+    dataCriacao:
+      column: data_criacao
+  filters:
+    byIdsAndData:
+      $and:
+        - mes:
+            $eq: :mesFechamento
+        - ano:
+            $eq: :anoFechamento
+    byId:
+      - id:
+          $eq: :filterIdFechamento
+
+taxa:
+  model: tb_taxa
+  fields:
+    idTipoTaxa:
+      column: id_tipo_taxa
+    valor:
+      column: valor
+    idFechamento:
+      column: id_fechamento
+    idUsina:
+      column: id_usina
+  filters:
+    byUsinaEFechamento:
+      - idUsina:
+          $eq: :filterIdUsina
+      - idFechamento:
+          $eq: :filterIdFechamento
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+  filters:
+    byIdUsina:
+      - idUsina: :filterIdUsina
+
+unidade-geradora:
+  model: tb_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: potencia_disponivel
+    dataInicioOperacao:
+      column: data_inicio_operacao
+    idUsina:
+      column: id_usina
+  filters:
+    byIdUsina:
+      - idUsina:
+          $eq: :filterIdUsina
+
+evento-mudanca-estado-operativo: 
+  model: tb_evento_mudanca_estado_operativo
+  fields:
+    idEvento: 
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_classificacao_origem
+    idTipoEstadoOperativo:
+      column: id_tipo_estado_operativo
+    idCondicaoOperativa:
+      column: id_condicao_operativa
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: potencia_disponivel
+  byIntervaloDatas:
+      $and:
+        - dataVerificada:
+            $gte: :filterDataInicialEvento
+        - dataVerificada:
+            $lte: :filterDataFinalEvento
+
+parametro-taxa:
+  model: tb_parametro_taxa
+  fields:
+    valorParametro:
+      column: valor_parametro
+    idTipoParametro:
+      column: id_tipo_parametro
+    idUge:
+      column: id_uge
+    idFechamento:
+      column: id_fechamento    
+  byUsinaEFechamento:
+      - idFechamento:
+          $eq: :filterIdFechamento
