@@ -30,7 +30,7 @@ class ComparacaoTaxas {
     }
 
     toString() {
-        return ("[Estatísticas comparação Taxas" + (this.label? " "+this.label: "") + "] teipiguais: " + this.teipiguais.length
+        return ("[Estatísticas comparação Taxas" + (this.label ? " " + this.label : "") + "] teipiguais: " + this.teipiguais.length
             + ", teipdiferentes: " + this.teipdiferentes.length
             + ", teifaiguais: " + this.teifaiguais.length
             + ", teifadiferentes: " + this.teifadiferentes.length);
@@ -139,34 +139,30 @@ module.exports = class UtilTest {
         calculoUsina.calcular();
 
         if (resultadoTeipMes) {
-            var valorTeip = utils.round(calculoUsina.valorTeip, 7);
-            var resultadoTeipMesRounded = utils.round(resultadoTeipMes, 7)
 
             if (comparacaoTaxas) {
-                var item = new ItemComparacaoTaxas(mes, ano, valorTeip, resultadoTeipMesRounded, calculoUsina);
-                if (valorTeip == resultadoTeipMesRounded) {
-                    comparacaoTaxas.teipiguais.push(item);
-                } else {
-                    comparacaoTaxas.teipdiferentes.push(item);
-                }
+                UtilTest.compararValoresTaxasEstatistica(
+                    calculoUsina.valorTeip, resultadoTeipMes,
+                    comparacaoTaxas, mes, ano, calculoUsina,
+                    comparacaoTaxas.teipiguais, comparacaoTaxas.teipdiferentes
+                );
             } else {
-                expect(valorTeip).toBe(resultadoTeipMesRounded);
+                expect(UtilTest.valueToCompare(calculoUsina.valorTeip)).
+                    toBe(UtilTest.valueToCompare(resultadoTeipMes));
             }
         }
 
         if (resultadoTeifaMes) {
-            var valorTeifa = utils.round(calculoUsina.valorTeifa, 7);
-            var resultadoTeifaMesRounded = utils.round(resultadoTeifaMes, 7);
 
             if (comparacaoTaxas) {
-                var item = new ItemComparacaoTaxas(mes, ano, valorTeifa, resultadoTeifaMesRounded, calculoUsina);
-                if (valorTeifa == resultadoTeifaMesRounded) {
-                    comparacaoTaxas.teifaiguais.push(item)
-                } else {
-                    comparacaoTaxas.teifadiferentes.push(item);
-                }
+                UtilTest.compararValoresTaxasEstatistica(
+                    calculoUsina.valorTeifa, resultadoTeifaMes,
+                    comparacaoTaxas, mes, ano, calculoUsina,
+                    comparacaoTaxas.teifaiguais, comparacaoTaxas.teifadiferentes
+                );
             } else {
-                expect(valorTeifa).toBe(resultadoTeifaMesRounded);
+                expect(UtilTest.valueToCompare(calculoUsina.valorTeifa)).
+                    toBe(UtilTest.valueToCompare(resultadoTeifaMes));
             }
         }
     }
@@ -198,35 +194,49 @@ module.exports = class UtilTest {
         //console.log(calculoUsina.toString());
 
         if (resultadoTeipMes) {
-            var valorTeip = utils.round(calculoUsina.valorTeip, 7);
-            var resultadoTeipMesRounded = utils.round(resultadoTeipMes, 7)
 
             if (comparacaoTaxas) {
-                var item = new ItemComparacaoTaxas(mes, ano, valorTeip, resultadoTeipMesRounded, calculoUsina);
-                if (valorTeip == resultadoTeipMesRounded) {
-                    comparacaoTaxas.teipiguais.push(item);
-                } else {
-                    comparacaoTaxas.teipdiferentes.push(item);
-                }
+                UtilTest.compararValoresTaxasEstatistica(
+                    calculoUsina.valorTeip, resultadoTeipMes,
+                    comparacaoTaxas, mes, ano, calculoUsina,
+                    comparacaoTaxas.teipiguais, comparacaoTaxas.teipdiferentes
+                );
             } else {
-                expect(valorTeip).toBe(resultadoTeipMesRounded);
+                expect(UtilTest.valueToCompare(calculoUsina.valorTeip)).
+                    toBe(UtilTest.valueToCompare(resultadoTeipMes));
             }
         }
 
         if (resultadoTeifaMes) {
-            var valorTeifa = utils.round(calculoUsina.valorTeifa, 7);
-            var resultadoTeifaMesRounded = utils.round(resultadoTeifaMes, 7);
 
             if (comparacaoTaxas) {
-                var item = new ItemComparacaoTaxas(mes, ano, valorTeifa, resultadoTeifaMesRounded, calculoUsina);
-                if (valorTeifa == resultadoTeifaMesRounded) {
-                    comparacaoTaxas.teifaiguais.push(item)
-                } else {
-                    comparacaoTaxas.teifadiferentes.push(item);
-                }
+                UtilTest.compararValoresTaxasEstatistica(
+                    calculoUsina.valorTeifa, resultadoTeifaMes,
+                    comparacaoTaxas, mes, ano, calculoUsina,
+                    comparacaoTaxas.teifaiguais, comparacaoTaxas.teifadiferentes
+                );
             } else {
-                expect(valorTeifa).toBe(resultadoTeifaMesRounded);
+                expect(UtilTest.valueToCompare(calculoUsina.valorTeifa)).
+                    toBe(UtilTest.valueToCompare(resultadoTeifaMes));
             }
+        }
+    }
+
+    static valueToCompare(valor1) {
+        return valor1.toRound(7);
+    }
+
+    static compararValoresTaxasEstatistica(valor1, valor2, comparacaoTaxas,
+        mes, ano, calculoUsina, listaiguais, listadiferentes) {
+
+        var valor1Round = UtilTest.valueToCompare(valor1);
+        var valor2Round = UtilTest.valueToCompare(valor2);
+
+        var item = new ItemComparacaoTaxas(mes, ano, valor1Round, valor2Round, calculoUsina);
+        if (valor1Round == valor2Round) {
+            listaiguais.push(item);
+        } else {
+            listadiferentes.push(item);
         }
     }
 
@@ -278,10 +288,12 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                UtilTest.executarCalculoTaxasAcumuladasUsinaMesAno(
-                    idUsina, resultado.mes, resultado.ano,
-                    uges, eventos, resultado.teipacum, resultado.teifaacum,
-                    comparacaoTaxas);
+                //if (resultado.ano >= 2014) {
+                    UtilTest.executarCalculoTaxasAcumuladasUsinaMesAno(
+                        idUsina, resultado.mes, resultado.ano,
+                        uges, eventos, resultado.teipacum, resultado.teifaacum,
+                        comparacaoTaxas);
+                //}
             });
 
             console.log(comparacaoTaxas.toString());
