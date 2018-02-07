@@ -1,37 +1,39 @@
-<h2>Consultar taxas</h2>
-<div>
-  <span>Usina:
-    <select [(ngModel)]="filtroConsulta.usina">
-      <option *ngFor="let usina of usinas" [ngValue]="usina">
-        {{usina.nome}}
-      </option>
-    </select>
-  </span>
-</div>
-<div>
-  <span>Data Inicial:
-    <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
-  </span>
-</div>
-<div>
-  <span>Data Final:
-    <input type="date" [(ngModel)]="filtroConsulta.dataFinal" />
-  </span>
-</div>
-<div>
-  <span>Tipo de taxa:
-    <select [(ngModel)]="filtroConsulta.tipoTaxa">
-      <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
-        {{tipoTaxa.nome}}
-      </option>
-    </select>
-  </span>
-</div>
-<div>
-  <span>
-    <button (click)='pesquisar($event)'>Pesquisar</button>
-  </span>
-</div>
+<h2>Histórico de taxas</h2>
+<fieldset>
+  <div>
+    <span>Usina:
+      <select [(ngModel)]="filtroConsulta.usina">
+        <option *ngFor="let usina of usinas" [ngValue]="usina">
+          {{usina.nome}}
+        </option>
+      </select>
+    </span>
+  </div>
+  <div>
+      <span>Tipo de taxa:
+        <select [(ngModel)]="filtroConsulta.tipoTaxa">
+          <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
+            {{tipoTaxa.nome}}
+          </option>
+        </select>
+      </span>
+    </div>
+  <div>
+    <span>Data Inicial:
+      <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
+    </span>
+  </div>
+  <div>
+    <span>Data Final:
+      <input type="date" [(ngModel)]="filtroConsulta.dataFinal" />
+    </span>
+  </div>
+  <div>
+    <span>
+      <button class="button" (click)='pesquisar($event)'>Pesquisar</button>
+    </span>
+  </div>
+</fieldset>
 
 <div>
   <span>
@@ -50,7 +52,7 @@
     Mês: {{ fechamentoMensal.mes }} Ano: {{ fechamentoMensal.ano }}
     <h2>Taxas: </h2>
     <ul>
-      <li *ngFor="let taxa of taxas">
+      <li (click)='exportarMemoriaProcessamento(taxa)' *ngFor="let taxa of taxas">
         Valor: {{ taxa.valor }}
       </li>
     </ul>

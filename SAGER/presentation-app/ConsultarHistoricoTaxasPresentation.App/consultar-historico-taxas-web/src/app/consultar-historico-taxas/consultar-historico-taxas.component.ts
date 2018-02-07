@@ -3,7 +3,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { Usina } from '../model/usina';
 import { environment } from '../../environments/environment';
-import { DatePipe } from '@angular/common';
+import * as FileSaver from 'file-saver';
+import { utils, write, WorkBook } from 'xlsx';
+import { saveAs } from 'file-saver';
+
+const EXCEL_TYPE = 'charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
 
 @Component({
   selector: 'app-consultar-historico-taxas',
@@ -61,7 +66,31 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.http.post(environment.urlServerPresentation + environment.pesquisarTaxaPorId, body).subscribe(taxas => {
       this.taxas = taxas;
     });
+  }
 
+  exportarMemoriaProcessamento(taxa) {
+    const memoriaDeProcessamento = { 'Taxa equivalente de indisponibilidade forçada apurada - Teifa': 'usina' };
+    this.exportAsExcelFile([memoriaDeProcessamento], 'MemoriaDeProcessamento');
+  }
+
+  public exportAsExcelFile(json: any[], excelFileName: string): void {
+    const ws_name = 'Memória de processo';
+    const wb: WorkBook = { SheetNames: [], Sheets: {} };
+    const ws: any = utils.aoa_to_sheet(json);
+    wb.SheetNames.push(ws_name);
+    wb.Sheets[ws_name] = ws;
+    const wbout = write(wb, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+
+    saveAs(new Blob([this.getBuffer(wbout)], { type: 'application/octet-stream' }), 'exported.xlsx');
+  }
+
+  getBuffer(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i !== s.length; ++i) {
+      view[i] = s.charCodeAt(i) & 0xFF;
+    };
+    return buf;
   }
 
 }
