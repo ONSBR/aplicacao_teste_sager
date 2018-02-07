@@ -1,5 +1,0 @@
-operations:
-  - name: executarCalculoTaxas
-    event: calculate.tax.request
-    commit: true
-   
