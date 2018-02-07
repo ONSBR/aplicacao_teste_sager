@@ -1,10 +1,15 @@
 {
     "app": {
         "type": "process",
-        "name": "calculartaxasprocess.app",
+        "name": "calculartaxasprocess",
         "version": "1.0",
         "description": "Calcular taxas process app",
         "author": "Fernando Andrade",
         "id": "591bb393-41a3-4634-8216-aa1281856fdb"
+    },
+    "solution": {
+        "name": "SAGER",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
     }
 }
