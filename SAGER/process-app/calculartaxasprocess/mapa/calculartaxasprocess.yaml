@@ -109,11 +109,10 @@ eventomudancaestadooperativo:
     potenciaDisponivel:
       column: potencia_disponivel
   byIntervaloDatas:
-      $and:
-        - dataVerificada:
-            $gte: :filterDataInicialEvento
-        - dataVerificada:
-            $lte: :filterDataFinalEvento
+    - dataVerificada:
+        $gte: :filterDataInicialEvento
+    - dataVerificada:
+        $lte: :filterDataFinalEvento
 
 parametrotaxa:
   model: tb_parametro_taxa
