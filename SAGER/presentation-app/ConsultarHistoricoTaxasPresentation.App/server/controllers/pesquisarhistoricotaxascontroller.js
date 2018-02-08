@@ -14,9 +14,9 @@ class PesquisarHistoricoTaxasController {
      * @description Pesquisa histórico de execuções de calculo.
      */
     pesquisarHistorico(request, response) {
-        this.pesquisarTaxas(request).
-            then(taxas => { return this.pesquisarFechamentos(request, taxas); }).
-            then(fechamentosMensais => { return this.pesquisarExecucoesCalculo(fechamentosMensais); }).
+        this.pesquisarFechamentos(request).
+            then(fechamentosMensais => { return this.pesquisarTaxas(request, fechamentosMensais); }).
+            then(taxas => { return this.pesquisarExecucoesCalculo(taxas); }).
             then(historicoExecucoes => { response.send(historicoExecucoes); }).
             catch(e => { console.log(`Erro durante a consulta de histórico de execuções: ${e.toString()}`) });
     }
@@ -24,10 +24,11 @@ class PesquisarHistoricoTaxasController {
     /**
      * @method pesquisarTaxas
      * @param {Request} request Objeto de request
-     * @description Pesquisa histórico de taxas por usina, data inicial, data final e tipo de taxa
+     * @description Pesquisa histórico de taxas por usina, tipo de taxa e ids de fechamento
      */
-    pesquisarTaxas(request) {
-        let urlFiltroTaxas = this.getUrlFiltroTaxas(request);
+    pesquisarTaxas(request, fechamentosMensais) {
+        let idsFechamentos = this.extrairIdsFechamentos(fechamentosMensais);
+        let urlFiltroTaxas = this.getUrlFiltroTaxas(request, idsFechamentos);
         console.log('urlFiltroTaxas:' + urlFiltroTaxas);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroTaxas);
     }
@@ -66,47 +67,44 @@ class PesquisarHistoricoTaxasController {
         return config.getUrlFiltroFechamentoMensalPorId(idFechamento);
     }
 
-    getUrlFiltroTaxas(request) {
-        return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request))
+    getUrlFiltroTaxas(request, idsFechamentos) {
+        return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request), idsFechamentos.join(';'))
     }
 
-    pesquisarFechamentos(request, taxas) {
-        let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request, taxas);
+    pesquisarFechamentos(request) {
+        let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request);
         console.log('urlFiltroFechamentosMensais: ' + urlFiltroFechamentosMensais);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroFechamentosMensais);
     }
 
-    getUrlFiltroFechamentosMensais(request, taxas) {
+    getUrlFiltroFechamentosMensais(request) {
         let dataInicial = new Date(this.getDataInicial(request));
         let dataFinal = new Date(this.getDataFinal(request));
 
-        let idsFechamentos = this.extrairIdsFechamentosMensaisFromTaxas(taxas);
-        idsFechamentos = Array.from(this.distinct(idsFechamentos));
         return config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
-            dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear(), idsFechamentos.join(';'));
+            dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear());
     }
 
-    pesquisarExecucoesCalculo(fechamentosMensais) {
-        console.log('fechamentosMensais ' + fechamentosMensais);
-        let idsFechamentos = this.extrairIdsFechamentos(fechamentosMensais);
+    pesquisarExecucoesCalculo(taxas) {
+        let idsFechamentos = this.extrairIdsFechamentosDeTaxas(taxas);
         idsFechamentos = Array.from(this.distinct(idsFechamentos));
         let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao(idsFechamentos);
         console.log('urlFiltroExecucoesCalculo: ' + urlFiltroExecucoesCalculo);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroExecucoesCalculo);
     }
 
-    extrairIdsFechamentos(fechamentosMensais) {
-        let idsFechamentos = fechamentosMensais.map(fechamentosMensais => fechamentosMensais.id);
+    extrairIdsFechamentosDeTaxas(taxas) {
+        let idsFechamentos = taxas.map(taxa => taxa.idFechamento);
+        return idsFechamentos;
+    }
+
+    extrairIdsFechamentos(fechamentos) {
+        let idsFechamentos = fechamentos.map(fechamento => fechamento.id);
         return idsFechamentos;
     }
 
     getUrlFiltroExecucao(idsFechamento) {
         return config.getUrlFiltroExecucao(idsFechamento);
-    }
-
-    extrairIdsFechamentosMensaisFromTaxas(taxas) {
-        let idsFechamentos = taxas.map(taxa => taxa.idFechamento);
-        return idsFechamentos;
     }
 
     getUrlFiltroTaxasAPartirIdFechamento(idFechamento) {

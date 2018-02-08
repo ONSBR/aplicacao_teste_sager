@@ -11,5 +11,6 @@ export const environment = {
   consultaFiltroInicial: 'filtroinicial',
   pesquisarHistorico: 'pesquisarhistorico',
   pesquisarTaxaPorId: 'pesquisartaxaporid',
-  pesquisarFechamentoMensalPorId: 'pesquisarfechamentomensalporid'
+  pesquisarFechamentoMensalPorId: 'pesquisarfechamentomensalporid',
+  getMemoriaDeProcessamento: 'getMemoriaDeProcessamento'
 };

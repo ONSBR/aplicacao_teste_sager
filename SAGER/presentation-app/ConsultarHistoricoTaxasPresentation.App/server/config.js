@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2168;
+const DOMAIN_PORT = 2151;
 
 config.PORT = 8181;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
@@ -10,13 +10,13 @@ config.getUrlFiltroExecucao = function getUrlFiltroExecucao(idsFechamento) {
     return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/execucao-calculo-fechamento?filter=byIdsFechamentos&idsFechamentos=${idsFechamento}`;
 }
 
-config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId) {
-    return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/taxa?filter=byUsinaETipoTaxa&idUsina=${idUsina}&tipoTaxa=${tipoTaxaId}`;
+config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId, idsFechamentos) {
+    return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/taxa?filter=byUsinaTipoTaxaIdsFechamentos&idUsina=${idUsina}&tipoTaxa=${tipoTaxaId}&idsFechamentos=${idsFechamentos}`;
 }
 
 config.getUrlFiltroFechamentos =
-    function getUrlFiltroFechamentos(mesInicial, anoInicial, mesFinal, anoFinal, idsFechamento) {
-        return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamento-mensal?filter=byIdsAndData&mesInicial=${mesInicial}&anoInicial=${anoInicial}&mesFinal=${mesFinal}&anoFinal=${anoFinal}&ids=${idsFechamento}`;
+    function getUrlFiltroFechamentos(mesInicial, anoInicial, mesFinal, anoFinal) {
+        return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamento-mensal?filter=byData&mesInicial=${mesInicial}&anoInicial=${anoInicial}&mesFinal=${mesFinal}&anoFinal=${anoFinal}`;
     }
 
 config.getUrlFiltroTaxasAPartirIdFechamento =
@@ -28,5 +28,12 @@ config.getUrlFiltroFechamentoMensalPorId =
     function getUrlFiltroFechamentosMensaisPorId(idFechamento) {
         return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamento-mensal?filter=byId&id=${idFechamento}`
     }
+
+config.getProcessMemoryUrl =
+    function getProcessMemoryUrl(processInstanceId) {
+        return `http://localhost:9091/${processInstanceId}/head`
+    }
+
+
 
 module.exports = config;

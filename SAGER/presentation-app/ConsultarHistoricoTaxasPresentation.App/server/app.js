@@ -4,6 +4,7 @@ const config = require('./config');
 const PesquisarHistoricoTaxasController = require('./controllers/pesquisarhistoricotaxascontroller');
 const ListarUsinasController = require('./controllers/listarusinascontroller');
 const ListarTipoTaxaController = require('./controllers/listartipotaxacontroller');
+const MemoriaProcessamentoController = require('./controllers/memoriaprocessamentocontroller');
 
 const app = express();
 const PORT = config.PORT;
@@ -29,6 +30,12 @@ let listarUsinasController = new ListarUsinasController();
 
 app.get("/listarusinas", (req, res) => {
     listarUsinasController.listarUsinas(req, res);
+});
+
+let memoriaProcessamentoController = new MemoriaProcessamentoController();
+
+app.post("/getMemoriaDeProcessamento", (req, res) => {
+    memoriaProcessamentoController.getMemoriaDeProcessamento(req, res);
 });
 
 let pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController();
