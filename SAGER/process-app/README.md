@@ -1,8 +1,28 @@
 # Engine de execução de processos da plataforma. chamada do worker.
 
+#############################################################################################################################
+#
+# ESTRUTURA DE PASTAS 
+#
+# O process.app está estruturado da seguinte forma:
+# - mapa\: arquivos de mapeamento de entidades do projeto
+# - metadados\: arquivos de mapeamento de eventos
+# - process\: pasta de arquivos de processamento de negócio
+# - process\business\: pasta com as classes de negocio
+# - process\business\parametros\: pasta com as classes de negocio de calculo de parametros
+# - process\entities\: pasta com as entidades de negócio utilizadas no cálculo
+#
+# classes de teste:
+# - spec\testmass\: pasta com arquivos e conteúdo para carga de massa de testes,temos massa de 
+#   teste em planilha e estáticas
+# - spec\calcularparametrostaxas.appSpec.js : testa o cálculo dos parâmetros
+# - spec\calculartaxasprocess.appSpec.js : testa o cálculo das taxas
+# - spec\validaeventotipoparametro.appSpec.js : testa as regras de evento que atende cada tipo
+#   de parâmetros
+#############################################################################################################################
 
 
-###############################################################################################
+#############################################################################################################################
 #
 # TESTES 
 #
