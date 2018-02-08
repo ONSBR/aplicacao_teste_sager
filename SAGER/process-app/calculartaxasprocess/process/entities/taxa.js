@@ -2,7 +2,7 @@ const BaseEntity = require("./_baseentity");
 
 module.exports = class Taxa extends BaseEntity {
     constructor(id, valorTaxa, idTipoTaxa, idFechamento, idUsina) {
-        super("taxa");
+        super();
         this.id = id;
         this.valorTaxa = valorTaxa ? valorTaxa: 0;
         this.idTipoTaxa = idTipoTaxa;
