@@ -43,6 +43,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.http.post(url, body).subscribe(data => {
       this.execucoes = data;
       this.taxas = [];
+      this.fechamentoMensal = {};
     });
   }
 

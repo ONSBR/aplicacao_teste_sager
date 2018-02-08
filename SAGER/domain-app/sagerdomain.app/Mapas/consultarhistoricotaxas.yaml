@@ -32,7 +32,7 @@ fechamento-mensal:
     dataCriacao:
       column: data_criacao
   filters:
-    byIdsAndData:
+    byData:
       $and:
         - mes:
             $gte: :mesInicial
@@ -42,8 +42,6 @@ fechamento-mensal:
             $lte: :mesFinal
         - ano:
             $lte: :anoFinal
-        - id:
-            $in: $ids
     byId:
       id:
         $eq: :id            
@@ -83,11 +81,13 @@ taxa:
     idUsina:
       column: id_usina
   filters:
-    byUsinaETipoTaxa:
+    byUsinaTipoTaxaIdsFechamentos:
       - tipoTaxa:
           $eq: :tipoTaxa
       - idUsina:
           $eq: :idUsina
+      - idFechamento:
+            $in: $idsFechamentos          
     byIdFechamento:
       idFechamento:
         $eq: :idFechamento
