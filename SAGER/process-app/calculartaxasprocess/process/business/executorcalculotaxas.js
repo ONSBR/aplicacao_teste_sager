@@ -2,48 +2,54 @@ const utils = require("../../utils");
 const ExecucaoCalculoFechamento = require("../entities/execucaocalculofechamento");
 const Taxa = require("../entities/taxa");
 const ParametroTaxa = require("../entities/parametrotaxa");
+const FechamentoMensal = require("../entities/fechamentomensal");
 const constants = require("./constants");
-const eventCatalog = require("../../../metadados/eventcatalog");
+const eventCatalog = require("../../metadados/eventcatalog");
 const CalculoTaxasPeriodoUge = require("./calculotaxasperiodouge");
 const CalculoTaxasPeriodoUsina = require("./calculotaxasperiodousina");
 const PeriodoCalculo = require("./periodocalculo");
 
-module.exports.executarCalculoTaxas = function (contexto) {
+module.exports.executarCalculoTaxas = function (contexto, resolve, reject) {
+
+    console.log("INICIO: "+JSON.stringify(contexto));
 
     // TODO e a função agregada, por exemplo, se existem as taxas já
-    var evento = contexto.evento;
-    var dataSet = contexto.dataSet;
+    var evento = contexto.event;
+    var dataset = contexto.dataset;
+    var payload = evento.payload;
 
-    var idFechamento = evento.payload.idFechamento;
-    var fechamento = dataSet.FechamentoMensal.collection.firstOrDefault();
+    var fechamento = dataset.fechamentomensal.collection.firstOrDefault(it => {
+        return it.ano == payload.anoFechamento && it.mes == payload.mesFechamento;
+    });
+
+    // TODO deveria obter do contexto
+    var dataAtual = new Date();
 
     if (!fechamento) {
         throw new Error("Não informado o fechamento mensal para execução das taxas.");
     }
 
     var execucaoCalculo = new ExecucaoCalculoFechamento();
-    execucaoCalculo.id = utils.guid();
-    execucaoCalculo.idFechamento = idFechamento;
-    execucaoCalculo.dataInicio = Date.now;
+    execucaoCalculo.idFechamento = fechamento.id;
+    execucaoCalculo.dataInicio = dataAtual;
 
-    dataSet.ExecucaoCalculoFechamento.insert(execucaoCalculo);
+    dataset.execucaocalculofechamento.insert(execucaoCalculo);
 
-    var usinas = dataSet.Usina.collection;
-    contexto.eventoSaida = [];
+    var usinas = dataset.usina.collection;
+    contexto.eventOut = [];
     usinas.forEach(it => {
 
-        contexto.eventoSaida.push({
-            name: eventCatalog.calcular_taxas_mensais,
+        contexto.eventOut.push({
+            name: eventCatalog.calculate_tax_month_usina,
             payload: { idUsina: it.idUsina, fechamento: fechamento }
         });
     });
-
 }
 
 module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
-    var evento = contexto.evento;
-    var dataSet = contexto.dataSet;
+    var evento = contexto.event;
+    var dataset = contexto.dataset;
 
     var mes = evento.payload.fechamento.mes;
     var ano = evento.payload.fechamento.ano;
@@ -51,12 +57,11 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
     var idUsina = evento.payload.idUsina;
 
-    var uges = dataSet.UnidadeGeradora.collection;
-    var eventosEstOper = dataSet.EventoMudancaEstadoOperativo.collection;
+    var uges = dataset.unidadegeradora.collection;
+    var eventosEstOper = dataset.eventomudancaestadooperativo.collection;
 
     var periodoCalculo = new PeriodoCalculo(mes, ano);
 
-    var mesCompare = mes - 1;
     eventosEstOper = eventosEstOper.where(it => {
         return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos && 
             it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
@@ -77,7 +82,8 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
     calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
 
         calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
-            dataSet.ParametroTaxa.insert(new ParametroTaxa(
+            dataset.parametrotaxa.insert(new ParametroTaxa(
+                undefined,
                 calculoParam.qtdHoras,
                 calculoParam.tipoParametro,
                 calculoUge.unidadeGeradora.idUge,
@@ -85,7 +91,8 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
             ));
         });
 
-        dataSet.ParametroTaxa.insert(new ParametroTaxa(
+        dataset.parametrotaxa.insert(new ParametroTaxa(
+            undefined,
             calculoUge.calculoParametroHP.qtdHoras,
             calculoUge.calculoParametroHP.tipoParametro,
             calculoUge.unidadeGeradora.idUge,
@@ -94,7 +101,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
 
     });
 
-    dataSet.Taxa.insert(new Taxa(
+    dataset.taxa.insert(new Taxa(
         undefined,
         calculoUsina.valorTeip,
         constants.TipoTaxa.TEIP,
@@ -102,7 +109,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
         idUsina
     ));
 
-    dataSet.Taxa.insert(new Taxa(
+    dataset.taxa.insert(new Taxa(
         undefined,
         calculoUsina.valorTeifa,
         constants.TipoTaxa.TEIFA,

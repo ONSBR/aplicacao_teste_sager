@@ -223,7 +223,7 @@ module.exports = class UtilTest {
     }
 
     static valueToCompare(valor1) {
-        return valor1.toRound(7);
+        return valor1.toFixedDown(5);
     }
 
     static compararValoresTaxasEstatistica(valor1, valor2, comparacaoTaxas,
@@ -252,7 +252,7 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                if (resultado.ano >= 2014) {
+                if (resultado.ano < 2013) {
                 UtilTest.executarCalculoTaxasMensaisUsinaMesAno(
                     idUsina, resultado.mes, resultado.ano,
                     uges, eventos, resultado.teipmes, resultado.teifames,
@@ -290,12 +290,12 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                //if (resultado.ano >= 2014) {
+                if (resultado.ano >= 2014) {
                     UtilTest.executarCalculoTaxasAcumuladasUsinaMesAno(
                         idUsina, resultado.mes, resultado.ano,
                         uges, eventos, resultado.teipacum, resultado.teifaacum,
                         comparacaoTaxas);
-                //}
+                }
             });
 
             console.log(comparacaoTaxas.toString());
@@ -308,17 +308,24 @@ module.exports = class UtilTest {
     }
 }
 
-module.exports.StubDataset = class StubDataset {
+module.exports.Stubdataset = class Stubdataset {
 
-    constructor(dataParam) {
+    constructor(entities, dataParam) {
         this.data = dataParam ? dataParam : [];
+        this.entities = entities;
     }
 
     get collection() {
         return Enumerable.from(this.data);
     }
 
-    insert(entity) {
+    add(entity) {
         this.data.push(entity);
     }
+
+    insert(entity) {
+        this.data.push(entity);
+        this.entities.push(entity);
+    }
 }
+

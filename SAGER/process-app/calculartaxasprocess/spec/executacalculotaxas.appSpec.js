@@ -1,59 +1,125 @@
 const fileDataMass = require("./testMass/filedatamass");
 const utils = require("../utils");
 const utilTest = require("./utiltest");
-const calcularTaxasProcess = require("../process/calculartaxasprocess");
+const ExecutorCalculoTaxas = require("../process/business/executorcalculotaxas");
+const FechamentoMensal = require("../process/entities/fechamentomensal");
+const HttpClient = require("plataforma-sdk/http/client");
+
+const DOMAIN_PORT = 2188;
+
+const MAPA = "calculartaxasprocess";
+
+var httpClient = new HttpClient();
+
+function catch_error(error) {
+    console.error("error: " + error.stack);
+}
+
+function inserirDados(lista) {
+    console.log("Inserindo dados. lista.length: " + lista.length);
+    console.log("Dados: " + JSON.stringify(lista));
+    return httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([lista]))/*.then(result => {
+        console.log("Dados incluídos...");
+    })*/.catch(catch_error);
+}
+
+function getUrlAppDomain(map, entity, verb) {
+    if (!map) {
+        map = MAPA;
+    }
+    var url = `http://localhost:${DOMAIN_PORT}/${map}/`;
+    if (entity) {
+        url += `${entity}/`;
+    }
+    if (verb) {
+        url += verb;
+    }
+    return url;
+}
 
 describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
     it('validar execução do processapp de cálculo de taxas para o mês 09/2014.', () => {
 
         Promise.all([fileDataMass.file_mass_uge_ALUXG(), fileDataMass.file_mass_events_09_2014_ALUXG()]).then(results => {
-/*
+
             var uges = results[0];
             var evtsEstOpr = results[1];
 
+            var instance_id = utils.guid();
+
             var idUsina = "ALUXG";
 
-            var fechamento = { id: utils.guid(), mes: 9, ano: 2014 };
+            var mes = 9;
+            var ano = 2014;
 
-            var context = { dataSet: {}, evento: {} };
-            context.evento.payload = { idFechamento: fechamento.id };
+            var entities = [];
+            var context = { dataset: {}, event: {} };
+            context.event.payload = { mesFechamento: mes, anoFechamento: ano };
 
-            context.dataSet.FechamentoMensal = new utilTest.StubDataset();
-            context.dataSet.FechamentoMensal.insert(fechamento);
+            console.log("INICIO FECHAMENTO");
 
-            context.dataSet.ExecucaoCalculoFechamento = new utilTest.StubDataset();
+            context.dataset.FechamentoMensal = new utilTest.Stubdataset(entities, []);
+            var fechamento = new FechamentoMensal("1", mes, ano, new Date());
+            context.dataset.FechamentoMensal.add(fechamento);
+            context.dataset.ExecucaoCalculoFechamento = new utilTest.Stubdataset(entities);
 
-            context.dataSet.Usina = new utilTest.StubDataset();
-            context.dataSet.Usina.insert({ idUsina: idUsina });
+            context.dataset.Usina = new utilTest.Stubdataset();
+            context.dataset.Usina.add({ idUsina: idUsina });
 
-            //calcularTaxasProcess.executarCalculoTaxas(context);
+            expect(context.event.payload.anoFechamento).toBe(ano);
+            try {
+                ExecutorCalculoTaxas.executarCalculoTaxas(context);
+            } catch (error) {
+                console.log("error: " + error.stack);
+            }
 
-            expect(context.eventoSaida[0].payload.idUsina).toBe(idUsina);
+            expect(context.eventOut[0].payload.idUsina).toBe(idUsina);
+            expect(context.eventOut[0].payload.fechamento.ano).toBe(ano);
 
-            var execucao = context.dataSet.ExecucaoCalculoFechamento.collection.firstOrDefault();
+            var execucao = context.dataset.ExecucaoCalculoFechamento.collection.firstOrDefault();
             expect(execucao).toBeDefined();
 
-            context.dataSet.UnidadeGeradora = new utilTest.StubDataset(uges);
-            context.dataSet.EventoMudancaEstadoOperativo = new utilTest.StubDataset(evtsEstOpr);
+            var eventorigem = context.eventOut[0];
+            
+            context = { dataset: {}, event: eventorigem };
 
-            context.dataSet.ParametroTaxa = new utilTest.StubDataset();
-            context.dataSet.Taxa = new utilTest.StubDataset();
+            context.dataset.UnidadeGeradora = new utilTest.Stubdataset(entities, uges);
+            console.log("DDD"+ evtsEstOpr.length);
+            context.dataset.EventoMudancaEstadoOperativo = new utilTest.Stubdataset(entities, evtsEstOpr);
 
-            context.evento = { payload: { idUsina: idUsina, fechamento: fechamento } };
+            context.dataset.ParametroTaxa = new utilTest.Stubdataset(entities);
+            context.dataset.Taxa = new utilTest.Stubdataset(entities);
 
-            //calcularTaxasProcess.calcularTaxasMensaisPorUsina(context);
+            try {
+                ExecutorCalculoTaxas.calcularTaxasMensaisPorUsina(context);
+            } catch (error) {
+                console.log("error: " + error.stack);
+            }
 
-            //expect(context.dataSet.Taxa.collection.firstOrDefault().valorTaxa).toBe(0.004135802469135802);
+            expect(context.dataset.Taxa.collection.toArray().length).toBe(2);
 
-            //expect(context.dataSet.ParametroTaxa.collection.toArray().length).toBe(48);
-*/
+            expect(context.dataset.Taxa.collection.toArray()[0].valorTaxa).toBe(0.004135802469135802);
+
+            expect(context.dataset.ParametroTaxa.collection.toArray().length).toBe(48);
+
+            console.log("\n context final["+instance_id+"]: " + JSON.stringify(context) + "\n");
+
+            entities.forEach(it => {
+                it._metadata.instance_id = instance_id;
+            });
+            inserirDados(entities).then(result => {
+                console.log("Execução realizada com sucesso. taxas calculadas para mes: " + mes + ", ano: " + ano);
+            });
+
         }).catch(error => {
-            console.error("error: " + error.stack);
+            console.log("error: " + error.stack);
             expect(error).toBe(null);
         });
 
     })
 
 });
+
+
 

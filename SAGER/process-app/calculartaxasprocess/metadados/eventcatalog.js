@@ -1,4 +1,4 @@
 module.exports = {
-    calcular_taxas_mensais: "calcular_taxas_mensais",
-    calcular_taxas_acumuladas: "calcular_taxas_acumuladas",
+    calculate_tax_month_usina: "calculate.tax.month.usina",
+    calculate_tax_accumulate_usina: "calculate.tax.accumulate.usina",
 }

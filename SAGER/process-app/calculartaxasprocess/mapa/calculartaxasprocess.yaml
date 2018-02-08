@@ -1,4 +1,4 @@
-execucao-calculo-fechamento:
+execucaocalculofechamento:
   model: tb_execucao_calculo_fechamento
   fields:
     id:
@@ -20,7 +20,7 @@ execucao-calculo-fechamento:
       - idFechamento:
           $in: $idsFechamentos
 
-fechamento-mensal:
+fechamentomensal:
   model: tb_fechamento_mensal
   fields:
     id:
@@ -32,12 +32,11 @@ fechamento-mensal:
     dataCriacao:
       column: data_criacao
   filters:
-    byIdsAndData:
-      $and:
-        - mes:
-            $eq: :mesFechamento
-        - ano:
-            $eq: :anoFechamento
+    byMesAno:
+      - mes:
+          $eq: :mesFechamento
+      - ano:
+          $eq: :anoFechamento
     byId:
       - id:
           $eq: :filterIdFechamento
@@ -76,7 +75,7 @@ usina:
     byIdUsina:
       - idUsina: :filterIdUsina
 
-unidade-geradora:
+unidadegeradora:
   model: tb_unidade_geradora
   fields:
     idUge:
@@ -92,7 +91,7 @@ unidade-geradora:
       - idUsina:
           $eq: :filterIdUsina
 
-evento-mudanca-estado-operativo: 
+eventomudancaestadooperativo: 
   model: tb_evento_mudanca_estado_operativo
   fields:
     idEvento: 
@@ -116,7 +115,7 @@ evento-mudanca-estado-operativo:
         - dataVerificada:
             $lte: :filterDataFinalEvento
 
-parametro-taxa:
+parametrotaxa:
   model: tb_parametro_taxa
   fields:
     valorParametro:

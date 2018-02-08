@@ -1,19 +1,26 @@
 const csv = require('csvtojson');
 const fs = require('fs');
 
-var PATH_FILES_MASS = "./spec/testMass/filesmass/";
+var PATH_FILES_MASS = "./spec/testmass/filesmass/";
 
 module.exports = class FileCsvToJson {
 
-    static set pathFileMass(pathFilesMass) {
-        PATH_FILES_MASS = pathFilesMass;
+    constructor(pathFilesMass) {
+        if (!pathFilesMass) {
+            pathFilesMass = PATH_FILES_MASS;
+        }
+        this.pathFilesMass = pathFilesMass;
     }
 
-    static convert(fileName, mapJson) {
+    set pathFileMass(pathFilesMass) {
+        this.pathFilesMass = pathFilesMass;
+    }
+
+    convert(fileName, mapJson) {
 
         var retorno = [];
 
-        const csvFilePath = PATH_FILES_MASS + fileName + ".csv";
+        const csvFilePath = this.pathFilesMass + fileName + ".csv";
         console.log(csvFilePath);
         const csv = require("csvtojson");
 
