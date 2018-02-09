@@ -9,9 +9,9 @@ const CalculoTaxasPeriodoUge = require("./calculotaxasperiodouge");
 const CalculoTaxasPeriodoUsina = require("./calculotaxasperiodousina");
 const PeriodoCalculo = require("./periodocalculo");
 
-module.exports.executarCalculoTaxas = function (contexto, resolve, reject) {
+module.exports.executarCalculoTaxas = function (contexto, resolve, reject, eventManager) {
 
-    console.log("INICIO: "+JSON.stringify(contexto));
+    console.log("INICIO [executarCalculoTaxas]: " + JSON.stringify(contexto));
 
     // TODO e a função agregada, por exemplo, se existem as taxas já
     var evento = contexto.event;
@@ -26,27 +26,50 @@ module.exports.executarCalculoTaxas = function (contexto, resolve, reject) {
     var dataAtual = new Date();
 
     if (!fechamento) {
-        throw new Error("Não informado o fechamento mensal para execução das taxas.");
+        //throw new Error("Não informado o fechamento mensal para execução das taxas.");
+        fechamento = new FechamentoMensal(
+            utils.guid(),
+            payload.mesFechamento,
+            payload.anoFechamento,
+            dataAtual
+        );
+        dataset.fechamentomensal.insert(fechamento);
     }
 
     var execucaoCalculo = new ExecucaoCalculoFechamento();
+    execucaoCalculo.id = utils.guid();
     execucaoCalculo.idFechamento = fechamento.id;
     execucaoCalculo.dataInicio = dataAtual;
 
     dataset.execucaocalculofechamento.insert(execucaoCalculo);
 
+    var periodoCalculo = new PeriodoCalculo(payload.mesFechamento, payload.anoFechamento);
+
     var usinas = dataset.usina.collection;
-    contexto.eventOut = [];
     usinas.forEach(it => {
 
-        contexto.eventOut.push({
+        /*eventManager.emit({
             name: eventCatalog.calculate_tax_month_usina,
             payload: { idUsina: it.idUsina, fechamento: fechamento }
+        });*/
+        eventManager.emit({
+            name: "calculate.tax.request",
+            payload: { idUsina: it.idUsina, 
+                fechamento: fechamento, 
+                filterDataInicialEvento: periodoCalculo.dataInicio,
+                filterDataFinalEvento: periodoCalculo.dataFim
+            }
+        }).then(result => {
+            console.log("Usina: " + it.idUsina);
+        }).catch(error => {
+            console.log("Error Usina: " + error.stack);
         });
     });
 }
 
-module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
+module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, reject, eventManager) {
+
+    console.log("INICIO [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto));
 
     var evento = contexto.event;
     var dataset = contexto.dataset;
@@ -63,7 +86,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto) {
     var periodoCalculo = new PeriodoCalculo(mes, ano);
 
     eventosEstOper = eventosEstOper.where(it => {
-        return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos && 
+        return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
             it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
     });
 

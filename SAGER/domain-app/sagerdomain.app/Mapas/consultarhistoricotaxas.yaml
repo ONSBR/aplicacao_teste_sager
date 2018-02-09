@@ -1,26 +1,26 @@
-execucaocalculofechamento:
+execucao-calculo-fechamento:
   model: tb_execucao_calculo_fechamento
   fields:
     id:
       column: id
     dataInicio:
-      column: data_inicio
+      column: dataInicio
     dataFim:
-      column: data_fim
+      column: dataFim
     idCenario:
-      column: id_cenario
+      column: idCenario
     idTarefa:
-      column: id_tarefa
+      column: idTarefa
     protocolo:
       column: protocolo
     idFechamento:
-      column: id_fechamento
+      column: idFechamento
   filters:
     byIdsFechamentos:
-      - idFechamento:
-          $in: $idsFechamentos
+      idFechamento:
+        $in: $idsFechamentos
 
-fechamentomensal:
+fechamento-mensal:
   model: tb_fechamento_mensal
   fields:
     id:
@@ -29,103 +29,72 @@ fechamentomensal:
       column: mes
     ano:
       column: ano
-    dataCriacao:
-      column: data_criacao
+    idExecucaoCalculoFechamento:
+      column: idExecucaoCalculoFechamento
   filters:
-    byMesAno:
-      - mes:
-          $eq: :mesFechamento
-      - ano:
-          $eq: :anoFechamento
+    byIdsAndData:
+      $and:
+        - mes:
+            $gte: :mesInicial
+        - ano:
+            $gte: :anoInicial
+        - mes:
+            $lte: :mesFinal
+        - ano:
+            $lte: :anoFinal
+        - id:
+            $in: $ids
     byId:
-      - id:
-          $eq: :filterIdFechamento
+      id:
+        $eq: :id            
+
+tarefa-retificacao:
+  model: tb_tarefa_retificacao
+  fields:
+    id:
+      column: id
+    nome:
+      column: nome
+  filters:
+    byName:
+      nome: :nome
+
+cenario:
+  model: tb_cenario
+  fields:
+    nome:
+      column: nome    
+    dataInicio:
+      column: dataInicio
+    dataFim:
+      column: dataFim
+    dataExecucao:
+      column: dataExecucao
 
 taxa:
   model: tb_taxa
   fields:
-    idTipoTaxa:
-      column: id_tipo_taxa
+    tipoTaxa:
+      column: tipoTaxa
     valor:
       column: valor
     idFechamento:
-      column: id_fechamento
+      column: idFechamento
     idUsina:
-      column: id_usina
+      column: idUsina
   filters:
-    byUsinaEFechamento:
-      - idUsina:
-          $eq: :filterIdUsina
-      - idFechamento:
-          $eq: :filterIdFechamento
-
-usina:
-  model: tb_usina
-  fields:
-    id:
-      column: id
-      required: true
-    idUsina:
-      column: id_usina
-      required: true
-    nome:
-      column: nome
-      required: true
-  filters:
-    byIdUsina:
-      - idUsina: :filterIdUsina
-
-unidadegeradora:
-  model: tb_unidade_geradora
-  fields:
-    idUge:
-      column: id_uge
-    potenciaDisponivel:
-      column: potencia_disponivel
-    dataInicioOperacao:
-      column: data_inicio_operacao
-    idUsina:
-      column: id_usina
-  filters:
-    byIdUsina:
-      - idUsina:
-          $eq: :filterIdUsina
-
-eventomudancaestadooperativo: 
-  model: tb_evento_mudanca_estado_operativo
-  fields:
-    idEvento: 
-      column: id_evento
-    idUge:
-      column: id_uge
-    idClassificacaoOrigem:
-      column: id_classificacao_origem
-    idTipoEstadoOperativo:
-      column: id_tipo_estado_operativo
-    idCondicaoOperativa:
-      column: id_condicao_operativa
-    dataVerificada:
-      column: data_verificada
-    potenciaDisponivel:
-      column: potencia_disponivel
-  byIntervaloDatas:
+    byUsinaETipoTaxa:
       $and:
-        - dataVerificada:
-            $gte: :filterDataInicialEvento
-        - dataVerificada:
-            $lte: :filterDataFinalEvento
+        - tipoTaxa:
+            $eq: :tipoTaxa
+        - idUsina:
+            $eq: :idUsina
+    byIdFechamento:
+      idFechamento:
+        $eq: :idFechamento
 
-parametrotaxa:
-  model: tb_parametro_taxa
+tipo-taxa:
+  model: tb_tipo_taxa
   fields:
-    valorParametro:
-      column: valor_parametro
-    idTipoParametro:
-      column: id_tipo_parametro
-    idUge:
-      column: id_uge
-    idFechamento:
-      column: id_fechamento    
-  byUsinaEFechamento:
-      - idFechamento:
-          $eq: :filterIdFechamento
+    nome:
+      column: nome   

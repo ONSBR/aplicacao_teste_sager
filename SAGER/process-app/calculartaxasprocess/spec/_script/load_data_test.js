@@ -1,4 +1,3 @@
-const FileCsvToJson = require("../testMass/fileCsvToJson");
 const FileDataMass = require("../testMass/fileDataMass");
 const HttpClient = require("plataforma-sdk/http/client");
 const FechamentoMensal = require("../../process/entities/fechamentoMensal");
@@ -7,7 +6,7 @@ const utils = require("../../utils");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
-const DOMAIN_PORT = 2147;
+const DOMAIN_PORT = 2196;
 
 const MAPA = "calculartaxasprocess";
 
