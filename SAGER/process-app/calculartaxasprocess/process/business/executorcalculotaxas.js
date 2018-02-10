@@ -56,8 +56,8 @@ module.exports.executarCalculoTaxas = function (contexto, resolve, reject, event
             name: "calculate.tax.request",
             payload: { idUsina: it.idUsina, 
                 fechamento: fechamento, 
-                filterDataInicialEvento: periodoCalculo.dataInicio,
-                filterDataFinalEvento: periodoCalculo.dataFim
+                dataInicialEvento: periodoCalculo.dataInicio,
+                dataFinalEvento: periodoCalculo.dataFim
             }
         }).then(result => {
             console.log("Usina: " + it.idUsina);
@@ -69,7 +69,7 @@ module.exports.executarCalculoTaxas = function (contexto, resolve, reject, event
 
 module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, reject, eventManager) {
 
-    console.log("INICIO [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto));
+    console.log("INICIO [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto.dataset.eventomudancaestadooperativo.length));
 
     var evento = contexto.event;
     var dataset = contexto.dataset;

@@ -6,7 +6,7 @@ const utils = require("../../utils");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
-const DOMAIN_PORT = 2196;
+const DOMAIN_PORT = 2122;
 
 const MAPA = "calculartaxasprocess";
 
