@@ -7,11 +7,13 @@ SDK.run((context, resolve, reject, eventManager) => {
     
     try {
         if (context.event.payload.idUsina) {
-            ExecutorCalculoTaxas.calcularTaxasMensaisPorUsina(context, resolve, reject, eventManager);
+            ExecutorCalculoTaxas.calcularTaxasMensaisPorUsina(context, eventManager);
         } else {
-            ExecutorCalculoTaxas.executarCalculoTaxas(context, resolve, reject, eventManager);
+            ExecutorCalculoTaxas.executarCalculoTaxas(context, eventManager);
         }       
+        resolve();
     }catch(error) {
         console.log("error: " + error.stack);
+        reject(error);
     }
 });

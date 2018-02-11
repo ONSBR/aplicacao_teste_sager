@@ -9,7 +9,7 @@ const CalculoTaxasPeriodoUge = require("./calculotaxasperiodouge");
 const CalculoTaxasPeriodoUsina = require("./calculotaxasperiodousina");
 const PeriodoCalculo = require("./periodocalculo");
 
-module.exports.executarCalculoTaxas = function (contexto, resolve, reject, eventManager) {
+module.exports.executarCalculoTaxas = function (contexto, eventManager) {
 
     console.log("INICIO [executarCalculoTaxas]: " + JSON.stringify(contexto));
 
@@ -42,16 +42,13 @@ module.exports.executarCalculoTaxas = function (contexto, resolve, reject, event
     execucaoCalculo.dataInicio = dataAtual;
 
     dataset.execucaocalculofechamento.insert(execucaoCalculo);
+    execucaoCalculo._metadata.changeTrack = "create";
 
     var periodoCalculo = new PeriodoCalculo(payload.mesFechamento, payload.anoFechamento);
 
     var usinas = dataset.usina.collection;
     usinas.forEach(it => {
 
-        /*eventManager.emit({
-            name: eventCatalog.calculate_tax_month_usina,
-            payload: { idUsina: it.idUsina, fechamento: fechamento }
-        });*/
         eventManager.emit({
             name: "calculate.tax.request",
             payload: { idUsina: it.idUsina, 
@@ -65,11 +62,13 @@ module.exports.executarCalculoTaxas = function (contexto, resolve, reject, event
             console.log("Error Usina: " + error.stack);
         });
     });
+
+    resolve();
 }
 
-module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, reject, eventManager) {
+module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) {
 
-    console.log("INICIO [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto.dataset.eventomudancaestadooperativo.length));
+    console.log("INICIO [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length));
 
     var evento = contexto.event;
     var dataset = contexto.dataset;
@@ -106,7 +105,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, rejec
 
         calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
             dataset.parametrotaxa.insert(new ParametroTaxa(
-                undefined,
+                utils.guid(),
                 calculoParam.qtdHoras,
                 calculoParam.tipoParametro,
                 calculoUge.unidadeGeradora.idUge,
@@ -115,7 +114,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, rejec
         });
 
         dataset.parametrotaxa.insert(new ParametroTaxa(
-            undefined,
+            utils.guid(),
             calculoUge.calculoParametroHP.qtdHoras,
             calculoUge.calculoParametroHP.tipoParametro,
             calculoUge.unidadeGeradora.idUge,
@@ -125,7 +124,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, rejec
     });
 
     dataset.taxa.insert(new Taxa(
-        undefined,
+        utils.guid(),
         calculoUsina.valorTeip,
         constants.TipoTaxa.TEIP,
         idFechamento,
@@ -133,17 +132,14 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, resolve, rejec
     ));
 
     dataset.taxa.insert(new Taxa(
-        undefined,
+        utils.guid(),
         calculoUsina.valorTeifa,
         constants.TipoTaxa.TEIFA,
         idFechamento,
         idUsina
     ));
 
-    contexto.eventoSaida = {
-        name: eventCatalog.calcular_taxas_acumuladas,
-        payload: evento.payload
-    };
+    console.log("FIM [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto.dataset));
 }
 
 module.exports.calcularTaxasAcumuladasPorUsina = function (contexto) {
