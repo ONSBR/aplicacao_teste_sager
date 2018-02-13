@@ -170,25 +170,34 @@ module.exports = class UtilTest {
     static executarCalculoTaxasAcumuladasUsinaMesAno(idUsina, mes, ano, uges, eventosEstOper,
         resultadoTeipMes, resultadoTeifaMes, comparacaoTaxas) {
 
-        var periodoCalculo = new PeriodoCalculo(mes, ano, 60);
+        var periodoAcumulado = new PeriodoCalculo(mes, ano, 60);
 
         eventosEstOper = eventosEstOper.where(it => {
-            return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-                it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
+            return it.dataVerificadaEmSegundos >= periodoAcumulado.dataInicioEmSegundos &&
+                it.dataVerificadaEmSegundos < periodoAcumulado.dataFimEmSegundos;
         });
 
         //console.log("eventosEstOper.length: " + eventosEstOper.toArray().length);
 
         var calculosUges = [];
         uges.forEach(uge => {
-            var calculoUge = new CalculoTaxasPeriodoUge(
-                periodoCalculo, uge,
-                eventosEstOper.where(it => { return it.idUge == uge.idUge })
-            );
-            calculosUges.push(calculoUge);
+
+            periodoAcumulado.mesAnoInterval.forEach(mesAno => {
+                
+                var periodoCalculo = new PeriodoCalculo(mesAno.mes, mesAno.ano);
+                var calculoUge = new CalculoTaxasPeriodoUge(
+                    periodoCalculo, uge,
+                    eventosEstOper.where(it => {
+                        return it.idUge == uge.idUge &&
+                            it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
+                            it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos
+                    })
+                );
+                calculosUges.push(calculoUge);
+            });
         });
 
-        var calculoUsina = new CalculoTaxasPeriodoUsina(periodoCalculo, idUsina, calculosUges);
+        var calculoUsina = new CalculoTaxasPeriodoUsina(periodoAcumulado, idUsina, calculosUges);
         calculoUsina.calcular();
 
         //console.log(calculoUsina.toString());

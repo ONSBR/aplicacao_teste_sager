@@ -67,8 +67,10 @@ module.exports.ClassificacaoOrigem = {
 }
 
 module.exports.TipoTaxa = {
-    TEIP: "TEIP",
-    TEIFA: "TEIFA"
+    TEIPmes: "TEIPmes",
+    TEIFAmes: "TEIFAmes",
+    TEIPacum: "TEIPac",
+    TEIFAacum: "TEIFAac"
 }
 
 

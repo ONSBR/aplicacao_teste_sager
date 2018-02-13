@@ -8,10 +8,11 @@ const eventCatalog = require("../../metadados/eventcatalog");
 const CalculoTaxasPeriodoUge = require("./calculotaxasperiodouge");
 const CalculoTaxasPeriodoUsina = require("./calculotaxasperiodousina");
 const PeriodoCalculo = require("./periodocalculo");
+const extensions = require("../../extensions");
 
 module.exports.executarCalculoTaxas = function (contexto, eventManager) {
 
-    console.log("INICIO [executarCalculoTaxas]: " + JSON.stringify(contexto));
+    console.log("INICIO [executarCalculoTaxas].");
 
     // TODO e a função agregada, por exemplo, se existem as taxas já
     var evento = contexto.event;
@@ -23,7 +24,7 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
     });
 
     // TODO deveria obter do contexto
-    var dataAtual = new Date();
+    var dataAtual = evento.reference_date ? evento.reference_date : new Date();
 
     if (!fechamento) {
         //throw new Error("Não informado o fechamento mensal para execução das taxas.");
@@ -40,9 +41,9 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
     execucaoCalculo.id = utils.guid();
     execucaoCalculo.idFechamento = fechamento.id;
     execucaoCalculo.dataInicio = dataAtual;
+    execucaoCalculo.protocolo = payload.mesFechamento.zeroFillLeft(4) + '/' + payload.anoFechamento;
 
     dataset.execucaocalculofechamento.insert(execucaoCalculo);
-    execucaoCalculo._metadata.changeTrack = "create";
 
     var periodoCalculo = new PeriodoCalculo(payload.mesFechamento, payload.anoFechamento);
 
@@ -51,8 +52,9 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
 
         eventManager.emit({
             name: "calculate.tax.request",
-            payload: { idUsina: it.idUsina, 
-                fechamento: fechamento, 
+            payload: {
+                idUsina: it.idUsina,
+                idFechamento: fechamento.id,
                 dataInicialEvento: periodoCalculo.dataInicio,
                 dataFinalEvento: periodoCalculo.dataFim
             }
@@ -62,20 +64,21 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
             console.log("Error Usina: " + error.stack);
         });
     });
-
-    resolve();
 }
 
 module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) {
 
-    console.log("INICIO [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length));
+    console.log("INICIO [calcularTaxasMensaisPorUsina]: " +
+        JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length)
+    );
 
     var evento = contexto.event;
     var dataset = contexto.dataset;
 
-    var mes = evento.payload.fechamento.mes;
-    var ano = evento.payload.fechamento.ano;
-    var idFechamento = evento.payload.fechamento.id;
+    var fechamento = contexto.dataset.fechamentomensal.collection.firstOrDefault();
+
+    var mes = fechamento.mes;
+    var ano = fechamento.ano;
 
     var idUsina = evento.payload.idUsina;
 
@@ -84,6 +87,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) 
 
     var periodoCalculo = new PeriodoCalculo(mes, ano);
 
+    // TODO retirar pois teoricamente já foi filtrado no mapa
     eventosEstOper = eventosEstOper.where(it => {
         return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
             it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
@@ -104,44 +108,128 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) 
     calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
 
         calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
-            dataset.parametrotaxa.insert(new ParametroTaxa(
-                utils.guid(),
-                calculoParam.qtdHoras,
-                calculoParam.tipoParametro,
-                calculoUge.unidadeGeradora.idUge,
-                idFechamento
-            ));
+
+            updateOrCreateParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
+                calculoParam.tipoParametro, calculoParam.qtdHoras);
         });
 
-        dataset.parametrotaxa.insert(new ParametroTaxa(
-            utils.guid(),
-            calculoUge.calculoParametroHP.qtdHoras,
-            calculoUge.calculoParametroHP.tipoParametro,
-            calculoUge.unidadeGeradora.idUge,
-            idFechamento
-        ));
+        updateOrCreateParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
+            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras);
 
     });
 
-    dataset.taxa.insert(new Taxa(
-        utils.guid(),
-        calculoUsina.valorTeip,
-        constants.TipoTaxa.TEIP,
-        idFechamento,
-        idUsina
-    ));
+    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIPmes, calculoUsina.valorTeip);
+    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIFAmes, calculoUsina.valorTeifa);
 
-    dataset.taxa.insert(new Taxa(
-        utils.guid(),
-        calculoUsina.valorTeifa,
-        constants.TipoTaxa.TEIFA,
-        idFechamento,
-        idUsina
-    ));
+    var periodoAcumulado = new PeriodoCalculo(mes, ano, 60);
 
-    console.log("FIM [calcularTaxasMensaisPorUsina]: " + JSON.stringify(contexto.dataset));
+    // TODO depois alterar para funcionar por evento
+    eventManager.emit({
+        name: "calculate.tax.request",
+        payload: {
+            acumulada: true,
+            idUsina: idUsina,
+            idFechamento: fechamento.id,
+            dataInicialEvento: periodoAcumulado.dataInicio,
+            dataFinalEvento: periodoAcumulado.dataFim
+        }
+    }).then(result => {
+        console.log("Usina: " + idUsina);
+    }).catch(error => {
+        console.log("Error Usina: " + error.stack);
+    });
+
 }
 
-module.exports.calcularTaxasAcumuladasPorUsina = function (contexto) {
+function updateOrCreateTaxa(dataset, idFechamento, idUsina, idTipoTaxa, valorTaxa) {
+    var taxa = dataset.taxa.collection.firstOrDefault(it => {
+        return it.idFechamento == idFechamento && it.idUsina == idUsina && it.idTipoTaxa == idTipoTaxa
+    });
+    if (taxa) {
+        taxa.valorTaxa = valorTaxa;
+        dataset.taxa.update(taxa);
+    } else {
+        dataset.taxa.insert(new Taxa(
+            utils.guid(),
+            valorTaxa,
+            idTipoTaxa,
+            idFechamento,
+            idUsina
+        ));
+    }
+}
+
+function updateOrCreateParametroTaxa(dataset, idFechamento, idUge, idTipoParametro, valorParametro) {
+
+    var paramTaxa = dataset.parametrotaxa.collection.firstOrDefault(it => {
+        return it.idFechamento == idFechamento && it.idUge == idUge && it.idTipoParametro == idTipoParametro
+    });
+    if (paramTaxa) {
+        paramTaxa.valorParametro = valorParametro;
+        dataset.parametrotaxa.update(paramTaxa);
+    } else {
+        dataset.parametrotaxa.insert(new ParametroTaxa(
+            utils.guid(),
+            valorParametro,
+            idTipoParametro,
+            idUge,
+            idFechamento
+        ));
+    }
+}
+
+module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManager) {
+
+    console.log("INICIO [calcularTaxasAcumuladasPorUsina]: " +
+        JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length)
+    );
+
+    var evento = contexto.event;
+    var dataset = contexto.dataset;
+
+    var fechamento = contexto.dataset.fechamentomensal.collection.firstOrDefault();
+
+    var mes = fechamento.mes;
+    var ano = fechamento.ano;
+
+    var idUsina = evento.payload.idUsina;
+
+    var uges = dataset.unidadegeradora.collection;
+    var eventosEstOper = dataset.eventomudancaestadooperativo.collection;
+
+    var periodoAcumulado = new PeriodoCalculo(mes, ano, 60);
+
+    // TODO retirar pois teoricamente já foi filtrado no mapa
+    eventosEstOper = eventosEstOper.where(it => {
+        return it.dataVerificadaEmSegundos >= periodoAcumulado.dataInicioEmSegundos &&
+            it.dataVerificadaEmSegundos <= periodoAcumulado.dataFimEmSegundos;
+    });
+    console.log("periodoAcumulado: " + JSON.stringify(periodoAcumulado));
+    var calculosUges = [];
+    uges.forEach(uge => {
+        // Para ter o resultado para cada mes
+        periodoAcumulado.mesAnoInterval.forEach(mesAno => {
+
+            var periodoCalculo = new PeriodoCalculo(mesAno.mes, mesAno.ano);
+            var calculoUge = new CalculoTaxasPeriodoUge(
+                periodoCalculo, uge,
+                eventosEstOper.where(it => {
+                    return it.idUge == uge.idUge &&
+                        it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
+                        it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos
+                })
+            );
+            calculosUges.push(calculoUge);
+        });
+    });
+
+    var calculoUsina = new CalculoTaxasPeriodoUsina(periodoAcumulado, idUsina, calculosUges);
+    calculoUsina.calcular();
+
+    // TODO verificar se não precisar gravar os parâmetros como o mensal, 
+    // mas fica a dúvida salva para todos os 60 meses?
+
+    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIPacum, calculoUsina.valorTeip);
+    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIFAacum, calculoUsina.valorTeifa);
 
 }

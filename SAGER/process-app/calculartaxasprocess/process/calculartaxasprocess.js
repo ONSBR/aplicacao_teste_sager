@@ -6,7 +6,10 @@ SDK.run((context, resolve, reject, eventManager) => {
     console.log("Executando o calculo de taxas");
     
     try {
-        if (context.event.payload.idUsina) {
+        if (context.event.payload.acumulada) {
+            ExecutorCalculoTaxas.calcularTaxasAcumuladasPorUsina(context, eventManager);
+        }
+        else if (context.event.payload.idUsina) {
             ExecutorCalculoTaxas.calcularTaxasMensaisPorUsina(context, eventManager);
         } else {
             ExecutorCalculoTaxas.executarCalculoTaxas(context, eventManager);

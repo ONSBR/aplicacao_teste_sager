@@ -17,10 +17,10 @@ function catch_error(error) {
 
 function inserirDados(lista) {
     console.log("Inserindo dados. lista.length: " + lista.length);
-    console.log("Dados: " + JSON.stringify(lista));
-    return httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([lista]))/*.then(result => {
+    //console.log("Dados: " + JSON.stringify(lista));
+    return httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([lista])).then(result => {
         console.log("Dados incluídos...");
-    })*/.catch(catch_error);
+    }).catch(catch_error);
 }
 
 function getUrlAppDomain(map, entity, verb) {
@@ -57,6 +57,10 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
             var context = { dataset: {}, event: {} };
             context.event.payload = { mesFechamento: mes, anoFechamento: ano };
 
+            var eventOut = [];
+            var eventmanager = { };
+            eventmanager.emit = function(evt) {  return new Promise((res, rej)=>{ eventOut.push(evt); res(); }) };
+
             console.log("INICIO FECHAMENTO");
 
             context.dataset.fechamentomensal = new utilTest.Stubdataset(entities, []);
@@ -69,18 +73,17 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
             expect(context.event.payload.anoFechamento).toBe(ano);
             try {
-                ExecutorCalculoTaxas.executarCalculoTaxas(context);
+                ExecutorCalculoTaxas.executarCalculoTaxas(context, eventmanager);
             } catch (error) {
                 console.log("error: " + error.stack);
             }
 
-            expect(context.eventOut[0].payload.idUsina).toBe(idUsina);
-            expect(context.eventOut[0].payload.fechamento.ano).toBe(ano);
+            expect(eventOut[0].payload.idUsina).toBe(idUsina);
 
             var execucao = context.dataset.execucaocalculofechamento.collection.firstOrDefault();
             expect(execucao).toBeDefined();
 
-            var eventorigem = context.eventOut[0];
+            var eventorigem = eventOut[0];
             
             context = { dataset: {}, event: eventorigem };
 
@@ -91,8 +94,10 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
             context.dataset.parametrotaxa = new utilTest.Stubdataset(entities);
             context.dataset.taxa = new utilTest.Stubdataset(entities);
 
+            context.dataset.fechamentomensal = new utilTest.Stubdataset(entities, [fechamento]);
+
             try {
-                ExecutorCalculoTaxas.calcularTaxasMensaisPorUsina(context);
+                ExecutorCalculoTaxas.calcularTaxasMensaisPorUsina(context, eventmanager);
             } catch (error) {
                 console.log("error: " + error.stack);
             }
@@ -103,14 +108,12 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
             expect(context.dataset.parametrotaxa.collection.toArray().length).toBe(48);
 
-            console.log("\n context final["+instance_id+"]: " + JSON.stringify(context) + "\n");
-
             entities.forEach(it => {
                 it._metadata.instance_id = instance_id;
             });
-            inserirDados(entities).then(result => {
+            /*inserirDados(entities).then(result => {
                 console.log("Execução realizada com sucesso. taxas calculadas para mes: " + mes + ", ano: " + ano);
-            });
+            });*/
 
         }).catch(error => {
             console.log("error: " + error.stack);

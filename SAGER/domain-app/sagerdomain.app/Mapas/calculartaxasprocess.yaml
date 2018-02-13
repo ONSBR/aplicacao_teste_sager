@@ -40,14 +40,14 @@ fechamentomensal:
             $eq: :anoFechamento
     byId:
       - id:
-          $eq: :filterIdFechamento
+          $eq: :idFechamento
 
 taxa:
   model: tb_taxa
   fields:
     idTipoTaxa:
       column: id_tipo_taxa
-    valor:
+    valorTaxa:
       column: valor
     idFechamento:
       column: id_fechamento
@@ -57,9 +57,9 @@ taxa:
     byUsinaEFechamento:
       $and:
         - idUsina:
-            $eq: :filterIdUsina
+            $eq: :idUsina
         - idFechamento:
-            $eq: :filterIdFechamento
+            $eq: :idFechamento
 
 usina:
   model: tb_usina
@@ -131,4 +131,4 @@ parametrotaxa:
   filters:
     byUsinaEFechamento:
         - idFechamento:
-            $eq: :fechamento.id
+            $eq: :idFechamento
