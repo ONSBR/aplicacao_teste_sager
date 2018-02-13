@@ -177,8 +177,6 @@ module.exports = class UtilTest {
                 it.dataVerificadaEmSegundos < periodoAcumulado.dataFimEmSegundos;
         });
 
-        //console.log("eventosEstOper.length: " + eventosEstOper.toArray().length);
-
         var calculosUges = [];
         uges.forEach(uge => {
 
@@ -270,13 +268,13 @@ module.exports = class UtilTest {
             });
 
             console.log(comparacaoTaxas.toString());
-
-            /*console.log("LOG ERROR");
-            comparacaoTaxas.teipdiferentes.forEach(it => {
+            /*
+            console.log("LOG ERROR");
+            comparacaoTaxas.teipiguais.forEach(it => {
                 console.log("\nCalculoUsina: " + it.calculoUsina.toString().replace(new RegExp("{\"idUge\"", 'g'), "\n{\"idUge\""));
             });
-            console.log("FIM LOG ERROR");*/
-
+            console.log("FIM LOG ERROR");
+            */
             //expect(comparacaoTaxas.teipdiferentes.length).toBe(0);
             //expect(comparacaoTaxas.teifadiferentes.length).toBe(0);
 
