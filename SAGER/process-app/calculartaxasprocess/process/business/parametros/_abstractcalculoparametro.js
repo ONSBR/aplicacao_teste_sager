@@ -85,8 +85,9 @@ class AbstractCalculoParametroEventoDiferenca extends AbstractCalculoParametroEv
  */
 class AbstractCalculoParametroEventoLimitacaoPotencia extends AbstractCalculoParametroEvento {
     
-    constructor(tipoParametro, unidadeGeradora) {
+    constructor(tipoParametro, unidadeGeradora, inverseCompute) {
         super(tipoParametro, unidadeGeradora);
+        this.inverseCompute = inverseCompute;
     }
 
     /**
@@ -123,7 +124,11 @@ class AbstractCalculoParametroEventoLimitacaoPotencia extends AbstractCalculoPar
      */
     calcularLimitacaoDePotenciaCorrente() {
         
-        return (this.unidadeGeradora.potenciaDisponivel - this.eventoMudancaEstadoCorrente.potenciaDisponivel) / this.unidadeGeradora.potenciaDisponivel;
+        var numerator = this.inverseCompute ? 
+            this.eventoMudancaEstadoCorrente.potenciaDisponivel : 
+            (this.unidadeGeradora.potenciaDisponivel - this.eventoMudancaEstadoCorrente.potenciaDisponivel);
+
+        return  numerator / this.unidadeGeradora.potenciaDisponivel;
     }
 
     /**

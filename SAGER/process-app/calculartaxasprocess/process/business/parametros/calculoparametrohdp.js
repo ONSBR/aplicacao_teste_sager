@@ -9,7 +9,7 @@ var util = require("./utilcalculoparametro");
  * @description RNC110 - Parâmetro Horas de Desligamento Programado – HDP
  * Classe responsável por realizar os cálculos do tipo de parâmetro HDP
  */
-module.exports = class CalculoParametroHDP extends AbstractCalculoParametroEventoDiferenca {
+class CalculoParametroHDP extends AbstractCalculoParametroEventoDiferenca {
     
     constructor(unidadeGeradora) {
         super(TipoParametro.HDP, unidadeGeradora);
@@ -27,4 +27,13 @@ module.exports = class CalculoParametroHDP extends AbstractCalculoParametroEvent
                     || evtEstOper.idEstadoOperativo == EstadoOperativo.DCA) && 
                 util.validarIndisponibilidadeResponsabilidade(evtEstOper.idClassificacaoOrigem);
     }
+}
+
+/**
+ * @description RNC110 - Parâmetro Horas de Desligamento Programado – HDP
+ * @param {UnidadeGeradora} unidadeGeradora 
+ * @param {PeriodoCalculo} periodoCalculo 
+ */
+module.exports.factory = function (unidadeGeradora, periodoCalculo) {
+    return new CalculoParametroHDP(unidadeGeradora);
 }

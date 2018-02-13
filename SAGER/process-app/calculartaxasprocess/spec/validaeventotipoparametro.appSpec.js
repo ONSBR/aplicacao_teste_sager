@@ -22,7 +22,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper);
 
 
-        var validado = new CalculoParametroHDF().validarEvento(evtEstOper);
+        var validado = CalculoParametroHDF.factory().validarEvento(evtEstOper);
 
         expect(validado).toBe(true);
 
@@ -43,8 +43,8 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOperEstadoInvalido);
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOperClassificacaoInvalida);
 
-        var validadoEstadoInvalido = new CalculoParametroHDF().validarEvento(evtEstOperEstadoInvalido);
-        var validadoClassificacaoInvalida = new CalculoParametroHDF().validarEvento(evtEstOperClassificacaoInvalida);
+        var validadoEstadoInvalido = CalculoParametroHDF.factory().validarEvento(evtEstOperEstadoInvalido);
+        var validadoClassificacaoInvalida = CalculoParametroHDF.factory().validarEvento(evtEstOperClassificacaoInvalida);
 
         expect(validadoEstadoInvalido).toBe(false);
         expect(validadoClassificacaoInvalida).toBe(false);
@@ -60,7 +60,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper);
 
-        var validado = new CalculoParametroHEDF().validarEvento(evtEstOper);
+        var validado = CalculoParametroHEDF.factory().validarEvento(evtEstOper);
 
         expect(validado).toBe(true);
 
@@ -68,9 +68,9 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
     it('verificar eventos validos da massa em 09/2014, uge 0UG6, para o tipo de parametro HEDF', () => {
         
-        utilTest.testarValidacaoEventosParametroCalculo(
+        utilTest.testarValidacaoEventosParametroCalculo(9, 2014,
             staticDataMass.static_mass_0UG6_09_2014, 
-            CalculoParametroHEDF, 
+            CalculoParametroHEDF.factory, 
             [false, false, false, true, false, false, true, false, false, false]
         );
 
@@ -78,9 +78,9 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
     it('verificar eventos validos da massa em 09/2014, uge 0UG6, para o tipo de parametro HS', () => {
         
-        utilTest.testarValidacaoEventosParametroCalculo(
+        utilTest.testarValidacaoEventosParametroCalculo(9, 2014,
             staticDataMass.static_mass_0UG6_09_2014, 
-            CalculoParametroHS, 
+            CalculoParametroHS.factory, 
             [false, false, false, true, false, false, true, true, true, false]
         );
 
@@ -95,7 +95,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper);
 
-        var validado = new CalculoParametroHDP().validarEvento(evtEstOper);
+        var validado = CalculoParametroHDP.factory().validarEvento(evtEstOper);
 
         expect(validado).toBe(true);
 

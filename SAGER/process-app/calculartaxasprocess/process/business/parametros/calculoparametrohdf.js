@@ -9,7 +9,7 @@ var util = require("./utilcalculoparametro");
  * @description RNC111 - Parâmetro Horas de Desligamento Forçado – HDF
  * Classe responsável por realizar os cálculos do tipo de parâmetro HDF
  */
-module.exports = class CalculoParametroHDF extends AbstractCalculoParametroEventoDiferenca {
+class CalculoParametroHDF extends AbstractCalculoParametroEventoDiferenca {
 
     constructor(unidadeGeradora) {
         super(TipoParametro.HDF, unidadeGeradora);
@@ -25,5 +25,13 @@ module.exports = class CalculoParametroHDF extends AbstractCalculoParametroEvent
                 || evtEstOper.idEstadoOperativo == EstadoOperativo.DAU) && 
             util.validarIndisponibilidadeResponsabilidade(evtEstOper.idClassificacaoOrigem);
     }
+}
 
+/**
+ * @description RNC111 - Parâmetro Horas de Desligamento Forçado – HDF
+ * @param {UnidadeGeradora} unidadeGeradora 
+ * @param {PeriodoCalculo} periodoCalculo 
+ */
+module.exports.factory = function (unidadeGeradora, periodoCalculo) {
+    return new CalculoParametroHDF(unidadeGeradora);
 }

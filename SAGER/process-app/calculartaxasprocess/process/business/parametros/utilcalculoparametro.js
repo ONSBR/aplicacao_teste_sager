@@ -41,6 +41,15 @@ module.exports = class UtilCalculoParametro  {
         return evtEstOper.dataVerificadaEmSegundos >= dataEmSegundos_10_2014;
     }
     
+    static periodo_between_01_2000_e_09_2014(periodo) {
+        return periodo.dataInicioEmSegundos >= dataEmSegundos_01_2000 
+        && periodo.dataInicioEmSegundos < dataEmSegundos_10_2014;
+    }
+
+    static periodo_gte_10_2014(periodo) {
+        return periodo.dataInicioEmSegundos >= dataEmSegundos_10_2014;
+    }
+
     static validarEstado_LIG_LCC_LCI_LCS(idEstadoOperativo) {
         return estado_LIG_LCC_LCI_LCS.indexOf(idEstadoOperativo) >= 0; 
     }

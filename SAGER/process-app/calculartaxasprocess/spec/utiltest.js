@@ -39,11 +39,11 @@ class ComparacaoTaxas {
 
 module.exports = class UtilTest {
 
-    static testarValidacaoEventosParametroCalculo(staticDataMass, calculoParametroType, resultArray) {
+    static testarValidacaoEventosParametroCalculo(mes, ano, staticDataMass, calculoParametroType, resultArray) {
 
         var uge = new UnidadeGeradora();
 
-        var calculo = new calculoParametroType();
+        var calculo = calculoParametroType(uge, new PeriodoCalculo(mes, ano));
 
         var listEventos = staticDataMass(uge);
 
@@ -62,7 +62,7 @@ module.exports = class UtilTest {
 
         var uge = new UnidadeGeradora();
 
-        var calculo = new calculoParametroType(uge);
+        var calculo = calculoParametroType(uge, new PeriodoCalculo(mes, ano));
 
         var listEventos = staticDataMass(uge);
 
@@ -123,7 +123,7 @@ module.exports = class UtilTest {
 
         eventosEstOper = eventosEstOper.where(it => {
             return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-                it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
+                it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos;
         });
 
         var calculosUges = [];
@@ -232,7 +232,7 @@ module.exports = class UtilTest {
     }
 
     static valueToCompare(valor1) {
-        return valor1.toFixedDown(5);
+        return valor1.toRound(7);
     }
 
     static compararValoresTaxasEstatistica(valor1, valor2, comparacaoTaxas,
@@ -261,12 +261,12 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                if (resultado.ano < 2013) {
+                //if (resultado.ano < 2013) {
                 UtilTest.executarCalculoTaxasMensaisUsinaMesAno(
                     idUsina, resultado.mes, resultado.ano,
                     uges, eventos, resultado.teipmes, resultado.teifames,
                     comparacaoTaxas);
-                }
+                //}
             });
 
             console.log(comparacaoTaxas.toString());
@@ -299,7 +299,7 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                if (resultado.ano >= 2014) {
+                if (resultado.ano >= 2010) {
                     UtilTest.executarCalculoTaxasAcumuladasUsinaMesAno(
                         idUsina, resultado.mes, resultado.ano,
                         uges, eventos, resultado.teipacum, resultado.teifaacum,

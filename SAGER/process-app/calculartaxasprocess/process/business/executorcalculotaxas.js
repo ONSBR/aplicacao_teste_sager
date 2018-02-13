@@ -3,6 +3,7 @@ const ExecucaoCalculoFechamento = require("../entities/execucaocalculofechamento
 const Taxa = require("../entities/taxa");
 const ParametroTaxa = require("../entities/parametrotaxa");
 const FechamentoMensal = require("../entities/fechamentomensal");
+const EventoMudancaEstadoOperativo = require("../entities/eventomudancaestadooperativo");
 const constants = require("./constants");
 const eventCatalog = require("../../metadados/eventcatalog");
 const CalculoTaxasPeriodoUge = require("./calculotaxasperiodouge");
@@ -89,8 +90,9 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) 
 
     // TODO retirar pois teoricamente já foi filtrado no mapa
     eventosEstOper = eventosEstOper.where(it => {
+        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
         return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-            it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
+            it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos;
     });
 
     var calculosUges = [];
@@ -201,8 +203,9 @@ module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManage
 
     // TODO retirar pois teoricamente já foi filtrado no mapa
     eventosEstOper = eventosEstOper.where(it => {
+        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
         return it.dataVerificadaEmSegundos >= periodoAcumulado.dataInicioEmSegundos &&
-            it.dataVerificadaEmSegundos <= periodoAcumulado.dataFimEmSegundos;
+            it.dataVerificadaEmSegundos < periodoAcumulado.dataFimEmSegundos;
     });
     console.log("periodoAcumulado: " + JSON.stringify(periodoAcumulado));
     var calculosUges = [];
@@ -216,7 +219,7 @@ module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManage
                 eventosEstOper.where(it => {
                     return it.idUge == uge.idUge &&
                         it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-                        it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos
+                        it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos
                 })
             );
             calculosUges.push(calculoUge);

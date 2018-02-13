@@ -1,39 +1,30 @@
 var TipoParametro = require("../constants").TipoParametro;
-var EstadoOperativo = require("../constants").EstadoOperativo;
-var ClassificacaoOrigem = require("../constants").ClassificacaoOrigem;
-var CondicaoOperativa = require("../constants").CondicaoOperativa;
 var AbstractCalculoParametroEventoDiferenca = require("./_abstractcalculoparametro").AbstractCalculoParametroEventoDiferenca;
+var AbstractCalculoParametroEventoLimitacaoPotencia = require("./_abstractcalculoparametro").AbstractCalculoParametroEventoLimitacaoPotencia;
 var util = require("./utilcalculoparametro");
+
+
+function validarEventoHS(evtEstOper) {
+    
+    return util.validarEstado_LIG_LCC_LCI_LCS(evtEstOper.idEstadoOperativo);
+}
 
 /**
  * @description RNC104 - Parâmetro de horas em serviço HS
- * Classe responsável por realizar os cálculos do tipo de parâmetro HS
+ * @param {UnidadeGeradora} unidadeGeradora 
+ * @param {PeriodoCalculo} periodoCalculo 
  */
-module.exports = class CalculoParametroHS extends AbstractCalculoParametroEventoDiferenca {
-    
-    constructor(unidadeGeradora) {
-        super(TipoParametro.HS, unidadeGeradora);
-    }
+module.exports.factory = function(unidadeGeradora, periodoCalculo) {
 
-    /**
-     * @description Método responsável por validar os eventos de interesse do parâmetro HS
-     * @param {EventoMudancaEstadoOperativo} evtEstOper 
-     */
-    validarEvento(evtEstOper) {
-        
-        if (util.between_01_2000_e_09_2014(evtEstOper)) {
-            
-            return util.validarEstado_LIG_LCC_LCI_LCS(evtEstOper.idEstadoOperativo);
+    var retorno;
 
-        } else if (util.gte_10_2014(evtEstOper)) {
+    //if (util.periodo_between_01_2000_e_09_2014(periodoCalculo)) {
+        retorno = new  AbstractCalculoParametroEventoDiferenca(TipoParametro.HS, unidadeGeradora);
+    //} else if (util.periodo_gte_10_2014(periodoCalculo)) {
+    //    retorno = new  AbstractCalculoParametroEventoLimitacaoPotencia(TipoParametro.HS, unidadeGeradora, true);
+    //}
 
-            // TODO considerando proporcionalmente as limitações de potência nominal, no mês de apuração. 
-            // TODO : ATENÇÂO: É necessário criar todo o histórico das taxas dos últimos 60 meses com base 
-            //        neste novo critério para poder realizar o cálculo.
+    retorno.validarEvento = validarEventoHS;
 
-            return util.validarEstado_LIG_LCC_LCI_LCS(evtEstOper.idEstadoOperativo)
-        }
-
-    }
-
+    return retorno;
 }

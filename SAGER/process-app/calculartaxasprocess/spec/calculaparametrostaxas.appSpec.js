@@ -41,7 +41,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         var eventoNaoHDF2 = utils.clone(eventoNaoHDF);
         eventoNaoHDF2.dataVerificada = new Date(2017, 1, 5, 12, 30, 0);
         
-        var calculo = new CalculoParametroHDF();
+        var calculo = CalculoParametroHDF.factory();
 
         var listEventos = [eventoDAUHDF, eventoDEMHDF, eventoNaoHDF, eventoDAUHDF2, eventoNaoHDF2];
         listEventos.forEach(element => {
@@ -79,7 +79,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         var eventoFinalizacao = new EventoMudancaEstadoOperativo();
         eventoFinalizacao.dataVerificada = new Date(2017, 1, 31, 59, 59, 59);
         
-        var calculo = new CalculoParametroHDF();
+        var calculo = CalculoParametroHDF.factory();
 
         var listEventos = [eventoDAUHDF, eventoDEMHDF, eventoNaoHDF, eventoDAUHDF2, eventoFinalizacao];
         listEventos.forEach(element => {
@@ -105,7 +105,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         var uge = new UnidadeGeradora();
         uge.dataInicioOperacao = new Date(2016, 0, 1);
 
-        var calculo = new CalculoParametroHP(uge);
+        var calculo = CalculoParametroHP.factory(uge);
         calculo.calcular(new PeriodoCalculo(mes, ano));
         
         expect(calculo.qtdHoras).toEqual(744);
@@ -120,7 +120,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         var uge = new UnidadeGeradora();
         uge.dataInicioOperacao = new Date(2017, 0, 2, 16);
 
-        var calculo = new CalculoParametroHP(uge);
+        var calculo = CalculoParametroHP.factory(uge);
         calculo.calcular(new PeriodoCalculo(mes, ano));
         
         expect(calculo.qtdHoras).toEqual(704);
@@ -135,7 +135,7 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
         var uge = new UnidadeGeradora();
         uge.dataInicioOperacao = new Date(1994, 4, 30, 0);
 
-        var calculo = new CalculoParametroHP(uge);
+        var calculo = CalculoParametroHP.factory(uge);
         calculo.calcular(new PeriodoCalculo(mes, ano));
         
         expect(calculo.qtdHoras).toEqual(720);
@@ -146,31 +146,31 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
     it('validar cálculo parâmetro HEDF da massa em 09/2014, uge 0UG6', () => {
         
-        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHEDF, 1.41);
+        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHEDF.factory, 1.41);
         
     })
 
     it('validar cálculo parâmetro HS da massa em 09/2014, uge 0UG6', () => {
         
-        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHS, 41.97);
+        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHS.factory, 41.97);
 
     })
 
     it('validar cálculo parâmetro HRD da massa em 09/2014, uge 0UG6', () => {
         
-        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHRD, 670.08);
+        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHRD.factory, 670.08);
 
     })
     
     it('validar cálculo parâmetro HDP da massa em 09/2014, uge 0UG6', () => {
         
-        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHDP, 0);
+        utilTest.testarCalculoEventos(9, 2014, staticDataMass.static_mass_0UG6_09_2014, CalculoParametroHDP.factory, 0);
 
     })
 
     it('validar cálculo parâmetro HDP da massa em 07/2014, uge 0UG3', () => {
         
-        utilTest.testarCalculoEventos(7, 2014, staticDataMass.static_mass_0UG3_07_2014, CalculoParametroHDP, 256.23);
+        utilTest.testarCalculoEventos(7, 2014, staticDataMass.static_mass_0UG3_07_2014, CalculoParametroHDP.factory, 256.23);
 
     })
 });

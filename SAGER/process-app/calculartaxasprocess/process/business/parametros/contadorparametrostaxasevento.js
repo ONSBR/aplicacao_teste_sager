@@ -9,20 +9,20 @@ var util = require("./utilcalculoparametro");
 
 module.exports = class ContadorParametrosTaxasEvento {
 
-    constructor(unidadeGeradora) {
+    constructor(unidadeGeradora, periodoCalculo) {
 
         this.unidadeGeradora = unidadeGeradora;
         this.validar();
 
         this.listaCalculoTipoParametrosEventos = [];
 
-        this.calculoParametroHDF = new CalculoParametroHDF(unidadeGeradora);
-        this.calculoParametroHEDF = new CalculoParametroHEDF(unidadeGeradora);
-        this.calculoParametroHS = new CalculoParametroHS(unidadeGeradora);
-        this.calculoParametroHRD = new CalculoParametroHRD(unidadeGeradora);
-        this.calculoParametroHDCE = new CalculoParametroHDCE(unidadeGeradora);
-        this.calculoParametroHDP = new CalculoParametroHDP(unidadeGeradora);
-        this.calculoParametroHEDP = new CalculoParametroHEDP(unidadeGeradora);
+        this.calculoParametroHDF = CalculoParametroHDF.factory(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHEDF = CalculoParametroHEDF.factory(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHS = CalculoParametroHS.factory(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHRD = CalculoParametroHRD.factory(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHDCE = CalculoParametroHDCE.factory(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHDP = CalculoParametroHDP.factory(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHEDP = CalculoParametroHEDP.factory(unidadeGeradora, periodoCalculo);
 
         this.listaCalculoTipoParametrosEventos.push(this.calculoParametroHDF);
         this.listaCalculoTipoParametrosEventos.push(this.calculoParametroHEDF);
