@@ -35,3 +35,14 @@
 
 # carga de dados de testes na base de dados utilizar o load_data_test
 node ./spec/_script/load_data_test.js
+
+# Para executar o cálculo de fechamento para um específico mês/ano.
+# Deve enviar uma mensagem de evento para o event-manager da plataforma.
+#{
+#	"name": "calculate.tax.request",
+#	"payload": {
+#		"mesFechamento":12,
+#		"anoFechamento":2014
+#	}
+#}
+
