@@ -6,7 +6,7 @@ var extensions = require("../../../extensions");
  * @description RNC103 - Parâmetro do total de horas do período de apuração HP
  * Classe responsável por realizar os cálculos do tipo de parâmetro HP
  */
-module.exports = class CalculoParametroHP extends AbstractCalculoParametro {
+class CalculoParametroHP extends AbstractCalculoParametro {
     
     constructor(unidadeGeradora) {
         super(TipoParametro.HP, unidadeGeradora);
@@ -30,7 +30,14 @@ module.exports = class CalculoParametroHP extends AbstractCalculoParametro {
         }
 
         this.qtdHorasEmSegundos = dataFimCalculoEmSegundos - dataInicioCalculoEmSegundos;
-    }
+    }   
+}
 
-   
+/**
+ * @description RNC103 - Parâmetro do total de horas do período de apuração HP
+ * @param {UnidadeGeradora} unidadeGeradora 
+ * @param {PeriodoCalculo} periodoCalculo 
+ */
+module.exports.factory = function (unidadeGeradora, periodoCalculo) {
+    return new CalculoParametroHP(unidadeGeradora);
 }

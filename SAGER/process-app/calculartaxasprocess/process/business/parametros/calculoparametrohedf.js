@@ -9,7 +9,7 @@ var util = require("./utilcalculoparametro");
  * @description RNC114 - Parâmetro Horas Equivalentes de Desligamento Forçado – HEDF
  * Classe responsável por realizar os cálculos do tipo de parâmetro HEDF
  */
-module.exports = class CalculoParametroHEDF extends AbstractCalculoParametroEventoLimitacaoPotencia {
+class CalculoParametroHEDF extends AbstractCalculoParametroEventoLimitacaoPotencia {
     
     constructor(unidadeGeradora) {
         super(TipoParametro.HEDF, unidadeGeradora);
@@ -26,4 +26,13 @@ module.exports = class CalculoParametroHEDF extends AbstractCalculoParametroEven
             && util.validarIndisponibilidadeResponsabilidade(evtEstOper.idClassificacaoOrigem);
     }
 
+}
+
+/**
+ * @description RNC114 - Parâmetro Horas Equivalentes de Desligamento Forçado – HEDF
+ * @param {UnidadeGeradora} unidadeGeradora 
+ * @param {PeriodoCalculo} periodoCalculo 
+ */
+module.exports.factory = function (unidadeGeradora, periodoCalculo) {
+    return new CalculoParametroHEDF(unidadeGeradora);
 }

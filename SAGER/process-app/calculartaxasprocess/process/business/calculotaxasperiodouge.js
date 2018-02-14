@@ -10,8 +10,8 @@ module.exports = class CalculoTaxasPeriodoUge {
         this.unidadeGeradora = unidadeGeradora;
         this.eventosEstadoOperativo = CalculoTaxasPeriodoUge.orderEventosEstadoOperativo(eventosEstadoOperativo);
 
-        this.contadorEventos = new ContadorParametrosTaxasEvento(unidadeGeradora);
-        this.calculoParametroHP = new CalculoParametroHP(unidadeGeradora);
+        this.contadorEventos = new ContadorParametrosTaxasEvento(unidadeGeradora, periodoCalculo);
+        this.calculoParametroHP = CalculoParametroHP.factory(unidadeGeradora, periodoCalculo);
     }
 
     static orderEventosEstadoOperativo(eventos) {

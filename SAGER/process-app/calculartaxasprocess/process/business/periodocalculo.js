@@ -7,6 +7,7 @@ module.exports = class PeriodoCalculo {
 
         this.mes = mes;
         this.ano = ano;
+        this.mesAnoInterval = [];
 
         this.validar(mes, ano);
 
@@ -14,11 +15,17 @@ module.exports = class PeriodoCalculo {
             qtdMesesAntecicacao = 1;
         }
 
-        var momentFim = moment(new Date(ano, mes - 1, 1, 0, 0, 0, 0)).add(1, "months");
+        var momentFim = moment(new Date(ano, mes - 1, 1, 0, 0, 0, 0));
+        var momentInicio = momentFim;
+        momentFim = momentFim.add(1, "months");
         this.dataFim = momentFim.toDate();
         this.dataFimEmSegundos = this.dataFim.getTotalSeconds();
-
-        this.dataInicio = momentFim.subtract(qtdMesesAntecicacao, "months").toDate();
+        
+        for(var i=0; i < qtdMesesAntecicacao; i++) {
+            momentInicio = momentInicio.subtract(1, "months");
+            this.mesAnoInterval.push({"mes": (momentInicio.month()+1), "ano": momentInicio.year()});
+        }
+        this.dataInicio = momentInicio.toDate();
         this.dataInicioEmSegundos = this.dataInicio.getTotalSeconds();
     }
 

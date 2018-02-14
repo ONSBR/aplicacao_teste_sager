@@ -39,11 +39,11 @@ class ComparacaoTaxas {
 
 module.exports = class UtilTest {
 
-    static testarValidacaoEventosParametroCalculo(staticDataMass, calculoParametroType, resultArray) {
+    static testarValidacaoEventosParametroCalculo(mes, ano, staticDataMass, calculoParametroType, resultArray) {
 
         var uge = new UnidadeGeradora();
 
-        var calculo = new calculoParametroType();
+        var calculo = calculoParametroType(uge, new PeriodoCalculo(mes, ano));
 
         var listEventos = staticDataMass(uge);
 
@@ -62,7 +62,7 @@ module.exports = class UtilTest {
 
         var uge = new UnidadeGeradora();
 
-        var calculo = new calculoParametroType(uge);
+        var calculo = calculoParametroType(uge, new PeriodoCalculo(mes, ano));
 
         var listEventos = staticDataMass(uge);
 
@@ -123,7 +123,7 @@ module.exports = class UtilTest {
 
         eventosEstOper = eventosEstOper.where(it => {
             return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-                it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
+                it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos;
         });
 
         var calculosUges = [];
@@ -170,25 +170,32 @@ module.exports = class UtilTest {
     static executarCalculoTaxasAcumuladasUsinaMesAno(idUsina, mes, ano, uges, eventosEstOper,
         resultadoTeipMes, resultadoTeifaMes, comparacaoTaxas) {
 
-        var periodoCalculo = new PeriodoCalculo(mes, ano, 60);
+        var periodoAcumulado = new PeriodoCalculo(mes, ano, 60);
 
         eventosEstOper = eventosEstOper.where(it => {
-            return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-                it.dataVerificadaEmSegundos <= periodoCalculo.dataFimEmSegundos;
+            return it.dataVerificadaEmSegundos >= periodoAcumulado.dataInicioEmSegundos &&
+                it.dataVerificadaEmSegundos < periodoAcumulado.dataFimEmSegundos;
         });
-
-        //console.log("eventosEstOper.length: " + eventosEstOper.toArray().length);
 
         var calculosUges = [];
         uges.forEach(uge => {
-            var calculoUge = new CalculoTaxasPeriodoUge(
-                periodoCalculo, uge,
-                eventosEstOper.where(it => { return it.idUge == uge.idUge })
-            );
-            calculosUges.push(calculoUge);
+
+            periodoAcumulado.mesAnoInterval.forEach(mesAno => {
+                
+                var periodoCalculo = new PeriodoCalculo(mesAno.mes, mesAno.ano);
+                var calculoUge = new CalculoTaxasPeriodoUge(
+                    periodoCalculo, uge,
+                    eventosEstOper.where(it => {
+                        return it.idUge == uge.idUge &&
+                            it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
+                            it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos
+                    })
+                );
+                calculosUges.push(calculoUge);
+            });
         });
 
-        var calculoUsina = new CalculoTaxasPeriodoUsina(periodoCalculo, idUsina, calculosUges);
+        var calculoUsina = new CalculoTaxasPeriodoUsina(periodoAcumulado, idUsina, calculosUges);
         calculoUsina.calcular();
 
         //console.log(calculoUsina.toString());
@@ -223,7 +230,7 @@ module.exports = class UtilTest {
     }
 
     static valueToCompare(valor1) {
-        return valor1.toFixedDown(5);
+        return valor1.toRound(7);
     }
 
     static compararValoresTaxasEstatistica(valor1, valor2, comparacaoTaxas,
@@ -252,22 +259,22 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                if (resultado.ano < 2013) {
+                //if (resultado.ano < 2013) {
                 UtilTest.executarCalculoTaxasMensaisUsinaMesAno(
                     idUsina, resultado.mes, resultado.ano,
                     uges, eventos, resultado.teipmes, resultado.teifames,
                     comparacaoTaxas);
-                }
+                //}
             });
 
             console.log(comparacaoTaxas.toString());
-
-            /*console.log("LOG ERROR");
-            comparacaoTaxas.teipdiferentes.forEach(it => {
+            /*
+            console.log("LOG ERROR");
+            comparacaoTaxas.teipiguais.forEach(it => {
                 console.log("\nCalculoUsina: " + it.calculoUsina.toString().replace(new RegExp("{\"idUge\"", 'g'), "\n{\"idUge\""));
             });
-            console.log("FIM LOG ERROR");*/
-
+            console.log("FIM LOG ERROR");
+            */
             //expect(comparacaoTaxas.teipdiferentes.length).toBe(0);
             //expect(comparacaoTaxas.teifadiferentes.length).toBe(0);
 
@@ -290,7 +297,7 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                if (resultado.ano >= 2014) {
+                if (resultado.ano >= 2010) {
                     UtilTest.executarCalculoTaxasAcumuladasUsinaMesAno(
                         idUsina, resultado.mes, resultado.ano,
                         uges, eventos, resultado.teipacum, resultado.teifaacum,

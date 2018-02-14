@@ -1,4 +1,3 @@
-const FileCsvToJson = require("../testMass/fileCsvToJson");
 const FileDataMass = require("../testMass/fileDataMass");
 const HttpClient = require("plataforma-sdk/http/client");
 const FechamentoMensal = require("../../process/entities/fechamentoMensal");
@@ -7,12 +6,9 @@ const utils = require("../../utils");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
-const DOMAIN_PORT = 2188;
+const DOMAIN_PORT = 2182;
 
-const MAPA = "calculartaxas";
-
-//FileCsvToJson.pathFileMass = "../spec/testmass/filesmass/";
-FileCsvToJson.pathFileMass = "C:\\Users\\fca\\Documents\\poc\\aplicacao_teste_sager\\SAGER\\process-app\\calculartaxasprocess\\spec\\testmass\\filesmass\\";
+const MAPA = "calculartaxasprocess";
 
 var dataLoad = [];
 dataLoad.push(FileDataMass.file_mass_uge_ALUXG());

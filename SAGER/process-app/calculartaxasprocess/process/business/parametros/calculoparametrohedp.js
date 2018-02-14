@@ -9,7 +9,7 @@ var util = require("./utilcalculoparametro");
  * @description RNC113 - Parâmetro Horas Equivalentes de Desligamento Programado – HEDP
  * Classe responsável por realizar os cálculos do tipo de parâmetro HEDP
  */
-module.exports = class CalculoParametroHEDP extends AbstractCalculoParametroEventoLimitacaoPotencia {
+class CalculoParametroHEDP extends AbstractCalculoParametroEventoLimitacaoPotencia {
     
     constructor(unidadeGeradora) {
         super(TipoParametro.HEDP, unidadeGeradora);
@@ -27,4 +27,13 @@ module.exports = class CalculoParametroHEDP extends AbstractCalculoParametroEven
             && evtEstOper.idCondicaoOperativa == CondicaoOperativa.RPR
             && util.validarIndisponibilidadeResponsabilidade(evtEstOper.idClassificacaoOrigem);
     }
+}
+
+/**
+ * @description RNC113 - Parâmetro Horas Equivalentes de Desligamento Programado – HEDP
+ * @param {UnidadeGeradora} unidadeGeradora 
+ * @param {PeriodoCalculo} periodoCalculo 
+ */
+module.exports.factory = function (unidadeGeradora, periodoCalculo) {
+    return new CalculoParametroHEDP(unidadeGeradora);
 }

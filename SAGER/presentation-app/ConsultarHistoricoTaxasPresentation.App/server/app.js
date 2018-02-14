@@ -38,6 +38,10 @@ app.post("/getMemoriaDeProcessamento", (req, res) => {
     memoriaProcessamentoController.getMemoriaDeProcessamento(req, res);
 });
 
+app.get("/downloadMemoriaProcessamentoXlsx", (req, res) => {
+    memoriaProcessamentoController.downloadMemoriaProcessamentoXlsx(req, res);
+});
+
 let pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController();
 
 app.post("/pesquisarhistorico", (req, res) => {
