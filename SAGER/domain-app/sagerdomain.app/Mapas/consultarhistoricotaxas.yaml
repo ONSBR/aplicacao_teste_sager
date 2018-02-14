@@ -93,7 +93,7 @@ taxa:
       idFechamento:
         $eq: :idFechamento
 
-tipo-taxa:
+tipotaxa:
   model: tb_tipo_taxa
   fields:
     valorParametro:
@@ -109,11 +109,3 @@ tipo-taxa:
   byUsinaEFechamento:
       - idFechamento:
           $eq: :filterIdFechamento
-
-
-tipotaxa:
-  model: tb_tipo_taxa
-  fields:
-
-    nome:
-      column: nome
