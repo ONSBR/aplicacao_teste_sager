@@ -5,9 +5,6 @@ const executor = require("../process/business/executorcalculotaxas");
 const FechamentoMensal = require("../process/entities/fechamentomensal");
 const PeriodoCalculo = require("../process/business/periodocalculo")
 
-function catch_error(error) {
-    console.error("error: " + error.stack);
-}
 
 describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 
@@ -69,9 +66,6 @@ describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
             entities.forEach(it => {
                 it._metadata.instance_id = instance_id;
             });
-            /*inserirDados(entities).then(result => {
-                console.log("Execução realizada com sucesso. taxas calculadas para mes: " + mes + ", ano: " + ano);
-            });*/
 
         }).catch(error => {
             console.log("error: " + error.stack);
