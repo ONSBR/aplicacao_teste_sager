@@ -56,6 +56,7 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
             payload: {
                 idUsina: it.idUsina,
                 idFechamento: fechamento.id,
+                idExecucaoCalculo: execucaoCalculo.id,
                 dataInicialEvento: periodoCalculo.dataInicio,
                 dataFinalEvento: periodoCalculo.dataFim
             }
@@ -111,12 +112,16 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) 
 
         calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
 
-            updateOrCreateParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
-                calculoParam.tipoParametro, calculoParam.qtdHoras);
+            createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
+                calculoParam.tipoParametro, calculoParam.qtdHoras,
+                evento.payload.idExecucaoCalculo, mes, ano
+            );
         });
 
-        updateOrCreateParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
-            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras);
+        createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
+            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras,
+            evento.payload.idExecucaoCalculo, mes, ano
+        );
 
     });
 
@@ -132,6 +137,7 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) 
             acumulada: true,
             idUsina: idUsina,
             idFechamento: fechamento.id,
+            idExecucaoCalculo: evento.payload.idExecucaoCalculo,
             dataInicialEvento: periodoAcumulado.dataInicio,
             dataFinalEvento: periodoAcumulado.dataFim
         }
@@ -161,23 +167,13 @@ function updateOrCreateTaxa(dataset, idFechamento, idUsina, idTipoTaxa, valorTax
     }
 }
 
-function updateOrCreateParametroTaxa(dataset, idFechamento, idUge, idTipoParametro, valorParametro) {
+function createParametroTaxa(dataset, idFechamento, idUge, idTipoParametro, valorParametro, idExecucaoCalculo, mes, ano) {
 
-    var paramTaxa = dataset.parametrotaxa.collection.firstOrDefault(it => {
-        return it.idFechamento == idFechamento && it.idUge == idUge && it.idTipoParametro == idTipoParametro
-    });
-    if (paramTaxa) {
-        paramTaxa.valorParametro = valorParametro;
-        dataset.parametrotaxa.update(paramTaxa);
-    } else {
-        dataset.parametrotaxa.insert(new ParametroTaxa(
-            utils.guid(),
-            valorParametro,
-            idTipoParametro,
-            idUge,
-            idFechamento
-        ));
-    }
+    dataset.parametrotaxa.insert(new ParametroTaxa(
+        utils.guid(),
+        valorParametro, idTipoParametro, idUge,
+        idFechamento, idExecucaoCalculo, mes, ano
+    ));
 }
 
 module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManager) {
@@ -228,6 +224,23 @@ module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManage
 
     var calculoUsina = new CalculoTaxasPeriodoUsina(periodoAcumulado, idUsina, calculosUges);
     calculoUsina.calcular();
+
+    calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
+
+        calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
+
+            createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
+                calculoParam.tipoParametro, calculoParam.qtdHoras,
+                evento.payload.idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
+            );
+        });
+
+        createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
+            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras,
+            evento.payload.idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
+        );
+
+    });
 
     // TODO verificar se não precisar gravar os parâmetros como o mensal, 
     // mas fica a dúvida salva para todos os 60 meses?

@@ -19,6 +19,9 @@ execucaocalculofechamento:
     byIdsFechamentos:
       - idFechamento:
           $in: $idsFechamentos
+    byId:
+      - id:
+          $eq: :idExecucaoCalculo
 
 fechamentomensal:
   model: tb_fechamento_mensal
@@ -128,7 +131,16 @@ parametrotaxa:
       column: id_uge
     idFechamento:
       column: id_fechamento    
+    idExecucaoCalculoFechamento:
+      column: id_execucao_calculo_fechamento
+    mes:
+      column: mes
+    ano:
+      column: ano
   filters:
     byUsinaEFechamento:
+      $and:
         - idFechamento:
             $eq: :idFechamento
+        - idExecucaoCalculoFechamento:
+            $eq: :idExecucaoCalculo
