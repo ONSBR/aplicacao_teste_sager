@@ -2,7 +2,11 @@ const Enumerable = require('linq');
 const XLSX = require('xlsx');
 const util = require('../../util');
 
-
+/**
+ * @class ParseFileTemplate
+ * @description Classe responsável por definir as informações básica de taxa no
+ * documento xlsx, informações comuns a todas taxas.
+ */
 class ParseFileTemplate {
 
     constructor(context, taxa) {
@@ -38,7 +42,7 @@ class ParseFileTemplate {
         var fechamento = Enumerable.from(this.context.dataset.entities.fechamentomensal).firstOrDefault();
         this.sheet["B6"] = { v: (fechamento.mes.zeroFillLeft(2) + "/" + fechamento.ano) };
 
-        // TODO this.sheet["B7"] info de cenário.
+        // TODO this.sheet["B7"] info de cenário, quando tiver o caso de uso de cenário.
 
         // Parse dos eventos
         var curRow = 10;
@@ -68,12 +72,20 @@ class ParseFileTemplate {
     }
 }
 
+/**
+ * @class ParseTeipMes
+ * @description Classe responsável por realizar o parser para Excel, dos dados de memória de cálculo de TEIP mensal.
+ */
 class ParseTeipMes extends ParseFileTemplate {
 
     get suffixNameFile() {
         return "teip";
     }
 
+    /**
+     * @method parseContent
+     * @description realiza o parser do conteúdo específico da taxa do tipo Teip mensal
+     */
     parseContent() {
 
         super.parseContent(["J", "K", "L", "M", "N", "O", "P"]);
@@ -109,11 +121,11 @@ class ParseTeipMes extends ParseFileTemplate {
                 return p.idUge == it.idUge && p.mes == it.mes && p.ano == it.ano
                     && p.idTipoParametro == TipoParametro.HP
             });
-
+            
             this.sheet["A" + curRow] = { v: it.idUge };
             this.sheet["B" + curRow] = { v: it.mes };
             this.sheet["C" + curRow] = { v: it.ano };
-            this.sheet["D" + curRow] = { d: util.formatDate(uge.dataInicioOperacao) };
+            this.sheet["D" + curRow] = { v: util.formatDate(uge.dataInicioOperacao) };
             this.sheet["E" + curRow] = { v: uge.potenciaDisponivel };
             this.sheet["F" + curRow] = { v: util.valueToExcel(paramHDP.valorParametro) };
             this.sheet["G" + curRow] = { v: util.valueToExcel(paramHEDP.valorParametro) };
@@ -124,12 +136,20 @@ class ParseTeipMes extends ParseFileTemplate {
     }
 }
 
+/**
+ * @class ParseTeifaMes
+ * @description Classe responsável por realizar o parser para Excel, dos dados de memória de cálculo de TEIFa mensal.
+ */
 class ParseTeifaMes extends ParseFileTemplate {
 
     get suffixNameFile() {
         return "teifa";
     }
 
+    /**
+     * @method parseContent
+     * @description realiza o parser do conteúdo específico da taxa do tipo Teifa mensal
+     */
     parseContent() {
 
         super.parseContent(["L", "M", "N", "O", "P", "Q", "R"]);
@@ -190,6 +210,10 @@ class ParseTeifaMes extends ParseFileTemplate {
     }
 }
 
+/**
+ * @class ParseTeipAcum
+ * @description Classe responsável por realizar o parser para Excel, dos dados de memória de cálculo de TEIP acumulada.
+ */
 class ParseTeipAcum extends ParseTeipMes {
 
     parseContent() {
@@ -198,6 +222,10 @@ class ParseTeipAcum extends ParseTeipMes {
     }
 }
 
+/**
+ * @class ParseTeifaAcum
+ * @description Classe responsável por realizar o parser para Excel, dos dados de memória de cálculo de TEIFa acumulada.
+ */
 class ParseTeifaAcum extends ParseTeifaMes {
 
     parseContent() {
@@ -206,6 +234,10 @@ class ParseTeifaAcum extends ParseTeifaMes {
     }
 }
 
+/**
+ * @constant TipoParametro
+ * @description Indica os tipos de parâmetros possíveis
+ */
 const TipoParametro = {
     HDF: "HDF",
     HEDF: "HEDF",
@@ -217,6 +249,10 @@ const TipoParametro = {
     HP: "HP"
 }
 
+/**
+ * @constant TipoTaxa
+ * @description Indica os tipos de taxas possíveis
+ */
 const TipoTaxa = {
     TEIPmes: "TEIPmes",
     TEIFAmes: "TEIFAmes",
@@ -224,6 +260,13 @@ const TipoTaxa = {
     TEIFAacum: "TEIFAac"
 }
 
+/**
+ * @description Obtém uma instância do parser, da memória de cálculo de taxas, com o template excel
+ * para geração da planilha de conferência dos dados utilizados.
+ * 
+ * @param {context} context 
+ * @param {Taxa} taxa 
+ */
 module.exports.factory = function (context, taxa) {
 
     var retorno;
