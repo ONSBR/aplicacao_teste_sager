@@ -103,7 +103,9 @@ tipo-taxa:
     idUge:
       column: id_uge
     idFechamento:
-      column: id_fechamento    
+      column: id_fechamento
+    idTipoTaxa:
+      column: id_tipo_taxa          
   byUsinaEFechamento:
       - idFechamento:
           $eq: :filterIdFechamento
@@ -112,7 +114,6 @@ tipo-taxa:
 tipotaxa:
   model: tb_tipo_taxa
   fields:
-    idTipoTaxa:
-      column: id_tipo_taxa
+
     nome:
       column: nome
