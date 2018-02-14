@@ -1,5 +1,5 @@
 operations:
-  - name: executarCalculoTaxas
-    event: calculate.tax.request
+  - name: calcularTaxasPorUsina
+    event: calculate.tax.by.usina
     commit: true
    

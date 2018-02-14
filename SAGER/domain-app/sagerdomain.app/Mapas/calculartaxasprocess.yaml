@@ -16,9 +16,6 @@ execucaocalculofechamento:
     idFechamento:
       column: id_fechamento
   filters:
-    byIdsFechamentos:
-      - idFechamento:
-          $in: $idsFechamentos
     byId:
       - id:
           $eq: :idExecucaoCalculo
@@ -35,12 +32,6 @@ fechamentomensal:
     dataCriacao:
       column: data_criacao
   filters:
-    byMesAno:
-      $and:
-        - mes:
-            $eq: :mesFechamento
-        - ano:
-            $eq: :anoFechamento
     byId:
       - id:
           $eq: :idFechamento
@@ -77,7 +68,9 @@ usina:
       column: nome
       required: true
   filters:
-    all:
+    byIdUsina:
+      - idUsina:
+          $eq: :idUsina
 
 unidadegeradora:
   model: tb_unidade_geradora

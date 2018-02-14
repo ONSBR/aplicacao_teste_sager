@@ -11,68 +11,24 @@ const CalculoTaxasPeriodoUsina = require("./calculotaxasperiodousina");
 const PeriodoCalculo = require("./periodocalculo");
 const extensions = require("../../extensions");
 
-module.exports.executarCalculoTaxas = function (contexto, eventManager) {
+/**
+ * @description Responsável por executar as regras de negócio de cálculos de taxas, de teip e teifa,
+ * tanto mensal quanto acumulada.
+ * O que difere o cálculo de mensal para acumulado é o período, 1 e 60 meses, respectivamente.
+ * 
+ * @param {Context} contexto 
+ */
+module.exports.calcularTaxasPorUsina = function (contexto) {
 
-    console.log("INICIO [executarCalculoTaxas].");
+    var acumulada = contexto.event.payload.acumulada;
 
-    // TODO e a função agregada, por exemplo, se existem as taxas já
-    var evento = contexto.event;
-    var dataset = contexto.dataset;
-    var payload = evento.payload;
-
-    var fechamento = dataset.fechamentomensal.collection.firstOrDefault(it => {
-        return it.ano == payload.anoFechamento && it.mes == payload.mesFechamento;
-    });
-
-    // TODO deveria obter do contexto
-    var dataAtual = evento.reference_date ? evento.reference_date : new Date();
-
-    if (!fechamento) {
-        //throw new Error("Não informado o fechamento mensal para execução das taxas.");
-        fechamento = new FechamentoMensal(
-            utils.guid(),
-            payload.mesFechamento,
-            payload.anoFechamento,
-            dataAtual
-        );
-        dataset.fechamentomensal.insert(fechamento);
-    }
-
-    var execucaoCalculo = new ExecucaoCalculoFechamento();
-    execucaoCalculo.id = utils.guid();
-    execucaoCalculo.idFechamento = fechamento.id;
-    execucaoCalculo.dataInicio = dataAtual;
-    execucaoCalculo.protocolo = payload.mesFechamento.zeroFillLeft(4) + '/' + payload.anoFechamento;
-
-    dataset.execucaocalculofechamento.insert(execucaoCalculo);
-
-    var periodoCalculo = new PeriodoCalculo(payload.mesFechamento, payload.anoFechamento);
-
-    var usinas = dataset.usina.collection;
-    usinas.forEach(it => {
-
-        eventManager.emit({
-            name: "calculate.tax.request",
-            payload: {
-                idUsina: it.idUsina,
-                idFechamento: fechamento.id,
-                idExecucaoCalculo: execucaoCalculo.id,
-                dataInicialEvento: periodoCalculo.dataInicio,
-                dataFinalEvento: periodoCalculo.dataFim
-            }
-        }).then(result => {
-            console.log("Usina: " + it.idUsina);
-        }).catch(error => {
-            console.log("Error Usina: " + error.stack);
-        });
-    });
-}
-
-module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) {
-
-    console.log("INICIO [calcularTaxasMensaisPorUsina]: " +
+    console.log("INICIO [calcularTaxasPorUsina-"+(acumulada?"Acumulada":"Mensal")+"]: totaleventos = " +
         JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length)
     );
+
+    var totalMeses = acumulada? 60 : 1;
+    var tipoTaxaTeip = acumulada? constants.TipoTaxa.TEIPacum : constants.TipoTaxa.TEIPmes;
+    var tipoTaxaTeifa = acumulada? constants.TipoTaxa.TEIFAacum : constants.TipoTaxa.TEIFAmes
 
     var evento = contexto.event;
     var dataset = contexto.dataset;
@@ -87,127 +43,17 @@ module.exports.calcularTaxasMensaisPorUsina = function (contexto, eventManager) 
     var uges = dataset.unidadegeradora.collection;
     var eventosEstOper = dataset.eventomudancaestadooperativo.collection;
 
-    var periodoCalculo = new PeriodoCalculo(mes, ano);
+    var periodoTotal = new PeriodoCalculo(mes, ano, totalMeses);
 
-    // TODO retirar pois teoricamente já foi filtrado no mapa
-    eventosEstOper = eventosEstOper.where(it => {
+    eventosEstOper.forEach(it => {
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
-        return it.dataVerificadaEmSegundos >= periodoCalculo.dataInicioEmSegundos &&
-            it.dataVerificadaEmSegundos < periodoCalculo.dataFimEmSegundos;
     });
-
+    
     var calculosUges = [];
     uges.forEach(uge => {
-        var calculoUge = new CalculoTaxasPeriodoUge(
-            periodoCalculo, uge,
-            eventosEstOper.where(it => { return it.idUge == uge.idUge })
-        );
-        calculosUges.push(calculoUge);
-    });
-
-    var calculoUsina = new CalculoTaxasPeriodoUsina(periodoCalculo, idUsina, calculosUges);
-    calculoUsina.calcular();
-
-    calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
-
-        calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
-
-            createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
-                calculoParam.tipoParametro, calculoParam.qtdHoras,
-                evento.payload.idExecucaoCalculo, mes, ano
-            );
-        });
-
-        createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
-            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras,
-            evento.payload.idExecucaoCalculo, mes, ano
-        );
-
-    });
-
-    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIPmes, calculoUsina.valorTeip);
-    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIFAmes, calculoUsina.valorTeifa);
-
-    var periodoAcumulado = new PeriodoCalculo(mes, ano, 60);
-
-    // TODO depois alterar para funcionar por evento
-    eventManager.emit({
-        name: "calculate.tax.request",
-        payload: {
-            acumulada: true,
-            idUsina: idUsina,
-            idFechamento: fechamento.id,
-            idExecucaoCalculo: evento.payload.idExecucaoCalculo,
-            dataInicialEvento: periodoAcumulado.dataInicio,
-            dataFinalEvento: periodoAcumulado.dataFim
-        }
-    }).then(result => {
-        console.log("Usina: " + idUsina);
-    }).catch(error => {
-        console.log("Error Usina: " + error.stack);
-    });
-
-}
-
-function updateOrCreateTaxa(dataset, idFechamento, idUsina, idTipoTaxa, valorTaxa) {
-    var taxa = dataset.taxa.collection.firstOrDefault(it => {
-        return it.idFechamento == idFechamento && it.idUsina == idUsina && it.idTipoTaxa == idTipoTaxa
-    });
-    if (taxa) {
-        taxa.valorTaxa = valorTaxa;
-        dataset.taxa.update(taxa);
-    } else {
-        dataset.taxa.insert(new Taxa(
-            utils.guid(),
-            valorTaxa,
-            idTipoTaxa,
-            idFechamento,
-            idUsina
-        ));
-    }
-}
-
-function createParametroTaxa(dataset, idFechamento, idUge, idTipoParametro, valorParametro, idExecucaoCalculo, mes, ano) {
-
-    dataset.parametrotaxa.insert(new ParametroTaxa(
-        utils.guid(),
-        valorParametro, idTipoParametro, idUge,
-        idFechamento, idExecucaoCalculo, mes, ano
-    ));
-}
-
-module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManager) {
-
-    console.log("INICIO [calcularTaxasAcumuladasPorUsina]: " +
-        JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length)
-    );
-
-    var evento = contexto.event;
-    var dataset = contexto.dataset;
-
-    var fechamento = contexto.dataset.fechamentomensal.collection.firstOrDefault();
-
-    var mes = fechamento.mes;
-    var ano = fechamento.ano;
-
-    var idUsina = evento.payload.idUsina;
-
-    var uges = dataset.unidadegeradora.collection;
-    var eventosEstOper = dataset.eventomudancaestadooperativo.collection;
-
-    var periodoAcumulado = new PeriodoCalculo(mes, ano, 60);
-
-    // TODO retirar pois teoricamente já foi filtrado no mapa
-    eventosEstOper = eventosEstOper.where(it => {
-        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
-        return it.dataVerificadaEmSegundos >= periodoAcumulado.dataInicioEmSegundos &&
-            it.dataVerificadaEmSegundos < periodoAcumulado.dataFimEmSegundos;
-    });
-    console.log("periodoAcumulado: " + JSON.stringify(periodoAcumulado));
-    var calculosUges = [];
-    uges.forEach(uge => {
+        
         // Para ter o resultado para cada mes
-        periodoAcumulado.mesAnoInterval.forEach(mesAno => {
+        periodoTotal.mesAnoInterval.forEach(mesAno => {
 
             var periodoCalculo = new PeriodoCalculo(mesAno.mes, mesAno.ano);
             var calculoUge = new CalculoTaxasPeriodoUge(
@@ -222,7 +68,7 @@ module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManage
         });
     });
 
-    var calculoUsina = new CalculoTaxasPeriodoUsina(periodoAcumulado, idUsina, calculosUges);
+    var calculoUsina = new CalculoTaxasPeriodoUsina(periodoTotal, idUsina, calculosUges);
     calculoUsina.calcular();
 
     calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
@@ -242,10 +88,57 @@ module.exports.calcularTaxasAcumuladasPorUsina = function (contexto, eventManage
 
     });
 
-    // TODO verificar se não precisar gravar os parâmetros como o mensal, 
-    // mas fica a dúvida salva para todos os 60 meses?
+    // cria ou atualiza as taxas teip ou teifa
+    updateOrCreateTaxa(dataset, fechamento.id, idUsina, tipoTaxaTeip, calculoUsina.valorTeip);
+    updateOrCreateTaxa(dataset, fechamento.id, idUsina, tipoTaxaTeifa, calculoUsina.valorTeifa);
+}
 
-    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIPacum, calculoUsina.valorTeip);
-    updateOrCreateTaxa(dataset, fechamento.id, idUsina, constants.TipoTaxa.TEIFAacum, calculoUsina.valorTeifa);
+/**
+ * @function updateOrCreateTaxa
+ * @param {DataSet} dataset 
+ * @param {string} idFechamento 
+ * @param {string} idUsina 
+ * @param {string} idTipoTaxa 
+ * @param {float} valorTaxa 
+ * 
+ * @description Função responsável por criar ou atualizar a taxa do dataset que está sendo gerada no cálculo.
+ */
+function updateOrCreateTaxa(dataset, idFechamento, idUsina, idTipoTaxa, valorTaxa) {
+    var taxa = dataset.taxa.collection.firstOrDefault(it => {
+        return it.idFechamento == idFechamento && it.idUsina == idUsina && it.idTipoTaxa == idTipoTaxa
+    });
+    if (taxa) {
+        taxa.valorTaxa = valorTaxa;
+        dataset.taxa.update(taxa);
+    } else {
+        dataset.taxa.insert(new Taxa(
+            utils.guid(),
+            valorTaxa,
+            idTipoTaxa,
+            idFechamento,
+            idUsina
+        ));
+    }
+}
 
+/**
+ * @function createParametroTaxa
+ * @param {DataSet} dataset 
+ * @param {string} idFechamento 
+ * @param {string} idUge 
+ * @param {string} idTipoParametro 
+ * @param {float} valorParametro 
+ * @param {string} idExecucaoCalculo 
+ * @param {int} mes 
+ * @param {int} ano 
+ * 
+ * @description Função responsável por criar e adicionar no dataset, um parâmetro de taxa para uma execução de cálculo.
+ */
+function createParametroTaxa(dataset, idFechamento, idUge, idTipoParametro, valorParametro, idExecucaoCalculo, mes, ano) {
+
+    dataset.parametrotaxa.insert(new ParametroTaxa(
+        utils.guid(),
+        valorParametro, idTipoParametro, idUge,
+        idFechamento, idExecucaoCalculo, mes, ano
+    ));
 }
