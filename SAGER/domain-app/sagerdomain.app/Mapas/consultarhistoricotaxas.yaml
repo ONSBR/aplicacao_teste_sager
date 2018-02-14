@@ -1,4 +1,4 @@
-execucao-calculo-fechamento:
+execucaocalculofechamento:
   model: tb_execucao_calculo_fechamento
   fields:
     id:
@@ -20,7 +20,7 @@ execucao-calculo-fechamento:
       idFechamento:
         $in: $idsFechamentos
 
-fechamento-mensal:
+fechamentomensal:
   model: tb_fechamento_mensal
   fields:
     id:
@@ -30,7 +30,7 @@ fechamento-mensal:
     ano:
       column: ano
   filters:
-    byIdsAndData:
+    byData:
       $and:
         - mes:
             $gte: :mesInicial
@@ -40,8 +40,6 @@ fechamento-mensal:
             $lte: :mesFinal
         - ano:
             $lte: :anoFinal
-        - id:
-            $in: $ids
     byId:
       id:
         $eq: :id            
@@ -81,12 +79,14 @@ taxa:
     idUsina:
       column: id_usina
   filters:
-    byUsinaETipoTaxa:
+    byUsinaTipoTaxaIdsFechamentos:
       $and:
         - tipoTaxa:
             $eq: :tipoTaxa
         - idUsina:
             $eq: :idUsina
+        - idFechamento:
+            $in: $idsFechamentos            
     byIdFechamento:
       idFechamento:
         $eq: :idFechamento
