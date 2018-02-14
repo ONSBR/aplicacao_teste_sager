@@ -71,17 +71,6 @@ module.exports.static_mass_0UG6_09_2014 = function (uge) {
     evtEstOper10.potenciaDisponivel = 527;
     evtEstOper10.dataVerificada = new Date(2014, 8, 19, 11, 22);
     
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper1);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper2);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper3);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper4);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper5);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper6);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper7);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper8);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper9);
-    EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper10);
-
     var retorno = [evtEstOper1, evtEstOper2, evtEstOper3, evtEstOper4, evtEstOper5, 
         evtEstOper6, evtEstOper7, evtEstOper8, evtEstOper9, evtEstOper10];
 
@@ -119,12 +108,7 @@ module.exports.static_mass_0UG3_07_2014 = function (uge) {
         evtEstOper4.idClassificacaoOrigem = ClassificacaoOrigem.GUM;
         evtEstOper4.potenciaDisponivel = 0;
         evtEstOper4.dataVerificada = new Date(2014, 6, 21, 7, 46);
-            
-        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper1);
-        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper2);
-        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper3);
-        EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper4);
-    
+        
         var retorno = [evtEstOper1, evtEstOper2, evtEstOper3, evtEstOper4];
     
         retorno.forEach(element => {

@@ -18,8 +18,12 @@ if (!JSON.parse.changed) {
     JSON.parse.changed = true;
 }
 
-module.exports.valueToExcel = function (val) {
+module.exports.textToExcel = function (val) {
     return val ? val : "";
+}
+
+module.exports.numberToExcel = function (val) {
+    return val ? val : 0;
 }
 
 module.exports.formatDate = function (date) {
