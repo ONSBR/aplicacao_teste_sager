@@ -4,17 +4,17 @@ execucao-calculo-fechamento:
     id:
       column: id
     dataInicio:
-      column: dataInicio
+      column: data_inicio
     dataFim:
-      column: dataFim
+      column: data_fim
     idCenario:
-      column: idCenario
+      column: id_cenario
     idTarefa:
-      column: idTarefa
+      column: id_tarefa
     protocolo:
       column: protocolo
     idFechamento:
-      column: idFechamento
+      column: id_fechamento
   filters:
     byIdsFechamentos:
       idFechamento:
@@ -29,8 +29,6 @@ fechamento-mensal:
       column: mes
     ano:
       column: ano
-    idExecucaoCalculoFechamento:
-      column: idExecucaoCalculoFechamento
   filters:
     byIdsAndData:
       $and:
@@ -65,23 +63,23 @@ cenario:
     nome:
       column: nome    
     dataInicio:
-      column: dataInicio
+      column: data_inicio
     dataFim:
-      column: dataFim
+      column: data_fim
     dataExecucao:
-      column: dataExecucao
+      column: data_execucao
 
 taxa:
   model: tb_taxa
   fields:
     tipoTaxa:
-      column: tipoTaxa
+      column: id_tipo_taxa
     valor:
       column: valor
     idFechamento:
-      column: idFechamento
+      column: id_fechamento
     idUsina:
-      column: idUsina
+      column: id_usina
   filters:
     byUsinaETipoTaxa:
       $and:
@@ -93,8 +91,13 @@ taxa:
       idFechamento:
         $eq: :idFechamento
 
-tipo-taxa:
+tipotaxa:
   model: tb_tipo_taxa
   fields:
+    idTipoTaxa:
+      column: id_tipo_taxa          
     nome:
-      column: nome   
+      column: nome          
+  byUsinaEFechamento:
+      - idFechamento:
+          $eq: :filterIdFechamento

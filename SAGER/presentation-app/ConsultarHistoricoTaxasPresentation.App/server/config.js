@@ -1,13 +1,13 @@
 var config = {};
 
-const DOMAIN_PORT = 2151;
+const DOMAIN_PORT = 2186;
 
 config.PORT = 8181;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
-config.URL_TIPO_TAXA_SAGER = `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/tipo-taxa`;
+config.URL_TIPO_TAXA_SAGER = `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/tipotaxa`;
 
 config.getUrlFiltroExecucao = function getUrlFiltroExecucao(idsFechamento) {
-    return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/execucao-calculo-fechamento?filter=byIdsFechamentos&idsFechamentos=${idsFechamento}`;
+    return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/execucaocalculofechamento?filter=byIdsFechamentos&idsFechamentos=${idsFechamento}`;
 }
 
 config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId, idsFechamentos) {
@@ -16,7 +16,7 @@ config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId, idsFe
 
 config.getUrlFiltroFechamentos =
     function getUrlFiltroFechamentos(mesInicial, anoInicial, mesFinal, anoFinal) {
-        return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamento-mensal?filter=byData&mesInicial=${mesInicial}&anoInicial=${anoInicial}&mesFinal=${mesFinal}&anoFinal=${anoFinal}`;
+        return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamentomensal?filter=byData&mesInicial=${mesInicial}&anoInicial=${anoInicial}&mesFinal=${mesFinal}&anoFinal=${anoFinal}`;
     }
 
 config.getUrlFiltroTaxasAPartirIdFechamento =
@@ -26,7 +26,7 @@ config.getUrlFiltroTaxasAPartirIdFechamento =
 
 config.getUrlFiltroFechamentoMensalPorId =
     function getUrlFiltroFechamentosMensaisPorId(idFechamento) {
-        return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamento-mensal?filter=byId&id=${idFechamento}`
+        return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/fechamentomensal?filter=byId&id=${idFechamento}`
     }
 
 config.getProcessMemoryUrl =

@@ -6,7 +6,6 @@ import { environment } from '../../environments/environment';
 import * as FileSaver from 'file-saver';
 import { utils, write, WorkBook } from 'xlsx';
 import { saveAs } from 'file-saver';
-import { resolve } from 'path';
 
 const EXCEL_TYPE = 'charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -66,12 +65,10 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       environment.urlServerPresentation + environment.pesquisarFechamentoMensalPorId, body).
       toPromise().then(fechamentoMensal => {
         this.fechamentoMensal = fechamentoMensal[0];
-        resolve();
       });
     this.http.post(environment.urlServerPresentation + environment.pesquisarTaxaPorId, body).
       toPromise().then(taxas => {
         this.taxas = taxas;
-        resolve();
       });
   }
 
@@ -80,7 +77,6 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.http.post(environment.urlServerPresentation +
       environment.getMemoriaDeProcessamento, body).toPromise().then(request => {
         this.exportAsExcelFile(this.getMemoriaDeProcessamento(request), 'MemoriaDeProcessamento');
-        resolve();
       });
   }
 
