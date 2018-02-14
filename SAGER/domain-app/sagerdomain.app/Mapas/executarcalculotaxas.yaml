@@ -1,0 +1,52 @@
+execucaocalculofechamento:
+  model: tb_execucao_calculo_fechamento
+  fields:
+    id:
+      column: id
+    dataInicio:
+      column: data_inicio
+    dataFim:
+      column: data_fim
+    idCenario:
+      column: id_cenario
+    idTarefa:
+      column: id_tarefa
+    protocolo:
+      column: protocolo
+    idFechamento:
+      column: id_fechamento
+
+fechamentomensal:
+  model: tb_fechamento_mensal
+  fields:
+    id:
+      column: id
+    mes:
+      column: mes
+    ano:
+      column: ano
+    dataCriacao:
+      column: data_criacao
+  filters:
+    byMesAno:
+      $and:
+        - mes:
+            $eq: :mesFechamento
+        - ano:
+            $eq: :anoFechamento
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+  filters:
+    all:
+

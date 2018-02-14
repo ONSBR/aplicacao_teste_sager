@@ -4,15 +4,16 @@ const executor = require("./business/executorcalculotaxas");
 /**
  * EntryPoint de execução do serviço do processApp.
  */
-SDK.run((context, resolve, reject) => {
-    
+SDK.run((context, resolve, reject, eventManager) => {
+
     console.log("Executando o calculo de taxas");
-    
+
     try {
-        executor.calcularTaxasPorUsina(context);
+        executor.executarCalculoTaxas(context, eventManager);
         resolve();
-    }catch(error) {
+    } catch (error) {
         console.log("error: " + error.stack);
         reject(error);
     }
 });
+

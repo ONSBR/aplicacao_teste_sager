@@ -1,0 +1,15 @@
+{
+    "app": {
+        "type": "process",
+        "name": "executarcalculotaxas",
+        "version": "1.0",
+        "description": "Dispara o cálculo de taxas",
+        "author": "Fernando",
+        "id": "35f054fb-bbe9-4f58-af21-17e7ac4094fa"
+    },
+    "solution": {
+        "name": "sager",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
+    }
+}
