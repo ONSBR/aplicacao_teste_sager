@@ -12,5 +12,5 @@ export const environment = {
   pesquisarHistorico: 'pesquisarhistorico',
   pesquisarTaxaPorId: 'pesquisartaxaporid',
   pesquisarFechamentoMensalPorId: 'pesquisarfechamentomensalporid',
-  getMemoriaDeProcessamento: 'getMemoriaDeProcessamento'
+  downloadMemoriaProcessamentoXlsx: 'downloadMemoriaProcessamentoXlsx'
 };

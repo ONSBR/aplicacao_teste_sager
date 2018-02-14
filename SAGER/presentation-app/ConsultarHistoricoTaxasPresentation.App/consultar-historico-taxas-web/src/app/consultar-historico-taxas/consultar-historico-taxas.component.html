@@ -52,8 +52,8 @@
     Mês: {{ fechamentoMensal.mes }} Ano: {{ fechamentoMensal.ano }}
     <h2>Taxas: </h2>
     <ul>
-      <li (click)='exportarMemoriaProcessamento(taxa)' *ngFor="let taxa of taxas">
-        Valor: {{ taxa.valor }}
+      <li *ngFor="let taxa of taxas">
+        <a href="{{environment.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx + '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id}}">Valor: {{ taxa.valor }}</a>
       </li>
     </ul>
   </span>

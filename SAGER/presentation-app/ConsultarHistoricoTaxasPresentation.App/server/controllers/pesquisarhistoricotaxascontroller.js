@@ -41,9 +41,13 @@ class PesquisarHistoricoTaxasController {
      */
     pesquisarTaxasAPartirIdFechamento(request, response) {
         let idFechamento = request.body.idFechamentoMensal;
-        let urlFiltroTaxasAPartirIdFechamento = this.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
-        console.log('urlFiltroTaxasAPartirIdFechamento:' + urlFiltroTaxasAPartirIdFechamento);
-        this.domainPromiseHelper.getDomainPromise(urlFiltroTaxasAPartirIdFechamento).
+        let filtroConsulta = request.body.filtroConsulta;
+
+        let getUrlFiltroTaxas = this.getUrlFiltroTaxasPorUsinaTipoTaxaIdsFechamentos(
+            filtroConsulta.usina.idUsina, filtroConsulta.tipoTaxa.idTipoTaxa, [idFechamento]);
+
+        console.log('getUrlFiltroTaxas:' + getUrlFiltroTaxas);
+        this.domainPromiseHelper.getDomainPromise(getUrlFiltroTaxas).
             then(taxas => { response.send(taxas); }).
             catch(e => { console.log(`Erro durante a consulta de histórico de taxas a partir das execuções: ${e.toString()}`) });;
     }
@@ -69,6 +73,10 @@ class PesquisarHistoricoTaxasController {
 
     getUrlFiltroTaxas(request, idsFechamentos) {
         return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request), idsFechamentos.join(';'))
+    }
+
+    getUrlFiltroTaxasPorUsinaTipoTaxaIdsFechamentos(usinaId, tipoTaxaId, idsFechamentos) {
+        return config.getUrlFiltroTaxas(usinaId, tipoTaxaId, idsFechamentos.join(';'))
     }
 
     pesquisarFechamentos(request) {
@@ -116,11 +124,11 @@ class PesquisarHistoricoTaxasController {
     }
 
     getUsinaId(request) {
-        return request.body.filtroConsulta.usina.id;
+        return request.body.filtroConsulta.usina.idUsina;
     }
 
     getTipoTaxa(request) {
-        return request.body.filtroConsulta.tipoTaxa.id;
+        return request.body.filtroConsulta.tipoTaxa.idTipoTaxa;
     }
 
     getDataInicial(request) {
