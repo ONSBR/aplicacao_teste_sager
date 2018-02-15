@@ -87,4 +87,13 @@ describe('PesquisarHistoricoTaxasController: ', function () {
         expect(urlFiltroTaxas).toEqual('http://localhost:2151/consultarhistoricotaxas/fechamentomensal?filter=byId&id=33');
     });
 
+    it('Deve retornar os fechamentos.', function () {
+        let request = {
+            'body':
+                { 'filtroConsulta': {} }
+        };
+        let fechamentos = pesquisarHistoricoTaxasController.pesquisarFechamentos(request);
+        expect(fechamentos).toBeDefined();
+    });
+
 });
