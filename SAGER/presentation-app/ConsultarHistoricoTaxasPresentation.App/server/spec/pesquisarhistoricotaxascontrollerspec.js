@@ -31,10 +31,10 @@ describe('PesquisarHistoricoTaxasController: ', function () {
                 {
                     filtroConsulta: {
                         usina: {
-                            id: 1
+                            idUsina: 1
                         },
                         tipoTaxa: {
-                            id: 2
+                            idTipoTaxa: 2
                         }
                     }
                 }
@@ -56,13 +56,13 @@ describe('PesquisarHistoricoTaxasController: ', function () {
 
         let urlFiltroTaxas = pesquisarHistoricoTaxasController.getUrlFiltroFechamentosMensais(request);
 
-        expect(urlFiltroTaxas).toEqual('http://localhost:2151/consultarhistoricotaxas/fechamento-mensal?filter=byData&mesInicial=1&anoInicial=2018&mesFinal=12&anoFinal=2018');
+        expect(urlFiltroTaxas).toEqual('http://localhost:2151/consultarhistoricotaxas/fechamentomensal?filter=byData&mesInicial=1&anoInicial=2018&mesFinal=12&anoFinal=2018');
     });
 
     it('Deve retornar a url de pesquisa execuções de calculo a partir dos fechamentos mensais.', function () {
         let idsFechamento = [1, 5, 7];
         let urlFiltroExecucoesCalculo = pesquisarHistoricoTaxasController.getUrlFiltroExecucao(idsFechamento);
-        expect(urlFiltroExecucoesCalculo).toEqual('http://localhost:2151/consultarhistoricotaxas/execucao-calculo-fechamento?filter=byIdsFechamentos&idsFechamentos=1,5,7');
+        expect(urlFiltroExecucoesCalculo).toEqual('http://localhost:2151/consultarhistoricotaxas/execucaocalculofechamento?filter=byIdsFechamentos&idsFechamentos=1,5,7');
     });
 
     it('Deve retornar um array com os ids a partir dos fechamentos mensais.', function () {
@@ -84,7 +84,7 @@ describe('PesquisarHistoricoTaxasController: ', function () {
     it('Deve retornar a url de consulta de fechamento mensal por id.', function () {
         let idFechamento = 33;
         let urlFiltroTaxas = pesquisarHistoricoTaxasController.getUrlFiltroFechamentoMensalPorId(idFechamento);
-        expect(urlFiltroTaxas).toEqual('http://localhost:2151/consultarhistoricotaxas/fechamento-mensal?filter=byId&id=33');
+        expect(urlFiltroTaxas).toEqual('http://localhost:2151/consultarhistoricotaxas/fechamentomensal?filter=byId&id=33');
     });
 
 });
