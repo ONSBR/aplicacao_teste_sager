@@ -6,6 +6,12 @@ const DOMAIN_PORT = 2100;
 var dataLoad = [];
 dataLoad.push(tipoTaxaInitialLoad());
 
+let tiposTaxa = dataLoad[0];
+
+httpClient.post(getUrlAppDomain(), tiposTaxa).then(result => {
+    console.log("Tipos de taxas incluídas: " + tiposTaxa.length);
+}).catch(catch_error);
+
 function catch_error(error) {
     console.error("error: " + error.stack);
 }
@@ -13,16 +19,6 @@ function catch_error(error) {
 function getUrlAppDomain() {
     return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/persist`;
 }
-
-Promise.all(dataLoad).then(results => {
-
-    let tiposTaxa = results[0];
-
-    httpClient.post(getUrlAppDomain(), tiposTaxa).then(result => {
-        console.log("Tipos de taxas incluídas: " + tiposTaxa.length);
-    }).catch(catch_error);
-
-}).catch(catch_error);
 
 function tipoTaxaInitialLoad() {
     return [
