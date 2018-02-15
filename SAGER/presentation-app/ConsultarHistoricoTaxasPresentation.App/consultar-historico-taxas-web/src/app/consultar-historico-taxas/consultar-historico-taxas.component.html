@@ -1,46 +1,80 @@
-<h2>Histórico de taxas</h2>
-<fieldset>
-  <div>
-    <span>Usina:
-      <select [(ngModel)]="filtroConsulta.usina">
-        <option *ngFor="let usina of usinas" [ngValue]="usina">
-          {{usina.nome}}
-        </option>
-      </select>
-    </span>
-  </div>
-  <div>
-      <span>Tipo de taxa:
-        <select [(ngModel)]="filtroConsulta.tipoTaxa">
-          <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
-            {{tipoTaxa.nome}}
-          </option>
-        </select>
-      </span>
-    </div>
-  <div>
-    <span>Data Inicial:
-      <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
-    </span>
-  </div>
-  <div>
-    <span>Data Final:
-      <input type="date" [(ngModel)]="filtroConsulta.dataFinal" />
-    </span>
-  </div>
-  <div>
-    <span>
-      <button class="button" (click)='pesquisar($event)'>Pesquisar</button>
-    </span>
-  </div>
-</fieldset>
 
+<h2>Histórico de taxas</h2>
+
+<table border="0">
+  <tr>
+    <td width="70%">
+      <fieldset style="height: 110px">
+        <div>
+          <span>Usina:
+            <select [(ngModel)]="filtroConsulta.usina">
+              <option *ngFor="let usina of usinas" [ngValue]="usina">
+                {{usina.nome}}
+              </option>
+            </select>
+          </span>
+        </div>
+        <div>
+            <span>Tipo de taxa:
+              <select [(ngModel)]="filtroConsulta.tipoTaxa">
+                <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
+                  {{tipoTaxa.nome}}
+                </option>
+              </select>
+            </span>
+          </div>
+        <div>
+          <span>Data Inicial:
+            <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
+          </span>
+        </div>
+        <div>
+          <span>Data Final:
+            <input type="date" [(ngModel)]="filtroConsulta.dataFinal" />
+          </span>
+        </div>
+        <div>
+          <span>
+            <button class="button" (click)='pesquisar($event)'>Pesquisar</button>
+          </span>
+        </div>
+      </fieldset>
+    </td>
+    <td>
+      <fieldset style="height: 110px">
+        <div>
+          <span><b>Solicitar Cálculo de Taxas</b><br><br></span>
+        </div>
+        <div>
+          <span>Mês:
+            <input type="text" [(ngModel)]="fechamentoParaCalculo.mes" />
+          </span>
+        </div>
+        <div>
+          <span>Ano:
+            <input type="text" [(ngModel)]="fechamentoParaCalculo.ano" />
+          </span>
+        </div>
+        <div>
+          <span><br>
+            <button class="button" (click)='calcularTaxas($event)'>Solicitar Cálculo</button>
+          </span>
+        </div>
+      </fieldset>
+    </td>
+  </tr>
+</table>
 <div>
   <span>
     <h2>Execuções:</h2>
     <ul>
       <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of execucoes">
-        Execução: {{ execucao.protocolo }}
+        <b *ngIf="execucaoSelecionada.id == execucao.id">
+            Execução: {{ execucao.protocolo }}
+        </b>
+        <span *ngIf="execucaoSelecionada.id != execucao.id" style="cursor: pointer">
+            Execução: {{ execucao.protocolo }}
+        </span>
       </li>
     </ul>
   </span>

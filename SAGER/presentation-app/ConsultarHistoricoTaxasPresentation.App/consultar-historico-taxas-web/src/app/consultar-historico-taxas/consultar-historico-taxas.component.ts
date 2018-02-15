@@ -26,6 +26,8 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public fechamentoMensal;
   public environment;
 
+  public fechamentoParaCalculo = { 'mes': '', 'ano': '' };
+
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
     this.environment = environment;
@@ -46,6 +48,34 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       this.taxas = [];
       this.fechamentoMensal = {};
     });
+  }
+
+  calcularTaxas() {
+
+    var mesFechamento = 0;
+    var anoFechamento = 0;
+    try {
+      mesFechamento = parseInt(this.fechamentoParaCalculo.mes);
+    } catch (error) { }
+    try {
+      anoFechamento = parseInt(this.fechamentoParaCalculo.ano);
+    } catch (error) { }
+
+    if (mesFechamento > 0 && mesFechamento <= 12 && anoFechamento >= 2000) {
+
+      const url = environment.urlServerPresentation + environment.calcularTaxas;
+      const body = { 'mesFechamento': mesFechamento, 'anoFechamento': anoFechamento };
+      
+      this.http.post(url, body).toPromise().then(result => {
+        var msg = 'Enviada solicitação de cálculo de taxas com sucesso';
+        console.log(msg);
+        alert(msg);
+      });
+    }
+    else {
+      alert("Inválido mês ou ano informados para execução de cálculo.");
+    }
+
   }
 
   listarUsinas() {
@@ -76,8 +106,8 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   exportarMemoriaProcessamento(taxa) {
     this.http.get(this.getUrlDownloadMemoriaDeProcessamento(taxa)).toPromise().then(request => {
-        console.log('Export com sucesso');
-      });
+      console.log('Export com sucesso');
+    });
   }
 
   getUrlDownloadMemoriaDeProcessamento(taxa) {

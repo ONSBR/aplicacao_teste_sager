@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2128;
+const DOMAIN_PORT = 2180;
 
 config.PORT = 8181;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
@@ -34,6 +34,8 @@ config.getProcessMemoryUrl =
         return `http://localhost:9091/${processInstanceId}/head`
     }
 
-
+config.getEventManagerUrl = function (processInstanceId) {
+    return `http://localhost:8081/sendevent`
+}
 
 module.exports = config;
