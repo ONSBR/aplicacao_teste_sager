@@ -1,10 +1,17 @@
 describe('PesquisarHistoricoTaxasController: ', function () {
     let PesquisarHistoricoTaxasController = require('../controllers/pesquisarhistoricotaxascontroller');
     let config = require('../config');
+    let domainPromiseHelper;
     let pesquisarHistoricoTaxasController;
 
     beforeEach(function () {
-        pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController();
+        domainPromiseHelper = {
+            getDomainPromise: function(url) {
+                return {};
+            }
+        };
+        spyOn(domainPromiseHelper, 'getDomainPromise');
+        pesquisarHistoricoTaxasController = new PesquisarHistoricoTaxasController(domainPromiseHelper);
     });
 
     it('Deve realizar o distinct dos valores de um array', function () {
@@ -93,7 +100,12 @@ describe('PesquisarHistoricoTaxasController: ', function () {
                 { 'filtroConsulta': {} }
         };
         let fechamentos = pesquisarHistoricoTaxasController.pesquisarFechamentos(request);
-        expect(fechamentos).toBeDefined();
+        expect(domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith('http://localhost:2100/consultarhistoricotaxas/fechamentomensal?filter=byData&mesInicial=1&anoInicial=2018&mesFinal=12&anoFinal=2018');
     });
 
+    it('Deve retornar os fechamentos.', function () {
+        let taxas = [{'idFechamento': 1}, {'idFechamento': 2}, {'idFechamento': 3}];
+        let execucoes = pesquisarHistoricoTaxasController.pesquisarExecucoesCalculo(taxas);
+        expect(domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith('http://localhost:2100/consultarhistoricotaxas/execucaocalculofechamento?filter=byIdsFechamentos&idsFechamentos=1;2;3');
+    });
 });

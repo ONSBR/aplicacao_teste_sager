@@ -4,8 +4,11 @@ const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 class PesquisarHistoricoTaxasController {
 
     constructor(domainPromiseHelper) {
-        this.domainPromiseHelper = new DomainPromiseHelper();
-        this.config = config;
+        if(!domainPromiseHelper) {
+            this.domainPromiseHelper = new DomainPromiseHelper();
+        } else {
+            this.domainPromiseHelper = domainPromiseHelper;
+        }
     }
 
     /**
@@ -69,15 +72,15 @@ class PesquisarHistoricoTaxasController {
     }
 
     getUrlFiltroFechamentoMensalPorId(idFechamento) {
-        return this.config.getUrlFiltroFechamentoMensalPorId(idFechamento);
+        return config.getUrlFiltroFechamentoMensalPorId(idFechamento);
     }
 
     getUrlFiltroTaxas(request, idsFechamentos) {
-        return this.config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request), idsFechamentos.join(';'))
+        return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request), idsFechamentos.join(';'))
     }
 
     getUrlFiltroTaxasPorUsinaTipoTaxaIdsFechamentos(usinaId, tipoTaxaId, idsFechamentos) {
-        return this.config.getUrlFiltroTaxas(usinaId, tipoTaxaId, idsFechamentos.join(';'))
+        return config.getUrlFiltroTaxas(usinaId, tipoTaxaId, idsFechamentos.join(';'))
     }
 
     pesquisarFechamentos(request) {
@@ -90,7 +93,7 @@ class PesquisarHistoricoTaxasController {
         let dataInicial = new Date(this.getDataInicial(request));
         let dataFinal = new Date(this.getDataFinal(request));
 
-        return this.config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
+        return config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
             dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear());
     }
 
@@ -113,11 +116,11 @@ class PesquisarHistoricoTaxasController {
     }
 
     getUrlFiltroExecucao(idsFechamento) {
-        return this.config.getUrlFiltroExecucao(idsFechamento);
+        return config.getUrlFiltroExecucao(idsFechamento);
     }
 
     getUrlFiltroTaxasAPartirIdFechamento(idFechamento) {
-        return this.config.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
+        return config.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
     }
 
     distinct(values) {
