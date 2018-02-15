@@ -118,7 +118,7 @@ class ParseMemoryFileTemplate {
 
             this.sheet[this.colsEvent[0] + curRow] = { v: it.idEvento };
             this.sheet[this.colsEvent[1] + curRow] = { v: it.idUge };
-            this.sheet[this.colsEvent[2] + curRow] = { v: util.textToExcel(it.idTipoEstadoOperativo) };
+            this.sheet[this.colsEvent[2] + curRow] = { v: util.textToExcel(it.idEstadoOperativo) };
             this.sheet[this.colsEvent[3] + curRow] = { v: util.textToExcel(it.idCondicaoOperativa) };
             this.sheet[this.colsEvent[4] + curRow] = { v: util.textToExcel(it.idClassificacaoOrigem) };
             this.sheet[this.colsEvent[5] + curRow] = { v: util.formatDate(it.dataVerificada) };

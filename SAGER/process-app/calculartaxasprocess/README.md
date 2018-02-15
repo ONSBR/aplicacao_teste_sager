@@ -29,7 +29,28 @@
 # em ./spec/testmass/filemass
 # é necessário configurar a nesse script da porta de domínio
 # em DOMAIN_PORT e o mapa a ser usado em MAPA
-###############################################################################################
+#############################################################################################################################
 
 # carga de dados de testes na base de dados utilizar o load_data_test
 node ./spec/_script/load_data_test.js
+
+# para executar os testes unitários utilize o jasmine
+jasmine
+
+# para executar a análise de cobertura dos testes, utilizar o istanbul:
+npm test
+
+#############################################################################################################################
+#
+# DEPLOY E EXECUÇÃO
+#
+#############################################################################################################################
+
+# A execução do cálculo de taxa por usina é disparado pelo process app: executarcalculotaxas
+
+# Para iniciar execução desse processapp deve ser feita instalação das dependências com:
+npm install
+
+# Para executar o processapp a partir da plataforma deve ser feito deploy:
+plataforma --deploy local
+
