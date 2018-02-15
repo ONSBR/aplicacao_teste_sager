@@ -48,6 +48,10 @@ app.post("/pesquisarhistorico", (req, res) => {
     pesquisarHistoricoTaxasController.pesquisarHistorico(req, res);
 });
 
+app.post("/calculartaxas", (req, res) => {
+    pesquisarHistoricoTaxasController.calcularTaxas(req, res);
+});
+
 app.post("/pesquisartaxaporid", (req, res) => {
     pesquisarHistoricoTaxasController.pesquisarTaxasAPartirIdFechamento(req, res);
 });

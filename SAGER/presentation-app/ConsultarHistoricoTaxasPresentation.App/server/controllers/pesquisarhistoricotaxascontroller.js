@@ -1,5 +1,6 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const EventPromiseHelper = require('../helpers/eventpromisehelper');
 
 class PesquisarHistoricoTaxasController {
 
@@ -36,6 +37,19 @@ class PesquisarHistoricoTaxasController {
         console.log('urlFiltroTaxas:' + urlFiltroTaxas);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroTaxas);
     }
+
+    /**
+     * @method calcularTaxas
+     * @param {Request} request Objeto de request
+     * * @param {Response} request Objeto de response
+     * @description Solicitar cálculo de taxas
+     */
+    calcularTaxas(request, response) {
+        console.log("Payload: " + JSON.stringify(request.body));
+        var evento = {name: "calculate.tax.request", payload: request.body};
+        return this.eventPromiseHelper.putEventPromise(evento).then(res => {response.send(res)});
+    }
+
 
     /**
      * @method pesquisarTaxasAPartirIdFechamento
@@ -100,7 +114,7 @@ class PesquisarHistoricoTaxasController {
     pesquisarExecucoesCalculo(taxas) {
         let idsFechamentos = this.extrairIdsFechamentosDeTaxas(taxas);
         idsFechamentos = Array.from(this.distinct(idsFechamentos));
-        let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao(idsFechamentos);
+        let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao(idsFechamentos.join(";"));
         console.log('urlFiltroExecucoesCalculo: ' + urlFiltroExecucoesCalculo);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroExecucoesCalculo);
     }

@@ -11,6 +11,7 @@ export const environment = {
   consultaFiltroInicial: 'filtroinicial',
   pesquisarHistorico: 'pesquisarhistorico',
   pesquisarTaxaPorId: 'pesquisartaxaporid',
+  calcularTaxas: 'calculartaxas',
   pesquisarFechamentoMensalPorId: 'pesquisarfechamentomensalporid',
   downloadMemoriaProcessamentoXlsx: 'downloadMemoriaProcessamentoXlsx'
 };
