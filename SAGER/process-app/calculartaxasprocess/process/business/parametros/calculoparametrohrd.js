@@ -6,7 +6,10 @@ var AbstractCalculoParametroEventoDiferenca = require("./_abstractcalculoparamet
 var AbstractCalculoParametroEventoLimitacaoPotencia = require("./_abstractcalculoparametro").AbstractCalculoParametroEventoLimitacaoPotencia;
 var util = require("./utilcalculoparametro");
 
-
+/**
+ * @description Valida se o evento atende os critérios para contabilizar no parâmetro HRD.
+ * @param {EventoMudancaEstadoOperativo} evtEstOper 
+ */
 function validarEventoHRD(evtEstOper) {
     
     var condicao1 = evtEstOper.idEstadoOperativo == EstadoOperativo.DCO || evtEstOper.idEstadoOperativo == EstadoOperativo.RDP;
