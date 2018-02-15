@@ -8,7 +8,7 @@ var CalculoParametroHDF = require("../process/business/parametros/calculoparamet
 var CalculoParametroHEDF = require("../process/business/parametros/calculoparametrohedf");
 var CalculoParametroHS = require("../process/business/parametros/calculoparametrohs");
 var CalculoParametroHDP = require("../process/business/parametros/calculoparametrohdp");
-var utilTest = require("./utilTest");
+var utilTest = require("./utiltest");
 
 describe('O SAGER deve calcular as taxas TEIFA e TEIP', function () {
 

@@ -1,4 +1,4 @@
-const fileDataMass = require("./testMass/filedatamass");
+const fileDataMass = require("./testmass/filedatamass");
 const utils = require("../utils");
 const utilTest = require("./utiltest");
 const executor = require("../process/business/executorcalculotaxas");
