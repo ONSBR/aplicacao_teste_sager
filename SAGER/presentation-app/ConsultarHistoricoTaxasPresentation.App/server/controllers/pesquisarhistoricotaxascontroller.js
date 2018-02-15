@@ -7,6 +7,7 @@ class PesquisarHistoricoTaxasController {
     constructor(domainPromiseHelper) {
         this.domainPromiseHelper = new DomainPromiseHelper();
         this.eventPromiseHelper = new EventPromiseHelper();
+        this.config = config;
     }
 
     /**
@@ -83,15 +84,15 @@ class PesquisarHistoricoTaxasController {
     }
 
     getUrlFiltroFechamentoMensalPorId(idFechamento) {
-        return config.getUrlFiltroFechamentoMensalPorId(idFechamento);
+        return this.config.getUrlFiltroFechamentoMensalPorId(idFechamento);
     }
 
     getUrlFiltroTaxas(request, idsFechamentos) {
-        return config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request), idsFechamentos.join(';'))
+        return this.config.getUrlFiltroTaxas(this.getUsinaId(request), this.getTipoTaxa(request), idsFechamentos.join(';'))
     }
 
     getUrlFiltroTaxasPorUsinaTipoTaxaIdsFechamentos(usinaId, tipoTaxaId, idsFechamentos) {
-        return config.getUrlFiltroTaxas(usinaId, tipoTaxaId, idsFechamentos.join(';'))
+        return this.config.getUrlFiltroTaxas(usinaId, tipoTaxaId, idsFechamentos.join(';'))
     }
 
     pesquisarFechamentos(request) {
@@ -104,7 +105,7 @@ class PesquisarHistoricoTaxasController {
         let dataInicial = new Date(this.getDataInicial(request));
         let dataFinal = new Date(this.getDataFinal(request));
 
-        return config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
+        return this.config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
             dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear());
     }
 
@@ -127,11 +128,11 @@ class PesquisarHistoricoTaxasController {
     }
 
     getUrlFiltroExecucao(idsFechamento) {
-        return config.getUrlFiltroExecucao(idsFechamento);
+        return this.config.getUrlFiltroExecucao(idsFechamento);
     }
 
     getUrlFiltroTaxasAPartirIdFechamento(idFechamento) {
-        return config.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
+        return this.config.getUrlFiltroTaxasAPartirIdFechamento(idFechamento);
     }
 
     distinct(values) {
