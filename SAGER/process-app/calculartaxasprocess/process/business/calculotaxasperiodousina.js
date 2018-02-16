@@ -1,5 +1,6 @@
 const Enumerable = require('linq');
 const utils = require('../../utils');
+const extensions = require('../../extensions');
 
 module.exports = class CalculoTaxasPeriodoUsina {
 
@@ -93,7 +94,7 @@ module.exports = class CalculoTaxasPeriodoUsina {
     calcularTeifa() {
 
         this.valorTeifa = (this.paramHDFEmSegundos + this.paramHEDFEmSegundos) /
-            (this.paramHSEmSegundos + this.paramHDFEmSegundos + this.paramHRDEmSegundos + this.paramHDCEEmSegundos);
+            (this.paramHSEmSegundos + this.paramHDFEmSegundos + this.paramHRDEmSegundos + this.paramHDCEEmSegundos + this.paramHDPEmSegundos);
     }
 
     toString() {
