@@ -4,7 +4,11 @@ const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 class ListarUsinasController {
 
     constructor(domainPromiseHelper) {
-        this.domainPromiseHelper = new DomainPromiseHelper();
+        if(!domainPromiseHelper) {
+            this.domainPromiseHelper = new DomainPromiseHelper();
+        } else {
+            this.domainPromiseHelper = domainPromiseHelper;
+        }
     }
 
     /**
