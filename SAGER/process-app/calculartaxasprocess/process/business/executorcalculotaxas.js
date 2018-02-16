@@ -5,7 +5,6 @@ const ParametroTaxa = require("../entities/parametrotaxa");
 const FechamentoMensal = require("../entities/fechamentomensal");
 const EventoMudancaEstadoOperativo = require("../entities/eventomudancaestadooperativo");
 const constants = require("./constants");
-const eventCatalog = require("../../metadados/eventcatalog");
 const CalculoTaxasPeriodoUge = require("./calculotaxasperiodouge");
 const CalculoTaxasPeriodoUsina = require("./calculotaxasperiodousina");
 const PeriodoCalculo = require("./periodocalculo");
