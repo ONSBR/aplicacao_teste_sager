@@ -4,7 +4,11 @@ const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 class ListarTipoTaxaController {
 
     constructor(domainPromiseHelper) {
-        this.domainPromiseHelper = new DomainPromiseHelper();
+        if(!domainPromiseHelper) {
+            this.domainPromiseHelper = new DomainPromiseHelper();
+        } else {
+            this.domainPromiseHelper = domainPromiseHelper;
+        }
     }
 
     /**
@@ -15,7 +19,7 @@ class ListarTipoTaxaController {
      */
     listarTipoTaxa(request, response) {
         this.domainPromiseHelper.getDomainPromise(config.URL_TIPO_TAXA_SAGER).
-            then(data => { response.send(data) }).
+            then(data => { response.send(data); }).
             catch(e => { console.log(`Erro durante a consulta de tipos de taxa: ${e.toString()}`) });
     }
 
