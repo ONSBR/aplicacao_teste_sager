@@ -1,3 +1,7 @@
+/**
+ * @class BaseEntity
+ * @description classe base para definição de entidades de negócio.
+ */
 module.exports = class BaseEntity {
 
     constructor(typeentity) {

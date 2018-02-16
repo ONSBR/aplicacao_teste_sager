@@ -1,5 +1,10 @@
 const BaseEntity = require("./_baseentity");
 
+/**
+ * @class Taxa
+ * @description Entidade que representa a taxa calculada para uma usina 
+ * em um determinado fechamento (mes/ano).
+ */
 module.exports = class Taxa extends BaseEntity {
     constructor(id, valorTaxa, idTipoTaxa, idFechamento, idUsina) {
         super();

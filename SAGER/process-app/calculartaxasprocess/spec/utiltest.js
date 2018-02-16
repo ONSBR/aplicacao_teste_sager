@@ -268,9 +268,9 @@ module.exports = class UtilTest {
             });
 
             console.log(comparacaoTaxas.toString());
-            /*
-            console.log("LOG ERROR");
-            comparacaoTaxas.teipiguais.forEach(it => {
+            
+            /*console.log("LOG ERROR");
+            comparacaoTaxas.teifaiguais.forEach(it => {
                 console.log("\nCalculoUsina: " + it.calculoUsina.toString().replace(new RegExp("{\"idUge\"", 'g'), "\n{\"idUge\""));
             });
             console.log("FIM LOG ERROR");

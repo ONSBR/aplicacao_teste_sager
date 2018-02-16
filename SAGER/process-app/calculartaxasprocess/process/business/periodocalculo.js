@@ -1,8 +1,19 @@
 var moment = require("moment");
 var extensions = require("../../extensions");
 
+/**
+ * @class PeriodoCalculo
+ * @description Classe utilitária para identificar os períodos de cálculo de acordo 
+ * com os parâmetros de cálculo
+ */
 module.exports = class PeriodoCalculo {
 
+    /**
+     * Constrói o período de cálculo.
+     * @param {int} mes 
+     * @param {int} ano 
+     * @param {int} qtdMesesAntecicacao 
+     */
     constructor(mes, ano, qtdMesesAntecicacao) {
 
         this.mes = mes;
