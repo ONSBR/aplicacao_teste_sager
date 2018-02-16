@@ -10,6 +10,7 @@ O projeto é dividido em:
 #### consultar-historico-taxas-web: Camada web da aplicação.
 
 Para iniciar:
-> npm install
-> ng serve
-
+```sh
+$ npm install
+$ ng serve
+```
