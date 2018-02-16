@@ -1,2 +1,2 @@
-# Engine de execução de processos da plataforma. chamada do worker.
+# Aplicações de domínio para o SAGER.
 
