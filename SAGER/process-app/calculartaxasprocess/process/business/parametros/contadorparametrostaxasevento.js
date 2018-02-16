@@ -7,6 +7,10 @@ var CalculoParametroHDP = require("./calculoparametrohdp");
 var CalculoParametroHEDP = require("./calculoparametrohedp");
 var util = require("./utilcalculoparametro");
 
+/**
+ * @description Classe responsável por agrupar os cálculos de parâmetros que computam aventos
+ * para facilitar a avaliação dos eventos, validar e computar para cada parâmetro.
+ */
 module.exports = class ContadorParametrosTaxasEvento {
 
     constructor(unidadeGeradora, periodoCalculo) {
@@ -34,18 +38,30 @@ module.exports = class ContadorParametrosTaxasEvento {
 
     }
 
+    /**
+     * @description Limpa todos os valores de horas computados para os parâmetros
+     */
     reset() {
         this.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
             calculoParam.reset();
         });
     }
 
+    /**
+     * Validar o contador, informações comuns a todos os cálculos de parâmetros.
+     */
     validar() {
         if (!this.unidadeGeradora) {
             throw new Error("unidade geradora deve ser informada para o contador.");
         }
     }
 
+    /**
+     * @description Computa a quantidade de horas de operação do evento para o parâmetro, caso satisfaça as condições do parâmetro. 
+     * Cada parâmetro computa as horas do evento de forma diferente, conforme as regras estabelecidas, 
+     * e conforme os dados do evento: estado operativo, condição operativa, origem do evento.
+     * @param {EventoMudancaEstadoOperativo} evtEstOper 
+     */
     computarQtdHorasEvento(evtEstOper) {
 
         this.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
