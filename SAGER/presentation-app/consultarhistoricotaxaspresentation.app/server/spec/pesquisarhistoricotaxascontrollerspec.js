@@ -91,21 +91,13 @@ describe('PesquisarHistoricoTaxasController: ', function () {
     it('Deve retornar a url de consulta de fechamento mensal por id.', function () {
         let idFechamento = 33;
         let urlFiltroTaxas = pesquisarHistoricoTaxasController.getUrlFiltroFechamentoMensalPorId(idFechamento);
-        expect(urlFiltroTaxas).toEqual('http://localhost:2100/consultarhistoricotaxas/fechamentomensal?filter=byId&id=33');
-    });
-
-    it('Deve retornar os fechamentos.', function () {
-        let request = {
-            'body':
-                { 'filtroConsulta': {} }
-        };
-        let fechamentos = pesquisarHistoricoTaxasController.pesquisarFechamentos(request);
-        expect(domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith('http://localhost:2100/consultarhistoricotaxas/fechamentomensal?filter=byData&mesInicial=1&anoInicial=2018&mesFinal=12&anoFinal=2018');
+        expect(urlFiltroTaxas).toEqual('http://localhost:2151/consultarhistoricotaxas/fechamentomensal?filter=byId&id=33');
     });
 
     it('Deve retornar os fechamentos.', function () {
         let taxas = [{'idFechamento': 1}, {'idFechamento': 2}, {'idFechamento': 3}];
         let execucoes = pesquisarHistoricoTaxasController.pesquisarExecucoesCalculo(taxas);
-        expect(domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith('http://localhost:2100/consultarhistoricotaxas/execucaocalculofechamento?filter=byIdsFechamentos&idsFechamentos=1;2;3');
+        expect(domainPromiseHelper.getDomainPromise).
+            toHaveBeenCalledWith('http://localhost:2151/consultarhistoricotaxas/execucaocalculofechamento?filter=byIdsFechamentos&idsFechamentos=1;2;3');
     });
 });

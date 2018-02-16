@@ -1,7 +1,7 @@
 {
     "app": {
         "type": "presentation",
-        "name": "ConsultarHistoricoTaxasPresentation.App",
+        "name": "consultarhistoricotaxaspresentation.app",
         "version": "1.0",
         "description": "Presentation app para o UC2503-Consultar histórico de taxas",
         "author": "",
