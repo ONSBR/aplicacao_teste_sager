@@ -17,6 +17,8 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class ConsultarHistoricoTaxasComponent implements OnInit {
 
+  private presentationId: string = Guid.newGuid();
+
   public filtroConsulta;
   public tiposTaxa;
   public usinas: Array<Usina>;
@@ -64,7 +66,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     if (mesFechamento > 0 && mesFechamento <= 12 && anoFechamento >= 2000) {
 
       const url = environment.urlServerPresentation + environment.calcularTaxas;
-      const body = { 'mesFechamento': mesFechamento, 'anoFechamento': anoFechamento };
+      const body = { presentationId: this.presentationId, mesFechamento: mesFechamento, anoFechamento: anoFechamento };
       
       this.http.post(url, body).toPromise().then(result => {
         var msg = 'Enviada solicitação de cálculo de taxas com sucesso';
@@ -115,4 +117,13 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
   }
 
+}
+
+class Guid {
+  static newGuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+      });
+  }
 }

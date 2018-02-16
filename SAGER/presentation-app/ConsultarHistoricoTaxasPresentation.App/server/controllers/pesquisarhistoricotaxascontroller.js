@@ -44,7 +44,11 @@ class PesquisarHistoricoTaxasController {
      */
     calcularTaxas(request, response) {
         console.log("Payload: " + JSON.stringify(request.body));
-        var evento = {name: "calculate.tax.request", payload: request.body};
+        var evento = {
+            name: "calculate.tax.request", 
+            payload: { mesFechamento: request.body.mesFechamento, anoFechamento: request.body.anoFechamento }, 
+            origem: request.body.presentationId 
+        };
         return this.eventPromiseHelper.putEventPromise(evento).then(res => {response.send(res)});
     }
 
