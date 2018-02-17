@@ -268,9 +268,9 @@ module.exports = class UtilTest {
             });
 
             console.log(comparacaoTaxas.toString());
-            
-            /*console.log("LOG ERROR");
-            comparacaoTaxas.teifaiguais.forEach(it => {
+            /*
+            console.log("LOG ERROR");
+            comparacaoTaxas.teipdiferentes.forEach(it => {
                 console.log("\nCalculoUsina: " + it.calculoUsina.toString().replace(new RegExp("{\"idUge\"", 'g'), "\n{\"idUge\""));
             });
             console.log("FIM LOG ERROR");
@@ -297,7 +297,7 @@ module.exports = class UtilTest {
 
             resultados.forEach(resultado => {
 
-                if (resultado.ano >= 2010) {
+                if (resultado.ano >= 2005) {
                     UtilTest.executarCalculoTaxasAcumuladasUsinaMesAno(
                         idUsina, resultado.mes, resultado.ano,
                         uges, eventos, resultado.teipacum, resultado.teifaacum,
@@ -306,6 +306,14 @@ module.exports = class UtilTest {
             });
 
             console.log(comparacaoTaxas.toString());
+
+            /*
+            console.log("LOG ERROR");
+            comparacaoTaxas.teipdiferentes.forEach(it => {
+                console.log("\nCalculoUsina: " + it.calculoUsina.toString().replace(new RegExp("{\"idUge\"", 'g'), "\n{\"idUge\""));
+            });
+            console.log("FIM LOG ERROR");
+            */
 
         }).catch(error => {
             console.error("error: " + error.stack);

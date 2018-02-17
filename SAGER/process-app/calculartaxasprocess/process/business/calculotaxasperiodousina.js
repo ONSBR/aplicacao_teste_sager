@@ -23,87 +23,6 @@ module.exports = class CalculoTaxasPeriodoUsina {
 
         this.valorTeip = 0;
         this.valorTeifa = 0;
-
-        this.resetParametrosTaxas();
-    }
-
-    /**
-     * @description Limpa os resultados de computação de parâmetros.
-     * @method resetParametrosTaxas
-     */
-    resetParametrosTaxas() {
-        this.paramHDFEmSegundos = 0;
-        this.paramHEDFEmSegundos = 0;
-        this.paramHSEmSegundos = 0;
-        this.paramHRDEmSegundos = 0;
-        this.paramHDCEEmSegundos = 0;
-        this.paramHDPEmSegundos = 0;
-        this.paramHEDPEmSegundos = 0;
-        this.paramHPEmSegundos = 0;
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HDF em horas.
-     * @property HDF
-     */
-    get HDF() {
-        return utils.secondToHour(this.paramHDFEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HEDF em horas.
-     * @property HEDF
-     */
-    get HEDF() {
-        return utils.secondToHour(this.paramHEDFEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HS em horas.
-     * @property HS
-     */
-    get HS() {
-        return utils.secondToHour(this.paramHSEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HRD em horas.
-     * @property HRD
-     */
-    get HRD() {
-        return utils.secondToHour(this.paramHRDEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HDCE em horas.
-     * @property HDCE
-     */
-    get HDCE() {
-        return utils.secondToHour(this.paramHDCEEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HDP em horas.
-     * @property HDP
-     */
-    get HDP() {
-        return utils.secondToHour(this.paramHDPEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HEDP em horas.
-     * @property HEDP
-     */
-    get HEDP() {
-        return utils.secondToHour(this.paramHEDPEmSegundos);
-    }
-
-    /**
-     * @description Obtém o resultado do parâmetro HP em horas.
-     * @property HP
-     */
-    get HP() {
-        return utils.secondToHour(this.paramHPEmSegundos);
     }
 
     /**
@@ -114,7 +33,6 @@ module.exports = class CalculoTaxasPeriodoUsina {
         this.calculosTaxasMensaisUge.forEach(calculoUge => {
             calculoUge.reset();
         });
-
     }
 
     /**
@@ -126,38 +44,20 @@ module.exports = class CalculoTaxasPeriodoUsina {
         // TODO pode paralelizar o calculo das uges (sem prioridade, verificar a necessidade)
         this.calculosTaxasPeriodoUge.forEach(calculoUge => {
             calculoUge.calcular();
-
-            this.paramHDFEmSegundos += calculoUge.contadorEventos.calculoParametroHDF.qtdHorasEmSegundos;
-            this.paramHEDFEmSegundos += calculoUge.contadorEventos.calculoParametroHEDF.qtdHorasEmSegundos;
-            this.paramHSEmSegundos += calculoUge.contadorEventos.calculoParametroHS.qtdHorasEmSegundos;
-            this.paramHRDEmSegundos += calculoUge.contadorEventos.calculoParametroHRD.qtdHorasEmSegundos;
-            this.paramHDCEEmSegundos += calculoUge.contadorEventos.calculoParametroHDCE.qtdHorasEmSegundos;
-            this.paramHDPEmSegundos += calculoUge.contadorEventos.calculoParametroHDP.qtdHorasEmSegundos;
-            this.paramHEDPEmSegundos += calculoUge.contadorEventos.calculoParametroHEDP.qtdHorasEmSegundos;
-            this.paramHPEmSegundos += calculoUge.calculoParametroHP.qtdHorasEmSegundos;
         });
 
-        this.calcularTeip();
-        this.calcularTeifa();
-    }
+        var totalTeipUge = 0;
+        var totalTeifaUge = 0;
+        var totalPotUge = 0;
+        this.calculosTaxasPeriodoUge.forEach(calculoUge => {
+            var potdisp = calculoUge.unidadeGeradora.potenciaDisponivel;
+            totalTeipUge += (potdisp*calculoUge.valorTeip);
+            totalTeifaUge += (potdisp*calculoUge.valorTeifa);
+            totalPotUge += potdisp;
+        });
 
-    /**
-     * @description Executa o cálculo da taxa TEIP para a usina, usando os parâmetros calculados.
-     * @method calcularTeip
-     */
-    calcularTeip() {
-
-        this.valorTeip = (this.paramHDPEmSegundos + this.paramHEDPEmSegundos) / this.paramHPEmSegundos;
-    }
-
-    /**
-     * @description Executa o cálculo da taxa TEIFA para a usina, usando os parâmetros calculados.
-     * @method calcularTeifa
-     */
-    calcularTeifa() {
-
-        this.valorTeifa = (this.paramHDFEmSegundos + this.paramHEDFEmSegundos) /
-            (this.paramHSEmSegundos + this.paramHDFEmSegundos + this.paramHRDEmSegundos + this.paramHDCEEmSegundos + this.paramHDPEmSegundos);
+        this.valorTeip = totalTeipUge / totalPotUge;
+        this.valorTeifa = totalTeifaUge / totalPotUge;
     }
 
     toString() {
