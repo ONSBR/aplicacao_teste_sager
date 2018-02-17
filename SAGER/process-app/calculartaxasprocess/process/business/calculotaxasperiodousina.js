@@ -66,9 +66,6 @@ module.exports = class CalculoTaxasPeriodoUsina {
             JSON.stringify({
                 idUsina: this.idUsina, mes: this.periodoCalculo.mes, 
                 ano: this.periodoCalculo.ano, valorTeip: this.valorTeip,
-                HDF: this.HDF, HEDF: this.HEDF, HS: this.HS, 
-                HRD: this.HRD, HDCE: this.HDCE, HDP: this.HDP, 
-                HEDP: this.HEDP, HP: this.HP,
                 valorTeifa: this.valorTeifa,
                 calculosTaxasMensaisUge: Enumerable.from(this.calculosTaxasMensaisUge).
                     select(it => {
