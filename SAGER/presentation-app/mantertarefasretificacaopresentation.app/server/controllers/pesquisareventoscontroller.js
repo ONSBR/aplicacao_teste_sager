@@ -4,7 +4,7 @@ const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 class PesquisarEventosController {
 
     constructor(domainPromiseHelper) {
-        if(!domainPromiseHelper) {
+        if (!domainPromiseHelper) {
             this.domainPromiseHelper = new DomainPromiseHelper();
         } else {
             this.domainPromiseHelper = domainPromiseHelper;
@@ -19,8 +19,11 @@ class PesquisarEventosController {
      * partir de data inicial, data final e usina
      */
     pesquisarEventos(request, response) {
-        this.domainPromiseHelper.getDomainPromise(config.URL_USINA_SAGER).
-            then(data => { console.log(data) }).
+        let usinaId = this.getUsinaId(request);
+        this.domainPromiseHelper.getDomainPromise(
+            this.getUrlUnidadesGeradorasAPartirUsina(usinaId)).
+            then(uges => { return this.getEventosPorDataeUGe(request, uges) }).
+            then(eventos => { console.log(eventos) }).
             catch(e => { console.log(`Erro durante a consulta de usinas: ${e.toString()}`) });
     }
 
@@ -28,6 +31,36 @@ class PesquisarEventosController {
         return config.getUrlUnidadesGeradorasAPartirUsina(idUsina);
     }
 
+    getEventosPorDataeUGE(request, uges) {
+        let idsUGes = this.extrairIdsUges(uges).join(';');
+        let dataInicial = this.getDataInicial(request);
+        let dataFinal = this.getDataFinal(request);
+
+        let urlFiltroEventos = this.urlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal);
+
+        return this.domainPromiseHelper.getDomainPromise(urlFiltroEventos);
+    }
+
+    urlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal) {
+
+    }
+
+    extrairIdsUges(uges) {
+        return uges.map(uge => uge.id);
+    }
+
+    getDataInicial(request) {
+        return new Date(request.body.filtroEvento.dataInicial);
+    }
+
+    getDataFinal(request) {
+        return new Date(request.body.filtroEvento.dataFinal);
+    }
+
+    getUsinaId(request) {
+        return request.body.filtroEvento.usina.idUsina;
+    }
+
 }
 
-module.exports = ListarUsinasController
+module.exports = PesquisarEventosController

@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require('./config');
 const ListarUsinasController = require('./controllers/listarusinascontroller');
+const PesquisarEventosController = require('./controllers/pesquisareventoscontroller');
 
 const app = express();
 const PORT = config.PORT;
@@ -21,6 +22,12 @@ let listarUsinasController = new ListarUsinasController();
 
 app.get("/listarusinas", (req, res) => {
     listarUsinasController.listarUsinas(req, res);
+});
+
+let pesquisarEventosController = new PesquisarEventosController();
+
+app.post("/pesquisareventos", (req, res) => {
+    pesquisarEventosController.pesquisarEventos(req, res);
 });
 
 app.listen(PORT, function () {

@@ -34,8 +34,11 @@ export class MantertarefaComponent implements OnInit {
 
   pesquisarEventos() {
     const url = environment.urlServerPresentation + environment.pesquisarEventos;
-    const body = { 'filtroConsulta': this.filtroEvento };
-    this.http.post(url, body);
+    const body = { 'filtroEvento': this.filtroEvento };
+    console.log(url);
+    this.http.post(url, body).subscribe(data => {
+      console.log('OK');
+    });
   }
 
 }
