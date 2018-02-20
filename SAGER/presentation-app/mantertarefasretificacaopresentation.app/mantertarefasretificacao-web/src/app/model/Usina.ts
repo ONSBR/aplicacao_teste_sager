@@ -1,4 +1,4 @@
 export class Usina {
-    id: string;
-    idUsina: string;
+    constructor(public id: string, public idUsina: string) {
+    }
 }
