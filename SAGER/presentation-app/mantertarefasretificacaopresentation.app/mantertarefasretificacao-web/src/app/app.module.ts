@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { MantertarefaComponent } from './mantertarefa/mantertarefa.component';
@@ -12,7 +12,8 @@ import { MantertarefaComponent } from './mantertarefa/mantertarefa.component';
     MantertarefaComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

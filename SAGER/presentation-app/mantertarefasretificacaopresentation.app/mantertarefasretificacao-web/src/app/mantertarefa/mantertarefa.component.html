@@ -1,3 +1,54 @@
-<p>
-  mantertarefa works!
-</p>
+<h2>
+  Manter tarefas
+</h2>
+
+<fieldset>
+  <div>
+    <span>Usina:
+      <select [(ngModel)]="filtroEvento.usina">
+        <option *ngFor="let usina of usinas" [ngValue]="usina">
+          {{usina.nome}}
+        </option>
+      </select>
+    </span>
+  </div>
+  <div>
+    <span>Data Inicial:
+      <input type="date" [(ngModel)]="filtroEvento.dataInicial" />
+    </span>
+  </div>
+  <div>
+    <span>Data Final:
+      <input type="date" [(ngModel)]="filtroEvento.dataFinal" />
+    </span>
+  </div>
+  <div>
+    <span>
+      <button class="button" (click)='pesquisarEventos($event)'>Pesquisar eventos</button>
+    </span>
+  </div>
+</fieldset>
+
+<fieldset>
+  <div>
+    <span>Número da tarefa:
+      <input type="text" [(ngModel)]="numeroTarefa" />
+      <button class="button" (click)='salvarTarefa($event)'>Salvar tarefa</button>
+    </span>
+  </div>
+  <div>
+    <table border="1">
+      <tr>Tarefas</tr>
+      <tr *ngFor="let tarefa of tarefas">
+        <td>
+          {{ tarefa.nome }}
+        </td>
+        <td>
+          <button class="button" (click)='downloadPlanilha($event)'>Download da planilha</button>
+          <button class="button" (click)='uploadPlanilha($event)'>Upload da planilha</button>
+          <button class="button" (click)='aplicar($event)'>Aplicar</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</fieldset>
