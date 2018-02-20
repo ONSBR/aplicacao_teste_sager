@@ -25,33 +25,31 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
         JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length)
     );
 
-    var totalMeses = acumulada ? 60 : 1;
+    // define as variaveis para tipo mensal e acumulada.
+    var totalMeses = acumulada ? 60 : 1; 
     var tipoTaxaTeip = acumulada ? constants.TipoTaxa.TEIPacum : constants.TipoTaxa.TEIPmes;
     var tipoTaxaTeifa = acumulada ? constants.TipoTaxa.TEIFAacum : constants.TipoTaxa.TEIFAmes
 
     var evento = contexto.event;
-    var dataset = contexto.dataset;
+    var dataset = contexto.dataset; 
 
     var fechamento = contexto.dataset.fechamentomensal.collection.firstOrDefault();
-
-    var mes = fechamento.mes;
-    var ano = fechamento.ano;
 
     var idUsina = evento.payload.idUsina;
 
     var uges = dataset.unidadegeradora.collection;
     var eventosEstOper = dataset.eventomudancaestadooperativo.collection;
 
-    var periodoTotal = new PeriodoCalculo(mes, ano, totalMeses);
+    var periodoTotal = new PeriodoCalculo(fechamento.mes, fechamento.ano, totalMeses);
 
     eventosEstOper.forEach(it => {
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
     });
 
-    var calculosUges = [];
+    var calculosUges = [];ps
     uges.forEach(uge => {
 
-        // Para ter o resultado para cada mes
+        // Para ter o resultado para cada mes, no mensal teremos apenas 1.
         periodoTotal.mesAnoInterval.forEach(mesAno => {
 
             var periodoCalculo = new PeriodoCalculo(mesAno.mes, mesAno.ano);
