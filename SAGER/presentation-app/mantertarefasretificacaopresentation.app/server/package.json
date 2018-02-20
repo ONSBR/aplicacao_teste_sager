@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Manter Tarefas de retificação backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ONSBR/aplicacao_teste_sager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ONSBR/aplicacao_teste_sager/issues"
+  },
+  "homepage": "https://github.com/ONSBR/aplicacao_teste_sager#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "jasmine": "^2.9.0",
+    "jasmine-node": "^1.14.5",
+    "moment": "^2.20.1",
+    "node-rest-client": "^3.1.0"
+  }
+}
