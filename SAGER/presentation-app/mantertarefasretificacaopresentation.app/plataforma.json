@@ -1,0 +1,10 @@
+{
+    "app": {
+        "type": "presentation",
+        "name": "mantertarefasretificacaopresentation.app",
+        "version": "1.0",
+        "description": "Presentation app UC00601-Manter tarefas de retificação.",
+        "author": "",
+        "id": "1448a166-a191-40e7-8c05-b1621f34ad73"
+    }
+}
