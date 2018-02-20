@@ -1,3 +1,19 @@
+unidadegeradora:
+  model: tb_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: potencia_disponivel
+    dataInicioOperacao:
+      column: data_inicio_operacao
+    idUsina:
+      column: id_usina
+  filters:
+    byIdUsina:
+      - idUsina:
+          $eq: :idUsina
+
 eventomudancaestadooperativo: 
   model: tb_evento_mudanca_estado_operativo
   fields:
@@ -22,3 +38,5 @@ eventomudancaestadooperativo:
             $gte: :dataInicial
         - dataVerificada:
             $lte: :dataFinal
+        - idUge:
+            $in: $idsUges

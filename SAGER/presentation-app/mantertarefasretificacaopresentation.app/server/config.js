@@ -8,4 +8,8 @@ const EVENT_MANAGER_HOST = 'localhost';
 config.PORT = 8182;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
 
+config.getUrlUnidadesGeradorasAPartirUsina = function getUrlUnidadesGeradorasAPartirUsina(idUsina) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/unidadegeradora?filter=byIdUsina&idUsina=${idUsina}`;
+}
+
 module.exports = config;

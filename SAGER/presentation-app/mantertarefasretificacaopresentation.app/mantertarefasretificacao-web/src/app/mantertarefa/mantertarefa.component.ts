@@ -27,10 +27,15 @@ export class MantertarefaComponent implements OnInit {
   }
 
   listarUsinas() {
-    console.log(environment.urlServerPresentation + environment.listarUsinas);
     this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
       this.usinas = <Usina[]>data;
     });
+  }
+
+  pesquisarEventos() {
+    const url = environment.urlServerPresentation + environment.pesquisarEventos;
+    const body = { 'filtroConsulta': this.filtroEvento };
+    this.http.post(url, body);
   }
 
 }
