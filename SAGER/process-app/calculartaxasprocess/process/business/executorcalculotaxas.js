@@ -21,13 +21,13 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
 
     var acumulada = contexto.event.payload.acumulada;
 
-    console.log("INICIO [calcularTaxasPorUsina-"+(acumulada?"Acumulada":"Mensal")+"]: totaleventos = " +
+    console.log("INICIO [calcularTaxasPorUsina-" + (acumulada ? "Acumulada" : "Mensal") + "]: totaleventos = " +
         JSON.stringify(contexto.dataset.eventomudancaestadooperativo.collection.toArray().length)
     );
 
-    var totalMeses = acumulada? 60 : 1;
-    var tipoTaxaTeip = acumulada? constants.TipoTaxa.TEIPacum : constants.TipoTaxa.TEIPmes;
-    var tipoTaxaTeifa = acumulada? constants.TipoTaxa.TEIFAacum : constants.TipoTaxa.TEIFAmes
+    var totalMeses = acumulada ? 60 : 1;
+    var tipoTaxaTeip = acumulada ? constants.TipoTaxa.TEIPacum : constants.TipoTaxa.TEIPmes;
+    var tipoTaxaTeifa = acumulada ? constants.TipoTaxa.TEIFAacum : constants.TipoTaxa.TEIFAmes
 
     var evento = contexto.event;
     var dataset = contexto.dataset;
@@ -47,10 +47,10 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
     eventosEstOper.forEach(it => {
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
     });
-    
+
     var calculosUges = [];
     uges.forEach(uge => {
-        
+
         // Para ter o resultado para cada mes
         periodoTotal.mesAnoInterval.forEach(mesAno => {
 
@@ -70,26 +70,38 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
     var calculoUsina = new CalculoTaxasPeriodoUsina(periodoTotal, idUsina, calculosUges);
     calculoUsina.calcular();
 
-    calculoUsina.calculosTaxasPeriodoUge.forEach(calculoUge => {
-
-        calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
-
-            createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
-                calculoParam.tipoParametro, calculoParam.qtdHoras,
-                evento.payload.idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
-            );
-        });
-
-        createParametroTaxa(dataset, fechamento.id, calculoUge.unidadeGeradora.idUge,
-            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras,
-            evento.payload.idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
-        );
-
-    });
+    gerarParametrosTaxas(calculoUsina.calculosTaxasPeriodoUge, dataset, fechamento.id, evento.payload.idExecucaoCalculo);
 
     // cria ou atualiza as taxas teip ou teifa
     updateOrCreateTaxa(dataset, fechamento.id, idUsina, tipoTaxaTeip, calculoUsina.valorTeip);
     updateOrCreateTaxa(dataset, fechamento.id, idUsina, tipoTaxaTeifa, calculoUsina.valorTeifa);
+}
+
+/**
+ * @description Gera os parâmetros de taxas para as unidades geradoras.
+ * @param {CalculoTaxasPeriodoUge[]} calculosTaxasPeriodoUge 
+ * @param {DataSet} dataset 
+ * @param {int} idFechamento 
+ * @param {int} idExecucaoCalculo 
+ */
+function gerarParametrosTaxas(calculosTaxasPeriodoUge, dataset, idFechamento, idExecucaoCalculo) {
+    
+    calculosTaxasPeriodoUge.forEach(calculoUge => {
+
+        calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
+
+            createParametroTaxa(dataset, idFechamento, calculoUge.unidadeGeradora.idUge,
+                calculoParam.tipoParametro, calculoParam.qtdHoras,
+                idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
+            );
+        });
+
+        createParametroTaxa(dataset, idFechamento, calculoUge.unidadeGeradora.idUge,
+            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras,
+            idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
+        );
+
+    });
 }
 
 /**

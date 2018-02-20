@@ -21,8 +21,6 @@ class CalculoParametroHEDP extends AbstractCalculoParametroEventoLimitacaoPotenc
      */
     validarEvento(evtEstOper) {
         
-        // TODO semelhante ao HEDF, validar com Talita
-
         return (util.validarEstado_LIG_LCC_LCI_LCS(evtEstOper.idEstadoOperativo)) 
             && evtEstOper.idCondicaoOperativa == CondicaoOperativa.RPR
             && util.validarIndisponibilidadeResponsabilidade(evtEstOper.idClassificacaoOrigem);
