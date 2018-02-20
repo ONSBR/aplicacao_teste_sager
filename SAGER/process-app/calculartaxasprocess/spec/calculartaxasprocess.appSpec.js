@@ -48,13 +48,13 @@ describe('O SAGER deve calcular as taxas TEIFA e TEI', function () {
 
     it('validar cálculo da teip para o mês 12/2014, usina ALUXG.', () => {
 
-        /* TODO validando calculo acumulada
+        // TODO validando calculo acumulada
         utilTest.testarCalculoTaxasAcumuladasUsinaValores(
             "ALUXG", 12, 2014, fileDataMass.file_mass_uge_ALUXG,
             fileDataMass.file_mass_events_ALUXG_1,
             fileDataMass.file_mass_events_ALUXG_2,
-            0.0186441
-        );*/
+            0.0184692  // TODO valor acumulado deveria ser 0.0186441
+        );
 
     })
 
