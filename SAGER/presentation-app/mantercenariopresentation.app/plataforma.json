@@ -1,0 +1,10 @@
+{
+    "app": {
+        "type": "presentation",
+        "name": "mantercenariopresentation.app",
+        "version": "1.0",
+        "description": "Presentation app do UC00606-Manter cenários.",
+        "author": "",
+        "id": "80ae0ca9-6e9c-4087-9297-3a0325f6d999"
+    }
+}

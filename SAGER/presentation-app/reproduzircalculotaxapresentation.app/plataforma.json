@@ -1,0 +1,10 @@
+{
+    "app": {
+        "type": "presentation",
+        "name": "reproduzircalculotaxapresentation.app",
+        "version": "1.0",
+        "description": "Presentation app do UC02505-Reproduzir Cálculo de Taxa.",
+        "author": "",
+        "id": "5aea8ef7-861f-434b-a817-60eb2e4fa4e9"
+    }
+}
