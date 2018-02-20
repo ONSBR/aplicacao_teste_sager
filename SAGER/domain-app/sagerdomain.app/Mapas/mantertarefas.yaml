@@ -1,0 +1,24 @@
+eventomudancaestadooperativo: 
+  model: tb_evento_mudanca_estado_operativo
+  fields:
+    idEvento: 
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_classificacao_origem
+    idEstadoOperativo:
+      column: id_tipo_estado_operativo
+    idCondicaoOperativa:
+      column: id_condicao_operativa
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: potencia_disponivel
+  filters:
+    byIntervaloDatas:
+      $and:
+        - dataVerificada:
+            $gte: :dataInicial
+        - dataVerificada:
+            $lte: :dataFinal
