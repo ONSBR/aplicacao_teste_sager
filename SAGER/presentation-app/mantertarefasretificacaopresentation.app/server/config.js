@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2125;
+const DOMAIN_PORT = 2145;
 const DOMAIN_HOST = 'localhost';
 const PROCESS_MEMORY_HOST = 'localhost';
 const EVENT_MANAGER_HOST = 'localhost';
@@ -12,8 +12,8 @@ config.getUrlUnidadesGeradorasAPartirUsina = function getUrlUnidadesGeradorasAPa
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/unidadegeradora?filter=byIdUsina&idUsina=${idUsina}`;
 }
 
-config.getUrlUnidadesGeradorasAPartirUsina = function getUrlUnidadesGeradorasAPartirUsina(idUsina) {
-    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/unidadegeradora?filter=byIdUsina&idUsina=${idUsina}`;
+config.getUrlFiltroEventoPorDataseUGes = function getUrlFiltroEventoPorDataseUGes(idsUges, dataInicial, dataFinal) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=byIntervaloDatas&dataInicial=${dataInicial}&dataFinal=${dataFinal}=&idsUges=${idsUges}`;
 }
 
 module.exports = config;

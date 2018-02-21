@@ -1,5 +1,6 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const parseEventosXlsx = require('./parse/parseeventosxlsx');
 
 class PesquisarEventosController {
 
@@ -20,33 +21,50 @@ class PesquisarEventosController {
      */
     pesquisarEventos(request, response) {
         let usinaId = this.getUsinaId(request);
-        this.domainPromiseHelper.getDomainPromise(
-            this.getUrlUnidadesGeradorasAPartirUsina(usinaId)).
+        let urlUnidadesGeradorasAPartirUsina = this.getUrlUnidadesGeradorasAPartirUsina(usinaId);
+        let filtroEventos = request.body.filtroEvento;
+        console.log('urlUnidadesGeradorasAPartirUsina=' + urlUnidadesGeradorasAPartirUsina);
+        this.domainPromiseHelper.getDomainPromise(urlUnidadesGeradorasAPartirUsina).
             then(uges => { return this.getEventosPorDataeUGe(request, uges) }).
-            then(eventos => { console.log(eventos) }).
-            catch(e => { console.log(`Erro durante a consulta de usinas: ${e.toString()}`) });
+            then(eventos => { this.downloadPlanilhaEventos(response, filtroEventos, eventos) }).
+            catch(e => { console.log(`Erro durante a consulta de eventos: ${e.toString()}`) });
+    }
+
+    downloadPlanilhaEventos(response, filtroEventos, eventos) {
+        try {
+            var parseFileTemplate = parseEventosXlsx.factory(filtroEventos, eventos);
+            var contentXlsx = parseFileTemplate.parse();
+            response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
+            response.setHeader('Content-Length', contentXlsx.length);
+            response.write(contentXlsx, 'binary');
+            response.end();
+        }
+        catch (error) {
+            console.log(error);
+            response.sendStatus(400);
+        }
     }
 
     getUrlUnidadesGeradorasAPartirUsina(idUsina) {
         return config.getUrlUnidadesGeradorasAPartirUsina(idUsina);
     }
 
-    getEventosPorDataeUGE(request, uges) {
+    getEventosPorDataeUGe(request, uges) {
         let idsUGes = this.extrairIdsUges(uges).join(';');
-        let dataInicial = this.getDataInicial(request);
-        let dataFinal = this.getDataFinal(request);
+        let dataInicial = this.getDataInicial(request).toISOString().slice(0, 10);
+        let dataFinal = this.getDataFinal(request).toISOString().slice(0, 10);
 
-        let urlFiltroEventos = this.urlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal);
-
+        let urlFiltroEventos = this.getUrlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal);
+        console.log('urlFiltroEventos=' + urlFiltroEventos);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroEventos);
     }
 
-    urlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal) {
-
+    getUrlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal) {
+        return config.getUrlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal);
     }
 
     extrairIdsUges(uges) {
-        return uges.map(uge => uge.id);
+        return uges.map(uge => uge.idUge);
     }
 
     getDataInicial(request) {
