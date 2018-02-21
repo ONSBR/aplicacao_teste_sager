@@ -3,17 +3,14 @@ const util = require('../../util');
 
 class ParseMemoryFileTemplate {
 
-    constructor(filtroPesquisa, eventos) {
-        this.filtroPesquisa = filtroPesquisa;
-        this.dataInicial = new Date(filtroPesquisa.dataInicial).toISOString().slice(0,10);
-        this.dataFinal = new Date(filtroPesquisa.dataFinal).toISOString().slice(0,10);
-        this.usina = filtroPesquisa.usina;
+    constructor(idUsina, dataInicial, dataFinal, eventos) {
+        this.usina = idUsina;
+        this.dataInicial = new Date(dataInicial).toISOString().slice(0, 10);
+        this.dataFinal = new Date(dataFinal).toISOString().slice(0, 10);
         this.fileNameSuffix = this.getFileNameSuffix();
 
-        let filePath = "./templates/template_eventos.xlsx";
-        this.workbook = XLSX.readFileSync(filePath);
+        this.workbook = XLSX.utils.book_new();
 
-        this.sheet = this.workbook.Sheets.eventos;
         this.eventos = eventos;
     }
 
@@ -22,19 +19,45 @@ class ParseMemoryFileTemplate {
     }
 
     parse() {
+        var wsData = [this.getUsina(), this.getDataInicial(), this.getDataFinal()];
+        this.parseEventos(wsData);
+        var workSheet = XLSX.utils.aoa_to_sheet(wsData);
 
-        this.parseContent();
-
+        this.workbook.SheetNames.push('eventos');
+        this.workbook.Sheets['eventos'] = workSheet;
+        this.sheet = this.workbook.Sheets['eventos'];
         var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
         var contentXlsx = XLSX.write(this.workbook, wopts);
-
         return contentXlsx;
     }
 
-    parseContent() {
-        this.sheet["B1"] = this.usina;
-        this.sheet["B2"] = this.dataInicial;
-        this.sheet["B3"] = this.dataFinal;
+    getUsina() {
+        let header = [];
+        header[0] = 'Usina';
+        header[1] = this.usina;
+        return header;
+    }
+
+    getDataInicial(){
+        let header = [];
+        header[0] = 'Data Inicial';
+        header[1] = this.dataInicial;
+        return header;
+    }
+
+    getDataFinal(){
+        let header = [];
+        header[0] = 'Data Final';
+        header[1] = this.dataFinal;
+        return header;
+    }
+
+    parseEventos() {
+        // let eventRow = 8;
+        // this.eventos.forEach(evento => {
+        //     this.sheet[`A${eventRow}`] = { v: evento.idEvento };
+        //     eventRow++;
+        // });
     }
 
 }
@@ -44,6 +67,6 @@ class ParseMemoryFileTemplate {
  * @param {eventos} eventos 
  * @param {filtroPesquisa} filtroPesquisa
  */
-module.exports.factory = function (filtroPesquisa, eventos) {
-    return new ParseMemoryFileTemplate(filtroPesquisa, eventos);
+module.exports.factory = function (idUsina, dataInicial, dataFinal, eventos) {
+    return new ParseMemoryFileTemplate(idUsina, dataInicial, dataFinal, eventos);
 }

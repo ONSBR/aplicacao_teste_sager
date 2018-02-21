@@ -26,7 +26,7 @@ app.get("/listarusinas", (req, res) => {
 
 let pesquisarEventosController = new PesquisarEventosController();
 
-app.post("/pesquisareventos", (req, res) => {
+app.get("/pesquisareventos", (req, res) => {
     pesquisarEventosController.pesquisarEventos(req, res);
 });
 

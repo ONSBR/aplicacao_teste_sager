@@ -22,17 +22,19 @@ class PesquisarEventosController {
     pesquisarEventos(request, response) {
         let usinaId = this.getUsinaId(request);
         let urlUnidadesGeradorasAPartirUsina = this.getUrlUnidadesGeradorasAPartirUsina(usinaId);
-        let filtroEventos = request.body.filtroEvento;
         console.log('urlUnidadesGeradorasAPartirUsina=' + urlUnidadesGeradorasAPartirUsina);
         this.domainPromiseHelper.getDomainPromise(urlUnidadesGeradorasAPartirUsina).
             then(uges => { return this.getEventosPorDataeUGe(request, uges) }).
-            then(eventos => { this.downloadPlanilhaEventos(response, filtroEventos, eventos) }).
+            then(eventos => { this.downloadPlanilhaEventos(request, response, eventos) }).
             catch(e => { console.log(`Erro durante a consulta de eventos: ${e.toString()}`) });
     }
 
-    downloadPlanilhaEventos(response, filtroEventos, eventos) {
+    downloadPlanilhaEventos(request, response, eventos) {
         try {
-            var parseFileTemplate = parseEventosXlsx.factory(filtroEventos, eventos);
+            var parseFileTemplate = 
+                parseEventosXlsx.factory(
+                    this.getUsinaId(request), this.getDataInicial(request), this.getDataFinal(request), eventos);
+
             var contentXlsx = parseFileTemplate.parse();
             response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
             response.setHeader('Content-Length', contentXlsx.length);
@@ -68,15 +70,15 @@ class PesquisarEventosController {
     }
 
     getDataInicial(request) {
-        return new Date(request.body.filtroEvento.dataInicial);
+        return new Date(request.query.dataInicial);
     }
 
     getDataFinal(request) {
-        return new Date(request.body.filtroEvento.dataFinal);
+        return new Date(request.query.dataFinal);
     }
 
     getUsinaId(request) {
-        return request.body.filtroEvento.usina.idUsina;
+        return request.query.idUsina;
     }
 
 }
