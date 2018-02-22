@@ -1,5 +1,5 @@
 const XLSX = require('xlsx');
-const util = require('../../util');
+const Util = require('./util');
 
 class ParseMemoryFileTemplate {
 
@@ -20,11 +20,11 @@ class ParseMemoryFileTemplate {
 
     parse() {
         let wsData = [this.getUsina(), this.getDataInicial(), this.getDataFinal()];
-
-        wsData.push([]);        
-        wsData.push([]);
+        this.adicionaLinhaVazia(wsData);
+        this.adicionaLinhaVazia(wsData);
         wsData.push(['Eventos']);
         wsData.push(this.getCabecalhoEventos());
+        this.adicionaListaDeEventos(wsData);
         let workSheet = XLSX.utils.aoa_to_sheet(wsData);
 
         this.workbook.SheetNames.push('eventos');
@@ -33,6 +33,24 @@ class ParseMemoryFileTemplate {
         let wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
         let contentXlsx = XLSX.write(this.workbook, wopts);
         return contentXlsx;
+    }
+
+    adicionaListaDeEventos(wsData) {
+        this.eventos.forEach(evento => {
+            let linhaEvento = [];
+            linhaEvento.push(evento.idEvento);
+            linhaEvento.push(evento.idUge);
+            linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
+            linhaEvento.push(Util.textToExcel(evento.idCondicaoOperativa));
+            linhaEvento.push(Util.textToExcel(evento.idClassificacaoOrigem));
+            linhaEvento.push(Util.formatDate(evento.dataVerificada));
+            linhaEvento.push(evento.potenciaDisponivel);
+            wsData.push(linhaEvento);
+        });
+    }
+
+    adicionaLinhaVazia(wsData) {
+        wsData.push([]);
     }
 
     getCabecalhoEventos() {
