@@ -19,16 +19,24 @@ class ParseMemoryFileTemplate {
     }
 
     parse() {
-        var wsData = [this.getUsina(), this.getDataInicial(), this.getDataFinal()];
-        this.parseEventos(wsData);
-        var workSheet = XLSX.utils.aoa_to_sheet(wsData);
+        let wsData = [this.getUsina(), this.getDataInicial(), this.getDataFinal()];
+
+        wsData.push([]);        
+        wsData.push([]);
+        wsData.push(['Eventos']);
+        wsData.push(this.getCabecalhoEventos());
+        let workSheet = XLSX.utils.aoa_to_sheet(wsData);
 
         this.workbook.SheetNames.push('eventos');
         this.workbook.Sheets['eventos'] = workSheet;
         this.sheet = this.workbook.Sheets['eventos'];
-        var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
-        var contentXlsx = XLSX.write(this.workbook, wopts);
+        let wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
+        let contentXlsx = XLSX.write(this.workbook, wopts);
         return contentXlsx;
+    }
+
+    getCabecalhoEventos() {
+        return ['desger_id', 'uge_id', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
     }
 
     getUsina() {
@@ -38,14 +46,14 @@ class ParseMemoryFileTemplate {
         return header;
     }
 
-    getDataInicial(){
+    getDataInicial() {
         let header = [];
         header[0] = 'Data Inicial';
         header[1] = this.dataInicial;
         return header;
     }
 
-    getDataFinal(){
+    getDataFinal() {
         let header = [];
         header[0] = 'Data Final';
         header[1] = this.dataFinal;
