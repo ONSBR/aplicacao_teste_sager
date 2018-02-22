@@ -4,6 +4,9 @@ import { Usina } from '../model/Usina';
 import { TarefaRetificacao } from '../model/TarefaRetificacao';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver/FileSaver';
+import { RequestOptions } from '@angular/http/src/base_request_options';
 
 @Component({
   selector: 'app-mantertarefa',
@@ -33,12 +36,16 @@ export class MantertarefaComponent implements OnInit {
   }
 
   pesquisarEventos() {
-    const url = environment.urlServerPresentation + environment.pesquisarEventos;
-    const body = { 'filtroEvento': this.filtroEvento };
-    console.log(url);
-    this.http.post(url, body).subscribe(data => {
-      console.log('OK');
-    });
+    const url = this.getUrlPesquisarEventos();
+    console.log('url' + url);
+    window.location.href = url;
+    // this.http.get(this.getUrlPesquisarEventos()).toPromise().
+    //   then(data => { console.log(data); }).
+    //   catch(error => { console.log(error); });
+  }
+
+  getUrlPesquisarEventos() {
+    return `${environment.urlServerPresentation}${environment.pesquisarEventos}?idUsina=${this.filtroEvento.usina.idUsina}&dataInicial=${this.filtroEvento.dataInicial}&dataFinal=${this.filtroEvento.dataFinal}`;
   }
 
 }
