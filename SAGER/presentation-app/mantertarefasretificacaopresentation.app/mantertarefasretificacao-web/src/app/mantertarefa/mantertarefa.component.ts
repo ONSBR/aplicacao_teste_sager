@@ -26,7 +26,6 @@ export class MantertarefaComponent implements OnInit {
 
   ngOnInit() {
     this.listarUsinas();
-    this.tarefas = [{ 'id': '1', 'nome': 'teste' }, { 'id': '2', 'nome': 'teste 2' }, { 'id': '3', 'nome': 'teste 3' }];
   }
 
   listarUsinas() {
@@ -35,13 +34,15 @@ export class MantertarefaComponent implements OnInit {
     });
   }
 
+  listarTarefas() {
+    this.http.get(environment.urlServerPresentation + environment.listarTarefas).subscribe(data => {
+      this.tarefas = <TarefaRetificacao[]>data;
+    });
+  }
+
   pesquisarEventos() {
     const url = this.getUrlPesquisarEventos();
-    console.log('url' + url);
     window.location.href = url;
-    // this.http.get(this.getUrlPesquisarEventos()).toPromise().
-    //   then(data => { console.log(data); }).
-    //   catch(error => { console.log(error); });
   }
 
   getUrlPesquisarEventos() {

@@ -40,3 +40,34 @@ eventomudancaestadooperativo:
             $lte: :dataFinal
         - idUge:
             $in: $idsUges
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+    tipo:
+      column: tipo
+      required: true
+    agente:
+      column: agente
+      required: true      
+  filters:
+    byName:
+      nome: :nome 
+    byIdUsina:
+      id: :idUsina              
+
+tarefaretificacao:
+  model: tb_tarefa_retificacao
+  fields:
+    nome:
+      column: nome
+      required: true

@@ -19,9 +19,7 @@ class ParseMemoryFileTemplate {
     }
 
     parse() {
-        let wsData = [this.getUsina(), this.getDataInicial(), this.getDataFinal()];
-        this.adicionaLinhaVazia(wsData);
-        this.adicionaLinhaVazia(wsData);
+        let wsData = [];
         wsData.push(['Eventos']);
         wsData.push(this.getCabecalhoEventos());
         this.adicionaListaDeEventos(wsData);
@@ -38,8 +36,9 @@ class ParseMemoryFileTemplate {
     adicionaListaDeEventos(wsData) {
         this.eventos.forEach(evento => {
             let linhaEvento = [];
-            linhaEvento.push(evento.idEvento);
+            linhaEvento.push('');
             linhaEvento.push(evento.idUge);
+            linhaEvento.push(evento.idEvento);
             linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
             linhaEvento.push(Util.textToExcel(evento.idCondicaoOperativa));
             linhaEvento.push(Util.textToExcel(evento.idClassificacaoOrigem));
@@ -49,12 +48,10 @@ class ParseMemoryFileTemplate {
         });
     }
 
-    adicionaLinhaVazia(wsData) {
-        wsData.push([]);
-    }
 
     getCabecalhoEventos() {
-        return ['desger_id', 'uge_id', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
+        //FIXME Modificar nome das colunas?
+        return ['id_usina', 'uge_id', 'desger_id', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
     }
 
     getUsina() {
