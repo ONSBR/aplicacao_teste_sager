@@ -36,7 +36,7 @@ class ParseMemoryFileTemplate {
     adicionaListaDeEventos(wsData) {
         this.eventos.forEach(evento => {
             let linhaEvento = [];
-            linhaEvento.push('');
+            linhaEvento.push(this.usina);
             linhaEvento.push(evento.idUge);
             linhaEvento.push(evento.idEvento);
             linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
@@ -73,14 +73,6 @@ class ParseMemoryFileTemplate {
         header[0] = 'Data Final';
         header[1] = this.dataFinal;
         return header;
-    }
-
-    parseEventos() {
-        // let eventRow = 8;
-        // this.eventos.forEach(evento => {
-        //     this.sheet[`A${eventRow}`] = { v: evento.idEvento };
-        //     eventRow++;
-        // });
     }
 
 }
