@@ -6,8 +6,8 @@ class Util {
         return value ? value : "";
     }
 
-    static formatDate(date) {
-        return date ? moment(date).format("DD-MM-YYYY HH:mm:ss") : "";
+    static formatDate(date, format) {
+        return date ? moment(date).format(format) : "";
     }
 }
 

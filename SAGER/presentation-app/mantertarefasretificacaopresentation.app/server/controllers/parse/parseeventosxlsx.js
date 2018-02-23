@@ -13,7 +13,7 @@ class ParseMemoryFileTemplate {
     }
 
     getFileNameSuffix() {
-        return `${this.usina}_${this.dataInicial}_${this.dataFinal}`;
+        return `${this.uges.join(';')}_${this.dataInicial}_${this.dataFinal}`;
     }
 
     parse() {
@@ -32,6 +32,7 @@ class ParseMemoryFileTemplate {
     }
 
     adicionaListaDeEventos(wsData) {
+        const formatDD_MM_YYYY_HH_mm_ss = 'DD-MM-YYYY HH:mm:ss';
         this.eventos.forEach(evento => {
             let linhaEvento = [];
             let unidadeGeradora = this.uges.filter(uge => { return uge.idUge === evento.idUge })[0];
@@ -41,7 +42,7 @@ class ParseMemoryFileTemplate {
             linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
             linhaEvento.push(Util.textToExcel(evento.idCondicaoOperativa));
             linhaEvento.push(Util.textToExcel(evento.idClassificacaoOrigem));
-            linhaEvento.push(Util.formatDate(evento.dataVerificada));
+            linhaEvento.push(Util.formatDate(evento.dataVerificada, formatDD_MM_YYYY_HH_mm_ss));
             linhaEvento.push(evento.potenciaDisponivel);
             wsData.push(linhaEvento);
         });

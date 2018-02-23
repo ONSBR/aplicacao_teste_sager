@@ -35,19 +35,18 @@ class PesquisarEventosController {
 
     downloadPlanilhaEventos(request, response, uges, eventos) {
         try {
-            var parseFileTemplate =
+            let parseFileTemplate =
                 parseEventosXlsx.factory(
                     uges, this.getDataInicial(request), this.getDataFinal(request), eventos);
 
-            var contentXlsx = parseFileTemplate.parse();
+            let contentXlsx = parseFileTemplate.parse();
             response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
             response.setHeader('Content-Length', contentXlsx.length);
             response.write(contentXlsx, 'binary');
             response.end();
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
-            response.sendStatus(400);
+            response.status(400).send({ error: error.toString() });
         }
     }
 
@@ -59,7 +58,6 @@ class PesquisarEventosController {
         let idsUGes = this.extrairIdsUges(uges).join(';');
         let dataInicial = this.getDataInicial(request).toISOString().slice(0, 10);
         let dataFinal = this.getDataFinal(request).toISOString().slice(0, 10);
-
         let urlFiltroEventos = this.getUrlFiltroEventoPorDataseUGes(idsUGes, dataInicial, dataFinal);
         console.log('urlFiltroEventos=' + urlFiltroEventos);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroEventos);
