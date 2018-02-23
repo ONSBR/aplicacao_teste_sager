@@ -4,12 +4,9 @@
 
 <fieldset>
   <div>
-    <span>Usina:
-      <select [(ngModel)]="filtroEvento.usina">
-        <option *ngFor="let usina of usinas" [ngValue]="usina">
-          {{usina.nome}}
-        </option>
-      </select>
+    <span>Usina:</span>
+    <span *ngFor="let usina of usinas">
+      <input type="checkbox" (change)="updateCheckedOptions($event, usina)">{{usina.idUsina}}
     </span>
   </div>
   <div>

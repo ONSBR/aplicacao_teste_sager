@@ -10,9 +10,9 @@ unidadegeradora:
     idUsina:
       column: id_usina
   filters:
-    byIdUsina:
-      - idUsina:
-          $eq: :idUsina
+    byIdUsina: 
+      idUsina:
+        $in: :$idsUsinas
 
 eventomudancaestadooperativo: 
   model: tb_evento_mudanca_estado_operativo

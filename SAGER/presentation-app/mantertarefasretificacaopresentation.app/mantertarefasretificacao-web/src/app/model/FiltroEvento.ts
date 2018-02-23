@@ -1,7 +1,7 @@
 import { Usina } from './Usina';
 
 export class FiltroEvento {
-    usina: Usina;
+    usinas: Array<Usina>;
     dataInicial: Date;
     dataFinal: Date;
 }

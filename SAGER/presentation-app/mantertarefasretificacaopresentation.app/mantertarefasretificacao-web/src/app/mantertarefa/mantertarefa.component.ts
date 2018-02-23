@@ -22,6 +22,7 @@ export class MantertarefaComponent implements OnInit {
 
   constructor(private http: HttpClient) {
     this.filtroEvento = new FiltroEvento();
+    this.filtroEvento.usinas = [];
   }
 
   ngOnInit() {
@@ -42,11 +43,21 @@ export class MantertarefaComponent implements OnInit {
 
   pesquisarEventos() {
     const url = this.getUrlPesquisarEventos();
+    console.log('url' + url);
     window.location.href = url;
   }
 
   getUrlPesquisarEventos() {
-    return `${environment.urlServerPresentation}${environment.pesquisarEventos}?idUsina=${this.filtroEvento.usina.idUsina}&dataInicial=${this.filtroEvento.dataInicial}&dataFinal=${this.filtroEvento.dataFinal}`;
+    return `${environment.urlServerPresentation}${environment.pesquisarEventos}?idsUsinas=${this.filtroEvento.usinas.join(';')}&dataInicial=${this.filtroEvento.dataInicial}&dataFinal=${this.filtroEvento.dataFinal}`;
+  }
+
+  updateCheckedOptions(event, usina) {
+    if (event.target.checked) {
+      this.filtroEvento.usinas.push(usina.idUsina);
+    } else {
+      const index = this.filtroEvento.usinas.indexOf(usina.idUsina);
+      this.filtroEvento.usinas.splice(index, 1);
+    }
   }
 
 }

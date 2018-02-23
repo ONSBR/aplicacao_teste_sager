@@ -3,14 +3,12 @@ const Util = require('./util');
 
 class ParseMemoryFileTemplate {
 
-    constructor(idUsina, dataInicial, dataFinal, eventos) {
-        this.usina = idUsina;
+    constructor(uges, dataInicial, dataFinal, eventos) {
+        this.uges = uges;
         this.dataInicial = new Date(dataInicial).toISOString().slice(0, 10);
         this.dataFinal = new Date(dataFinal).toISOString().slice(0, 10);
         this.fileNameSuffix = this.getFileNameSuffix();
-
         this.workbook = XLSX.utils.book_new();
-
         this.eventos = eventos;
     }
 
@@ -36,7 +34,8 @@ class ParseMemoryFileTemplate {
     adicionaListaDeEventos(wsData) {
         this.eventos.forEach(evento => {
             let linhaEvento = [];
-            linhaEvento.push(this.usina);
+            let unidadeGeradora = this.uges.filter(uge => { return uge.idUge === evento.idUge })[0];
+            linhaEvento.push(unidadeGeradora.idUsina);
             linhaEvento.push(evento.idUge);
             linhaEvento.push(evento.idEvento);
             linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
@@ -82,6 +81,6 @@ class ParseMemoryFileTemplate {
  * @param {eventos} eventos 
  * @param {filtroPesquisa} filtroPesquisa
  */
-module.exports.factory = function (idUsina, dataInicial, dataFinal, eventos) {
-    return new ParseMemoryFileTemplate(idUsina, dataInicial, dataFinal, eventos);
+module.exports.factory = function (uges, dataInicial, dataFinal, eventos) {
+    return new ParseMemoryFileTemplate(uges, dataInicial, dataFinal, eventos);
 }

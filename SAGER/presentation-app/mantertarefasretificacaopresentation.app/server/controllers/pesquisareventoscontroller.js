@@ -17,23 +17,27 @@ class PesquisarEventosController {
      * @param {Request} request Objeto de request
      * @param {Response} response Objeto de response
      * @description Pesquisa todos os eventos de mudança de estado operativo a 
-     * partir de data inicial, data final e usina
+     * partir de data inicial, data final e usinas
      */
     pesquisarEventos(request, response) {
-        let usinaId = this.getUsinaId(request);
-        let urlUnidadesGeradorasAPartirUsina = this.getUrlUnidadesGeradorasAPartirUsina(usinaId);
+        let idsUsinas = this.getUsinasIds(request);
+        let urlUnidadesGeradorasAPartirUsina = this.getUrlUnidadesGeradorasAPartirUsina(idsUsinas);
         console.log('urlUnidadesGeradorasAPartirUsina=' + urlUnidadesGeradorasAPartirUsina);
+        let uges;
         this.domainPromiseHelper.getDomainPromise(urlUnidadesGeradorasAPartirUsina).
-            then(uges => { return this.getEventosPorDataeUGe(request, uges) }).
-            then(eventos => { this.downloadPlanilhaEventos(request, response, eventos) }).
+            then(ugesPesquisa => {
+                uges = ugesPesquisa;
+                return this.getEventosPorDataeUGe(request, uges);
+            }).
+            then(eventos => { this.downloadPlanilhaEventos(request, response, uges, eventos) }).
             catch(e => { console.log(`Erro durante a consulta de eventos: ${e.toString()}`) });
     }
 
-    downloadPlanilhaEventos(request, response, eventos) {
+    downloadPlanilhaEventos(request, response, uges, eventos) {
         try {
-            var parseFileTemplate = 
+            var parseFileTemplate =
                 parseEventosXlsx.factory(
-                    this.getUsinaId(request), this.getDataInicial(request), this.getDataFinal(request), eventos);
+                    uges, this.getDataInicial(request), this.getDataFinal(request), eventos);
 
             var contentXlsx = parseFileTemplate.parse();
             response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
@@ -47,8 +51,8 @@ class PesquisarEventosController {
         }
     }
 
-    getUrlUnidadesGeradorasAPartirUsina(idUsina) {
-        return config.getUrlUnidadesGeradorasAPartirUsina(idUsina);
+    getUrlUnidadesGeradorasAPartirUsina(idsUsinas) {
+        return config.getUrlUnidadesGeradorasAPartirUsina(idsUsinas);
     }
 
     getEventosPorDataeUGe(request, uges) {
@@ -77,8 +81,8 @@ class PesquisarEventosController {
         return new Date(request.query.dataFinal);
     }
 
-    getUsinaId(request) {
-        return request.query.idUsina;
+    getUsinasIds(request) {
+        return request.query.idsUsinas;
     }
 
 }
