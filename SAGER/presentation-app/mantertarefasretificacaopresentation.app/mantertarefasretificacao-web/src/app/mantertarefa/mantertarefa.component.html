@@ -41,8 +41,12 @@
           {{ tarefa.nome }}
         </td>
         <td>
+          <label for="file">Upload da planilha</label><input type="file" (change)='uploadPlanilha(tarefa, $event.target.files)'/>
+        </td>
+        <td>
           <button class="button" (click)='downloadPlanilha($event)'>Download da planilha</button>
-          <button class="button" (click)='uploadPlanilha($event)'>Upload da planilha</button>
+        </td>
+        <td>
           <button class="button" (click)='aplicar($event)'>Aplicar</button>
         </td>
       </tr>

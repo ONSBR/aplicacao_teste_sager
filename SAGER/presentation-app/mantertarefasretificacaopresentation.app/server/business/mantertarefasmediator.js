@@ -1,33 +1,24 @@
-const config = require('../config');
-const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const TarefaDAO = require('../dao/tarefadao');
+
 
 class ManterTarefasMediator {
 
-    constructor(domainPromiseHelper) {
-        this.domainPromiseHelper = new DomainPromiseHelper();
+    constructor() {
+        this.tarefaDAO = new TarefaDAO();
     }
 
-    inserirTarefa(nomeTarefa, response) {
-        let urlInserirTarefa = config.getUrlInserirTarefa();
-        console.log('urlInserirTarefa= ' + urlInserirTarefa);
-        let args = this.createArgs(nomeTarefa);
-        this.domainPromiseHelper.postDomainPromise(urlInserirTarefa, args).
-            then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante o cadastro de usinas: ${e.toString()}`) });
+    inserirTarefa(nomeTarefa) {
+        return this.tarefaDAO.inserirTarefa(nomeTarefa);
     }
 
-    createArgs(nomeTarefa) {
-        return {
-            data:[{
-                "nome": nomeTarefa,
-                "_metadata": {
-                    "type": "tarefaretificacao",
-                    "changeTrack": "create",
-                    "branch": "master"
-                }
-            }], headers: { "Content-Type": "application/json" }
-        }
+    listarTarefas() {
+        return this.tarefaDAO.listarTarefas();
     }
+
+    uploadplanilha(){
+        
+    }
+
 }
 
 module.exports = ManterTarefasMediator

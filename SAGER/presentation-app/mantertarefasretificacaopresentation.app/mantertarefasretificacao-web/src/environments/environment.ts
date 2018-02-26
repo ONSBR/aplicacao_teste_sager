@@ -9,5 +9,6 @@ export const environment = {
   listarUsinas: 'listarusinas',
   listarTarefas: 'listartarefas',
   pesquisarEventos: 'pesquisareventos',
-  inserirTarefa: 'inserirtarefa'
+  inserirTarefa: 'inserirtarefa',
+  uploadPlanilha: 'uploadplanilha'
 };

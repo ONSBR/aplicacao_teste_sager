@@ -71,3 +71,23 @@ tarefaretificacao:
     nome:
       column: nome
       required: true
+
+eventomudancaestadooperativotarefa: 
+  model: tb_evento_mudanca_estado_operativo_tarefa
+  fields:
+    idEvento: 
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_classificacao_origem
+    idEstadoOperativo:
+      column: id_tipo_estado_operativo
+    idCondicaoOperativa:
+      column: id_condicao_operativa
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: potencia_disponivel
+    operacao:
+      column: operacao      

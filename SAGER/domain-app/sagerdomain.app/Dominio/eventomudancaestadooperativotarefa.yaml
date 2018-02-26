@@ -1,0 +1,18 @@
+tb_evento_mudanca_estado_operativo_tarefa:
+  id_evento:
+    - string
+  id_uge:
+    - string
+  id_classificacao_origem:
+    - string  
+  id_tipo_estado_operativo:
+    - string  
+  id_condicao_operativa:
+    - string  
+  data_verificada:
+    - date
+  potencia_disponivel:
+    - double
+  operacao:
+    - string    
+    
