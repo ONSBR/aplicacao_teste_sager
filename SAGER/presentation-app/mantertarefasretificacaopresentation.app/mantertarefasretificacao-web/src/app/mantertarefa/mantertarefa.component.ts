@@ -16,7 +16,7 @@ import { RequestOptions } from '@angular/http/src/base_request_options';
 export class MantertarefaComponent implements OnInit {
 
   public filtroEvento: FiltroEvento;
-  public numeroTarefa: string;
+  public nomeTarefa: string;
   public tarefas: Array<TarefaRetificacao>;
   public usinas: Array<Usina>;
 
@@ -27,6 +27,7 @@ export class MantertarefaComponent implements OnInit {
 
   ngOnInit() {
     this.listarUsinas();
+    this.listarTarefas();
   }
 
   listarUsinas() {
@@ -39,6 +40,13 @@ export class MantertarefaComponent implements OnInit {
     this.http.get(environment.urlServerPresentation + environment.listarTarefas).subscribe(data => {
       this.tarefas = <TarefaRetificacao[]>data;
     });
+  }
+
+  inserirTarefa() {
+    let body = { 'nomeTarefa': this.nomeTarefa };
+    this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
+      data => { console.log(data); this.listarTarefas(); }
+    );
   }
 
   pesquisarEventos() {

@@ -25,4 +25,4 @@ class ListarTarefasController {
 
 }
 
-module.exports = ListarUsinasController
+module.exports = ListarTarefasController

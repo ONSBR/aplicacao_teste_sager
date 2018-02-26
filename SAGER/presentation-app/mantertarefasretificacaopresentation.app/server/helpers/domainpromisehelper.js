@@ -1,5 +1,4 @@
 const Client = require('node-rest-client').Client;
-const util = require('../util');
 
 class DomainPromiseHelper {
 
@@ -7,6 +6,19 @@ class DomainPromiseHelper {
         return new Promise((resolve, reject) => {
             let client = new Client();
             let request = client.get(url, function (data) {
+                resolve(data);
+            });
+            request.on('error', function (err) {
+                console.log('request error', err);
+                reject(err);
+            });
+        });
+    }
+
+    postDomainPromise(url, args) {
+        return new Promise((resolve, reject) => {
+            let client = new Client();
+            let request = client.post(url, args, function (data) {
                 resolve(data);
             });
             request.on('error', function (err) {

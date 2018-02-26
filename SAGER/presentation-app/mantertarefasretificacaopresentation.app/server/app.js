@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const config = require('./config');
 const ListarUsinasController = require('./controllers/listarusinascontroller');
 const PesquisarEventosController = require('./controllers/pesquisareventoscontroller');
+const ManterTarefasController = require('./controllers/mantertarefascontroller');
+const ListarTarefasController = require('./controllers/listartarefascontroller');
 
 const app = express();
 const PORT = config.PORT;
@@ -28,6 +30,18 @@ let pesquisarEventosController = new PesquisarEventosController();
 
 app.get("/pesquisareventos", (req, res) => {
     pesquisarEventosController.pesquisarEventos(req, res);
+});
+
+let listarTarefasController = new ListarTarefasController();
+
+app.get("/listartarefas", (req, res) => {
+    listarTarefasController.listarTarefas(req, res);
+});
+
+let manterTarefasController = new ManterTarefasController();
+
+app.post("/inserirtarefa", (req, res) => {
+    manterTarefasController.inserirTarefa(req, res);
 });
 
 app.listen(PORT, function () {

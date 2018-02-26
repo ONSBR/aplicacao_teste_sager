@@ -8,5 +8,6 @@ export const environment = {
   urlServerPresentation: 'http://localhost:8182/',
   listarUsinas: 'listarusinas',
   listarTarefas: 'listartarefas',
-  pesquisarEventos: 'pesquisareventos'
+  pesquisarEventos: 'pesquisareventos',
+  inserirTarefa: 'inserirtarefa'
 };

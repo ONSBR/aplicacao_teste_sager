@@ -1,27 +1,21 @@
 const config = require('../config');
-const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const ManterTarefasMediator = require('../business/mantertarefasmediator');
 
 class ManterTarefasController {
 
-    constructor(domainPromiseHelper) {
-        if(!domainPromiseHelper) {
-            this.domainPromiseHelper = new DomainPromiseHelper();
-        } else {
-            this.domainPromiseHelper = domainPromiseHelper;
-        }
+    constructor() {
+        this.manterTarefasMediator = new ManterTarefasMediator();
     }
 
     /**
-     * @method cadastrarTarefa
+     * @method inserirTarefa
      * @param {Request} request Objeto de request
      * @param {Response} response Objeto de response
-     * @description Lista todas as usinas cadastradas
+     * @description cadastra a tarefa de retificação
      */
-    cadastrarTarefa(request, response) {
-        let tarefa = request.body.tarefa;
-        this.domainPromiseHelper.getDomainPromise(config.URL_USINA_SAGER).
-            then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a consulta de usinas: ${e.toString()}`) });
+    inserirTarefa(request, response) {
+        let nomeTarefa = request.body.nomeTarefa;
+        this.manterTarefasMediator.inserirTarefa(nomeTarefa, response);
     }
 
 }
