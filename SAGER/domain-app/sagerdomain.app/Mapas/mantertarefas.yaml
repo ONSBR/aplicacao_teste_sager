@@ -77,6 +77,8 @@ eventomudancaestadooperativotarefa:
   fields:
     idEvento: 
       column: id_evento
+    nomeTarefa: 
+      column: nome_tarefa  
     idUge:
       column: id_uge
     idClassificacaoOrigem:

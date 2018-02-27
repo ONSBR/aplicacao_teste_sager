@@ -55,13 +55,14 @@ export class MantertarefaComponent implements OnInit {
     window.location.href = url;
   }
 
-  uploadPlanilha(tarefa: TarefaRetificacao, files: FileList){
+  uploadPlanilha(tarefa: TarefaRetificacao, files: FileList) {
     tarefa.planilha = files.item(0);
     const endpoint = environment.urlServerPresentation + environment.uploadPlanilha;
     const formData: FormData = new FormData();
-    formData.append('fileKey', tarefa.planilha, tarefa.planilha.name);
-    return this.http
-      .post(endpoint, formData).subscribe(data => console.log(data));
+    formData.append('planilha', tarefa.planilha, tarefa.planilha.name);
+    formData.append('nomeTarefa', tarefa.nome);
+    const headers = new HttpHeaders();
+    return this.http.post(endpoint, formData, { 'headers': headers }).subscribe(data => console.log(data));
   }
 
   getUrlPesquisarEventos() {

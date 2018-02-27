@@ -36,9 +36,15 @@ class ManterTarefasController {
      * @param {Response} response Objeto de response
      * @description Realiza o upload da planilha para uma tarefa
     */
-    uploadplanilha(request, response) {
-        console.log(request.files);
-        this.manterTarefasMediator.uploadplanilha();
+    uploadPlanilha(request, response) {
+        if (!request.files) {
+            return response.status(400).send('No files were uploaded.');
+        }
+        this.manterTarefasMediator.uploadplanilha(request).then(data => { response.send(data) }).
+            catch(e => {
+                console.log(`Erro no upload de eventos=:${e.toString()}`);
+                response.status(400).send(`Erro no upload de eventos=:${e.toString()}`);
+            });
     }
 
 }
