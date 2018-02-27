@@ -38,12 +38,21 @@ class AbstractCalculoParametroEvento extends AbstractCalculoParametro {
     
     constructor(tipoParametro, unidadeGeradora) {
         super(tipoParametro, unidadeGeradora);
-        this.eventoMudancaEstadoCorrente = null;       
+        this.eventoMudancaEstadoCorrente = null;
     }
     
     reset() {
         super.reset();
         this.eventoMudancaEstadoCorrente = null;       
+    }
+
+    addTipoParametroCalculo(evtEstOper, isEventoTipoTaxa) {
+        if (isEventoTipoTaxa) {
+            if (!evtEstOper.tiposParametrosComputados) {
+                evtEstOper.tiposParametrosComputados = [];
+            }
+            evtEstOper.tiposParametrosComputados.push(this.tipoParametro);
+        }
     }
 }
 
@@ -64,6 +73,8 @@ class AbstractCalculoParametroEventoDiferenca extends AbstractCalculoParametroEv
     computarEvento(evtEstOper) {
         
         var isEventoTipoTaxa = this.validarEvento(evtEstOper);
+
+        super.addTipoParametroCalculo(evtEstOper, isEventoTipoTaxa);
         
         if (isEventoTipoTaxa) {
             if (!this.eventoMudancaEstadoCorrente) {
@@ -101,6 +112,8 @@ class AbstractCalculoParametroEventoLimitacaoPotencia extends AbstractCalculoPar
         this.validarPotenciaUnidadeGeradora();
 
         var isEventoTipoTaxa = this.validarEvento(evtEstOper);
+
+        super.addTipoParametroCalculo(evtEstOper, isEventoTipoTaxa)
         
         if (this.eventoMudancaEstadoCorrente) {
             

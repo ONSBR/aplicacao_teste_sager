@@ -67,7 +67,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
       const url = environment.urlServerPresentation + environment.calcularTaxas;
       const body = { presentationId: this.presentationId, mesFechamento: mesFechamento, anoFechamento: anoFechamento };
-      
+
       this.http.post(url, body).toPromise().then(result => {
         var msg = 'Enviada solicitação de cálculo de taxas com sucesso';
         console.log(msg);
@@ -78,6 +78,20 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       alert("Inválido mês ou ano informados para execução de cálculo.");
     }
 
+  }
+
+  linkMemoriaTaxa(taxa) {
+    return environment.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx +
+      '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
+  }
+
+  reproduzirCalculoTaxa(taxa) {
+    this.http.post(
+      environment.urlServerPresentation + environment.reproduzirCalculoTaxa, 
+      {instance_id: taxa._metadata.instance_id}
+    ).subscribe(data => {
+      alert('Solicitação de reprodução do cálculo da taxa realizada com sucesso.');
+    });
   }
 
   listarUsinas() {
@@ -121,9 +135,9 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
 class Guid {
   static newGuid() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-          return v.toString(16);
-      });
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 }

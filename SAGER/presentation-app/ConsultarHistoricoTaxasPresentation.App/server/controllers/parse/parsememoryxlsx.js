@@ -1,6 +1,8 @@
 const Enumerable = require('linq');
 const XLSX = require('xlsx');
 const util = require('../../util');
+const TipoParametro = require('./constants').TipoParametro;
+const TipoTaxa = require('./constants').TipoTaxa;
 
 /**
  * @class ParseFileTemplate
@@ -21,7 +23,7 @@ class ParseMemoryFileTemplate {
         this.taxa = taxa;
 
         this.colsEvent = colsEvent;
-        this.colsTipoParametro = colsTipoParametro;        
+        this.colsTipoParametro = colsTipoParametro;
     }
 
     recoverData() {
@@ -87,7 +89,7 @@ class ParseMemoryFileTemplate {
     }
 
     parseParametros() {
-        
+
         // UGE_ID	Mês	Ano	Iníco Oper	P
         var curRow = 10;
         this.grpParam.forEach(it => {
@@ -101,10 +103,10 @@ class ParseMemoryFileTemplate {
             this.sheet["E" + curRow] = { v: uge.potenciaDisponivel };
 
             this.colsTipoParametro.forEach(ct => {
-               
+
                 var param = this.getParametroByItemGroup(it, ct.tipoParametro);
-               
-                this.sheet[ct.columnLetter + curRow] = { v: util.numberToExcel(param.valorParametro) };    
+
+                this.sheet[ct.columnLetter + curRow] = { v: util.numberToExcel(param.valorParametro) };
             });
 
             curRow++;
@@ -116,15 +118,25 @@ class ParseMemoryFileTemplate {
         var curRow = 10;
         this.evtEstOpers.forEach(it => {
 
-            this.sheet[this.colsEvent[0] + curRow] = { v: it.idEvento };
-            this.sheet[this.colsEvent[1] + curRow] = { v: it.idUge };
-            this.sheet[this.colsEvent[2] + curRow] = { v: util.textToExcel(it.idEstadoOperativo) };
-            this.sheet[this.colsEvent[3] + curRow] = { v: util.textToExcel(it.idCondicaoOperativa) };
-            this.sheet[this.colsEvent[4] + curRow] = { v: util.textToExcel(it.idClassificacaoOrigem) };
-            this.sheet[this.colsEvent[5] + curRow] = { v: util.formatDate(it.dataVerificada) };
-            this.sheet[this.colsEvent[6] + curRow] = { v: it.potenciaDisponivel };
+            var containTipo = it.tiposParametrosComputados && it.tiposParametrosComputados.length > 0;
+            var qtdTipos = containTipo ? it.tiposParametrosComputados.length : 1;
 
-            curRow++;
+            for (var i = 0; i < qtdTipos; i++, curRow++) {
+                
+                this.sheet[this.colsEvent[0] + curRow] = { v: it.idEvento };
+                this.sheet[this.colsEvent[1] + curRow] = { v: it.idUge };
+                this.sheet[this.colsEvent[2] + curRow] = { v: util.textToExcel(it.idEstadoOperativo) };
+                this.sheet[this.colsEvent[3] + curRow] = { v: util.textToExcel(it.idCondicaoOperativa) };
+                this.sheet[this.colsEvent[4] + curRow] = { v: util.textToExcel(it.idClassificacaoOrigem) };
+                this.sheet[this.colsEvent[5] + curRow] = { v: util.formatDate(it.dataVerificada) };
+                this.sheet[this.colsEvent[6] + curRow] = { v: it.potenciaDisponivel };
+                this.sheet[this.colsEvent[7] + curRow] = { v: util.secondToHour(it.duracaoEmSegundos) };
+
+                var tpparam = containTipo ? it.tiposParametrosComputados[i] : "";
+
+                this.sheet[this.colsEvent[8] + curRow] = { v: tpparam };
+            }
+
         });
     }
 
@@ -139,45 +151,18 @@ class ParseMemoryFileTemplate {
     }
 }
 
-
-/**
- * @constant TipoParametro
- * @description Indica os tipos de parâmetros possíveis
- */
-const TipoParametro = {
-    HDF: "HDF",
-    HEDF: "HEDF",
-    HS: "HS",
-    HRD: "HRD",
-    HDCE: "HDCE",
-    HDP: "HDP",
-    HEDP: "HEDP",
-    HP: "HP"
-}
-
-/**
- * @constant TipoTaxa
- * @description Indica os tipos de taxas possíveis
- */
-const TipoTaxa = {
-    TEIPmes: "TEIPmes",
-    TEIFAmes: "TEIFAmes",
-    TEIPacum: "TEIPac",
-    TEIFAacum: "TEIFAac"
-}
-
 /**
  * @constant teipMetadata
  * @description informações especfíficas para o parse do tipo TEIP
  */
 const teipMetadata = {
     suffixNameFile: "teip",
-    colsEvent: ["J", "K", "L", "M", "N", "O", "P"], 
+    colsEvent: ["J", "K", "L", "M", "N", "O", "P", "Q", "R"],
     colsTipoParametro: [
-        {columnLetter: "F", tipoParametro: TipoParametro.HDP},
-        {columnLetter: "G", tipoParametro: TipoParametro.HEDP},
-        {columnLetter: "H", tipoParametro: TipoParametro.HP}
-    ] 
+        { columnLetter: "F", tipoParametro: TipoParametro.HDP },
+        { columnLetter: "G", tipoParametro: TipoParametro.HEDP },
+        { columnLetter: "H", tipoParametro: TipoParametro.HP }
+    ]
 }
 
 /**
@@ -186,14 +171,14 @@ const teipMetadata = {
  */
 const teifaMetadata = {
     suffixNameFile: "teifa",
-    colsEvent: ["L", "M", "N", "O", "P", "Q", "R"], 
+    colsEvent: ["L", "M", "N", "O", "P", "Q", "R", "S", "T"],
     colsTipoParametro: [
-        {columnLetter: "F", tipoParametro: TipoParametro.HDF},
-        {columnLetter: "G", tipoParametro: TipoParametro.HEDF},
-        {columnLetter: "H", tipoParametro: TipoParametro.HS},
-        {columnLetter: "I", tipoParametro: TipoParametro.HRD},
-        {columnLetter: "J", tipoParametro: TipoParametro.HDCE}
-    ] 
+        { columnLetter: "F", tipoParametro: TipoParametro.HDF },
+        { columnLetter: "G", tipoParametro: TipoParametro.HEDF },
+        { columnLetter: "H", tipoParametro: TipoParametro.HS },
+        { columnLetter: "I", tipoParametro: TipoParametro.HRD },
+        { columnLetter: "J", tipoParametro: TipoParametro.HDCE }
+    ]
 }
 
 /**
@@ -208,13 +193,13 @@ module.exports.factory = function (context, taxa) {
     var retorno;
     if (taxa.idTipoTaxa == TipoTaxa.TEIPmes || taxa.idTipoTaxa == TipoTaxa.TEIPacum) {
         retorno = new ParseMemoryFileTemplate(
-            context, taxa, teipMetadata.suffixNameFile, 
+            context, taxa, teipMetadata.suffixNameFile,
             teipMetadata.colsEvent, teipMetadata.colsTipoParametro
         );
     }
     else if (taxa.idTipoTaxa == TipoTaxa.TEIFAmes || taxa.idTipoTaxa == TipoTaxa.TEIFAacum) {
         retorno = new ParseMemoryFileTemplate(
-            context, taxa, teifaMetadata.suffixNameFile, 
+            context, taxa, teifaMetadata.suffixNameFile,
             teifaMetadata.colsEvent, teifaMetadata.colsTipoParametro
         );
     }

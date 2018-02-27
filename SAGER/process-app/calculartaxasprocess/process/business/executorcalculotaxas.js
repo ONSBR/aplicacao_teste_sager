@@ -46,7 +46,7 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
         EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(it);
     });
 
-    var calculosUges = [];ps
+    var calculosUges = [];
     uges.forEach(uge => {
 
         // Para ter o resultado para cada mes, no mensal teremos apenas 1.
@@ -68,7 +68,10 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
     var calculoUsina = new CalculoTaxasPeriodoUsina(periodoTotal, idUsina, calculosUges);
     calculoUsina.calcular();
 
-    gerarParametrosTaxas(calculoUsina.calculosTaxasPeriodoUge, dataset, fechamento.id, evento.payload.idExecucaoCalculo);
+    adicionarParametrosTaxas(
+        calculoUsina.calculosTaxasPeriodoUge, dataset, 
+        fechamento.id, evento.payload.idExecucaoCalculo
+    );
 
     // cria ou atualiza as taxas teip ou teifa
     updateOrCreateTaxa(dataset, fechamento.id, idUsina, tipoTaxaTeip, calculoUsina.valorTeip);
@@ -82,22 +85,27 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
  * @param {int} idFechamento 
  * @param {int} idExecucaoCalculo 
  */
-function gerarParametrosTaxas(calculosTaxasPeriodoUge, dataset, idFechamento, idExecucaoCalculo) {
+function adicionarParametrosTaxas(calculosTaxasPeriodoUge, dataset, idFechamento, idExecucaoCalculo) {
     
     calculosTaxasPeriodoUge.forEach(calculoUge => {
 
         calculoUge.contadorEventos.listaCalculoTipoParametrosEventos.forEach(calculoParam => {
 
-            createParametroTaxa(dataset, idFechamento, calculoUge.unidadeGeradora.idUge,
-                calculoParam.tipoParametro, calculoParam.qtdHoras,
-                idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
-            );
+            dataset.parametrotaxa.insert(new ParametroTaxa(
+                utils.guid(),
+                calculoParam.qtdHoras, calculoParam.tipoParametro, calculoUge.unidadeGeradora.idUge,
+                idFechamento, idExecucaoCalculo, calculoUge.periodoCalculo.mes, 
+                calculoUge.periodoCalculo.ano
+            ));
+
         });
 
-        createParametroTaxa(dataset, idFechamento, calculoUge.unidadeGeradora.idUge,
-            calculoUge.calculoParametroHP.tipoParametro, calculoUge.calculoParametroHP.qtdHoras,
-            idExecucaoCalculo, calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
-        );
+        dataset.parametrotaxa.insert(new ParametroTaxa(
+            utils.guid(),
+            calculoUge.calculoParametroHP.qtdHoras, calculoUge.calculoParametroHP.tipoParametro, 
+            calculoUge.unidadeGeradora.idUge, idFechamento, idExecucaoCalculo, 
+            calculoUge.periodoCalculo.mes, calculoUge.periodoCalculo.ano
+        ));
 
     });
 }
@@ -128,26 +136,4 @@ function updateOrCreateTaxa(dataset, idFechamento, idUsina, idTipoTaxa, valorTax
             idUsina
         ));
     }
-}
-
-/**
- * @function createParametroTaxa
- * @param {DataSet} dataset 
- * @param {string} idFechamento 
- * @param {string} idUge 
- * @param {string} idTipoParametro 
- * @param {float} valorParametro 
- * @param {string} idExecucaoCalculo 
- * @param {int} mes 
- * @param {int} ano 
- * 
- * @description Função responsável por criar e adicionar no dataset, um parâmetro de taxa para uma execução de cálculo.
- */
-function createParametroTaxa(dataset, idFechamento, idUge, idTipoParametro, valorParametro, idExecucaoCalculo, mes, ano) {
-
-    dataset.parametrotaxa.insert(new ParametroTaxa(
-        utils.guid(),
-        valorParametro, idTipoParametro, idUge,
-        idFechamento, idExecucaoCalculo, mes, ano
-    ));
 }

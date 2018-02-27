@@ -1,7 +1,7 @@
 const HttpClient = require("plataforma-sdk/http/client");
 var httpClient = new HttpClient(); 
 
-const DOMAIN_PORT = 2125;
+const DOMAIN_PORT = 2161;
 
 var dataLoad = [];
 dataLoad.push(tipoTaxaInitialLoad());
