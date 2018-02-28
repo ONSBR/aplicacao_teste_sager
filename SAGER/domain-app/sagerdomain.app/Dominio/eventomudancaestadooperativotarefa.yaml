@@ -1,4 +1,6 @@
 tb_evento_mudanca_estado_operativo_tarefa:
+  id_usina:
+    - string
   id_evento:
     - string
   nome_tarefa:

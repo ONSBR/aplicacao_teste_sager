@@ -75,6 +75,8 @@ tarefaretificacao:
 eventomudancaestadooperativotarefa: 
   model: tb_evento_mudanca_estado_operativo_tarefa
   fields:
+    idUsina: 
+      column: id_usina
     idEvento: 
       column: id_evento
     nomeTarefa: 
@@ -93,3 +95,6 @@ eventomudancaestadooperativotarefa:
       column: potencia_disponivel
     operacao:
       column: operacao      
+  filters:
+    byNomeTarefa:
+      nomeTarefa: :nometarefa 
