@@ -31,6 +31,10 @@ class TarefaDAO {
         return this.domainPromiseHelper.getDomainPromise(config.URL_TAREFAS);
     }
 
+    consultarEventosRetificacaoPorNomeTarefa(nomeTarefa){
+        return this.domainPromiseHelper.getDomainPromise(config.getEventosRetificacaoPorNomeTarefa(nomeTarefa));
+    }
+
     inserirTarefasRetificacaoOperacao(eventosRetificacao) {
         let urlInserirTarefa = config.getUrlInserirTarefa();
         let args = this.createTarefaRetifcacaoOperacaoArgs(eventosRetificacao);
@@ -42,7 +46,9 @@ class TarefaDAO {
 
         eventosRetificacao.forEach(evento => {
             entities.push({
+                'nomeTarefa': evento.nomeTarefa,
                 'idEvento': evento.idEvento,
+                'idUsina': evento.idUsina,
                 'idUge': evento.idUge,
                 'idEstadoOperativo': evento.idEstadoOperativo, 
                 'idCondicaoOperativa': evento.idCondicaoOperativa,

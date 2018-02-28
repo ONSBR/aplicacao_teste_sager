@@ -1,6 +1,6 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
-const parseEventosXlsx = require('./parse/parseeventosxlsx');
+const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 
 class PesquisarEventosController {
 

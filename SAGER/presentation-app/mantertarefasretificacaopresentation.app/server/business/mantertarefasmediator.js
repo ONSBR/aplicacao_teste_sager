@@ -1,6 +1,7 @@
 const TarefaDAO = require('../dao/tarefadao');
 const XLSX = require('xlsx');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
+const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 
 class ManterTarefasMediator {
 
@@ -16,15 +17,15 @@ class ManterTarefasMediator {
         return this.tarefaDAO.listarTarefas();
     }
 
-    uploadplanilha(request) {
-        let nomeTarefa = request.body.nomeTarefa;
-        let planilha = XLSX.read(request.files.planilha.data);
+    uploadplanilha(nomeTarefa, file) {
+        let planilha = XLSX.read(file.data);
         let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
 
         let eventosRetificacao = [];
         for (let i = 3; i <= sheetLength; i++) {
             let eventoMudancaEstadoOperativoTarefa = new EventoMudancaEstadoOperativoTarefa();
             eventoMudancaEstadoOperativoTarefa.nomeTarefa = nomeTarefa;
+            eventoMudancaEstadoOperativoTarefa.idUsina = this.getSheetValue(planilha.Sheets.eventos, 'A', i);
             eventoMudancaEstadoOperativoTarefa.idUge = this.getSheetValue(planilha.Sheets.eventos, 'B', i);
             eventoMudancaEstadoOperativoTarefa.idEvento = this.getSheetValue(planilha.Sheets.eventos, 'C', i);
             eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
@@ -41,12 +42,27 @@ class ManterTarefasMediator {
 
     getSheetValue(sheet, column, row) {
         let value = sheet[column + row];
-        if(value) {
+        if (value) {
             return value.v;
         } else {
             return null;
         }
     }
+
+    downloadPlanilha(nomeTarefa) {
+        return new Promise((resolve, reject) => {
+            this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(nomeTarefa).then(eventosRetificacoes => {
+                let parseFileTemplate = parseEventosXlsx.factory();
+                parseFileTemplate.eventos = eventosRetificacoes;
+                let contentXlsx = parseFileTemplate.parse();
+                resolve(contentXlsx);
+            }).catch(error => {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
+
 
 }
 

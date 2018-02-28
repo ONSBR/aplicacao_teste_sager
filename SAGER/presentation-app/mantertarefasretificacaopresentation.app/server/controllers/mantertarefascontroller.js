@@ -40,11 +40,30 @@ class ManterTarefasController {
         if (!request.files) {
             return response.status(400).send('No files were uploaded.');
         }
-        this.manterTarefasMediator.uploadplanilha(request).then(data => { response.send(data) }).
+        this.manterTarefasMediator.uploadplanilha(request.body.nomeTarefa, request.files.planilha).then(data => { response.send(data) }).
             catch(e => {
                 console.log(`Erro no upload de eventos=:${e.toString()}`);
                 response.status(400).send(`Erro no upload de eventos=:${e.toString()}`);
             });
+    }
+
+    /**
+     * @method downloadPlanilha
+     * @param {Request} request Objeto de request
+     * @param {Response} response Objeto de response
+     * @description Realiza o download da planilha de eventos a partir 
+    */
+    downloadPlanilha(request, response) {
+        let nomeTarefa = request.query.nometarefa;
+        this.manterTarefasMediator.downloadPlanilha(nomeTarefa).then(contentXlsx => {
+            response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
+            response.setHeader('Content-Length', contentXlsx.length);
+            response.write(contentXlsx, 'binary');
+            response.end();
+        }).catch(e => {
+            console.log(`Erro no download da planilha=:${e.toString()}`);
+            response.status(400).send(`Erro no download da planilha=:${e.toString()}`);
+        });
     }
 
 }

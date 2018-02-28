@@ -65,6 +65,17 @@ export class MantertarefaComponent implements OnInit {
     return this.http.post(endpoint, formData, { 'headers': headers }).subscribe(data => console.log(data));
   }
 
+  downloadPlanilha(tarefa: TarefaRetificacao) {
+    console.log(tarefa);
+    const url = this.getUrlDownloadPlanilha(tarefa.nome);
+    console.log('url' + url);
+    window.location.href = url;
+  }
+
+  getUrlDownloadPlanilha(nomeTarefa) {
+    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nometarefa=${nomeTarefa}`;
+  }
+
   getUrlPesquisarEventos() {
     return `${environment.urlServerPresentation}${environment.pesquisarEventos}?idsUsinas=${this.filtroEvento.usinas.join(';')}&dataInicial=${this.filtroEvento.dataInicial}&dataFinal=${this.filtroEvento.dataFinal}`;
   }

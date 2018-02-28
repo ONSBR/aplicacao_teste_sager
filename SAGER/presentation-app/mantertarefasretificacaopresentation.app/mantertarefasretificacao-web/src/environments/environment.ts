@@ -10,5 +10,6 @@ export const environment = {
   listarTarefas: 'listartarefas',
   pesquisarEventos: 'pesquisareventos',
   inserirTarefa: 'inserirtarefa',
-  uploadPlanilha: 'uploadplanilha'
+  uploadPlanilha: 'uploadplanilha',
+  downloadplanilha: 'downloadplanilha'
 };

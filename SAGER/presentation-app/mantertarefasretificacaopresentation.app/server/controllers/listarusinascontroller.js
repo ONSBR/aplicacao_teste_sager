@@ -1,14 +1,10 @@
 const config = require('../config');
-const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const UsinaMediator = require('../business/usinamediator');
 
 class ListarUsinasController {
 
-    constructor(domainPromiseHelper) {
-        if(!domainPromiseHelper) {
-            this.domainPromiseHelper = new DomainPromiseHelper();
-        } else {
-            this.domainPromiseHelper = domainPromiseHelper;
-        }
+    constructor() {
+        this.usinaMediator = new UsinaMediator();
     }
 
     /**
@@ -18,7 +14,7 @@ class ListarUsinasController {
      * @description Lista todas as usinas cadastradas
      */
     listarUsinas(request, response) {
-        this.domainPromiseHelper.getDomainPromise(config.URL_USINA_SAGER).
+        this.usinaMediator.listarUsinas().
             then(data => { response.send(data) }).
             catch(e => { console.log(`Erro durante a consulta de usinas: ${e.toString()}`) });
     }
