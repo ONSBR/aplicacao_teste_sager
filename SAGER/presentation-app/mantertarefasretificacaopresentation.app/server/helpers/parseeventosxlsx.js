@@ -6,6 +6,8 @@ class ParseMemoryFileTemplate {
     constructor(uges, dataInicial, dataFinal, eventos) {
         this.uges = uges;
         if (dataInicial && dataFinal) {
+            console.log('dataInicial='+dataInicial);
+            console.log('dataFinal='+dataFinal);
             this.dataInicial = new Date(dataInicial).toISOString().slice(0, 10);
             this.dataFinal = new Date(dataFinal).toISOString().slice(0, 10);
             this.fileNameSuffix = this.getFileNameSuffix();

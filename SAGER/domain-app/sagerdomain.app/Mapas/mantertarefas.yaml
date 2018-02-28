@@ -12,7 +12,8 @@ unidadegeradora:
   filters:
     byIdUsina: 
       idUsina:
-        $in: :$idsUsinas
+        $in: 
+          - :idsUsinas
 
 eventomudancaestadooperativo: 
   model: tb_evento_mudanca_estado_operativo
