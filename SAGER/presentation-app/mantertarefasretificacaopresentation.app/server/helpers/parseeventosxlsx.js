@@ -6,8 +6,6 @@ class ParseMemoryFileTemplate {
     constructor(uges, dataInicial, dataFinal, eventos) {
         this.uges = uges;
         if (dataInicial && dataFinal) {
-            console.log('dataInicial='+dataInicial);
-            console.log('dataFinal='+dataFinal);
             this.dataInicial = new Date(dataInicial).toISOString().slice(0, 10);
             this.dataFinal = new Date(dataFinal).toISOString().slice(0, 10);
             this.fileNameSuffix = this.getFileNameSuffix();
@@ -39,11 +37,14 @@ class ParseMemoryFileTemplate {
         const formatDD_MM_YYYY_HH_mm_ss = 'DD-MM-YYYY HH:mm:ss';
         this.eventos.forEach(evento => {
             let linhaEvento = [];
+
+            //FIXME criar metodo para validar origem do download
+            let unidadeGeradora;
             if (this.uges) {
-                let unidadeGeradora = this.uges.filter(uge => { return uge.idUge === evento.idUge })[0];
+                unidadeGeradora = this.uges.filter(uge => { return uge.idUge === evento.idUge })[0];
                 linhaEvento.push(unidadeGeradora.idUsina);
             } else {
-                linhaEvento.push(evento.idUsina)
+                linhaEvento.push(evento.idUsina);
             }
 
             linhaEvento.push(evento.idUge);
@@ -52,14 +53,32 @@ class ParseMemoryFileTemplate {
             linhaEvento.push(Util.textToExcel(evento.idCondicaoOperativa));
             linhaEvento.push(Util.textToExcel(evento.idClassificacaoOrigem));
             linhaEvento.push(Util.formatDate(evento.dataVerificada, formatDD_MM_YYYY_HH_mm_ss));
-            linhaEvento.push(evento.potenciaDisponivel);
-            if(evento.operacao) {
+            if (unidadeGeradora) {
+                linhaEvento.push(this.getDisponibilidade(unidadeGeradora, evento));
+            } else {
+                linhaEvento.push(evento.potenciaDisponivel);
+            }
+            if (evento.operacao) {
                 linhaEvento.push(evento.operacao);
             }
             wsData.push(linhaEvento);
         });
     }
 
+    //RS_RINT019 - Preenchimento Automático do Campo Disponibilidade
+    getDisponibilidade(uge, evento) {
+        let disponibilidade;
+
+        const NOR_NOT_TST = ['NOR', 'NOT', 'TST'];
+        const OUTRAS_CONDICOES_OPERATIVAS = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
+        if (NOR_NOT_TST.includes(evento.idCondicaoOperativa)) {
+            disponibilidade = uge.potenciaDisponivel;
+        } else if (OUTRAS_CONDICOES_OPERATIVAS.includes(evento.idCondicaoOperativa)) {
+            disponibilidade = 0;
+        }
+
+        return disponibilidade;
+    }
 
     getCabecalhoEventos() {
         return ['id_usina', 'uge_id', 'desger_id', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];

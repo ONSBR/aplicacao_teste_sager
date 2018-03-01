@@ -14,14 +14,13 @@ class EventoMediator {
                     return this.eventoDAO.getEventosPorDataeUGe(this.extrairIdsUges(uges).join(';'),
                         dataInicial.toISOString().slice(0, 10), dataFinal.toISOString().slice(0, 10));
                 }).then(eventos => {
-                    resolve(this.downloadPlanilhaEventos(uges, eventos, dataInicial, dataFinal))
+                    resolve(this.downloadPlanilhaEventos(uges, eventos, dataInicial, dataFinal));
                 }).
                 catch(error => {
                     console.log(`Erro durante a consulta de eventos: ${error.toString()}`);
                     reject(error);
                 });
         });
-
     }
 
     downloadPlanilhaEventos(uges, eventos, dataInicial, dataFinal) {
