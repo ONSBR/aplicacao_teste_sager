@@ -8,14 +8,9 @@ class ParseMemoryFileTemplate {
         if (dataInicial && dataFinal) {
             this.dataInicial = new Date(dataInicial).toISOString().slice(0, 10);
             this.dataFinal = new Date(dataFinal).toISOString().slice(0, 10);
-            this.fileNameSuffix = this.getFileNameSuffix();
         }
         this.workbook = XLSX.utils.book_new();
         this.eventos = eventos;
-    }
-
-    getFileNameSuffix() {
-        return `${this.uges.join(';')}_${this.dataInicial}_${this.dataFinal}`;
     }
 
     parse() {
@@ -82,27 +77,6 @@ class ParseMemoryFileTemplate {
 
     getCabecalhoEventos() {
         return ['id_usina', 'uge_id', 'desger_id', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
-    }
-
-    getUsina() {
-        let header = [];
-        header[0] = 'Usina';
-        header[1] = this.usina;
-        return header;
-    }
-
-    getDataInicial() {
-        let header = [];
-        header[0] = 'Data Inicial';
-        header[1] = this.dataInicial;
-        return header;
-    }
-
-    getDataFinal() {
-        let header = [];
-        header[0] = 'Data Final';
-        header[1] = this.dataFinal;
-        return header;
     }
 
 }

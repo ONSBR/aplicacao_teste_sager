@@ -38,7 +38,7 @@ describe('ParseMemoryFileTemplate deve:', function () {
             {idEvento: '1', idUge: '2', idEvento: '33', idEstadoOperativo: 'LIG', idCondicaoOperativa: 'NOR',
                 idClassificacaoOrigem: 'GAG', dataVerificada:'2017-03-03', potenciaDisponivel: 400}, 
             {idEvento: '1', idUge: '2', idEvento: '33', idEstadoOperativo: 'LIG', idCondicaoOperativa: 'NOR',
-                idClassificacaoOrigem: 'GAG', dataVerificada:'2017-03-03', potenciaDisponivel: 400}
+                idClassificacaoOrigem: 'GAG', dataVerificada:'2017-03-03', potenciaDisponivel: 500}
         ];
         let parseMemoryFileTemplate = ParseMemoryFileTemplate.factory(uges, dataInicial, dataFinal, eventos);
 
@@ -46,6 +46,27 @@ describe('ParseMemoryFileTemplate deve:', function () {
         parseMemoryFileTemplate.adicionaListaDeEventos(wsData);
 
         expect(wsData[0]).toEqual([ 'ALUXG', '2', '33', 'LIG', 'NOR', 'GAG', '03-03-2017 00:00:00', 500]);
+        expect(wsData[1]).toEqual([ 'ALUXG', '2', '33', 'LIG', 'NOR', 'GAG', '03-03-2017 00:00:00', 500]);
+    });
+
+    it('Adicionar uma linha na planilha para cada evento a partir do evento de retificacao:', () => {
+        let uges = undefined;
+        let dataInicial = new Date(2017, 02, 01);
+        let dataFinal = new Date(2017, 03, 01);
+        let eventos = [
+            {idUsina: 'ALUXG', idEvento: '1', idUge: '2', idEvento: '33', idEstadoOperativo: 'LIG', idCondicaoOperativa: 'NOR',
+                idClassificacaoOrigem: 'GAG', dataVerificada:'2017-03-03', potenciaDisponivel: 400, operacao: 'I'}, 
+            {idUsina: 'ALUXG', idEvento: '1', idUge: '2', idEvento: '33', idEstadoOperativo: 'LIG', idCondicaoOperativa: 'NOR',
+                idClassificacaoOrigem: 'GAG', dataVerificada:'2017-03-03', potenciaDisponivel: 400, operacao: 'A'}
+        ];
+        let parseMemoryFileTemplate = ParseMemoryFileTemplate.factory();
+        parseMemoryFileTemplate.eventos = eventos;
+
+        let wsData = [];
+        parseMemoryFileTemplate.adicionaListaDeEventos(wsData);
+
+        expect(wsData[0]).toEqual([ 'ALUXG', '2', '33', 'LIG', 'NOR', 'GAG', '03-03-2017 00:00:00', 400, 'I']);
+        expect(wsData[1]).toEqual([ 'ALUXG', '2', '33', 'LIG', 'NOR', 'GAG', '03-03-2017 00:00:00', 400, 'A']);
     });
 
     it('Gerar uma planilha:', () => {
@@ -68,7 +89,6 @@ describe('ParseMemoryFileTemplate deve:', function () {
 
         expect(contentXlsx).toBeDefined();
     });
-
 
 });
 
