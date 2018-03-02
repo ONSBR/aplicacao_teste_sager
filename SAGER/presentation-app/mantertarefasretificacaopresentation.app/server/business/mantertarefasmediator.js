@@ -37,7 +37,7 @@ class ManterTarefasMediator {
             eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
         }
 
-        return this.tarefaDAO.inserirTarefasRetificacaoOperacao(eventosRetificacao);
+        return this.tarefaDAO.inserirEventosRetificacao(eventosRetificacao);
     }
 
     getSheetValue(sheet, column, row) {

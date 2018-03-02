@@ -35,13 +35,13 @@ class TarefaDAO {
         return this.domainPromiseHelper.getDomainPromise(config.getEventosRetificacaoPorNomeTarefa(nomeTarefa));
     }
 
-    inserirTarefasRetificacaoOperacao(eventosRetificacao) {
+    inserirEventosRetificacao(eventosRetificacao) {
         let urlInserirTarefa = config.getUrlInserirTarefa();
-        let args = this.createTarefaRetifcacaoOperacaoArgs(eventosRetificacao);
-        return this.domainPromiseHelper.postDomainPromise(urlInserirTarefa, this.createTarefaRetifcacaoOperacaoArgs(eventosRetificacao));
+        let args = this.createInsertEventosRetificacaoArgs(eventosRetificacao);
+        return this.domainPromiseHelper.postDomainPromise(urlInserirTarefa, args);
     }
 
-    createTarefaRetifcacaoOperacaoArgs(eventosRetificacao) {
+    createInsertEventosRetificacaoArgs(eventosRetificacao) {
         let entities = [];
 
         eventosRetificacao.forEach(evento => {
