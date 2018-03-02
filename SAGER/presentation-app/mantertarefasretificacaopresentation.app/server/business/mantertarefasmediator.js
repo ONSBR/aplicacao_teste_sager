@@ -19,9 +19,12 @@ class ManterTarefasMediator {
 
     uploadplanilha(nomeTarefa, file) {
         let planilha = XLSX.read(file.data);
-        let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
-
+        return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
+    }
+    
+    preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha) {
         let eventosRetificacao = [];
+        let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
         for (let i = 3; i <= sheetLength; i++) {
             let eventoMudancaEstadoOperativoTarefa = new EventoMudancaEstadoOperativoTarefa();
             eventoMudancaEstadoOperativoTarefa.nomeTarefa = nomeTarefa;
@@ -36,8 +39,7 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
             eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
         }
-
-        return this.tarefaDAO.inserirEventosRetificacao(eventosRetificacao);
+        return eventosRetificacao;
     }
 
     getSheetValue(sheet, column, row) {

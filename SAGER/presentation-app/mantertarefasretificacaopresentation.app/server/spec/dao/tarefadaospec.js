@@ -1,9 +1,13 @@
 const TarefaDAO = require('../../dao/tarefadao');
 
 describe('TarefaDAO deve:', function () {
+    let tarefaDAO;
+
+    beforeEach(function() {
+        tarefaDAO = new TarefaDAO();
+      });
 
     it('Retornar o payload para inserção de tarefas:', () => {
-        let tarefaDAO = new TarefaDAO();
         let payloadInsertTarefa = tarefaDAO.createTarefaRetifcacaoArgs('TAREFA_2');
 
         expect(payloadInsertTarefa).toEqual({
@@ -20,7 +24,6 @@ describe('TarefaDAO deve:', function () {
     });
 
     it('Retornar o payload para inserção de eventos de retificação:', () => {
-        let tarefaDAO = new TarefaDAO();
         let eventoRetificacao1 = {
             nomeTarefa: 'tarefa1', idEvento: '123', idUsina: 'ALUXG',
             idUge: 'ALUXG-0UG1', idEstadoOperativo: 'EOC', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GAG',
