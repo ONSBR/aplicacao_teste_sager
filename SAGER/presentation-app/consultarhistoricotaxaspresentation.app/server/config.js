@@ -1,6 +1,10 @@
 var config = {};
 
+<<<<<<< HEAD
 const DOMAIN_PORT = 2137;
+=======
+const DOMAIN_PORT = 2166;
+>>>>>>> 494a5f126920397e150b97b58f90c5770bbf0f74
 const DOMAIN_HOST = 'localhost';
 const PROCESS_MEMORY_HOST = 'localhost';
 const EVENT_MANAGER_HOST = 'localhost';

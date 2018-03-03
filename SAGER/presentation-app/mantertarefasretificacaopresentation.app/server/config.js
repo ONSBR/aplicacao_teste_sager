@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2145;
+const DOMAIN_PORT = 2117;
 const DOMAIN_HOST = 'localhost';
 const PROCESS_MEMORY_HOST = 'localhost';
 const EVENT_MANAGER_HOST = 'localhost';
@@ -20,5 +20,10 @@ config.getUrlFiltroEventoPorDataseUGes = function getUrlFiltroEventoPorDataseUGe
 config.getUrlInserirTarefa = function getUrlInserirTarefa() {
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/persist`;
 }
+
+config.getEventosRetificacaoPorNomeTarefa = function getEventosRetificacaoPorNomeTarefa(nomeTarefa) {
+    return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=${nomeTarefa}`;
+}
+
 
 module.exports = config;

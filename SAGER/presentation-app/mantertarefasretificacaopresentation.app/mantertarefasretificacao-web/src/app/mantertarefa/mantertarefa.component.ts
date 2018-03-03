@@ -19,10 +19,14 @@ export class MantertarefaComponent implements OnInit {
   public nomeTarefa: string;
   public tarefas: Array<TarefaRetificacao>;
   public usinas: Array<Usina>;
+  public camposObrigatoriosPesquisaEventos: Array<string>;
+  public camposObrigatoriosTarefa: Array<string>;
 
   constructor(private http: HttpClient) {
     this.filtroEvento = new FiltroEvento();
     this.filtroEvento.usinas = [];
+    this.camposObrigatoriosPesquisaEventos = [];
+    this.camposObrigatoriosTarefa = [];
   }
 
   ngOnInit() {
@@ -43,25 +47,67 @@ export class MantertarefaComponent implements OnInit {
   }
 
   inserirTarefa() {
-    let body = { 'nomeTarefa': this.nomeTarefa };
-    this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
-      data => { console.log(data); this.listarTarefas(); }
-    );
+    this.camposObrigatoriosTarefa = [];
+    if(this.validarTarefa()) {
+      let body = { 'nomeTarefa': this.nomeTarefa };
+      this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
+        data => {
+          this.listarTarefas();
+        }
+      );
+    }
+  }
+
+  validarTarefa() {
+    if (!this.nomeTarefa) {
+      this.camposObrigatoriosTarefa.push('Nome da tarefa');
+    }
+
+    return !(this.camposObrigatoriosTarefa.length > 0);
   }
 
   pesquisarEventos() {
-    const url = this.getUrlPesquisarEventos();
+    this.camposObrigatoriosPesquisaEventos = [];
+    if (this.validarFiltroPesquisaEventos()) {
+      const url = this.getUrlPesquisarEventos();
+      console.log('url' + url);
+      window.location.href = url;
+    }
+  }
+
+  validarFiltroPesquisaEventos() {
+    if (this.filtroEvento.usinas.length <= 0) {
+      this.camposObrigatoriosPesquisaEventos.push('Usinas');
+    }
+    if (!this.filtroEvento.dataInicial) {
+      this.camposObrigatoriosPesquisaEventos.push('Data Inicial');
+    }
+    if (!this.filtroEvento.dataFinal) {
+      this.camposObrigatoriosPesquisaEventos.push('Data Final');
+    }
+
+    return !(this.camposObrigatoriosPesquisaEventos.length > 0);
+  }
+
+  uploadPlanilha(tarefa: TarefaRetificacao, files: FileList) {
+    tarefa.planilha = files.item(0);
+    const endpoint = environment.urlServerPresentation + environment.uploadPlanilha;
+    const formData: FormData = new FormData();
+    formData.append('planilha', tarefa.planilha, tarefa.planilha.name);
+    formData.append('nomeTarefa', tarefa.nome);
+    const headers = new HttpHeaders();
+    return this.http.post(endpoint, formData, { 'headers': headers }).subscribe(data => console.log(data));
+  }
+
+  downloadPlanilha(tarefa: TarefaRetificacao) {
+    console.log(tarefa);
+    const url = this.getUrlDownloadPlanilha(tarefa.nome);
     console.log('url' + url);
     window.location.href = url;
   }
 
-  uploadPlanilha(tarefa: TarefaRetificacao, files: FileList){
-    tarefa.planilha = files.item(0);
-    const endpoint = environment.urlServerPresentation + environment.uploadPlanilha;
-    const formData: FormData = new FormData();
-    formData.append('fileKey', tarefa.planilha, tarefa.planilha.name);
-    return this.http
-      .post(endpoint, formData).subscribe(data => console.log(data));
+  getUrlDownloadPlanilha(nomeTarefa) {
+    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nometarefa=${nomeTarefa}`;
   }
 
   getUrlPesquisarEventos() {

@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const fileUpload = require('express-fileupload')
 const config = require('./config');
 const ListarUsinasController = require('./controllers/listarusinascontroller');
 const PesquisarEventosController = require('./controllers/pesquisareventoscontroller');
@@ -10,11 +11,12 @@ const PORT = config.PORT;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(fileUpload());
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Content-Type');
     res.setHeader('Access-Control-Allow-Credentials', false);
     next();
 });
@@ -38,11 +40,15 @@ app.post("/inserirtarefa", (req, res) => {
 });
 
 app.post("/uploadplanilha", (req, res) => {
-    manterTarefasController.uploadplanilha(req, res);
+    manterTarefasController.uploadPlanilha(req, res);
 });
 
 app.get("/listartarefas", (req, res) => {
     manterTarefasController.listarTarefas(req, res);
+});
+
+app.get("/downloadplanilha", (req, res) => {
+    manterTarefasController.downloadPlanilha(req, res);
 });
 
 app.listen(PORT, function () {

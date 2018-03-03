@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { Usina } from '../model/usina';
 import { environment } from '../../environments/environment';
