@@ -14,5 +14,7 @@ export const environment = {
   calcularTaxas: 'calculartaxas',
   pesquisarFechamentoMensalPorId: 'pesquisarfechamentomensalporid',
   downloadMemoriaProcessamentoXlsx: 'downloadMemoriaProcessamentoXlsx',
-  reproduzirCalculoTaxa: 'reproduzirCalculoTaxa'
+  reproduzirCalculoTaxa: 'reproduzirCalculoTaxa',
+  listarReproducoes: 'listarReproducoes',
+  downloadComparacaoReproducaoXlsx: 'downloadComparacaoReproducaoXlsx'
 };

@@ -6,6 +6,8 @@ import { environment } from '../../environments/environment';
 import * as FileSaver from 'file-saver';
 import { utils, write, WorkBook } from 'xlsx';
 import { saveAs } from 'file-saver';
+import { Reproducao } from '../model/reproducao';
+import { setInterval } from 'timers';
 
 const EXCEL_TYPE = 'charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -30,6 +32,8 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   public fechamentoParaCalculo = { 'mes': '', 'ano': '' };
 
+  public reproducoes: Reproducao[] = [];
+
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
     this.environment = environment;
@@ -40,6 +44,10 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.execucaoSelecionada = { 'protocolo': '' };
     this.fechamentoMensal = { 'mes': '', 'ano': '' };
     this.listarTipoTaxa();
+    var self = this;
+    var listarReproducoes = this.listarReproducoes;
+    listarReproducoes(self);
+    setInterval(function () { listarReproducoes(self) }, 5000);
   }
 
   pesquisar() {
@@ -85,12 +93,34 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
   }
 
+  linkResultadoReproducao(reproducao) {
+    return environment.urlServerPresentation + environment.downloadComparacaoReproducaoXlsx +
+      '?instance_id=' + reproducao.instance_id +
+      '&original_id=' + reproducao.original_id +
+      '&taxa_id=' + reproducao.owner;
+  }
+
   reproduzirCalculoTaxa(taxa) {
     this.http.post(
-      environment.urlServerPresentation + environment.reproduzirCalculoTaxa, 
-      {instance_id: taxa._metadata.instance_id}
+      environment.urlServerPresentation + environment.reproduzirCalculoTaxa,
+      { instance_id: taxa._metadata.instance_id, presentationId: this.presentationId, taxa_id: taxa.id }
     ).subscribe(data => {
       alert('Solicitação de reprodução do cálculo da taxa realizada com sucesso.');
+    });
+  }
+
+  listarReproducoes(self) {
+
+    self.http.get(environment.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
+      
+      var reprods = <Reproducao[]>data;
+      
+      var newlist: Reproducao[] = [];
+      for (var i = reprods.length - 1; i >= 0; i--) {
+        newlist.push(reprods[i]);
+      }
+      
+      self.reproducoes = newlist;
     });
   }
 

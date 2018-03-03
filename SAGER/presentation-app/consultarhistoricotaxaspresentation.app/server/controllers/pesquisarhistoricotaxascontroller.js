@@ -12,6 +12,7 @@ class PesquisarHistoricoTaxasController {
             this.domainPromiseHelper = domainPromiseHelper;
         }
         //this.eventManager = new Lookup().eventManager;
+        //this.eventManager.host = "localhost";
         this.eventPromiseHelper = new EventPromiseHelper();
     }
 

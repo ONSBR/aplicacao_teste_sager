@@ -63,8 +63,16 @@ app.post("/pesquisarfechamentomensalporid", (req, res) => {
 
 let reproducaoController = new ReproducaoController();
 
-app.get("/reproduzirCalculoTaxa", (req, res) => {
+app.post("/reproduzirCalculoTaxa", (req, res) => {
     reproducaoController.reproduzirCalculoTaxa(req, res);
+});
+
+app.get("/downloadComparacaoReproducaoXlsx", (req, res) => {
+    reproducaoController.downloadComparacaoReproducaoXlsx(req, res);
+});
+
+app.get("/listarReproducoes", (req, res) => {
+    reproducaoController.listarReproducoes(req, res);
 });
 
 

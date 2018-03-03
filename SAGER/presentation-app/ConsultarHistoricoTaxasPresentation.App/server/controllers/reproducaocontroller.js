@@ -1,8 +1,10 @@
 const config = require('../config');
 const Enumerable = require('linq');
-//const parsexlsx = require('./parse/parsexlsx');
 const reproducaoBusiness = require('../business/reproducaobusiness');
 const Lookup = require('plataforma-sdk/ioc/lookup');
+const EventPromiseHelper = require('../helpers/eventpromisehelper');
+const ReproducaoBusiness = require('../business/reproducaobusiness');
+const parsexlsx = require('../controllers/parse/parsereproducaoxlsx');
 
 /**
  * @class ReproducaoController
@@ -12,6 +14,8 @@ class ReproducaoController {
 
     constructor() {
         //this.eventManager = new Lookup().eventManager;
+        this.eventPromiseHelper = new EventPromiseHelper();
+        this.reproducaoBusiness = new ReproducaoBusiness();
     }
 
     /**
@@ -22,13 +26,19 @@ class ReproducaoController {
      * @argument {string} instance_id identificador da instância do processo que gerou a taxa
      */
     reproduzirCalculoTaxa(request, response) {
+
         var evento = {
-            name: "system.event.reproduction.request", 
-            payload: { instance_id: request.body.instance_id }, 
-            owner: request.body.presentationId 
+            name: "system.events.reproduction.request",
+            reproduction: {
+                instance_id: request.body.instance_id,
+                //owner: request.body.presentationId,
+                //taxa_id: request.body.taxa_id
+                owner: request.body.taxa_id
+            }
         };
 
-        this.eventManager.emit(evento).then(res => {response.send(res)});
+        //this.eventManager.emit(evento).then(res => {response.send(res)});
+        return this.eventPromiseHelper.putEventPromise(evento).then(res => { response.send(res) });
     }
 
     /**
@@ -36,29 +46,35 @@ class ReproducaoController {
      * @param {*} request 
      * @param {*} response 
      */
-    downloadComparacaoReproducao(request, response) {
-        
-        var reproduction_id = request.body.reproduction_id;
-        var taxa_id = request.body.taxa_id;
+    downloadComparacaoReproducaoXlsx(request, response) {
 
-        var reproduction;
-        
-        var processInstanceOriginalId = reproduction;
-        var processInstanceReproductedId = reproduction.processInstanceReproductedId;
+        var instance_id = request.query.instance_id;
+        var original_id = request.query.original_id;
+        var taxa_id = request.query.taxa_id;
 
-        var processInstanceOriginal = new Promise();
-        var processInstanceReproducted = new Promise();
+        this.reproducaoBusiness.compararMemoriasReproducao(original_id, instance_id, taxa_id).
+            then(resultado => {
+                try {
+                    var parseFileTemplate = parsexlsx.factory(resultado);
+                    var contentXlsx = parseFileTemplate.parse();
 
-        Promise.all(processInstance, processInstanceReproducted).then(results => {
-            
-            var contextOriginal = results[0];
-            var contextReproducted = results[1];
+                    response.setHeader('Content-disposition',
+                        'attachment; filename=resultadoreproducao_' +
+                        original_id + '.xlsx');
+                    response.setHeader('Content-Length', contentXlsx.length);
+                    response.write(contentXlsx, 'binary');
+                    response.end();
+                }
+                catch (error) {
+                    console.log(error);
+                    response.send(400);
+                }
+            }).catch(e => { console.log(`Erro durante a consulta da memória de processamento: ${e.toString()}`) });;
+    }
 
-            var resultadoComparacao = reproducaoBusiness.compararMemoriaCalculoTaxa(contextOriginal, contextReproducted);
+    listarReproducoes(request, response) {
 
-        }).catch(error => {
-            // TODO tratamento de erro
-        });
+        this.reproducaoBusiness.listarReproducoes().then(res => { response.send(res) });
     }
 }
 
