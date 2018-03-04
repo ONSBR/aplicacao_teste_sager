@@ -7,7 +7,6 @@ import * as FileSaver from 'file-saver';
 import { utils, write, WorkBook } from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Reproducao } from '../model/reproducao';
-import { setInterval } from 'timers';
 
 const EXCEL_TYPE = 'charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';

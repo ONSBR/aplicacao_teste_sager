@@ -207,7 +207,7 @@ class ParseResultadoReproducaoFile {
             for (var i = 0; i < qtdTipos; i++ , this.curRow++) {
 
                 this.sheet["A" + this.curRow] = { v: dadosComuns.idEvento };
-                this.sheet["B" + curRow] = { v: dadosComuns.idUge };
+                this.sheet["B" + this.curRow] = { v: dadosComuns.idUge };
                 if (it.original) {
 
                     this.sheet["C" + this.curRow] = { v: util.textToExcel(it.original.idEstadoOperativo) };
