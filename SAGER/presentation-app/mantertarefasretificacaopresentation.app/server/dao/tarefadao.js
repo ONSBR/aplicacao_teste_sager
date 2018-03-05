@@ -1,5 +1,6 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const Util = require('../helpers/util');
 
 class TarefaDAO {
 
@@ -43,7 +44,6 @@ class TarefaDAO {
 
     createInsertEventosRetificacaoArgs(eventosRetificacao) {
         let entities = [];
-
         eventosRetificacao.forEach(evento => {
             entities.push({
                 'nomeTarefa': evento.nomeTarefa,
@@ -53,6 +53,7 @@ class TarefaDAO {
                 'idEstadoOperativo': evento.idEstadoOperativo, 
                 'idCondicaoOperativa': evento.idCondicaoOperativa,
                 'idClassificacaoOrigem': evento.idClassificacaoOrigem,
+                'dataVerificada': Util.stringToDate(evento.dataVerificada, 'DD-MM-YYYY HH:mm:ss'),
                 'potenciaDisponivel': evento.potenciaDisponivel,
                 'operacao': evento.operacao,
                 '_metadata': {

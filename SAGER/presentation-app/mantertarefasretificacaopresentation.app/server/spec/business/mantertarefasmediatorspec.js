@@ -11,7 +11,7 @@ describe('ManterTarefasMediator deve:', function () {
         expect(eventosRetificacao).toBeDefined();
 
         expect(eventosRetificacao).toEqual([
-            { idEvento: '400872', nomeTarefa: 'tarefaTeste', idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GAG', idEstadoOperativo: 'DCA', idCondicaoOperativa: '', dataVerificada: '', potenciaDisponivel: '', operacao: 'i', idUsina: 'ALUXG' },
+            { idEvento: '400872', nomeTarefa: 'tarefaTeste', idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GAG', idEstadoOperativo: 'DCA', idCondicaoOperativa: '', dataVerificada: undefined, potenciaDisponivel: '', operacao: 'i', idUsina: 'ALUXG' },
             { idEvento: '400872', nomeTarefa: 'tarefaTeste', idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GAG', idEstadoOperativo: 'DCA', idCondicaoOperativa: '', dataVerificada: '', potenciaDisponivel: '', operacao: 'i', idUsina: 'ALUXG' }
         ]);
     });

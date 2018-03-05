@@ -10,7 +10,7 @@ class ManterTarefasMediatorSpecHelper {
         eventosPlanilha['D3'] = {v:'DCA'};
         eventosPlanilha['E3'] = {v:''};
         eventosPlanilha['F3'] = {v:'GAG'};
-        eventosPlanilha['G3'] = {v:''};
+        eventosPlanilha['G3'] = {v:undefined};
         eventosPlanilha['H3'] = {v:''};
         eventosPlanilha['I3'] = {v:'i'};
 
