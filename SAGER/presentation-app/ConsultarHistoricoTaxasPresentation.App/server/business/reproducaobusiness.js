@@ -132,7 +132,7 @@ class ReproducaoBusiness {
                 comparacao.reproducao = paramr;
             }
         });
-        console.log('compararParametros2');
+        
         parametrosReproducao.forEach(paramr => {
             
             var contemParamo = parametrosOriginais.any(it => { return this.equalsProperties(it, paramr, propertiesCompare); });

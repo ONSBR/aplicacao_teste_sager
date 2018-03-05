@@ -8,6 +8,14 @@ const EVENT_MANAGER_HOST = 'localhost';
 const CORE_HOST = 'localhost';
 const CORE_PORT = 9110;
 
+config.DOMAIN_PORT = DOMAIN_PORT;
+config.DOMAIN_HOST = DOMAIN_HOST;
+config.PROCESS_MEMORY_HOST = PROCESS_MEMORY_HOST;
+config.EVENT_MANAGER_HOST = EVENT_MANAGER_HOST;
+
+config.CORE_HOST = CORE_HOST;
+config.CORE_PORT = CORE_PORT;
+
 config.PORT = 8181;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
 config.URL_TIPO_TAXA_SAGER = `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/tipotaxa`;
