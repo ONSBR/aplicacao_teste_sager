@@ -100,9 +100,7 @@ export class MantertarefaComponent implements OnInit {
   }
 
   downloadPlanilha(tarefa: TarefaRetificacao) {
-    console.log(tarefa);
     const url = this.getUrlDownloadPlanilha(tarefa.nome);
-    console.log('url' + url);
     window.location.href = url;
   }
 
