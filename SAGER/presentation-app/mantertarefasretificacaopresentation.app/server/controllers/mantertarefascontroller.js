@@ -51,7 +51,7 @@ class ManterTarefasController {
      * @method downloadPlanilha
      * @param {Request} request Objeto de request
      * @param {Response} response Objeto de response
-     * @description Realiza o download da planilha de eventos a partir 
+     * @description Realiza o download da planilha de eventos a partir da tarefa.
     */
     downloadPlanilha(request, response) {
         let nomeTarefa = request.query.nometarefa;

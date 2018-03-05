@@ -27,12 +27,12 @@ describe('TarefaDAO deve:', function () {
         let eventoRetificacao1 = {
             nomeTarefa: 'tarefa1', idEvento: '123', idUsina: 'ALUXG',
             idUge: 'ALUXG-0UG1', idEstadoOperativo: 'EOC', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GAG',
-            potenciaDisponivel: '100', potencia: 500, operacao: 'I'
+            potenciaDisponivel: '100', potencia: 500, operacao: 'I', dataVerificada: '01-08-1997 02:00:00'
         };
         let eventoRetificacao2 = {
             nomeTarefa: 'tarefa1', idEvento: '123', idUsina: 'ALUXG',
             idUge: 'ALUXG-0UG2', idEstadoOperativo: 'EOC', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GAG',
-            potenciaDisponivel: '100', potencia: 500, operacao: 'I'
+            potenciaDisponivel: '100', potencia: 500, operacao: 'I', dataVerificada: '02-08-1997 02:00:00'
         };
         let payloadInsertEventoRetificacao = tarefaDAO.createInsertEventosRetificacaoArgs([eventoRetificacao1, eventoRetificacao2]);
 
@@ -45,6 +45,7 @@ describe('TarefaDAO deve:', function () {
                 idEstadoOperativo: 'EOC',
                 idCondicaoOperativa: 'NOR',
                 idClassificacaoOrigem: 'GAG',
+                dataVerificada: '1997-08-01T02:00:00-03:00',
                 potenciaDisponivel: '100',
                 operacao: 'I',
                 _metadata: {
@@ -58,6 +59,7 @@ describe('TarefaDAO deve:', function () {
                 idEstadoOperativo: 'EOC',
                 idCondicaoOperativa: 'NOR',
                 idClassificacaoOrigem: 'GAG',
+                dataVerificada: '1997-08-02T02:00:00-03:00',
                 potenciaDisponivel: '100',
                 operacao: 'I',
                 _metadata: {
