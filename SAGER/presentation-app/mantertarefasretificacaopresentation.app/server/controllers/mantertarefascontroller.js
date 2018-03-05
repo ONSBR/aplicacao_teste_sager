@@ -66,6 +66,21 @@ class ManterTarefasController {
         });
     }
 
+    /**
+     * @method excluirTarefa
+     * @param {Request} request Objeto de request
+     * @param {Response} response Objeto de response
+     * @description Exclui a tarefa através do id.
+    */
+   excluirTarefa(request, response) {
+        let tarefaId = request.body.tarefaId;
+        this.manterTarefasMediator.excluirTarefa(tarefaId).then(data => { response.send(data) }).
+            catch(e => { 
+                console.log(`Erro durante a exclusão da tarefa: ${e.toString()}`);
+                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`); 
+            });
+   }
+
 }
 
 module.exports = ManterTarefasController

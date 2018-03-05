@@ -28,6 +28,26 @@ class TarefaDAO {
         }
     }
 
+    excluirTarefa(tarefaId){
+        let urlExcluirTarefa = config.getUrlInserirTarefa();
+        console.log('urlExcluirTarefa= ' + urlExcluirTarefa);
+        let args = this.createExcluirTarefaRetifcacaoArgs(tarefaId);
+        return this.domainPromiseHelper.postDomainPromise(urlExcluirTarefa, args);
+    }
+
+    createExcluirTarefaRetifcacaoArgs(tarefaId) {
+        return {
+            data: [{
+                "id": tarefaId,
+                "_metadata": {
+                    "type": "tarefaretificacao",
+                    "changeTrack": "destroy",
+                    "branch": "master"
+                }
+            }], headers: { "Content-Type": "application/json" }
+        }
+    }
+
     listarTarefas() {
         return this.domainPromiseHelper.getDomainPromise(config.URL_TAREFAS);
     }

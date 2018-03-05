@@ -11,5 +11,6 @@ export const environment = {
   pesquisarEventos: 'pesquisareventos',
   inserirTarefa: 'inserirtarefa',
   uploadPlanilha: 'uploadplanilha',
-  downloadplanilha: 'downloadplanilha'
+  downloadplanilha: 'downloadplanilha',
+  excluirTarefa: 'excluirtarefa'
 };

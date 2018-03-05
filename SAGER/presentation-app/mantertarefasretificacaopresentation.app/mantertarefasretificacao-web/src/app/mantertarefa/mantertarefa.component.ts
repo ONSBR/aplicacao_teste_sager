@@ -48,7 +48,7 @@ export class MantertarefaComponent implements OnInit {
 
   inserirTarefa() {
     this.camposObrigatoriosTarefa = [];
-    if(this.validarTarefa()) {
+    if (this.validarTarefa()) {
       let body = { 'nomeTarefa': this.nomeTarefa };
       this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
         data => {
@@ -91,12 +91,12 @@ export class MantertarefaComponent implements OnInit {
 
   uploadPlanilha(tarefa: TarefaRetificacao, files: FileList) {
     tarefa.planilha = files.item(0);
-    const endpoint = environment.urlServerPresentation + environment.uploadPlanilha;
+    const urlUploadPlanilha = environment.urlServerPresentation + environment.uploadPlanilha;
     const formData: FormData = new FormData();
     formData.append('planilha', tarefa.planilha, tarefa.planilha.name);
     formData.append('nomeTarefa', tarefa.nome);
     const headers = new HttpHeaders();
-    return this.http.post(endpoint, formData, { 'headers': headers }).subscribe(data => console.log(data));
+    return this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => console.log(data));
   }
 
   downloadPlanilha(tarefa: TarefaRetificacao) {
@@ -119,6 +119,15 @@ export class MantertarefaComponent implements OnInit {
       const index = this.filtroEvento.usinas.indexOf(usina.idUsina);
       this.filtroEvento.usinas.splice(index, 1);
     }
+  }
+
+  excluir(tarefa) {
+    let body = { 'tarefaId': tarefa.id };
+    this.http.post(environment.urlServerPresentation + environment.excluirTarefa, body).subscribe(
+      data => {
+        this.listarTarefas();
+      }
+    );
   }
 
 }

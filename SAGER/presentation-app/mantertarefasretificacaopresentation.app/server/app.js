@@ -43,6 +43,10 @@ app.post("/uploadplanilha", (req, res) => {
     manterTarefasController.uploadPlanilha(req, res);
 });
 
+app.post("/excluirtarefa", (req, res) => {
+    manterTarefasController.excluirTarefa(req, res);
+});
+
 app.get("/listartarefas", (req, res) => {
     manterTarefasController.listarTarefas(req, res);
 });

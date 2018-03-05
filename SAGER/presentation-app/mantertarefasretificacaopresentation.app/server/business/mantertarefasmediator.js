@@ -65,6 +65,10 @@ class ManterTarefasMediator {
         });
     }
 
+    excluirTarefa(tarefaId){
+        return this.tarefaDAO.excluirTarefa(tarefaId);
+    }
+
 
 }
 
