@@ -1,9 +1,9 @@
-
-<h2>Histórico de taxas</h2>
+<h2>
+  Histórico de taxas</h2>
 
 <table border="0">
   <tr>
-    <td width="70%">
+    <td width="500" style="vertical-align:top">
       <fieldset style="height: 110px">
         <div>
           <span>Usina:
@@ -15,14 +15,14 @@
           </span>
         </div>
         <div>
-            <span>Tipo de taxa:
-              <select [(ngModel)]="filtroConsulta.tipoTaxa">
-                <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
-                  {{tipoTaxa.nome}}
-                </option>
-              </select>
-            </span>
-          </div>
+          <span>Tipo de taxa:
+            <select [(ngModel)]="filtroConsulta.tipoTaxa">
+              <option *ngFor="let tipoTaxa of tiposTaxa" [ngValue]="tipoTaxa">
+                {{tipoTaxa.nome}}
+              </option>
+            </select>
+          </span>
+        </div>
         <div>
           <span>Data Inicial:
             <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
@@ -39,11 +39,44 @@
           </span>
         </div>
       </fieldset>
+      <div>
+        <span>
+          <h2>Execuções:</h2>
+          <ul>
+            <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of execucoes">
+              <b *ngIf="execucaoSelecionada.id == execucao.id">
+                Execução: {{ execucao.protocolo }}
+              </b>
+              <span *ngIf="execucaoSelecionada.id != execucao.id" style="cursor: pointer">
+                Execução: {{ execucao.protocolo }}
+              </span>
+            </li>
+          </ul>
+        </span>
+      </div>
+
+      <div>
+        <span>
+          <h2>Fechamento: </h2>
+          Mês: {{ fechamentoMensal.mes }} Ano: {{ fechamentoMensal.ano }}
+          <h2>Taxas: </h2>
+          <ul>
+            <li *ngFor="let taxa of taxas">
+              <a href="{{linkMemoriaTaxa(taxa)}}">Valor: {{ (taxa.valor?taxa.valor:0) }}</a>
+              <input type="button" (click)="reproduzirCalculoTaxa(taxa)" value="Reproduzir" />
+            </li>
+          </ul>
+        </span>
+      </div>
     </td>
-    <td>
+    <td style="vertical-align:top">
       <fieldset style="height: 110px">
         <div>
-          <span><b>Solicitar Cálculo de Taxas</b><br><br></span>
+          <span>
+            <b>Solicitar Cálculo de Taxas</b>
+            <br>
+            <br>
+          </span>
         </div>
         <div>
           <span>Mês:
@@ -56,39 +89,31 @@
           </span>
         </div>
         <div>
-          <span><br>
+          <span>
+            <br>
             <button class="button" (click)='calcularTaxas($event)'>Solicitar Cálculo</button>
+          </span>
+        </div>
+      </fieldset>
+      <br>
+      <fieldset>
+        <div>
+          <span>
+            <b>Reprodução</b>
+            <br>
+            <br>
+          </span>
+        </div>
+        <div>
+          <span>
+            <ul>
+              <li *ngFor="let reproducao of reproducoes">
+                <a href="{{linkResultadoReproducao(reproducao)}}">{{ reproducao.start_date }}</a>
+              </li>
+            </ul>
           </span>
         </div>
       </fieldset>
     </td>
   </tr>
 </table>
-<div>
-  <span>
-    <h2>Execuções:</h2>
-    <ul>
-      <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of execucoes">
-        <b *ngIf="execucaoSelecionada.id == execucao.id">
-            Execução: {{ execucao.protocolo }}
-        </b>
-        <span *ngIf="execucaoSelecionada.id != execucao.id" style="cursor: pointer">
-            Execução: {{ execucao.protocolo }}
-        </span>
-      </li>
-    </ul>
-  </span>
-</div>
-
-<div>
-  <span>
-    <h2>Fechamento: </h2>
-    Mês: {{ fechamentoMensal.mes }} Ano: {{ fechamentoMensal.ano }}
-    <h2>Taxas: </h2>
-    <ul>
-      <li *ngFor="let taxa of taxas">
-        <a href="{{environment.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx + '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id}}">Valor: {{ (taxa.valor?taxa.valor:0) }}</a>
-      </li>
-    </ul>
-  </span>
-</div>

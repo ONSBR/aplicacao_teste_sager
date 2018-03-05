@@ -1,6 +1,7 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const EventPromiseHelper = require('../helpers/eventpromisehelper');
+const Lookup = require('plataforma-sdk/ioc/lookup');
 
 class PesquisarHistoricoTaxasController {
 
@@ -10,6 +11,9 @@ class PesquisarHistoricoTaxasController {
         } else {
             this.domainPromiseHelper = domainPromiseHelper;
         }
+        //this.eventManager = new Lookup().eventManager;
+        //this.eventManager.host = "localhost";
+        this.eventPromiseHelper = new EventPromiseHelper();
     }
 
     /**
@@ -49,8 +53,10 @@ class PesquisarHistoricoTaxasController {
         var evento = {
             name: "calculate.tax.request", 
             payload: { mesFechamento: request.body.mesFechamento, anoFechamento: request.body.anoFechamento }, 
-            origem: request.body.presentationId 
+            owner: request.body.presentationId 
         };
+        
+        //return this.eventManager.emit(evento).then(res => {response.send(res)});
         return this.eventPromiseHelper.putEventPromise(evento).then(res => {response.send(res)});
     }
 

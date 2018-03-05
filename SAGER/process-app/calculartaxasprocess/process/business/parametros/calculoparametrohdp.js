@@ -20,7 +20,7 @@ class CalculoParametroHDP extends AbstractCalculoParametroEventoDiferenca {
      * @param {EventoMudancaEstadoOperativo} evtEstOper 
      */
     validarEvento(evtEstOper) {
-        
+        // TODO teste reprodução: if (evtEstOper.idClassificacaoOrigem == 'GAC') evtEstOper.idClassificacaoOrigem = 'TES';
         return (evtEstOper.idEstadoOperativo == EstadoOperativo.DPR 
                     || evtEstOper.idEstadoOperativo == EstadoOperativo.DUR
                     || evtEstOper.idEstadoOperativo == EstadoOperativo.DPA

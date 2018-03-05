@@ -2,7 +2,7 @@ const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const fs = require('fs');
 const Enumerable = require('linq');
-const parsexlsx = require('./parse/parsexlsx');
+const parsexlsx = require('./parse/parsememoryxlsx');
 
 /**
  * @class MemoriaProcessamentoController
@@ -72,7 +72,5 @@ class MemoriaProcessamentoController {
     }
 
 }
-
-
 
 module.exports = MemoriaProcessamentoController

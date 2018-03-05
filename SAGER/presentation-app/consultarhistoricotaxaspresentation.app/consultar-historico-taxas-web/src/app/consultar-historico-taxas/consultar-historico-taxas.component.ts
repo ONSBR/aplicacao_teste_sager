@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import * as FileSaver from 'file-saver';
 import { utils, write, WorkBook } from 'xlsx';
 import { saveAs } from 'file-saver';
+import { Reproducao } from '../model/reproducao';
 
 const EXCEL_TYPE = 'charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -30,6 +31,8 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   public fechamentoParaCalculo = { 'mes': '', 'ano': '' };
 
+  public reproducoes: Reproducao[] = [];
+
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
     this.environment = environment;
@@ -40,6 +43,10 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.execucaoSelecionada = { 'protocolo': '' };
     this.fechamentoMensal = { 'mes': '', 'ano': '' };
     this.listarTipoTaxa();
+    var self = this;
+    var listarReproducoes = this.listarReproducoes;
+    listarReproducoes(self);
+    setInterval(function () { listarReproducoes(self) }, 5000);
   }
 
   pesquisar() {
@@ -67,7 +74,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
       const url = environment.urlServerPresentation + environment.calcularTaxas;
       const body = { presentationId: this.presentationId, mesFechamento: mesFechamento, anoFechamento: anoFechamento };
-      
+
       this.http.post(url, body).toPromise().then(result => {
         var msg = 'Enviada solicitação de cálculo de taxas com sucesso';
         console.log(msg);
@@ -78,6 +85,42 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       alert("Inválido mês ou ano informados para execução de cálculo.");
     }
 
+  }
+
+  linkMemoriaTaxa(taxa) {
+    return environment.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx +
+      '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
+  }
+
+  linkResultadoReproducao(reproducao) {
+    return environment.urlServerPresentation + environment.downloadComparacaoReproducaoXlsx +
+      '?instance_id=' + reproducao.instance_id +
+      '&original_id=' + reproducao.original_id +
+      '&taxa_id=' + reproducao.owner;
+  }
+
+  reproduzirCalculoTaxa(taxa) {
+    this.http.post(
+      environment.urlServerPresentation + environment.reproduzirCalculoTaxa,
+      { instance_id: taxa._metadata.instance_id, presentationId: this.presentationId, taxa_id: taxa.id }
+    ).subscribe(data => {
+      alert('Solicitação de reprodução do cálculo da taxa realizada com sucesso.');
+    });
+  }
+
+  listarReproducoes(self) {
+
+    self.http.get(environment.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
+      
+      var reprods = <Reproducao[]>data;
+      
+      var newlist: Reproducao[] = [];
+      for (var i = reprods.length - 1; i >= 0; i--) {
+        newlist.push(reprods[i]);
+      }
+      
+      self.reproducoes = newlist;
+    });
   }
 
   listarUsinas() {
@@ -121,9 +164,9 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
 class Guid {
   static newGuid() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-          return v.toString(16);
-      });
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 }

@@ -27,7 +27,7 @@ module.exports.numberToExcel = function (val) {
 }
 
 module.exports.formatDate = function (date) {
-    return date? moment(date).format("DD-MM-YYYY HH:mm:ss") : "";
+    return date ? moment(date).format("DD-MM-YYYY HH:mm:ss") : "";
 }
 
 Number.prototype.zeroFillLeft = function (len) {
@@ -46,3 +46,7 @@ String.prototype.padLeft = function (len, charComplete) {
 String.prototype.padRight = function (len, charComplete) {
     return this.padFill(len, charComplete, false);
 };
+
+module.exports.secondToHour = function (seconds) {
+    return seconds > 0 ? seconds / 3600 : 0;
+}

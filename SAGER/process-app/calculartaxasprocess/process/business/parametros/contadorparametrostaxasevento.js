@@ -69,6 +69,11 @@ module.exports = class ContadorParametrosTaxasEvento {
             // Todas as regras de parâmetros de taxas valem para eventos a partir de 01/2000
             if (!util.lt_01_2000(evtEstOper)) {
 
+                if (this.previousEventOper) {
+                    this.previousEventOper.duracaoEmSegundos = evtEstOper.dataVerificadaEmSegundos - this.previousEventOper.dataVerificadaEmSegundos;
+                }
+                this.previousEventOper = evtEstOper;
+
                 calculoParam.computarEvento(evtEstOper);
             }
         });

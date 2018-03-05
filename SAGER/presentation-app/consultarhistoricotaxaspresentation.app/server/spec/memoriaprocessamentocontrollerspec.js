@@ -1,6 +1,6 @@
 describe('MemoriaProcesssamentoController: ', function () {
     let MemoriaProcesssamentoController = require('../controllers/memoriaprocessamentocontroller');
-    let ParserXlsx = require('../controllers/parse/parsexlsx');
+    let ParserXlsx = require('../controllers/parse/parsememoryxlsx');
     let config = require('../config');
     let memoriaProcesssamentoController;
 

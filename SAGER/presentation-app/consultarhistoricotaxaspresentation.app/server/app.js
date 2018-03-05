@@ -5,6 +5,7 @@ const PesquisarHistoricoTaxasController = require('./controllers/pesquisarhistor
 const ListarUsinasController = require('./controllers/listarusinascontroller');
 const ListarTipoTaxaController = require('./controllers/listartipotaxacontroller');
 const MemoriaProcessamentoController = require('./controllers/memoriaprocessamentocontroller');
+const ReproducaoController = require('./controllers/reproducaocontroller');
 
 const app = express();
 const PORT = config.PORT;
@@ -59,6 +60,21 @@ app.post("/pesquisartaxaporid", (req, res) => {
 app.post("/pesquisarfechamentomensalporid", (req, res) => {
     pesquisarHistoricoTaxasController.pesquisarFechamentoMensalPorId(req, res);
 });
+
+let reproducaoController = new ReproducaoController();
+
+app.post("/reproduzirCalculoTaxa", (req, res) => {
+    reproducaoController.reproduzirCalculoTaxa(req, res);
+});
+
+app.get("/downloadComparacaoReproducaoXlsx", (req, res) => {
+    reproducaoController.downloadComparacaoReproducaoXlsx(req, res);
+});
+
+app.get("/listarReproducoes", (req, res) => {
+    reproducaoController.listarReproducoes(req, res);
+});
+
 
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
