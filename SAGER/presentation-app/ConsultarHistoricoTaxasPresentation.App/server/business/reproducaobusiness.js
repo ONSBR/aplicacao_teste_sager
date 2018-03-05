@@ -3,6 +3,9 @@ const CorePromiseHelper = require('../helpers/corepromisehelper');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const Enumerable = require('linq');
 
+/**
+ * @description Representa resultado da comparação para cada item comparado.
+ */
 class Comparacao {
     constructor(original, reproducao, tipo_mudanca) {
         this.original = original;
@@ -14,6 +17,9 @@ class Comparacao {
     }
 }
 
+/**
+ * @description Representa o resultado da comparação das memórias da execução original com da reprodução.
+ */
 class ResultadoComparacaoMemoriaCalculoTaxa {
 
     constructor(contextoOriginal, execucaoOriginal, execucaoReproducao, taxaComparacao, parametrosComparacao, eventosComparacao) {
@@ -26,6 +32,10 @@ class ResultadoComparacaoMemoriaCalculoTaxa {
     }
 }
 
+/**
+ * @description Classe que define as regras de comparação do resultado do cálculo, 
+ * original com o resultado após a execução do reprocessamento.
+ */
 class ReproducaoBusiness {
 
     constructor() {
@@ -33,6 +43,14 @@ class ReproducaoBusiness {
         this.domainPromiseHelper = new DomainPromiseHelper();
     }
 
+    /**
+     * @description Compara o resultado da execução de calculo de taxas, da versão original, 
+     * com o resultado após a reprodução.
+     * 
+     * @param {string} processInstanceOriginalId 
+     * @param {string} processInstanceReproductedId 
+     * @param {string} taxaId 
+     */
     compararMemoriasReproducao(processInstanceOriginalId, processInstanceReproductedId, taxaId) {
 
         let processMemoryOriginalUrl = config.getProcessMemoryUrl(processInstanceOriginalId);
@@ -58,6 +76,12 @@ class ReproducaoBusiness {
 
     }
 
+    /**
+     * @description Compara as memórias de cálculo da execução original, com a memória da execução da reprodução.
+     * @param {Context} contextOriginal 
+     * @param {Context} contextReproducao 
+     * @param {string} taxaId 
+     */
     compararMemoriasCalculoTaxa(contextOriginal, contextReproducao, taxaId) {
         
         // obtenção da reprodução
@@ -73,10 +97,19 @@ class ReproducaoBusiness {
         );
     }
 
+    /**
+     * @description Obtém a listagem das reproduções.
+     */
     listarReproducoes() {
         return this.corePromiseHelper.getCorePromise('reproduction');
     }
 
+    /**
+     * @description Compara as taxas calculadas, no cálculo original com o valor da reprodução.
+     * @param {Context} contextOriginal 
+     * @param {Context} contextReproducao 
+     * @param {string} taxaId 
+     */
     compararTaxa(contextOriginal, contextReproducao, taxaId) {
         console.log('compararTaxa:' + taxaId);
         
@@ -100,6 +133,12 @@ class ReproducaoBusiness {
         return comparacao;
     }
 
+    /**
+     * @description Verifica se 2 objetos são iguais considerando as propriedades informadas.
+     * @param {JObject} arg1 
+     * @param {JObject} arg2 
+     * @param {string[]} props 
+     */
     equalsProperties(arg1, arg2, props) {
         var retorno = true;
         props.forEach(prop => {
@@ -110,6 +149,12 @@ class ReproducaoBusiness {
         return retorno;
     }
 
+    /**
+     * @description Faz a comparação dos parâmetros calculados e registrados na memória original, 
+     * com os da memória da instância da reprodução.
+     * @param {Context} contextOriginal 
+     * @param {Context} contextReproducao 
+     */
     compararParametros(contextOriginal, contextReproducao) {
         console.log('compararParametros');
 
@@ -146,6 +191,12 @@ class ReproducaoBusiness {
         return comparacoes;
     }
 
+    /**
+     * @description Cria um objeto de diferença das propriedades que não possuem valor iguais.
+     * @param {JObject} arg1 
+     * @param {JObject} arg2 
+     * @param {string[]} props 
+     */
     createDiff(arg1, arg2, props) {
         var retorno = {};
         props.forEach(prop => {
@@ -156,6 +207,11 @@ class ReproducaoBusiness {
         return retorno;
     }
 
+    /**
+     * @description Faz a comparação dos eventos, usados no cálculo, da memória original e memória da instância da reprodução.
+     * @param {Context} contextOriginal 
+     * @param {Context} contextReproducao 
+     */
     compararEventos(contextOriginal, contextReproducao) {
         console.log('compararEventos');
 
