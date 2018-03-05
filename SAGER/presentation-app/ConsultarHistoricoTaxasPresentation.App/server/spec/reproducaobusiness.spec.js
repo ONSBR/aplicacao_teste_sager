@@ -58,6 +58,7 @@ describe('ReproducaoBusiness: ', function () {
 
         reproducaoBusiness.compararMemoriasReproducao(processInstanceOriginalId, processInstanceReproductedId, taxaId).then(res => {
             
+            // Testa o resultado da comparação das memórias
             expectExecucao(res);
             expect(res.taxaComparacao.reproducao).toBeUndefined();
             
@@ -95,6 +96,7 @@ describe('ReproducaoBusiness: ', function () {
 
         reproducaoBusiness.compararMemoriasReproducao(processInstanceOriginalId, processInstanceReproductedId, taxaId).then(res => {
             
+            // Testa o resultado da comparação das memórias
             expectExecucao(res);
             expect(res.taxaComparacao.reproducao).toBe(1.0037074372759855);
             
@@ -132,6 +134,7 @@ describe('ReproducaoBusiness: ', function () {
 
         reproducaoBusiness.compararMemoriasReproducao(processInstanceOriginalId, processInstanceReproductedId, taxaId).then(res => {
             
+            // Testa o resultado da comparação das memórias
             expectExecucao(res);
             expect(res.taxaComparacao.reproducao).toBe(0.0031212664277180404);
             
@@ -176,6 +179,7 @@ describe('ReproducaoBusiness: ', function () {
 
         reproducaoBusiness.compararMemoriasReproducao(processInstanceOriginalId, processInstanceReproductedId, taxaId).then(res => {
             
+            // Testa o resultado da comparação das memórias
             expectExecucao(res);
             expect(res.taxaComparacao.reproducao).toBe(0.0031212664277180404);
             
