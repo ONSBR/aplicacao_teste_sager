@@ -14,10 +14,8 @@ cenario:
     situacao:
       column: situacao
   filters:
-    byNome: 
-      nome: :nomeCenario
-    byId: 
-      id: :idCenario  
+    byNome: "nome = :nomeCenario"
+    byId: "id = :idCenario"
 
 regracenario:
   model: tb_regra_cenario
@@ -31,9 +29,7 @@ regracenario:
     tipoRegra:
       column: tipo_regra
     idCenario:
-      column: idCenario
+      column: id_cenario
   filters:
-    byIdCenario: 
-      idCenario: :idCenario
-    byId: 
-      id: :idRegra  
+    byIdCenario: "id_cenario = :idCenario"
+    byId: "id = :idRegra"

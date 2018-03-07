@@ -4,11 +4,11 @@ tb_evento_mudanca_estado_operativo:
   id_uge:
     - string
   id_classificacao_origem:
-    - string  
+    - string
   id_tipo_estado_operativo:
-    - string  
+    - string
   id_condicao_operativa:
-    - string  
+    - string
   data_verificada:
     - date
   potencia_disponivel:

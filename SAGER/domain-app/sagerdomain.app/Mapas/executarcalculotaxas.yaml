@@ -28,12 +28,7 @@ fechamentomensal:
     dataCriacao:
       column: data_criacao
   filters:
-    byMesAno:
-      $and:
-        - mes:
-            $eq: :mesFechamento
-        - ano:
-            $eq: :anoFechamento
+    byMesAno: "mes = :mesFechamento and ano = :anoFechamento"
 
 usina:
   model: tb_usina

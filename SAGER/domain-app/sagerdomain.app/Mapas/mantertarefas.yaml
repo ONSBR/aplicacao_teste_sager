@@ -10,15 +10,12 @@ unidadegeradora:
     idUsina:
       column: id_usina
   filters:
-    byIdUsina: 
-      idUsina:
-        $in: 
-          - :idsUsinas
+    byIdUsina:  "id_usina in ($idsUsinas)"
 
-eventomudancaestadooperativo: 
+eventomudancaestadooperativo:
   model: tb_evento_mudanca_estado_operativo
   fields:
-    idEvento: 
+    idEvento:
       column: id_evento
     idUge:
       column: id_uge
@@ -33,14 +30,8 @@ eventomudancaestadooperativo:
     potenciaDisponivel:
       column: potencia_disponivel
   filters:
-    byIntervaloDatas:
-      $and:
-        - dataVerificada:
-            $gte: :dataInicial
-        - dataVerificada:
-            $lte: :dataFinal
-        - idUge:
-            $in: $idsUges
+    byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
+
 
 usina:
   model: tb_usina
@@ -59,12 +50,10 @@ usina:
       required: true
     agente:
       column: agente
-      required: true      
+      required: true
   filters:
-    byName:
-      nome: :nome 
-    byIdUsina:
-      id: :idUsina              
+    byName: "nome = :nome"
+    byIdUsina: "id_usina = :idUsina"
 
 tarefaretificacao:
   model: tb_tarefa_retificacao
@@ -73,15 +62,15 @@ tarefaretificacao:
       column: nome
       required: true
 
-eventomudancaestadooperativotarefa: 
+eventomudancaestadooperativotarefa:
   model: tb_evento_mudanca_estado_operativo_tarefa
   fields:
-    idUsina: 
+    idUsina:
       column: id_usina
-    idEvento: 
+    idEvento:
       column: id_evento
-    nomeTarefa: 
-      column: nome_tarefa  
+    nomeTarefa:
+      column: nome_tarefa
     idUge:
       column: id_uge
     idClassificacaoOrigem:
@@ -95,7 +84,6 @@ eventomudancaestadooperativotarefa:
     potenciaDisponivel:
       column: potencia_disponivel
     operacao:
-      column: operacao      
+      column: operacao
   filters:
-    byNomeTarefa:
-      nomeTarefa: :nometarefa 
+    byNomeTarefa: "nome_tarefa = :nometarefa"
