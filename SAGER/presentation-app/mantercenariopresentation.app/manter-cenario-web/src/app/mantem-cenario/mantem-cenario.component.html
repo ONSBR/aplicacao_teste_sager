@@ -42,7 +42,7 @@
               <th width="100">Dt.Fim Vig.</th>
               <th>justificativa</th>
               <th width="80">Situação</th>
-              <th width="60">Opções</th>
+              <th width="160">Opções</th>
             </tr>
             <tr *ngFor="let cenario of cenarios" style="cursor: pointer">
               <td (click)='alterar(cenario)'>
@@ -64,6 +64,7 @@
                 <button class="button" (click)='excluir(cenario)'>Excluir</button>
                 <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Inativo'" >Ativar</button>
                 <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Ativo'" >Inativar</button>
+                <button class="button">Incorporar</button>
               </td>
             </tr>
           </table>
