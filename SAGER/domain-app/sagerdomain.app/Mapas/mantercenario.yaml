@@ -1,0 +1,39 @@
+cenario:
+  model: tb_cenario
+  fields:
+    nomeCenario:
+      column: nome
+    dataInicioVigencia:
+      column: data_inicio
+    dataFimVigencia:
+      column: data_fim
+    dataExecucao:
+      column: data_execucao
+    justificativa:
+      column: justificativa
+    situacao:
+      column: situacao
+  filters:
+    byNome: 
+      nome: :nomeCenario
+    byId: 
+      id: :idCenario  
+
+regracenario:
+  model: tb_regra_cenario
+  fields:
+    nomeRegra:
+      column: nome
+    regraDe:
+      column: rerga_de
+    regraPara:
+      column: regra_para
+    tipoRegra:
+      column: tipo_regra
+    idCenario:
+      column: idCenario
+  filters:
+    byIdCenario: 
+      idCenario: :idCenario
+    byId: 
+      id: :idRegra  

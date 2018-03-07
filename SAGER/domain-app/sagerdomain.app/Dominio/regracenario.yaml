@@ -1,0 +1,11 @@
+tb_regra_cenario:  
+  nome:
+    - string
+  regra_de:
+    - string    
+  regra_para:
+    - string    
+  tipo_regra:
+    - string
+  id_cenario:
+    - string

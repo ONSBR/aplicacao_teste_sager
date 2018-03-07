@@ -1,0 +1,72 @@
+<h2>Manter Cenário</h2>
+
+<table border="0">
+  <tr>
+    <td width="1000" style="vertical-align:top">
+      <fieldset style="height: 110px">
+        <div>
+          <span>Nome do Cenário:
+            <input type="text" [(ngModel)]="filtroConsulta.nome" />
+          </span>
+        </div>
+        <div>
+          <span>Data Inicial:
+            <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
+          </span>
+        </div>
+        <div>
+          <span>Data Final:
+            <input type="date" [(ngModel)]="filtroConsulta.dataFinal" />
+          </span>
+        </div>
+        <div>
+          <span>Ativo:
+            <input type="checkbox" [(ngModel)]="filtroConsulta.ativo" />
+          </span>
+        </div>
+        <div>
+          <span>
+            <button class="button" (click)='pesquisar($event)'>Pesquisar</button>
+            <button class="button" (click)='incluir($event)'>Incluir</button>
+          </span>
+        </div>
+      </fieldset>
+      <div>
+        <span>
+          <h2>Cenários:</h2>
+          <table border="1" width="1000">
+            <tr>
+              <th width="200">Id</th>
+              <th width="150">Nome</th>
+              <th width="100">Dt.Ini Vig.</th>
+              <th width="100">Dt.Fim Vig.</th>
+              <th>justificativa</th>
+              <th width="80">Situação</th>
+              <th width="60">Opções</th>
+            </tr>
+            <tr *ngFor="let cenario of cenarios" style="cursor: pointer">
+              <td (click)='alterar(cenario)'>
+                {{cenario.id}}
+              </td>
+              <td (click)='alterar(cenario)'>
+                <b *ngIf="cenarioSelecionada.id == cenario.id">
+                  {{ cenario.nomeCenario }}
+                </b>
+                <span *ngIf="cenarioSelecionada.id != cenario.id">
+                  {{ cenario.nomeCenario }}
+                </span>
+              </td>
+              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia}}</td>
+              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia}}</td>
+              <td (click)='alterar(cenario)'>{{cenario.justificativa}}</td>
+              <td>{{cenario.situacao}}</td>
+              <td>
+                <button class="button" (click)='excluir(cenario)'>Excluir</button>
+              </td>
+            </tr>
+          </table>
+        </span>
+      </div>
+    </td>
+  </tr>
+</table>

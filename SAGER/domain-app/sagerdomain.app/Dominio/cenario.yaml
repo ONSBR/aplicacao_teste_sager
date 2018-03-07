@@ -7,3 +7,8 @@ tb_cenario:
     - date    
   data_execucao:
     - date    
+  justificativa:
+    - string
+  situacao:
+    - string    
+  

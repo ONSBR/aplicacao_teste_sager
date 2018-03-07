@@ -1,0 +1,75 @@
+<h2>{{titulo}} Cenário</h2>
+
+<table border="0">
+  <tr>
+    <td width="500" style="vertical-align:top">
+      <fieldset style="height: 130px">
+        <div>
+          <span>Nome do Cenário:
+            <input type="text" [(ngModel)]="data.nomeCenario" />
+          </span>
+        </div>
+        <div>
+          <span>Data Inicial:
+            <input type="date" [(ngModel)]="data.dataInicioVigencia" />
+          </span>
+        </div>
+        <div>
+          <span>Data Final:
+            <input type="date" [(ngModel)]="data.dataFimVigencia" />
+          </span>
+        </div>
+        <div>
+          <span>Justificativa:
+            <input type="text" [(ngModel)]="data.justificativa" />
+          </span>
+        </div>
+        <div>
+          <span>Situação: {{data.situacao}}
+          </span>
+        </div>
+        <div>
+          <span>
+            <button class="button" (click)='confirmar()'>Confirmar</button>
+            <button class="button" (click)='onNoClick()'>Fechar</button>
+            <button class="button" (click)='incluir()'>Incluir Regra</button>
+          </span>
+        </div>
+      </fieldset>
+      <div>
+        <h3>Regras Críticas</h3>
+        <table border="1" width="800">
+          <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>De</th>
+            <th>Para</th>
+            <th>Opção</th>
+          </tr>
+          <tr *ngFor="let regra of data.regras">
+            <td>
+              <input type="text" [(ngModel)]="regra.nomeRegra" />
+            </td>
+            <td>
+              <select [(ngModel)]="regra.tipoRegra">
+                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra">
+                  {{tipoRegra}}
+                </option>
+              </select>
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="regra.regraDe" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="regra.regraPara" />
+            </td>
+            <td>
+              <button class="button" (click)='excluir(regra)'>Excluir</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </td>
+  </tr>
+</table>
