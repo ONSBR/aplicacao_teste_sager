@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { Cenario, SituacaoCenario } from '../model/model';
 import { DialogCenarioComponent } from './dialog-cenario/dialog-cenario.component';
 
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogConfig, DialogPosition } from '@angular/material';
 
 @Component({
   selector: 'app-mantem-cenario',
@@ -68,7 +68,7 @@ export class MantemCenarioComponent implements OnInit {
   openDialog() {
 
     let dialogRef = this.dialog.open(DialogCenarioComponent, {
-      width: '1000px', height: '270px',
+      width: '1000px', height: '350px',
       data: this.cenarioSelecionada
     });
 

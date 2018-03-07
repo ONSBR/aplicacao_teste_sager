@@ -16,6 +16,7 @@ export class DialogCenarioComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: Cenario) { }
 
   ngOnInit() {
+
   }
 
   get titulo() {
@@ -25,12 +26,33 @@ export class DialogCenarioComponent implements OnInit {
   confirmar(): void {
 
     if (this.data.nomeCenario && this.data.dataInicioVigencia && this.data.justificativa) {
-      this.dialogRef.close(this.data);
+
+      if (this.validarRegras()) {
+        this.dialogRef.close(this.data);
+      } 
+
     } else {
       alert('Informe os campos: Nome do Cenário, Data Inicial, Data Final e Justificativa!');
     }
 
+  }
+
+  validarRegras() {
     
+    var retorno = true;
+    
+    if (this.data.regras && this.data.regras.length > 0) {
+      this.data.regras.forEach(it => {
+        if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
+          alert('Informe os dados da regra!');
+          retorno = false;
+        }
+      });
+    } else {
+      alert('Informe pelo menos uma regra crítica para ser aplicada ao cenário!');
+    }
+
+    return retorno;
   }
 
   excluir(regra) {

@@ -1,42 +1,44 @@
-<h2>{{titulo}} Cenário</h2>
+<h2 mat-dialog-title>{{titulo}} Cenário</h2>
 
 <table border="0">
   <tr>
     <td width="500" style="vertical-align:top">
-      <fieldset style="height: 130px">
-        <div>
-          <span>Nome do Cenário:
-            <input type="text" [(ngModel)]="data.nomeCenario" />
-          </span>
-        </div>
-        <div>
-          <span>Data Inicial:
-            <input type="date" [(ngModel)]="data.dataInicioVigencia" />
-          </span>
-        </div>
-        <div>
-          <span>Data Final:
-            <input type="date" [(ngModel)]="data.dataFimVigencia" />
-          </span>
-        </div>
-        <div>
-          <span>Justificativa:
-            <input type="text" [(ngModel)]="data.justificativa" />
-          </span>
-        </div>
-        <div>
-          <span>Situação: {{data.situacao}}
-          </span>
-        </div>
-        <div>
+      <fieldset style="height: 140px">
+        <mat-dialog-content>
+          <div>
+            <span>Nome do Cenário:
+              <input type="text" [(ngModel)]="data.nomeCenario" />
+            </span>
+          </div>
+          <div>
+            <span>Data Inicial:
+              <input type="date" [(ngModel)]="data.dataInicioVigencia" />
+            </span>
+          </div>
+          <div>
+            <span>Data Final:
+              <input type="date" [(ngModel)]="data.dataFimVigencia" />
+            </span>
+          </div>
+          <div>
+            <span>Justificativa:
+              <input type="text" [(ngModel)]="data.justificativa" />
+            </span>
+          </div>
+          <div>
+            <span>Situação: {{data.situacao}}
+            </span>
+          </div>
+        </mat-dialog-content>
+        <mat-dialog-actions>
           <span>
             <button class="button" (click)='confirmar()'>Confirmar</button>
             <button class="button" (click)='onNoClick()'>Fechar</button>
             <button class="button" (click)='incluir()'>Incluir Regra</button>
           </span>
-        </div>
+        </mat-dialog-actions>
       </fieldset>
-      <span>
+      <span *ngIf="data.regras && data.regras.length > 0">
         <h3>Regras Críticas</h3>
         <table border="1" width="800">
           <tr>
