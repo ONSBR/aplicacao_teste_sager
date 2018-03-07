@@ -62,6 +62,8 @@
               <td>{{cenario.situacao}}</td>
               <td>
                 <button class="button" (click)='excluir(cenario)'>Excluir</button>
+                <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Inativo'" >Ativar</button>
+                <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Ativo'" >Inativar</button>
               </td>
             </tr>
           </table>

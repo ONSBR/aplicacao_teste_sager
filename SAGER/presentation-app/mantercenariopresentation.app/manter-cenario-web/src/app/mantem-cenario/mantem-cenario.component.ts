@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { environment } from '../../environments/environment';
-import { Cenario } from '../model/model';
+import { Cenario, SituacaoCenario } from '../model/model';
 import { DialogCenarioComponent } from './dialog-cenario/dialog-cenario.component';
 
 import { MatDialog } from '@angular/material';
@@ -41,6 +41,16 @@ export class MantemCenarioComponent implements OnInit {
     this.cenarios.splice(index,1);
   }
 
+  ativarInativar(cenario) {
+    var index = this.cenarios.indexOf(cenario);
+    var cenarioSel = this.cenarios[index];
+    if (cenarioSel.situacao == SituacaoCenario.Ativo) {
+      cenarioSel.situacao = SituacaoCenario.Inativo;
+    } else {
+      cenarioSel.situacao = SituacaoCenario.Ativo;
+    }
+  }
+
   alterar(cenario) {
 
     this.cenarioSelecionada = clone(cenario);
@@ -75,6 +85,7 @@ export class MantemCenarioComponent implements OnInit {
         } else {
           cenario = result;
           cenario.id = Guid.newGuid();
+          cenario.situacao = SituacaoCenario.Ativo;
           this.cenarios.push(cenario);
         }
         this.cenarioSelecionada = cenario;
