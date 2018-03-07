@@ -15,7 +15,7 @@
         "jasmine-node": "^1.14.5",
         "linq": "^3.0.9",
         "moment": "^2.20.1",
-        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master",
+        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#feature/migracao-nova-versao",
         "unirest": "^0.5.1"
     }
 }

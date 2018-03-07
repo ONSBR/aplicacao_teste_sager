@@ -1,13 +1,13 @@
-tb_execucao_calculo_fechamento:  
+tb_exec_calc_fech:
   data_inicio:
     - date
   data_fim:
     - date
   id_fechamento:
-    - string  
+    - string
   id_cenario:
-    - string        
+    - string
   id_tarefa:
-    - string        
+    - string
   protocolo:
-    - string        
+    - string

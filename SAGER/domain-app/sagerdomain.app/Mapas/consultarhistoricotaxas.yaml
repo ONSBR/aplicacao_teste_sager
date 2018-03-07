@@ -1,5 +1,5 @@
 execucaocalculofechamento:
-  model: tb_execucao_calculo_fechamento
+  model: tb_exec_calc_fech
   fields:
     id:
       column: id

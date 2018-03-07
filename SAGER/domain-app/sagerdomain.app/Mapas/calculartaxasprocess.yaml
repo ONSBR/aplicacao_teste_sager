@@ -1,5 +1,5 @@
 execucaocalculofechamento:
-  model: tb_execucao_calculo_fechamento
+  model: tb_exec_calc_fech
   fields:
     id:
       column: id
@@ -67,7 +67,7 @@ unidadegeradora:
     idUge:
       column: id_uge
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     dataInicioOperacao:
       column: data_inicio_operacao
     idUsina:
@@ -76,22 +76,22 @@ unidadegeradora:
     byIdUsina: "id_usina = :idUsina"
 
 eventomudancaestadooperativo:
-  model: tb_evento_mudanca_estado_operativo
+  model: tb_evt_estado_oper
   fields:
     idEvento:
       column: id_evento
     idUge:
       column: id_uge
     idClassificacaoOrigem:
-      column: id_classificacao_origem
+      column: id_class_origem
     idEstadoOperativo:
-      column: id_tipo_estado_operativo
+      column: id_tp_estado_oper
     idCondicaoOperativa:
-      column: id_condicao_operativa
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicialEvento and data_verificada <= :dataFinalEvento"
 
@@ -108,10 +108,10 @@ parametrotaxa:
     idFechamento:
       column: id_fechamento
     idExecucaoCalculoFechamento:
-      column: id_execucao_calculo_fechamento
+      column: id_exec_calc_fech
     mes:
       column: mes
     ano:
       column: ano
   filters:
-    byUsinaEFechamento: "id_fechamento = :idFechamento and id_execucao_calculo_fechamento = :idExecucaoCalculo"
+    byUsinaEFechamento: "id_fechamento = :idFechamento and id_exec_calc_fech = :idExecucaoCalculo"

@@ -1,15 +1,15 @@
-tb_evento_mudanca_estado_operativo:
+tb_evt_estado_oper:
   id_evento:
     - string
   id_uge:
     - string
-  id_classificacao_origem:
+  id_class_origem:
     - string
-  id_tipo_estado_operativo:
+  id_tp_estado_oper:
     - string
-  id_condicao_operativa:
+  id_cond_oper:
     - string
   data_verificada:
     - date
-  potencia_disponivel:
+  pot_disp:
     - double

@@ -4,7 +4,7 @@ unidadegeradora:
     idUge:
       column: id_uge
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     dataInicioOperacao:
       column: data_inicio_operacao
     idUsina:
@@ -13,22 +13,22 @@ unidadegeradora:
     byIdUsina:  "id_usina in ($idsUsinas)"
 
 eventomudancaestadooperativo:
-  model: tb_evento_mudanca_estado_operativo
+  model: tb_evt_estado_oper
   fields:
     idEvento:
       column: id_evento
     idUge:
       column: id_uge
     idClassificacaoOrigem:
-      column: id_classificacao_origem
+      column: id_class_origem
     idEstadoOperativo:
-      column: id_tipo_estado_operativo
+      column: id_tp_estado_oper
     idCondicaoOperativa:
-      column: id_condicao_operativa
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
 
@@ -63,7 +63,7 @@ tarefaretificacao:
       required: true
 
 eventomudancaestadooperativotarefa:
-  model: tb_evento_mudanca_estado_operativo_tarefa
+  model: tb_evt_estado_oper_tarefa
   fields:
     idUsina:
       column: id_usina
@@ -74,15 +74,15 @@ eventomudancaestadooperativotarefa:
     idUge:
       column: id_uge
     idClassificacaoOrigem:
-      column: id_classificacao_origem
+      column: id_class_origem
     idEstadoOperativo:
-      column: id_tipo_estado_operativo
+      column: id_tp_estado_oper
     idCondicaoOperativa:
-      column: id_condicao_operativa
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     operacao:
       column: operacao
   filters:
