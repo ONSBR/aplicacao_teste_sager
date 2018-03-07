@@ -50,6 +50,7 @@ export class DialogCenarioComponent implements OnInit {
       });
     } else {
       alert('Informe pelo menos uma regra crítica para ser aplicada ao cenário!');
+      retorno = false;
     }
 
     return retorno;
