@@ -9,6 +9,8 @@ tb_cenario:
     - date    
   justificativa:
     - string
+  id_usina:
+    - string
   situacao:
     - string    
   

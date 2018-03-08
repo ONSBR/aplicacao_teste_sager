@@ -3,7 +3,7 @@
 <table border="0">
   <tr>
     <td width="500" style="vertical-align:top">
-      <fieldset style="height: 140px">
+      <fieldset style="height: 160px">
         <mat-dialog-content>
           <div>
             <span>Nome do Cenário:
@@ -11,18 +11,27 @@
             </span>
           </div>
           <div>
-            <span>Data Inicial:
+            <span>Data Início Vigência:
               <input type="date" [(ngModel)]="data.dataInicioVigencia" />
             </span>
           </div>
           <div>
-            <span>Data Final:
+            <span>Data Fim Vigência:
               <input type="date" [(ngModel)]="data.dataFimVigencia" />
             </span>
           </div>
           <div>
             <span>Justificativa:
               <input type="text" [(ngModel)]="data.justificativa" />
+            </span>
+          </div>
+          <div>
+            <span>Usina:
+              <select [(ngModel)]="idUsina">
+                <option *ngFor="let usina of usinas" [ngValue]="usina.idUsina">
+                  {{usina.idUsina}}
+                </option>
+              </select>
             </span>
           </div>
           <div>
@@ -43,7 +52,7 @@
         <table border="1" width="800">
           <tr>
             <th>Nome</th>
-            <th>Tipo</th>
+            <th>Tipo de Mudança</th>
             <th>De</th>
             <th>Para</th>
             <th>Opção</th>
@@ -59,11 +68,30 @@
                 </option>
               </select>
             </td>
-            <td>
-              <input type="text" [(ngModel)]="regra.regraDe" />
+            <td *ngIf="regra.tipoRegra == tiposRegra[0] || regra.tipoRegra == tiposRegra[1]">
+              <select [(ngModel)]="regra.regraDe">
+                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
+                  {{uge.idUge}}
+                </option>
+              </select>
+              - {{getUge(regra.regraDe).potenciaDisponivel}}
             </td>
-            <td>
+            <td *ngIf="regra.tipoRegra == tiposRegra[2]">
+              <select [(ngModel)]="regra.regraDe">
+                <option *ngFor="let origem of origens" [ngValue]="origem">
+                  {{origem}}
+                </option>
+              </select>
+            </td>
+            <td *ngIf="regra.tipoRegra == tiposRegra[0] || regra.tipoRegra == tiposRegra[1]">
               <input type="text" [(ngModel)]="regra.regraPara" />
+            </td>
+            <td *ngIf="regra.tipoRegra == tiposRegra[2]">
+              <select [(ngModel)]="regra.regraPara">
+                <option *ngFor="let origem of origens" [ngValue]="origem">
+                  {{origem}}
+                </option>
+              </select>
             </td>
             <td>
               <button class="button" (click)='excluir(regra)'>Excluir</button>

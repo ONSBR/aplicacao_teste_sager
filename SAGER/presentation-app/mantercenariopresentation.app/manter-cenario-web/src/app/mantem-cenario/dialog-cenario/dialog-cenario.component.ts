@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-
+import { HttpClient} from '@angular/common/http';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { Cenario, TipoRegra, RegraCritica } from '../../model/model';
+import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dialog-cenario',
@@ -10,17 +11,62 @@ import { Cenario, TipoRegra, RegraCritica } from '../../model/model';
 })
 export class DialogCenarioComponent implements OnInit {
 
-  tiposRegras: Array<TipoRegra> = [TipoRegra.PotenciaDisponivel];
+  tiposRegras: TipoRegra[] = [TipoRegra.PotenciaDisponivel, TipoRegra.Franquia, TipoRegra.OrigemEvento];
+
+  uges: UnidadeGeradora[] = [];
+
+  usinas: Usina[] = [];
+
+  get idUsina() {
+    return this.data.idUsina;
+  }
+
+  set idUsina(value) {
+    this.data.idUsina = value;
+    this.listarUges();
+  }
 
   constructor(private dialogRef: MatDialogRef<DialogCenarioComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: Cenario) { }
+    @Inject(MAT_DIALOG_DATA) private data: Cenario, private http: HttpClient) { }
 
   ngOnInit() {
+    this.listarUsinas();
+    this.listarUges();
+  }
 
+  getUge(idUge) {
+    this.uges.forEach(it => {
+      if (it.idUge == idUge) {
+        return it;
+      }
+    });
+    return {};
   }
 
   get titulo() {
     return this.data.id ? "Alterar" : "Incluir";
+  }
+
+  listarUsinas() {
+    this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
+      this.usinas = <Usina[]>data;
+    });
+  }
+
+  listarUges() {
+    
+    if (this.data && this.data.idUsina) {
+
+      var url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
+       '&idUsina=' + this.data.idUsina;
+      
+      this.http.get(url).subscribe(data => {
+        this.uges = <UnidadeGeradora[]>data;
+      });
+    } else {
+      this.uges = [];
+    }
+
   }
 
   confirmar(): void {
@@ -56,12 +102,12 @@ export class DialogCenarioComponent implements OnInit {
     return retorno;
   }
 
-  excluir(regra) {
+  excluirRegra(regra) {
     var index = this.data.regras.indexOf(regra);
     this.data.regras.splice(index,1);
   }
 
-  incluir() {
+  incluirRegra() {
 
     this.data.regras.push(new RegraCritica());
   }

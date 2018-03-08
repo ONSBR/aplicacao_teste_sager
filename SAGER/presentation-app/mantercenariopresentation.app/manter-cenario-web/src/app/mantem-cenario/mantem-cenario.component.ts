@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { environment } from '../../environments/environment';
-import { Cenario, SituacaoCenario } from '../model/model';
+import { Cenario, SituacaoCenario, RegraCritica } from '../model/model';
 import { DialogCenarioComponent } from './dialog-cenario/dialog-cenario.component';
 
 import { MatDialog, MatDialogConfig, DialogPosition } from '@angular/material';
@@ -17,7 +17,7 @@ export class MantemCenarioComponent implements OnInit {
   private presentationId: string = Guid.newGuid();
 
   public filtroConsulta = new FiltroConsulta();
-  public cenarios: Array<Cenario> = [];
+  public cenarios: Cenario[] = [];
   public cenarioSelecionada: Cenario;
   public environment;
 
@@ -32,30 +32,53 @@ export class MantemCenarioComponent implements OnInit {
     const url = environment.urlServerPresentation + environment.pesquisarCenario;
     const body = { 'filtroConsulta': this.filtroConsulta };
     this.http.post(url, body).subscribe(data => {
-      this.cenarios = <Array<Cenario>>data;
+      this.cenarios = <Cenario[]>data;
     });
   }
 
   excluir(cenario) {
-    var index = this.cenarios.indexOf(cenario);
-    this.cenarios.splice(index,1);
+
+    /* TODO STATIC var index = this.cenarios.indexOf(cenario);
+    this.cenarios.splice(index,1);*/
+
+    if (confirm('Confirma a exclusão do cenário?')) {
+      const url = environment.urlServerPresentation + environment.excluirCenario + "?idCenario=" + cenario.id;
+      this.http.delete(url).subscribe(data => {
+        alert("Exclusão de cenário realizada com sucesso!");
+        this.pesquisar();
+      });
+    }
+
   }
 
   ativarInativar(cenario) {
-    var index = this.cenarios.indexOf(cenario);
+    /* TODO STATIC var index = this.cenarios.indexOf(cenario);
     var cenarioSel = this.cenarios[index];
     if (cenarioSel.situacao == SituacaoCenario.Ativo) {
       cenarioSel.situacao = SituacaoCenario.Inativo;
     } else {
       cenarioSel.situacao = SituacaoCenario.Ativo;
-    }
+    }*/
+
+    const url = environment.urlServerPresentation + environment.ativarInativarCenario;
+    this.http.post(url, { idCenario: cenario.id }).subscribe(data => {
+      alert("Alteração de cenário realizada com sucesso!");
+      this.pesquisar();
+    });
   }
 
   alterar(cenario) {
 
     this.cenarioSelecionada = clone(cenario);
 
-    this.openDialog();
+    var url = environment.urlServerPresentation + environment.obterRegrasCriticas +
+      '&idCenario=' + this.cenarioSelecionada.id;
+
+    this.http.get(url).subscribe(data => {
+      this.cenarioSelecionada.regras = <RegraCritica[]>data;
+      this.openDialog();
+    });
+
   }
 
   incluir() {
@@ -63,6 +86,25 @@ export class MantemCenarioComponent implements OnInit {
     this.cenarioSelecionada = new Cenario();
 
     this.openDialog();
+  }
+
+  confirmarInclusao(cenario) {
+    const url = environment.urlServerPresentation + environment.incluirCenario;
+
+    this.http.put(url, cenario).subscribe(data => {
+      alert("Inclusão de cenário realizada com sucesso!");
+      this.pesquisar();
+    });
+  }
+
+  confirmarAlteracao(cenario) {
+
+    const url = environment.urlServerPresentation + environment.alterarCenario;
+
+    this.http.post(url, cenario).subscribe(data => {
+      alert("Alteração de cenário realizada com sucesso!");
+      this.pesquisar();
+    });
   }
 
   openDialog() {
@@ -73,7 +115,7 @@ export class MantemCenarioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      
+
       if (result) {
 
         var cenario = findCenario(this.cenarios, result);
@@ -82,17 +124,22 @@ export class MantemCenarioComponent implements OnInit {
           cenario.dataInicioVigencia = result.dataInicioVigencia;
           cenario.dataFimVigencia = result.dataFimVigencia;
           cenario.justificativa = result.justificativa;
+
+          this.confirmarAlteracao(cenario);
+
         } else {
           cenario = result;
           cenario.id = Guid.newGuid();
           cenario.situacao = SituacaoCenario.Ativo;
-          this.cenarios.push(cenario);
+
+          // TODO STATIC this.cenarios.push(cenario);
+          this.confirmarInclusao(cenario);
         }
         this.cenarioSelecionada = cenario;
       }
     });
   }
- 
+
 }
 
 function findCenario(cenarios: Array<Cenario>, cenario: Cenario) {

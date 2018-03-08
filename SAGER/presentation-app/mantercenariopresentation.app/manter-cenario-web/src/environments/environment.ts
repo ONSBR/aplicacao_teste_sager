@@ -11,5 +11,11 @@ export const environment = {
   pesquisarCenario: 'pesquisarCenario',
   incluirCenario: 'incluirCenario',
   alterarCenario: 'alterarCenario',
-  excluirCenario: 'excluirCenario'
+  excluirCenario: 'excluirCenario',
+  ativarInativarCenario: 'ativarInativarCenario',
+  obterRegrasCriticas: 'obterRegrasCriticas',
+
+  listarUsinas: 'listarUsinas',
+  listarUnidadesGeradoras: 'listarUnidadesGeradoras'
+
 };

@@ -36,4 +36,36 @@ regracenario:
     byIdCenario: 
       idCenario: :idCenario
     byId: 
-      id: :idRegra  
+      id: :idRegra
+
+unidadegeradora:
+  model: tb_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: potencia_disponivel
+    dataInicioOperacao:
+      column: data_inicio_operacao
+    idUsina:
+      column: id_usina
+  filters:
+    byIdUsina:
+      - idUsina:
+          $eq: :idUsina
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+  filters:
+    all:
+      
