@@ -66,7 +66,6 @@ class ManterTarefasMediator {
     }
 
     excluirTarefa(tarefa) {
-        console.log(tarefa);
         return new Promise((resolve, reject) => {
             this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
                 resolve(this.tarefaDAO.excluirTarefa(tarefa.id, eventos));
