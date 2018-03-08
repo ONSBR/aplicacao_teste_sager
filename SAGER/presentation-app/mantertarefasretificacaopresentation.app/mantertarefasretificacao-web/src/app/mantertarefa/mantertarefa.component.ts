@@ -137,7 +137,8 @@ export class MantertarefaComponent implements OnInit {
   }
 
   excluir(tarefa) {
-    let body = { 'tarefaId': tarefa.id };
+    this.limparMensagens();
+    let body = { 'tarefa': tarefa };
     this.http.post(environment.urlServerPresentation + environment.excluirTarefa, body).subscribe(
       data => {
         this.listarTarefas();

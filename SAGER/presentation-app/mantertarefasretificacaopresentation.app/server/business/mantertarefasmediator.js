@@ -21,7 +21,7 @@ class ManterTarefasMediator {
         let planilha = XLSX.read(file.data);
         return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
     }
-    
+
     preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha) {
         let eventosRetificacao = [];
         let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
@@ -65,8 +65,16 @@ class ManterTarefasMediator {
         });
     }
 
-    excluirTarefa(tarefaId){
-        return this.tarefaDAO.excluirTarefa(tarefaId);
+    excluirTarefa(tarefa) {
+        console.log(tarefa);
+        return new Promise((resolve, reject) => {
+            this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
+                resolve(this.tarefaDAO.excluirTarefa(tarefa.id, eventos));
+            });
+        }).catch(error => {
+            console.log(error);
+            reject(error);
+        });
     }
 
 
