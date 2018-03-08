@@ -28,7 +28,7 @@ config.getUrlFiltroCenarioPorId = function (idCenario) {
 }
 
 config.getUrlFiltroRegrasPorIdCenario = function (idCenario) {
-    return `${config.URL_CENARIO_SAGER}?filter=byIdCenario&idCenario=${idCenario}`;
+    return `${config.URL_REGRA_SAGER}?filter=byIdCenario&idCenario=${idCenario}`;
 }
 
 module.exports = config;

@@ -1,5 +1,4 @@
 const config = require('../config');
-const CorePromiseHelper = require('../helpers/corepromisehelper');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const Enumerable = require('linq');
 
@@ -33,66 +32,67 @@ class CenarioBusiness {
 
         var promiseCenario = this.domainPromiseHelper.getDomainPromise(urlCenario);
         var promiseRegras = this.domainPromiseHelper.getDomainPromise(urlRegras);
-
+        
         var listapersist = [];
 
         return new Promise((res, rej) => {
-            Promise.all([promiseCenario, promiseRegras], (results) => {
-
+            
+            Promise.all([promiseCenario, promiseRegras]).then(results => {
+                
                 var cenariosbd = results[0];
                 var regrasbd = Enumerable.from(results[1] ? results[1] : []);
-
+                
                 validarCenarios(cenariosbd, cenario.id, rej);
-
+                
                 var cenariobd = cenariosbd[0];
-
+                
                 cenariobd.nomeCenario = cenario.nomeCenario;
                 cenariobd.dataInicioVigencia = cenario.dataInicioVigencia;
                 cenariobd.dataFimVigencia = cenario.dataFimVigencia;
                 cenariobd.justificativa = cenario.justificativa;
-
+                
                 cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
                 listapersist.push(cenariobd);
 
                 var regrascenario = Enumerable.from(cenario.regras);
-
+                
                 regrasbd.forEach(regrabd => {
 
-                    var regracenario = regrascenario.firstOrDefault(it => { it.id == regrabd.id });
-
+                    var regracenario = regrascenario.firstOrDefault(it => { return it.id == regrabd.id });
+                    
                     if (regracenario) {
-
+                        
                         regrabd.nomeRegra = regracenario.nomeRegra;
                         regrabd.regraDe = regracenario.regraDe;
                         regrabd.regraPara = regracenario.regraPara;
                         regrabd.tipoRegra = regracenario.tipoRegra;
 
-                        regrabd._metadata.changeTrack = CHANGETRACK_CREATE;
+                        regrabd._metadata.changeTrack = CHANGETRACK_UPDATE;
                     } else {
                         regrabd._metadata.changeTrack = CHANGETRACK_DELETE;
                     }
 
                     listapersist.push(regrabd);
                 });
-
+                
                 regrascenario.forEach(regracenario => {
 
                     var contem = regrasbd.any(it => { return regracenario.id == it.id });
 
                     if (!contem) {
-                        regracenario._metadata = { changeTrack: CHANGETRACK_CREATE };
+                        regracenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: "regracenario" };
                         listapersist.push(regracenario);
                     }
                 });
-
+                
                 var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
                     config.URL_CENARIO_SAGER, listapersist);
-
+                    
                 promiseCenarioUpdate.then(result => { res(result) }).catch(
-                    e => catchError(e, 'atualização', idCenario, rej)
+                    e => catchError(e, 'atualização', cenario.id, rej)
                 );
 
-            }).catch(e => catchError(e, 'obtenção', idCenario, rej));
+            }).catch(e => catchError(e, 'obtenção', cenario.id, rej));
         });
 
     }
@@ -106,12 +106,12 @@ class CenarioBusiness {
 
         var listapersist = [];
 
-        cenario._metadata = { changeTrack: CHANGETRACK_CREATE };
+        cenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: "cenario" };
         listapersist.push(cenario);
 
         if (cenario.regras && cenario.regras.length > 0) {
             cenario.regras.forEach(it => {
-                it._metadata = { changeTrack: CHANGETRACK_CREATE };
+                it._metadata = { changeTrack: CHANGETRACK_CREATE, type: "cenario" };
                 listapersist.push(it);
             });
         }

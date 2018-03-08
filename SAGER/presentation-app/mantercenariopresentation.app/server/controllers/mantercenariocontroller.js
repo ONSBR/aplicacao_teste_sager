@@ -23,6 +23,7 @@ class ManterCenarioController {
         var filtroAtivo = request.body.ativo;
 
         var url = config.getUrlFiltroCenario(filtroNome);
+        
         this.domainPromiseHelper.getDomainPromise(url).
             then(data => { response.send(data); }).
             catch(e => { console.log(`Erro durante a consulta de cenários: ${e.toString()}`) });
