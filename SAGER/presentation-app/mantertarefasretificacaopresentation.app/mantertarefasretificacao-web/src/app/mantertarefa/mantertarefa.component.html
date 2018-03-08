@@ -43,6 +43,9 @@
       </li>
     </ul>
   </div>
+  <div *ngIf="mensagemUploadPlanilha" [ngStyle]="{'color':'green'}">
+    <span>{{mensagemUploadPlanilha}}</span>
+  </div>
   <div>
     <span>Nome da tarefa:
       <input type="text" [(ngModel)]="nomeTarefa" />

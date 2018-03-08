@@ -21,6 +21,7 @@ export class MantertarefaComponent implements OnInit {
   public usinas: Array<Usina>;
   public camposObrigatoriosPesquisaEventos: Array<string>;
   public camposObrigatoriosTarefa: Array<string>;
+  public mensagemUploadPlanilha: string;
 
   constructor(private http: HttpClient) {
     this.filtroEvento = new FiltroEvento();
@@ -47,15 +48,23 @@ export class MantertarefaComponent implements OnInit {
   }
 
   inserirTarefa() {
-    this.camposObrigatoriosTarefa = [];
+    this.limparMensagens();
     if (this.validarTarefa()) {
       let body = { 'nomeTarefa': this.nomeTarefa };
       this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
         data => {
           this.listarTarefas();
+        }, error => {
+          console.log(`Erro ao inserir tarefa: ${error}`);
         }
       );
     }
+  }
+
+  limparMensagens() {
+    this.camposObrigatoriosPesquisaEventos = [];
+    this.camposObrigatoriosTarefa = [];
+    this.mensagemUploadPlanilha = undefined;
   }
 
   validarTarefa() {
@@ -67,7 +76,7 @@ export class MantertarefaComponent implements OnInit {
   }
 
   pesquisarEventos() {
-    this.camposObrigatoriosPesquisaEventos = [];
+    this.limparMensagens();
     if (this.validarFiltroPesquisaEventos()) {
       const url = this.getUrlPesquisarEventos();
       console.log('url' + url);
@@ -90,13 +99,19 @@ export class MantertarefaComponent implements OnInit {
   }
 
   uploadPlanilha(tarefa: TarefaRetificacao, files: FileList) {
+    this.limparMensagens();
     tarefa.planilha = files.item(0);
     const urlUploadPlanilha = environment.urlServerPresentation + environment.uploadPlanilha;
     const formData: FormData = new FormData();
     formData.append('planilha', tarefa.planilha, tarefa.planilha.name);
     formData.append('nomeTarefa', tarefa.nome);
     const headers = new HttpHeaders();
-    return this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => console.log(data));
+    this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => {
+      console.log(data);
+      this.mensagemUploadPlanilha = "Upload executado com sucesso";
+    }, error => {
+      console.log(`Erro ao realizar upload da planilha: ${error}`);
+    });
   }
 
   downloadPlanilha(tarefa: TarefaRetificacao) {
