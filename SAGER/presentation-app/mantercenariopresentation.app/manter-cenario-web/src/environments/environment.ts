@@ -8,8 +8,8 @@ export const environment = {
   production: false,
   urlServerPresentation: 'http://localhost:8181/',
   
-  pesquisarCenario: 'pesquisarCenario',
-  incluirCenario: 'incluirCenario',
+  pesquisarCenarios: 'pesquisarCenarios',
+  inserirCenario: 'inserirCenario',
   alterarCenario: 'alterarCenario',
   excluirCenario: 'excluirCenario',
   ativarInativarCenario: 'ativarInativarCenario',

@@ -16,7 +16,7 @@ class ManterCenarioController {
      * @description Pesquisa os cenáios cadastrados no sistema
      */
     pesquisarCenarios(request, response) {
-
+        
         var filtroNome = request.body.nome;
         var filtroDataInicial = request.body.dataInicial;
         var filtroDataFinal = request.body.dataFinal;

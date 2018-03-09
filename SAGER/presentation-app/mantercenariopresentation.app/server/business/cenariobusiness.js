@@ -86,7 +86,7 @@ class CenarioBusiness {
                     });
 
                     var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                        config.URL_CENARIO_SAGER, listapersist);
+                        config.URL_CENARIO_SAGER_PERSIST, listapersist);
 
                     promiseCenarioUpdate.then(result => { res(result) }).catch(
                         error => { catchError(error, 'atualização', cenario.id, rej) }
@@ -116,9 +116,10 @@ class CenarioBusiness {
                 listapersist.push(it);
             });
         }
+        console.log(JSON.stringify(listapersist))
 
         var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-            config.URL_CENARIO_SAGER, listapersist);
+            config.URL_CENARIO_SAGER_PERSIST, listapersist);
 
         promiseCenarioUpdate.catch(error => { catchError(error, 'inclusão', cenario.nomeCenario, rej) });
 
@@ -159,7 +160,7 @@ class CenarioBusiness {
                     });
 
                     var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                        config.URL_CENARIO_SAGER, listapersist);
+                        config.URL_CENARIO_SAGER_PERSIST, listapersist);
 
                     promiseCenarioUpdate.then(result => { res(result) }).catch(
                         error => { catchError(error, 'exclusão', idCenario, rej) }
@@ -197,7 +198,7 @@ class CenarioBusiness {
                     cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
 
                     var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                        config.URL_CENARIO_SAGER, [cenariobd]);
+                        config.URL_CENARIO_SAGER_PERSIST, [cenariobd]);
 
                     promiseCenarioUpdate.then(result => { res(result) }).catch(
                         error => { catchError(error, 'ativação/inativação', idCenario, rej) }

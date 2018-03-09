@@ -29,8 +29,8 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   pesquisar() {
-    const url = environment.urlServerPresentation + environment.pesquisarCenario;
-    const body = { 'filtroConsulta': this.filtroConsulta };
+    const url = environment.urlServerPresentation + environment.pesquisarCenarios;
+    const body = this.filtroConsulta;
     this.http.post(url, body).subscribe(data => {
       this.cenarios = <Cenario[]>data;
     });
@@ -72,7 +72,7 @@ export class MantemCenarioComponent implements OnInit {
     this.cenarioSelecionada = clone(cenario);
 
     var url = environment.urlServerPresentation + environment.obterRegrasCriticas +
-      '&idCenario=' + this.cenarioSelecionada.id;
+      '?idCenario=' + this.cenarioSelecionada.id;
 
     this.http.get(url).subscribe(data => {
       this.cenarioSelecionada.regras = <RegraCritica[]>data;
@@ -89,7 +89,7 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   confirmarInclusao(cenario) {
-    const url = environment.urlServerPresentation + environment.incluirCenario;
+    const url = environment.urlServerPresentation + environment.inserirCenario;
 
     this.http.put(url, cenario).subscribe(data => {
       alert("Inclusão de cenário realizada com sucesso!");

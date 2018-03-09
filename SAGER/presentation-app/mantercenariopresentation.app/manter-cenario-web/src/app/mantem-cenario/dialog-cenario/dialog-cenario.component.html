@@ -43,7 +43,7 @@
           <span>
             <button class="button" (click)='confirmar()'>Confirmar</button>
             <button class="button" (click)='onNoClick()'>Fechar</button>
-            <button class="button" (click)='incluir()'>Incluir Regra</button>
+            <button class="button" (click)='incluirRegra()'>Incluir Regra</button>
           </span>
         </mat-dialog-actions>
       </fieldset>
@@ -68,7 +68,7 @@
                 </option>
               </select>
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegra[0] || regra.tipoRegra == tiposRegra[1]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1]">
               <select [(ngModel)]="regra.regraDe">
                 <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
                   {{uge.idUge}}
@@ -76,17 +76,17 @@
               </select>
               - {{getUge(regra.regraDe).potenciaDisponivel}}
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegra[2]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[2]">
               <select [(ngModel)]="regra.regraDe">
                 <option *ngFor="let origem of origens" [ngValue]="origem">
                   {{origem}}
                 </option>
               </select>
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegra[0] || regra.tipoRegra == tiposRegra[1]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1]">
               <input type="text" [(ngModel)]="regra.regraPara" />
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegra[2]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[2]">
               <select [(ngModel)]="regra.regraPara">
                 <option *ngFor="let origem of origens" [ngValue]="origem">
                   {{origem}}
@@ -94,7 +94,7 @@
               </select>
             </td>
             <td>
-              <button class="button" (click)='excluir(regra)'>Excluir</button>
+              <button class="button" (click)='excluirRegra(regra)'>Excluir</button>
             </td>
           </tr>
         </table>

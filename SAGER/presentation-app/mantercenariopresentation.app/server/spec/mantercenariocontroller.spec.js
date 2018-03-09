@@ -143,4 +143,19 @@ describe('ManterCenarioController: ', function () {
         
     });
 
+    it('Ativar e Inativar Cenário.', () => {
+        
+        request.body= { idCenario: "1" };
+
+        manterCenarioController.cenarioBusiness = {};
+        manterCenarioController.cenarioBusiness.ativarInativarCenario = function(cenario) {
+            result = request.body;
+            return domainpromisefake();
+        };
+        manterCenarioController.ativarInativarCenario(request, response);
+
+        expect(response.data).toEqual(result);
+        
+    });
+
 });

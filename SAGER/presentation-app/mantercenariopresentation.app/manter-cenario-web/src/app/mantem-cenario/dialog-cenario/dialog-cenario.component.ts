@@ -17,6 +17,8 @@ export class DialogCenarioComponent implements OnInit {
 
   usinas: Usina[] = [];
 
+  origens: string[] = [];
+
   get idUsina() {
     return this.data.idUsina;
   }
@@ -35,12 +37,13 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   getUge(idUge) {
+    var retorno = {};
     this.uges.forEach(it => {
       if (it.idUge == idUge) {
-        return it;
+        retorno = it;
       }
     });
-    return {};
+    return retorno;
   }
 
   get titulo() {
@@ -58,7 +61,7 @@ export class DialogCenarioComponent implements OnInit {
     if (this.data && this.data.idUsina) {
 
       var url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
-       '&idUsina=' + this.data.idUsina;
+       '?idUsina=' + this.data.idUsina;
       
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
