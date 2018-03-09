@@ -28,14 +28,16 @@ class TarefaDAO {
         }
     }
 
-    excluirTarefa(tarefaId){
+    excluirTarefa(tarefaId, eventos) {
         let urlExcluirTarefa = config.getUrlInserirTarefa();
         console.log('urlExcluirTarefa= ' + urlExcluirTarefa);
-        let args = this.createExcluirTarefaRetifcacaoArgs(tarefaId);
+        let args = this.createExcluirTarefaRetificacaoArgs(tarefaId);
+        this.modificarChangeTrack(eventos, 'destroy');
+        args.data = args.data.concat(eventos);
         return this.domainPromiseHelper.postDomainPromise(urlExcluirTarefa, args);
     }
 
-    createExcluirTarefaRetifcacaoArgs(tarefaId) {
+    createExcluirTarefaRetificacaoArgs(tarefaId) {
         return {
             data: [{
                 "id": tarefaId,
@@ -48,12 +50,20 @@ class TarefaDAO {
         }
     }
 
+    modificarChangeTrack(entidades, changeTrack) {
+        entidades.forEach(evento => {
+            evento._metadata['changeTrack'] = 'destroy';
+        });
+    }
+
     listarTarefas() {
         return this.domainPromiseHelper.getDomainPromise(config.URL_TAREFAS);
     }
 
-    consultarEventosRetificacaoPorNomeTarefa(nomeTarefa){
-        return this.domainPromiseHelper.getDomainPromise(config.getEventosRetificacaoPorNomeTarefa(nomeTarefa));
+    consultarEventosRetificacaoPorNomeTarefa(nomeTarefa) {
+        let urlConsultarEventosRetificacaoPorNomeTarefa = config.getEventosRetificacaoPorNomeTarefa(nomeTarefa);
+        console.log('consultarEventosRetificacaoPorNomeTarefa= ' + urlConsultarEventosRetificacaoPorNomeTarefa);
+        return this.domainPromiseHelper.getDomainPromise(urlConsultarEventosRetificacaoPorNomeTarefa);
     }
 
     inserirEventosRetificacao(eventosRetificacao) {
@@ -70,7 +80,7 @@ class TarefaDAO {
                 'idEvento': evento.idEvento,
                 'idUsina': evento.idUsina,
                 'idUge': evento.idUge,
-                'idEstadoOperativo': evento.idEstadoOperativo, 
+                'idEstadoOperativo': evento.idEstadoOperativo,
                 'idCondicaoOperativa': evento.idCondicaoOperativa,
                 'idClassificacaoOrigem': evento.idClassificacaoOrigem,
                 'dataVerificada': Util.stringToDate(evento.dataVerificada, 'DD-MM-YYYY HH:mm:ss'),
