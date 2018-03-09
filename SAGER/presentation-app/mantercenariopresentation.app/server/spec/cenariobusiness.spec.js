@@ -145,13 +145,27 @@ describe('CenarioBusiness: ', function () {
             expect(regra1.tipoRegra).toEqual(cenariobd.regras[0].tipoRegra);
             expect(regra1._metadata.changeTrack).toEqual("destroy");
 
-            expect(regra2.id).toBeUndefined();
             expect(regra2.nomeRegra).toEqual(cenariobd.regras[1].nomeRegra);
             expect(regra2.regraDe).toEqual(cenariobd.regras[1].regraDe);
             expect(regra2.regraPara).toEqual(cenariobd.regras[1].regraPara);
             expect(regra2.tipoRegra).toEqual(cenariobd.regras[1].tipoRegra);
             expect(regra2._metadata.changeTrack).toEqual("destroy");
 
+        });
+    });
+
+    it('Excluir cenário, cenário não encontrado.', () => {
+        
+        var cenariobd = datatest.cenariobd;
+        
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+
+        result[urlCenario] = [];
+        result[urlRegras] = [];
+        
+        cenarioBusiness.excluirCenario(cenariobd.id).catch(error => {
+            expect(error).toBeDefined();
         });
     });
 
@@ -202,6 +216,22 @@ describe('CenarioBusiness: ', function () {
             expect(cenariotest.situacao).toEqual(SituacaoCenario.Ativo);
             expect(cenariotest._metadata.changeTrack).toEqual("update");
 
+        });
+    });
+
+    it('Ativar/Inativar cenário, cenário não encontrado.', () => {
+        
+        var cenariobd = datatest.cenariobd;
+        cenariobd.situacao = SituacaoCenario.Ativo;
+        
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+
+        result[urlCenario] = [];
+        result[urlRegras] = [];
+        
+        cenarioBusiness.ativarInativarCenario(cenariobd.id).catch(error => {
+            expect(error).toBeDefined();
         });
     });
 });

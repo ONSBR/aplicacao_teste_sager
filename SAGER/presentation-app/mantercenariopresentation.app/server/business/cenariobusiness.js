@@ -32,67 +32,68 @@ class CenarioBusiness {
 
         var promiseCenario = this.domainPromiseHelper.getDomainPromise(urlCenario);
         var promiseRegras = this.domainPromiseHelper.getDomainPromise(urlRegras);
-        
+
         var listapersist = [];
 
         return new Promise((res, rej) => {
-            
+
             Promise.all([promiseCenario, promiseRegras]).then(results => {
-                
+
                 var cenariosbd = results[0];
                 var regrasbd = Enumerable.from(results[1] ? results[1] : []);
-                
-                validarCenarios(cenariosbd, cenario.id, rej);
-                
-                var cenariobd = cenariosbd[0];
-                
-                cenariobd.nomeCenario = cenario.nomeCenario;
-                cenariobd.dataInicioVigencia = cenario.dataInicioVigencia;
-                cenariobd.dataFimVigencia = cenario.dataFimVigencia;
-                cenariobd.justificativa = cenario.justificativa;
-                
-                cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
-                listapersist.push(cenariobd);
 
-                var regrascenario = Enumerable.from(cenario.regras);
-                
-                regrasbd.forEach(regrabd => {
+                if (validarCenarios(cenariosbd, cenario.id, rej)) {
 
-                    var regracenario = regrascenario.firstOrDefault(it => { return it.id == regrabd.id });
-                    
-                    if (regracenario) {
-                        
-                        regrabd.nomeRegra = regracenario.nomeRegra;
-                        regrabd.regraDe = regracenario.regraDe;
-                        regrabd.regraPara = regracenario.regraPara;
-                        regrabd.tipoRegra = regracenario.tipoRegra;
+                    var cenariobd = cenariosbd[0];
 
-                        regrabd._metadata.changeTrack = CHANGETRACK_UPDATE;
-                    } else {
-                        regrabd._metadata.changeTrack = CHANGETRACK_DELETE;
-                    }
+                    cenariobd.nomeCenario = cenario.nomeCenario;
+                    cenariobd.dataInicioVigencia = cenario.dataInicioVigencia;
+                    cenariobd.dataFimVigencia = cenario.dataFimVigencia;
+                    cenariobd.justificativa = cenario.justificativa;
 
-                    listapersist.push(regrabd);
-                });
-                
-                regrascenario.forEach(regracenario => {
+                    cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
+                    listapersist.push(cenariobd);
 
-                    var contem = regrasbd.any(it => { return regracenario.id == it.id });
+                    var regrascenario = Enumerable.from(cenario.regras);
 
-                    if (!contem) {
-                        regracenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: "regracenario" };
-                        listapersist.push(regracenario);
-                    }
-                });
-                
-                var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                    config.URL_CENARIO_SAGER, listapersist);
-                    
-                promiseCenarioUpdate.then(result => { res(result) }).catch(
-                    e => catchError(e, 'atualização', cenario.id, rej)
-                );
+                    regrasbd.forEach(regrabd => {
 
-            }).catch(e => catchError(e, 'obtenção', cenario.id, rej));
+                        var regracenario = regrascenario.firstOrDefault(it => { return it.id == regrabd.id });
+
+                        if (regracenario) {
+
+                            regrabd.nomeRegra = regracenario.nomeRegra;
+                            regrabd.regraDe = regracenario.regraDe;
+                            regrabd.regraPara = regracenario.regraPara;
+                            regrabd.tipoRegra = regracenario.tipoRegra;
+
+                            regrabd._metadata.changeTrack = CHANGETRACK_UPDATE;
+                        } else {
+                            regrabd._metadata.changeTrack = CHANGETRACK_DELETE;
+                        }
+
+                        listapersist.push(regrabd);
+                    });
+
+                    regrascenario.forEach(regracenario => {
+
+                        var contem = regrasbd.any(it => { return regracenario.id == it.id });
+
+                        if (!contem) {
+                            regracenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: "regracenario" };
+                            listapersist.push(regracenario);
+                        }
+                    });
+
+                    var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
+                        config.URL_CENARIO_SAGER, listapersist);
+
+                    promiseCenarioUpdate.then(result => { res(result) }).catch(
+                        error => { catchError(error, 'atualização', cenario.id, rej) }
+                    );
+                }
+
+            }).catch(error => { catchError(error, 'obtenção', cenario.id, rej) });
         });
 
     }
@@ -119,7 +120,7 @@ class CenarioBusiness {
         var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
             config.URL_CENARIO_SAGER, listapersist);
 
-        promiseCenarioUpdate.catch(e => catchError(e, 'inclusão', cenario.nomeCenario, rej));
+        promiseCenarioUpdate.catch(error => { catchError(error, 'inclusão', cenario.nomeCenario, rej) });
 
         return promiseCenarioUpdate;
     }
@@ -130,7 +131,7 @@ class CenarioBusiness {
      * @param {Response} response 
      */
     excluirCenario(idCenario) {
-        
+
         var urlCenario = config.getUrlFiltroCenarioPorId(idCenario);
         var urlRegras = config.getUrlFiltroRegrasPorIdCenario(idCenario);
 
@@ -140,31 +141,32 @@ class CenarioBusiness {
         var listapersist = [];
 
         return new Promise((res, rej) => {
-            Promise.all([promiseCenario, promiseRegras], (results) => {
+            Promise.all([promiseCenario, promiseRegras]).then(results => {
 
                 var cenariosbd = results[0];
                 var regrasbd = Enumerable.from(results[1] ? results[1] : []);
 
-                validarCenarios(cenariosbd, cenario.id, rej);
+                if (validarCenarios(cenariosbd, idCenario, rej)) {
 
-                var cenariobd = cenariosbd[0];
+                    var cenariobd = cenariosbd[0];
+                    
+                    cenariobd._metadata.changeTrack = CHANGETRACK_DELETE;
+                    listapersist.push(cenariobd);
 
-                cenariobd._metadata.changeTrack = CHANGETRACK_DELETE;
-                listapersist.push(cenariobd);
+                    regrasbd.forEach(regrabd => {
+                        regrabd._metadata.changeTrack = CHANGETRACK_DELETE;
+                        listapersist.push(regrabd);
+                    });
 
-                regrasbd.forEach(regrabd => {
-                    regrabd._metadata.changeTrack = CHANGETRACK_DELETE;
-                    listapersist.push(regrabd);
-                });
+                    var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
+                        config.URL_CENARIO_SAGER, listapersist);
 
-                var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                    config.URL_CENARIO_SAGER, listapersist);
+                    promiseCenarioUpdate.then(result => { res(result) }).catch(
+                        error => { catchError(error, 'exclusão', idCenario, rej) }
+                    );
+                }
 
-                promiseCenarioUpdate.then(result => { res(result) }).catch(
-                    e => catchError(e, 'exclusão', idCenario, rej)
-                );
-
-            }).catch(e => catchError(e, 'obtenção', idCenario, rej));
+            }).catch(error => { catchError(error, 'obtenção', idCenario, rej) });
         });
     }
 
@@ -182,26 +184,27 @@ class CenarioBusiness {
 
             promiseCenario.then(cenariosbd => {
 
-                validarCenarios(cenariosbd, idCenario, rej);
+                if (validarCenarios(cenariosbd, idCenario, rej)) {
 
-                var cenariobd = cenariosbd[0];
+                    var cenariobd = cenariosbd[0];
 
-                if (cenariobd.situacao == SituacaoCenario.Ativo) {
-                    cenariobd.situacao = SituacaoCenario.Inativo;
-                } else if (cenariobd.situacao == SituacaoCenario.Inativo) {
-                    cenariobd.situacao = SituacaoCenario.Ativo;
+                    if (cenariobd.situacao == SituacaoCenario.Ativo) {
+                        cenariobd.situacao = SituacaoCenario.Inativo;
+                    } else if (cenariobd.situacao == SituacaoCenario.Inativo) {
+                        cenariobd.situacao = SituacaoCenario.Ativo;
+                    }
+
+                    cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
+
+                    var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
+                        config.URL_CENARIO_SAGER, [cenariobd]);
+
+                    promiseCenarioUpdate.then(result => { res(result) }).catch(
+                        error => { catchError(error, 'ativação/inativação', idCenario, rej) }
+                    );
                 }
-                
-                cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
 
-                var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                    config.URL_CENARIO_SAGER, [cenariobd]);
-
-                promiseCenarioUpdate.then(result => { res(result) }).catch(
-                    e => catchError(e, 'ativação/inativação', idCenario, rej)
-                );
-
-            }).catch(e => catchError(e, 'obtenção', idCenario, rej));
+            }).catch(error => { catchError(error, 'obtenção', idCenario, rej) });
         });
     }
 }
@@ -211,14 +214,16 @@ function validarCenarios(cenarios, idCenario, reject) {
         var error = new Error(`Erro cenário não encontrado: ${idCenario}`)
         if (reject) {
             reject(error);
+            return false;
         } else {
             throw error;
         }
     }
+    return true;
 }
 
 function catchError(error, msgPart, idCenario, reject) {
-    console.log(`Erro ao executar [${msgPart}] do cenário[${idCenario}]: ${e.toString()}`);
+    console.log(`Erro ao executar [${msgPart}] do cenário[${idCenario}]: ${error.toString()}`);
     if (reject) {
         reject(error);
     }
