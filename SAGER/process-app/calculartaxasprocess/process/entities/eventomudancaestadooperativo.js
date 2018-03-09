@@ -27,12 +27,6 @@ module.exports = class EventoMudancaEstadoOperativo extends BaseEntity {
      * na mais baixa unidade de tempo considerada nos cálculos.
      */
     static gerarDataVerificadaEmSegundos(evento) {
-        console.log(JSON.stringify(evento, null, 4));
-        //TODO: refatorar
-        if (typeof evento.dataVerificada === "string"){
-            evento.dataVerificada = new Date(evento.dataVerificada.replace("00:00:00 GMT",""));
-        }
-        evento.dataVerificadaEmSegundos = evento.dataVerificada &&
-         typeof evento.dataVerificada.getTotalSeconds === "function" ? evento.dataVerificada.getTotalSeconds() : 0;
+        evento.dataVerificadaEmSegundos = evento.dataVerificada ? evento.dataVerificada.getTotalSeconds() : 0;
     }
 }
