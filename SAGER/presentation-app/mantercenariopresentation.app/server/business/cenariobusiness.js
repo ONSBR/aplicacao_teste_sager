@@ -174,27 +174,31 @@ class CenarioBusiness {
      */
     ativarInativarCenario(idCenario) {
 
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenario.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(idCenario);
 
         var promiseCenario = this.domainPromiseHelper.getDomainPromise(urlCenario);
 
         return new Promise((res, rej) => {
 
-            promiseCenario.then(cenariobd => {
+            promiseCenario.then(cenariosbd => {
+
+                validarCenarios(cenariosbd, idCenario, rej);
+
+                var cenariobd = cenariosbd[0];
 
                 if (cenariobd.situacao == SituacaoCenario.Ativo) {
-                    cenariobd.situacao == SituacaoCenario.Inativo;
+                    cenariobd.situacao = SituacaoCenario.Inativo;
                 } else if (cenariobd.situacao == SituacaoCenario.Inativo) {
-                    cenariobd.situacao == SituacaoCenario.Ativo;
+                    cenariobd.situacao = SituacaoCenario.Ativo;
                 }
-
+                
                 cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
 
                 var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
-                    config.URL_CENARIO_SAGER, [cenario]);
+                    config.URL_CENARIO_SAGER, [cenariobd]);
 
                 promiseCenarioUpdate.then(result => { res(result) }).catch(
-                    e => catchError(e, 'obtenção', idCenario, rej)
+                    e => catchError(e, 'ativação/inativação', idCenario, rej)
                 );
 
             }).catch(e => catchError(e, 'obtenção', idCenario, rej));

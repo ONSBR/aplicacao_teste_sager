@@ -1,3 +1,9 @@
+const SituacaoCenario = {
+    Ativo: 'Ativo',
+    Incorporado: 'Incorporado',
+    Inativo: 'Inativo'
+}
+
 describe('CenarioBusiness: ', function () {
     
     let config = require('../config');
@@ -76,7 +82,128 @@ describe('CenarioBusiness: ', function () {
         });
     });
 
+    it('Inserir cenário.', () => {
+        
+        var cenario = datatest.cenario;
+        
+        cenarioBusiness.inserirCenario(cenario).then(res => {
+            
+            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
 
+            var cenariotest = listapersist[0];
+            var regra1 = listapersist[1];
+            var regra2 = listapersist[2];
+
+            expect(cenariotest.nomeCenario).toEqual(cenario.nomeCenario);
+            expect(cenariotest.dataInicioVigencia).toEqual(cenario.dataInicioVigencia);
+            expect(cenariotest.dataFimVigencia).toEqual(cenario.dataFimVigencia);
+            expect(cenariotest.justificativa).toEqual(cenario.justificativa);
+            expect(cenariotest._metadata.changeTrack).toEqual("create");
+
+            expect(regra1.nomeRegra).toEqual(cenario.regras[0].nomeRegra);
+            expect(regra1.regraDe).toEqual(cenario.regras[0].regraDe);
+            expect(regra1.regraPara).toEqual(cenario.regras[0].regraPara);
+            expect(regra1.tipoRegra).toEqual(cenario.regras[0].tipoRegra);
+            expect(regra1._metadata.changeTrack).toEqual("create");
+
+            expect(regra2.nomeRegra).toEqual(cenario.regras[1].nomeRegra);
+            expect(regra2.regraDe).toEqual(cenario.regras[1].regraDe);
+            expect(regra2.regraPara).toEqual(cenario.regras[1].regraPara);
+            expect(regra2.tipoRegra).toEqual(cenario.regras[1].tipoRegra);
+            expect(regra2._metadata.changeTrack).toEqual("create");
+
+        });
+    });
+
+    it('Excluir cenário.', () => {
+        
+        var cenariobd = datatest.cenariobd;
+        
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+
+        result[urlCenario] = [cenariobd];
+        result[urlRegras] = cenariobd.regras;
+        
+        cenarioBusiness.excluirCenario(cenariobd.id).then(res => {
+            
+            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+
+            var cenariotest = listapersist[0];
+            var regra1 = listapersist[1];
+            var regra2 = listapersist[2];
+
+            expect(cenariotest.nomeCenario).toEqual(cenariobd.nomeCenario);
+            expect(cenariotest.dataInicioVigencia).toEqual(cenariobd.dataInicioVigencia);
+            expect(cenariotest.dataFimVigencia).toEqual(cenariobd.dataFimVigencia);
+            expect(cenariotest.justificativa).toEqual(cenariobd.justificativa);
+            expect(cenariotest._metadata.changeTrack).toEqual("destroy");
+
+            expect(regra1.nomeRegra).toEqual(cenariobd.regras[0].nomeRegra);
+            expect(regra1.regraDe).toEqual(cenariobd.regras[0].regraDe);
+            expect(regra1.regraPara).toEqual(cenariobd.regras[0].regraPara);
+            expect(regra1.tipoRegra).toEqual(cenariobd.regras[0].tipoRegra);
+            expect(regra1._metadata.changeTrack).toEqual("destroy");
+
+            expect(regra2.id).toBeUndefined();
+            expect(regra2.nomeRegra).toEqual(cenariobd.regras[1].nomeRegra);
+            expect(regra2.regraDe).toEqual(cenariobd.regras[1].regraDe);
+            expect(regra2.regraPara).toEqual(cenariobd.regras[1].regraPara);
+            expect(regra2.tipoRegra).toEqual(cenariobd.regras[1].tipoRegra);
+            expect(regra2._metadata.changeTrack).toEqual("destroy");
+
+        });
+    });
+
+    it('Ativar/Inativar cenário, inativando um cenário.', () => {
+        
+        var cenariobd = datatest.cenariobd;
+        cenariobd.situacao = SituacaoCenario.Ativo;
+        
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+
+        result[urlCenario] = [cenariobd];
+        result[urlRegras] = cenariobd.regras;
+        
+        cenarioBusiness.ativarInativarCenario(cenariobd.id).then(res => {
+            
+            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+
+            expect(listapersist.length).toEqual(1);
+
+            var cenariotest = listapersist[0];
+            
+            expect(cenariotest.situacao).toEqual(SituacaoCenario.Inativo);
+            expect(cenariotest._metadata.changeTrack).toEqual("update");
+
+        });
+    });
+
+    it('Ativar/Inativar cenário, ativando um cenário.', () => {
+        
+        var cenariobd = datatest.cenariobd;
+        cenariobd.situacao = SituacaoCenario.Inativo;
+        
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+
+        result[urlCenario] = [cenariobd];
+        result[urlRegras] = cenariobd.regras;
+        
+        cenarioBusiness.ativarInativarCenario(cenariobd.id).then(res => {
+            
+            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+
+            expect(listapersist.length).toEqual(1);
+
+            var cenariotest = listapersist[0];
+            
+            expect(cenariotest.situacao).toEqual(SituacaoCenario.Ativo);
+            expect(cenariotest._metadata.changeTrack).toEqual("update");
+
+        });
+    });
 });
 
 function generateDataTest(datatest) {
