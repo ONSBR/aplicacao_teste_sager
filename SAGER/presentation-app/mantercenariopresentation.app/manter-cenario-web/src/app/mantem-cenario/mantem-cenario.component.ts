@@ -43,9 +43,6 @@ export class MantemCenarioComponent implements OnInit {
 
   excluir(cenario) {
 
-    /* TODO STATIC var index = this.cenarios.indexOf(cenario);
-    this.cenarios.splice(index,1);*/
-
     if (confirm('Confirma a exclusão do cenário?')) {
       const url = environment.urlServerPresentation + environment.excluirCenario + "?idCenario=" + cenario.idCenario;
       this.http.delete(url).subscribe(data => {
@@ -57,14 +54,7 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   ativarInativar(cenario) {
-    /* TODO STATIC var index = this.cenarios.indexOf(cenario);
-    var cenarioSel = this.cenarios[index];
-    if (cenarioSel.situacao == SituacaoCenario.Ativo) {
-      cenarioSel.situacao = SituacaoCenario.Inativo;
-    } else {
-      cenarioSel.situacao = SituacaoCenario.Ativo;
-    }*/
-
+   
     const url = environment.urlServerPresentation + environment.ativarInativarCenario;
     this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
       alert("Alteração de cenário realizada com sucesso!");

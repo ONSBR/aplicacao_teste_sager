@@ -43,17 +43,18 @@ class CenarioBusiness {
 
             Promise.all([promiseCenario, promiseRegras]).then(results => {
 
-                var cenariosbd = results[0];
+                var cenariosbd = Enumerable.from(results[0] ? results[0] : []);
                 var regrasbd = Enumerable.from(results[1] ? results[1] : []);
 
-                if (validarCenarios(cenariosbd, cenario.id, rej)) {
+                var cenariobd = cenariosbd.firstOrDefault(it => {return it.idCenario == cenario.idCenario});
 
-                    var cenariobd = cenariosbd[0];
+                if (validarCenarios(cenariobd, cenario.idCenario, rej)) {
 
                     cenariobd.nomeCenario = cenario.nomeCenario;
                     cenariobd.dataInicioVigencia = cenario.dataInicioVigencia;
                     cenariobd.dataFimVigencia = cenario.dataFimVigencia;
                     cenariobd.justificativa = cenario.justificativa;
+                    cenariobd.idUsina = cenario.idUsina;
 
                     cenariobd._metadata.changeTrack = CHANGETRACK_UPDATE;
                     listapersist.push(cenariobd);
@@ -70,7 +71,6 @@ class CenarioBusiness {
                             regrabd.regraDe = regracenario.regraDe;
                             regrabd.regraPara = regracenario.regraPara;
                             regrabd.tipoRegra = regracenario.tipoRegra;
-                            regrabd.idUsina = regracenario.idUsina;
 
                             regrabd._metadata.changeTrack = CHANGETRACK_UPDATE;
                         } else {
@@ -127,7 +127,7 @@ class CenarioBusiness {
                 listapersist.push(it);
             });
         }
-        
+
         var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
             config.URL_CENARIO_SAGER_PERSIST, listapersist);
 
@@ -154,13 +154,13 @@ class CenarioBusiness {
         return new Promise((res, rej) => {
             Promise.all([promiseCenario, promiseRegras]).then(results => {
 
-                var cenariosbd = results[0];
+                var cenariosbd = Enumerable.from(results[0] ? results[0] : []);
                 var regrasbd = Enumerable.from(results[1] ? results[1] : []);
 
-                if (validarCenarios(cenariosbd, idCenario, rej)) {
+                var cenariobd = cenariosbd.firstOrDefault(it => {return it.idCenario == idCenario});
 
-                    var cenariobd = cenariosbd[0];
-                    
+                if (validarCenarios(cenariobd, idCenario, rej)) {
+
                     cenariobd._metadata.changeTrack = CHANGETRACK_DELETE;
                     listapersist.push(cenariobd);
 
@@ -193,11 +193,12 @@ class CenarioBusiness {
 
         return new Promise((res, rej) => {
 
-            promiseCenario.then(cenariosbd => {
+            promiseCenario.then(result => {
 
-                if (validarCenarios(cenariosbd, idCenario, rej)) {
+                var cenariosbd = Enumerable.from(result ? result : []);
+                var cenariobd = cenariosbd.firstOrDefault(it => {return it.idCenario == idCenario});
 
-                    var cenariobd = cenariosbd[0];
+                if (validarCenarios(cenariobd, idCenario, rej)) {
 
                     if (cenariobd.situacao == SituacaoCenario.Ativo) {
                         cenariobd.situacao = SituacaoCenario.Inativo;
@@ -220,8 +221,8 @@ class CenarioBusiness {
     }
 }
 
-function validarCenarios(cenarios, idCenario, reject) {
-    if (!cenarios || !cenarios.length || cenarios.length <= 0) {
+function validarCenarios(cenario, idCenario, reject) {
+    if (!cenario) {
         var error = new Error(`Erro cenário não encontrado: ${idCenario}`)
         if (reject) {
             reject(error);
