@@ -91,7 +91,6 @@ class CenarioBusiness {
                         }
                     });
 
-                    console.log(JSON.stringify(listapersist))
                     var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
                         config.URL_CENARIO_SAGER_PERSIST, listapersist);
 

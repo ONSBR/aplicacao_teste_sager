@@ -43,15 +43,17 @@ describe('CenarioBusiness: ', function () {
         var cenariobd = datatest.cenariobd;
         var cenario = datatest.cenario;
 
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.idCenario);
 
         result[urlCenario] = [cenariobd];
         result[urlRegras] = cenariobd.regras;
         
         cenarioBusiness.alterarCenario(cenario).then(res => {
             
-            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+            var listapersist = result[config.URL_CENARIO_SAGER_PERSIST + 'res'];
+
+            expect(listapersist).toBeDefined();
 
             var cenariotest = listapersist[0];
             var regra1 = listapersist[1];
@@ -88,7 +90,7 @@ describe('CenarioBusiness: ', function () {
         
         cenarioBusiness.inserirCenario(cenario).then(res => {
             
-            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+            var listapersist = result[config.URL_CENARIO_SAGER_PERSIST + 'res'];
 
             var cenariotest = listapersist[0];
             var regra1 = listapersist[1];
@@ -119,15 +121,15 @@ describe('CenarioBusiness: ', function () {
         
         var cenariobd = datatest.cenariobd;
         
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.idCenario);
 
         result[urlCenario] = [cenariobd];
         result[urlRegras] = cenariobd.regras;
         
         cenarioBusiness.excluirCenario(cenariobd.id).then(res => {
             
-            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+            var listapersist = result[config.URL_CENARIO_SAGER_PERSIST + 'res'];
 
             var cenariotest = listapersist[0];
             var regra1 = listapersist[1];
@@ -158,8 +160,8 @@ describe('CenarioBusiness: ', function () {
         
         var cenariobd = datatest.cenariobd;
         
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.idCenario);
 
         result[urlCenario] = [];
         result[urlRegras] = [];
@@ -174,15 +176,15 @@ describe('CenarioBusiness: ', function () {
         var cenariobd = datatest.cenariobd;
         cenariobd.situacao = SituacaoCenario.Ativo;
         
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.idCenario);
 
         result[urlCenario] = [cenariobd];
         result[urlRegras] = cenariobd.regras;
         
         cenarioBusiness.ativarInativarCenario(cenariobd.id).then(res => {
             
-            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+            var listapersist = result[config.URL_CENARIO_SAGER_PERSIST + 'res'];
 
             expect(listapersist.length).toEqual(1);
 
@@ -199,15 +201,15 @@ describe('CenarioBusiness: ', function () {
         var cenariobd = datatest.cenariobd;
         cenariobd.situacao = SituacaoCenario.Inativo;
         
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.idCenario);
 
         result[urlCenario] = [cenariobd];
         result[urlRegras] = cenariobd.regras;
         
         cenarioBusiness.ativarInativarCenario(cenariobd.id).then(res => {
             
-            var listapersist = result[config.URL_CENARIO_SAGER + 'res'];
+            var listapersist = result[config.URL_CENARIO_SAGER_PERSIST + 'res'];
 
             expect(listapersist.length).toEqual(1);
 
@@ -224,8 +226,8 @@ describe('CenarioBusiness: ', function () {
         var cenariobd = datatest.cenariobd;
         cenariobd.situacao = SituacaoCenario.Ativo;
         
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenariobd.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenariobd.idCenario);
 
         result[urlCenario] = [];
         result[urlRegras] = [];
@@ -240,6 +242,7 @@ function generateDataTest(datatest) {
 
     datatest.cenariobd = {
         id: "1",
+        idCenario: "1",
         nomeCenario: "nomeCenario_bd",  
         dataInicioVigencia: Date.now,
         dataFimVigencia: Date.now,
@@ -248,17 +251,21 @@ function generateDataTest(datatest) {
         regras: [
             { 
                 id: "1",
+                idCenario: "1",
                 nomeRegra: "nomeRegra_bd_1",
                 regraDe: "regraDe_bd_1",
                 regraPara: "regraPara_bd_1",
                 tipoRegra: "tipoRegra_bd_1",
+                idUsina: "A",
                 _metadata: { type: "regracenario" }
             }, {
                 id: "2",
+                idCenario: "2",
                 nomeRegra: "nomeRegra_bd_2",
                 regraDe: "regraDe_bd_2",
                 regraPara: "regraPara_bd_2",
                 tipoRegra: "tipoRegra_bd_2",
+                idUsina: "A",
                 _metadata: { type: "regracenario" }
             }
         ]
@@ -266,6 +273,7 @@ function generateDataTest(datatest) {
     
     datatest.cenario = { 
         id: "1",
+        idCenario: "1",
         nomeCenario: "nomeCenario",  
         dataInicioVigencia: Date.now,
         dataFimVigencia: Date.now,
@@ -273,15 +281,18 @@ function generateDataTest(datatest) {
         regras: [
             { 
                 id: "1",
+                idCenario: "1",
                 nomeRegra: "nomeRegra",
                 regraDe: "regraDe",
                 regraPara: "regraPara",
-                tipoRegra: "tipoRegra"
+                tipoRegra: "tipoRegra",
+                idUsina: "A"
             }, {
                 nomeRegra: "nomeRegra_2",
                 regraDe: "regraDe_2",
                 regraPara: "regraPara_2",
-                tipoRegra: "tipoRegra_2"
+                tipoRegra: "tipoRegra_2",
+                idUsina: "A"
             }
         ]
     };
