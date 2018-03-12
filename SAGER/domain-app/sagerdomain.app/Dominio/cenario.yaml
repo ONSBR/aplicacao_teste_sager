@@ -1,4 +1,6 @@
 tb_cenario:  
+  id_cenario:
+    - string
   nome:
     - string
   data_inicio:

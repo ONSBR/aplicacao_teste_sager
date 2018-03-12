@@ -1,6 +1,7 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const Enumerable = require('linq');
+const utils = require('../utils');
 
 const CHANGETRACK_CREATE = "create";
 const CHANGETRACK_UPDATE = "update";
@@ -11,6 +12,9 @@ const SituacaoCenario = {
     Incorporado: 'Incorporado',
     Inativo: 'Inativo'
 }
+
+const TypeCenario = "cenario";
+const TypeRegraCenario = "regracenario";
 
 /**
  * @description Classe que define as regras de manutenção de cenário.
@@ -66,6 +70,7 @@ class CenarioBusiness {
                             regrabd.regraDe = regracenario.regraDe;
                             regrabd.regraPara = regracenario.regraPara;
                             regrabd.tipoRegra = regracenario.tipoRegra;
+                            regrabd.idUsina = regracenario.idUsina;
 
                             regrabd._metadata.changeTrack = CHANGETRACK_UPDATE;
                         } else {
@@ -80,7 +85,8 @@ class CenarioBusiness {
                         var contem = regrasbd.any(it => { return regracenario.id == it.id });
 
                         if (!contem) {
-                            regracenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: "regracenario" };
+                            regracenario.idCenario = cenario.id;
+                            regracenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: TypeRegraCenario };
                             listapersist.push(regracenario);
                         }
                     });
@@ -107,12 +113,17 @@ class CenarioBusiness {
 
         var listapersist = [];
 
-        cenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: "cenario" };
+        if (!cenario.idCenario) {
+            cenario.idCenario = utils.guid();
+        }
+
+        cenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: TypeCenario };
         listapersist.push(cenario);
 
         if (cenario.regras && cenario.regras.length > 0) {
             cenario.regras.forEach(it => {
-                it._metadata = { changeTrack: CHANGETRACK_CREATE, type: "cenario" };
+                it.idCenario = cenario.idCenario;
+                it._metadata = { changeTrack: CHANGETRACK_CREATE, type: TypeRegraCenario };
                 listapersist.push(it);
             });
         }

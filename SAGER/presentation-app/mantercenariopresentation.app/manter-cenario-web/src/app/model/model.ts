@@ -1,6 +1,6 @@
 export class Cenario {
     
-    public id: string;
+    public idCenario: string;
     public nomeCenario: string;
     public dataInicioVigencia: Date;
     public dataFimVigencia: Date;
@@ -17,6 +17,7 @@ export class Cenario {
 export class RegraCritica {
 
     id: string;
+    idCenario: string;
     nomeRegra: string;
     regraDe: string;
     regraPara: string;

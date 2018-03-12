@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2181;
+const DOMAIN_PORT = 2165;
 const DOMAIN_HOST = 'localhost';
 
 config.DOMAIN_PORT = DOMAIN_PORT;
@@ -26,7 +26,7 @@ config.getUrlFiltroUnidadeGeradora = function (idUsina) {
 }
 
 config.getUrlFiltroCenarioPorId = function (idCenario) {
-    return `${config.URL_CENARIO_SAGER}?filter=byId&idCenario=${idCenario}`;
+    return `${config.URL_CENARIO_SAGER}?filter=byIdCenario&idCenario=${idCenario}`;
 }
 
 config.getUrlFiltroRegrasPorIdCenario = function (idCenario) {

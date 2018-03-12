@@ -1,6 +1,8 @@
 cenario:
   model: tb_cenario
   fields:
+    idCenario:
+      column: id_cenario
     nomeCenario:
       column: nome
     dataInicioVigencia:
@@ -13,11 +15,13 @@ cenario:
       column: justificativa
     situacao:
       column: situacao
+    idUsina:
+      column: id_usina
   filters:
     byNome: 
       nome: :nomeCenario
     byId: 
-      id: :idCenario  
+      idCenario: :idCenario  
 
 regracenario:
   model: tb_regra_cenario
@@ -25,13 +29,13 @@ regracenario:
     nomeRegra:
       column: nome
     regraDe:
-      column: rerga_de
+      column: regra_de
     regraPara:
       column: regra_para
     tipoRegra:
       column: tipo_regra
     idCenario:
-      column: idCenario
+      column: id_cenario
   filters:
     byIdCenario: 
       idCenario: :idCenario

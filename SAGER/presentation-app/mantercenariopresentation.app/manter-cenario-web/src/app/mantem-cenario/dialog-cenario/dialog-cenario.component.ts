@@ -47,7 +47,7 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   get titulo() {
-    return this.data.id ? "Alterar" : "Incluir";
+    return this.data.idCenario ? "Alterar" : "Incluir";
   }
 
   listarUsinas() {
@@ -112,6 +112,8 @@ export class DialogCenarioComponent implements OnInit {
 
   incluirRegra() {
 
+    var regra = new RegraCritica()
+    regra.idCenario = this.data.idCenario;
     this.data.regras.push(new RegraCritica());
   }
 
