@@ -15,7 +15,7 @@ class TarefaDAO {
         return this.domainPromiseHelper.postDomainPromise(urlInserirTarefa, args);
     }
 
-    createTarefaRetifcacaoArgs(nomeTarefa) {
+    createTarefaRetificacaoArgs(nomeTarefa) {
         return {
             data: [{
                 "nome": nomeTarefa,
@@ -52,7 +52,7 @@ class TarefaDAO {
 
     modificarChangeTrack(entidades, changeTrack) {
         entidades.forEach(evento => {
-            evento._metadata['changeTrack'] = 'destroy';
+            evento._metadata['changeTrack'] = changeTrack;
         });
     }
 

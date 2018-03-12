@@ -3,22 +3,22 @@ const TarefaDAO = require('../../dao/tarefadao');
 describe('TarefaDAO deve:', function () {
     let tarefaDAO;
 
-    beforeEach(function() {
+    beforeEach(function () {
         tarefaDAO = new TarefaDAO();
-      });
+    });
 
     it('Retornar o payload para inserção de tarefas:', () => {
-        let payloadInsertTarefa = tarefaDAO.createTarefaRetifcacaoArgs('TAREFA_2');
+        let payloadInsertTarefa = tarefaDAO.createTarefaRetificacaoArgs('TAREFA_2');
 
         expect(payloadInsertTarefa).toEqual({
             data: [{
-                "nome": 'TAREFA_2',
-                "_metadata": {
-                    "type": "tarefaretificacao",
-                    "changeTrack": "create",
-                    "branch": "master"
+                'nome': 'TAREFA_2',
+                '_metadata': {
+                    'type': 'tarefaretificacao',
+                    'changeTrack': 'create',
+                    'branch': 'master'
                 }
-            }], headers: { "Content-Type": "application/json" }
+            }], headers: { 'Content-Type': 'application/json' }
         });
 
     });
@@ -66,7 +66,7 @@ describe('TarefaDAO deve:', function () {
                     type: 'eventomudancaestadooperativotarefa', changeTrack: 'create', branch: 'master'
                 }
             }
-        ], headers: { "Content-Type": "application/json" }
+            ], headers: { 'Content-Type': 'application/json' }
         });
 
     });
@@ -114,14 +114,14 @@ describe('TarefaDAO deve:', function () {
                     type: 'eventomudancaestadooperativotarefa', changeTrack: 'create', branch: 'master'
                 }
             }
-        ], headers: { "Content-Type": "application/json" }
+            ], headers: { 'Content-Type': 'application/json' }
         });
 
     });
 
 
     it('Retornar o payload para exclusão de tarefas:', () => {
-        let payloadDeleteTarefaRetificacao = tarefaDAO.createExcluirTarefaRetifcacaoArgs('d1223476-3f46-496a-9b89-7ffaf0fff580');
+        let payloadDeleteTarefaRetificacao = tarefaDAO.createExcluirTarefaRetificacaoArgs('d1223476-3f46-496a-9b89-7ffaf0fff580');
 
         expect(payloadDeleteTarefaRetificacao).toEqual({
             data: [{
@@ -130,9 +130,41 @@ describe('TarefaDAO deve:', function () {
                     type: 'tarefaretificacao', changeTrack: 'destroy', branch: 'master'
                 }
             }
-        ], headers: { "Content-Type": "application/json" }
+            ], headers: { 'Content-Type': 'application/json' }
         });
 
+    });
+
+    it('Retornar o payload para exclusão de tarefas:', () => {
+        let entidades = [
+            {
+                '_metadata': {
+                    'branch': 'master',
+                    'type': 'tarefa'
+                },
+            },
+            {
+                '_metadata': {
+                    'branch': 'master',
+                    'type': 'tarefa'
+                },
+            }];
+
+        tarefaDAO.modificarChangeTrack(entidades, 'destroy');
+        expect(entidades).toEqual([{
+            '_metadata': {
+                'branch': 'master',
+                'type': 'tarefa',
+                'changeTrack': 'destroy'
+            },
+        },
+            {
+                '_metadata': {
+                    'branch': 'master',
+                    'type': 'tarefa',
+                    'changeTrack': 'destroy'
+                },
+            }]);
     });
 
 });
