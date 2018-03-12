@@ -114,7 +114,7 @@ export class DialogCenarioComponent implements OnInit {
 
     var regra = new RegraCritica()
     regra.idCenario = this.data.idCenario;
-    this.data.regras.push(new RegraCritica());
+    this.data.regras.push(regra);
   }
 
   onNoClick(): void {

@@ -31,8 +31,8 @@ class CenarioBusiness {
      */
     alterarCenario(cenario) {
 
-        var urlCenario = config.getUrlFiltroCenarioPorId(cenario.id);
-        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenario.id);
+        var urlCenario = config.getUrlFiltroCenarioPorId(cenario.idCenario);
+        var urlRegras = config.getUrlFiltroRegrasPorIdCenario(cenario.idCenario);
 
         var promiseCenario = this.domainPromiseHelper.getDomainPromise(urlCenario);
         var promiseRegras = this.domainPromiseHelper.getDomainPromise(urlRegras);
@@ -85,12 +85,13 @@ class CenarioBusiness {
                         var contem = regrasbd.any(it => { return regracenario.id == it.id });
 
                         if (!contem) {
-                            regracenario.idCenario = cenario.id;
+                            regracenario.idCenario = cenario.idCenario;
                             regracenario._metadata = { changeTrack: CHANGETRACK_CREATE, type: TypeRegraCenario };
                             listapersist.push(regracenario);
                         }
                     });
 
+                    console.log(JSON.stringify(listapersist))
                     var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
                         config.URL_CENARIO_SAGER_PERSIST, listapersist);
 
@@ -127,8 +128,7 @@ class CenarioBusiness {
                 listapersist.push(it);
             });
         }
-        console.log(JSON.stringify(listapersist))
-
+        
         var promiseCenarioUpdate = this.domainPromiseHelper.postDomainPromise(
             config.URL_CENARIO_SAGER_PERSIST, listapersist);
 

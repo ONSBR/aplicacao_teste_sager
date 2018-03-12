@@ -34,6 +34,10 @@ export class MantemCenarioComponent implements OnInit {
     const body = this.filtroConsulta;
     this.http.post(url, body).subscribe(data => {
       this.cenarios = <Cenario[]>data;
+      this.cenarios.forEach(it => {
+        it.dataInicioVigencia = this.ajustarDataCalendario(it.dataInicioVigencia);
+        it.dataFimVigencia = this.ajustarDataCalendario(it.dataFimVigencia);
+      })
     });
   }
 
@@ -68,9 +72,16 @@ export class MantemCenarioComponent implements OnInit {
     });
   }
 
+  private ajustarDataCalendario(dataAjuste) {
+    var idx = dataAjuste.indexOf('T');
+    return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;    
+  }
+
   alterar(cenario) {
 
     this.cenarioSelecionado = clone(cenario);
+    this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
+    this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
 
     var url = environment.urlServerPresentation + environment.obterRegrasCriticas +
       '?idCenario=' + this.cenarioSelecionado.idCenario;
@@ -121,23 +132,18 @@ export class MantemCenarioComponent implements OnInit {
       if (result) {
 
         var cenario = findCenario(this.cenarios, result);
-        if (cenario) {
-          cenario.nomeCenario = result.nomeCenario;
-          cenario.dataInicioVigencia = result.dataInicioVigencia;
-          cenario.dataFimVigencia = result.dataFimVigencia;
-          cenario.justificativa = result.justificativa;
-
-          this.confirmarAlteracao(cenario);
-
-        } else {
+        if (!cenario) {
+          
           cenario = result;
           cenario.idCenario = Guid.newGuid();
           cenario.situacao = SituacaoCenario.Ativo;
 
-          // TODO STATIC this.cenarios.push(cenario);
           this.confirmarInclusao(cenario);
+
+        } else {
+
+          this.confirmarAlteracao(result);
         }
-        this.cenarioSelecionado = cenario;
       }
     });
   }
