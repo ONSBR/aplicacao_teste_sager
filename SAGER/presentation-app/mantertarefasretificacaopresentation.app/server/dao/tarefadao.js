@@ -11,7 +11,7 @@ class TarefaDAO {
     inserirTarefa(nomeTarefa) {
         let urlInserirTarefa = config.getUrlInserirTarefa();
         console.log('urlInserirTarefa= ' + urlInserirTarefa);
-        let args = this.createTarefaRetifcacaoArgs(nomeTarefa);
+        let args = this.createTarefaRetificacaoArgs(nomeTarefa);
         return this.domainPromiseHelper.postDomainPromise(urlInserirTarefa, args);
     }
 

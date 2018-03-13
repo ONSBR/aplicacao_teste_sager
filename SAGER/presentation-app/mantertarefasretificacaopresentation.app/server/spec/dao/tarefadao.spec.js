@@ -135,7 +135,7 @@ describe('TarefaDAO deve:', function () {
 
     });
 
-    it('Retornar o payload para exclusão de tarefas:', () => {
+    it('Modifica o change do track:', () => {
         let entidades = [
             {
                 '_metadata': {
@@ -166,6 +166,13 @@ describe('TarefaDAO deve:', function () {
                 },
             }]);
     });
+
+    // it('Retorna o promise para a inserção de tarefas:', () => {
+    //     // spyOn(tarefaDAO.domainPromiseHelper, 'postDomainPromise').and.returnValue('teste');
+    //     let insertPromise = tarefaDAO.inserirTarefa('teste');
+
+        
+    // });
 
 });
 

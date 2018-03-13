@@ -17,7 +17,7 @@ describe('EventoDAO deve:', function () {
             resolve([{id: '1'}]);
         });
         eventoDAO.domainPromiseHelper.getDomainPromise = 
-            spyOn(eventoDAO.domainPromiseHelper, 'getDomainPromise').andReturn(promiseUge);
+            spyOn(eventoDAO.domainPromiseHelper, 'getDomainPromise').and.returnValue(promiseUge);
         let promiseUGE = eventoDAO.pesquisarUGEs(1);
         promiseUGE.then(uges => {
             expect(uges[0].id).toBe('1');
@@ -39,7 +39,7 @@ describe('EventoDAO deve:', function () {
             resolve([{id: '1'}]);
         });
         eventoDAO.domainPromiseHelper.getDomainPromise = 
-            spyOn(eventoDAO.domainPromiseHelper, 'getDomainPromise').andReturn(promiseEvento);
+            spyOn(eventoDAO.domainPromiseHelper, 'getDomainPromise').and.returnValue(promiseEvento);
         let promiseEventos = eventoDAO.getEventosPorDataeUGe('1', '2017-01-01', '2017-12-31');
         promiseEventos.then(uges => {
             expect(uges[0].id).toBe('1');
