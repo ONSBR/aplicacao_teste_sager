@@ -2,7 +2,7 @@ const UsinaDAO = require('../../dao/usinadao');
 const config = require('../../config');
 
 describe('TarefaDAO deve:', function () {
-    let tarefaDAO;
+    let usinaDAO;
     let promise;
 
     beforeEach(function () {
@@ -17,7 +17,7 @@ describe('TarefaDAO deve:', function () {
     it('Listar todas as usinas:', (done) => {
         usinaDAO.listarUsinas().then(data => {
             expect(data.id).toBe('1');
-            expect(tarefaDAO.domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith(config.URL_USINA_SAGER);
+            expect(usinaDAO.domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith(config.URL_USINA_SAGER);
             done();
         });
     });
