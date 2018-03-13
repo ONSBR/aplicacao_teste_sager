@@ -26,10 +26,10 @@
   },
   "devDependencies": {
     "nyc": "^11.6.0"
-  },
+  }, 
   "nyc": {
     "exclude": [
-      "*.spec.js"
+      "*spec.js", "*Spec.js"
     ],
     "all": true
   }
