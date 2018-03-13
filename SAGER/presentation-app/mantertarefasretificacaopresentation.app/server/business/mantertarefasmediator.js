@@ -7,6 +7,8 @@ class ManterTarefasMediator {
 
     constructor() {
         this.tarefaDAO = new TarefaDAO();
+        this.XLSX = XLSX;
+        this.parseEventosXlsx = parseEventosXlsx;
     }
 
     inserirTarefa(nomeTarefa) {
@@ -18,7 +20,7 @@ class ManterTarefasMediator {
     }
 
     uploadplanilha(nomeTarefa, file) {
-        let planilha = XLSX.read(file.data);
+        let planilha = this.XLSX.read(file.data);
         return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
     }
 
@@ -53,26 +55,31 @@ class ManterTarefasMediator {
 
     downloadPlanilha(nomeTarefa) {
         return new Promise((resolve, reject) => {
-            this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(nomeTarefa).then(eventosRetificacoes => {
-                let parseFileTemplate = parseEventosXlsx.factory();
-                parseFileTemplate.eventos = eventosRetificacoes;
-                let contentXlsx = parseFileTemplate.parse();
-                resolve(contentXlsx);
-            }).catch(error => {
+            try {
+                this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(nomeTarefa).then(eventosRetificacoes => {
+                    let parseFileTemplate = this.parseEventosXlsx.factory();
+                    parseFileTemplate.eventos = eventosRetificacoes;
+                    let contentXlsx = parseFileTemplate.parse();
+                    resolve(contentXlsx);
+                });
+            } catch (error) {
                 console.log(error);
                 reject(error);
-            });
+            }
         });
     }
 
     excluirTarefa(tarefa) {
         return new Promise((resolve, reject) => {
-            this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
-                resolve(this.tarefaDAO.excluirTarefa(tarefa.id, eventos));
-            });
-        }).catch(error => {
-            console.log(error);
-            reject(error);
+            try {
+                this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
+                    let deleteEventos = this.tarefaDAO.excluirTarefa(tarefa.id, eventos);
+                    resolve(deleteEventos);
+                });
+            } catch (error) {
+                console.log(`Erro ao excluir tarefa: ${error}`);
+                reject(error);
+            }
         });
     }
 

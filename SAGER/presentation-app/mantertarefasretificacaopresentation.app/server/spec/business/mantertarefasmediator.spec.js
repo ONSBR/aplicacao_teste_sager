@@ -4,8 +4,26 @@ const EventoMudancaEstadoOperativoTarefa = require('../../model/eventomudancaest
 
 describe('ManterTarefasMediator deve:', function () {
 
+    let manterTarefasMediator;
+
+    beforeEach(function () {
+        manterTarefasMediator = new ManterTarefasMediator();
+        promise = new Promise((resolve, reject) => {
+            resolve([{ id: '1' }]);
+        });
+
+        spyOn(manterTarefasMediator.tarefaDAO, 'inserirTarefa').and.callFake(function (nomeTarefa) { });
+        spyOn(manterTarefasMediator.tarefaDAO, 'consultarEventosRetificacaoPorNomeTarefa').and.returnValue(promise);
+        spyOn(manterTarefasMediator.tarefaDAO, 'listarTarefas').and.returnValue(promise);
+        spyOn(manterTarefasMediator.parseEventosXlsx, 'factory').and.returnValue({
+            parse() {
+                return 'content xlsx';
+            }
+        });
+
+    });
+
     it('Preencher os eventos de retificação através de uma planilha:', () => {
-        let manterTarefasMediator = new ManterTarefasMediator();
         let planilha = ManterTarefasMediatorSpecHelper.criarPlanilha();
         let nomeTarefa = 'tarefaTeste';
         let eventosRetificacao = manterTarefasMediator.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha);
@@ -20,6 +38,36 @@ describe('ManterTarefasMediator deve:', function () {
         expect(eventosRetificacao[0].potenciaDisponivel).toBe('');
         expect(eventosRetificacao[0].dataVerificada).toBeUndefined();
         expect(eventosRetificacao[0].operacao).toBe('i');
+    });
+
+    it('Insere uma tarefa:', () => {
+        manterTarefasMediator.inserirTarefa('tarefa teste');
+        expect(manterTarefasMediator.tarefaDAO.inserirTarefa).toHaveBeenCalledWith('tarefa teste');
+    });
+
+    it('Listar tarefas:', () => {
+        manterTarefasMediator.listarTarefas();
+        expect(manterTarefasMediator.tarefaDAO.listarTarefas).toHaveBeenCalled();
+    });
+
+    it('Realizar download da planilha de eventos:', (done) => {
+        manterTarefasMediator.downloadPlanilha('tarefateste').then(data => {
+            expect(data).toBe('content xlsx');
+            done();
+        }).catch(error => {
+            console.log(`Test error ${error}`)
+        });
+    });
+
+    it('Excluir as tarefas:', (done) => {
+        spyOn(manterTarefasMediator.tarefaDAO, 'excluirTarefa').and.returnValue(promise);
+        let tarefa = {id: '1', nome : 'tarefateste'};
+        manterTarefasMediator.excluirTarefa(tarefa).then(data => {
+            expect(data[0].id).toBe('1');
+            done();
+        }).catch(error => {
+            console.log(`Test error ${error}`)
+        });
     });
 
 });
