@@ -4,7 +4,7 @@
   "description": "Manter Tarefas de retificação backend",
   "main": "app.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "nyc jasmine"
   },
   "repository": {
     "type": "git",
