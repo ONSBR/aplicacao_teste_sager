@@ -1,10 +1,18 @@
 const TarefaDAO = require('../../dao/tarefadao');
+const config = require('../../config');
 
 describe('TarefaDAO deve:', function () {
     let tarefaDAO;
+    let promise;
 
     beforeEach(function () {
         tarefaDAO = new TarefaDAO();
+        promise = new Promise((resolve, reject) => {
+            resolve({ id: '1' });
+        });
+
+        spyOn(tarefaDAO.domainPromiseHelper, 'postDomainPromise').and.returnValue(promise);
+        spyOn(tarefaDAO.domainPromiseHelper, 'getDomainPromise').and.returnValue(promise);
     });
 
     it('Retornar o payload para inserção de tarefas:', () => {
@@ -158,22 +166,60 @@ describe('TarefaDAO deve:', function () {
                 'changeTrack': 'destroy'
             },
         },
-            {
-                '_metadata': {
-                    'branch': 'master',
-                    'type': 'tarefa',
-                    'changeTrack': 'destroy'
-                },
-            }]);
+        {
+            '_metadata': {
+                'branch': 'master',
+                'type': 'tarefa',
+                'changeTrack': 'destroy'
+            },
+        }]);
     });
 
-    // it('Retorna o promise para a inserção de tarefas:', () => {
-    //     // spyOn(tarefaDAO.domainPromiseHelper, 'postDomainPromise').and.returnValue('teste');
-    //     let insertPromise = tarefaDAO.inserirTarefa('teste');
+    it('Retorna o promise para a inserção de tarefas:', (done) => {
+        tarefaDAO.inserirTarefa('teste').then(data => {
+            expect(data.id).toBe('1');
+            expect(tarefaDAO.domainPromiseHelper.postDomainPromise).toHaveBeenCalled();
+            done();
+        });
 
-        
-    // });
+    });
 
+    it('Retorna o promise para a exclusão de tarefas:', (done) => {
+        tarefaDAO.excluirTarefa('1', [{_metadata: {}}]).then(data => {
+            expect(data.id).toBe('1');
+            expect(tarefaDAO.domainPromiseHelper.postDomainPromise).toHaveBeenCalled();
+            done();
+        });
+
+    });
+
+    it('Retorna o promise para a consulta de eventos por nome de tarefa:', (done) => {
+        tarefaDAO.consultarEventosRetificacaoPorNomeTarefa('tarefateste').then(data => {
+            expect(data.id).toBe('1');
+            expect(tarefaDAO.domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith('http://localhost:2117/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=tarefateste');
+            done();
+        });
+    });
+
+    it('Lista todas as tarefas:', (done) => {
+        tarefaDAO.listarTarefas().then(data => {
+            expect(data.id).toBe('1');
+            expect(tarefaDAO.domainPromiseHelper.getDomainPromise).toHaveBeenCalledWith(config.URL_TAREFAS);
+            done();
+        });
+    });
+
+    it('Insere eventos de retificação:', (done) => {
+        tarefaDAO.inserirEventosRetificacao([{id:'1'}, {id:'2'}]).then(data => {
+            expect(data.id).toBe('1');
+            expect(tarefaDAO.domainPromiseHelper.postDomainPromise).toHaveBeenCalled();
+            done();
+        });
+    });
+
+    
+
+    
 });
 
 
