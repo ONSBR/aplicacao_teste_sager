@@ -1,9 +1,10 @@
 const EventoDAO = require('../dao/eventodao');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 class EventoMediator {
-    
+
     constructor() {
         this.eventoDAO = new EventoDAO();
+        this.parseEventosXlsx = parseEventosXlsx;
     }
 
     pesquisarEventos(idsUsinas, dataInicial, dataFinal) {
@@ -12,6 +13,7 @@ class EventoMediator {
                 let uges;
                 this.eventoDAO.pesquisarUGEs(idsUsinas).
                     then(ugesPesquisa => {
+                        console.log('-------------------');
                         uges = ugesPesquisa;
                         return this.eventoDAO.getEventosPorDataeUGe(this.extrairIdsUges(uges).join(';'),
                             dataInicial.toISOString().slice(0, 10), dataFinal.toISOString().slice(0, 10));
@@ -30,7 +32,8 @@ class EventoMediator {
     }
 
     downloadPlanilhaEventos(uges, eventos, dataInicial, dataFinal) {
-        let parseFileTemplate = parseEventosXlsx.factory(uges, dataInicial, dataFinal, eventos);
+        console.log('++++++++++');
+        let parseFileTemplate = this.parseEventosXlsx.factory(uges, dataInicial, dataFinal, eventos);
         let contentXlsx = parseFileTemplate.parse();
         return contentXlsx;
     }
