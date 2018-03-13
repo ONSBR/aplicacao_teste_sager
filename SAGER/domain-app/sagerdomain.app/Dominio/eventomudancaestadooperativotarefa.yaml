@@ -14,7 +14,7 @@ tb_evt_estado_oper_tarefa:
   id_cond_oper:
     - string
   data_verificada:
-    - date
+    - datetime
   pot_disp:
     - double
   operacao:
