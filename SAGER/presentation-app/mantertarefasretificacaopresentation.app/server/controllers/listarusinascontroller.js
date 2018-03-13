@@ -16,7 +16,10 @@ class ListarUsinasController {
     listarUsinas(request, response) {
         this.usinaMediator.listarUsinas().
             then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a consulta de usinas: ${e.toString()}`) });
+            catch(e => {
+                console.log(`Erro durante a consulta de usinas: ${e.toString()}`);
+                response.send(e);
+            });
     }
 
 }
