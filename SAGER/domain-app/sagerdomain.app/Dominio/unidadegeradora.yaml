@@ -4,6 +4,6 @@ tb_unidade_geradora:
   pot_disp:
     - double
   data_inicio_operacao:
-    - date
+    - datetime
   id_usina:
     - string
