@@ -2,7 +2,7 @@ const ListarUsinasController = require('../../controllers/listarusinascontroller
 
 describe('ListarUsinasController deve:', function () {
 
-    it('Listar as usinas', () => {
+    it('Listar as usinas', (done) => {
         let listarUsinasController = new ListarUsinasController();
         let promiseUsina = new Promise((resolve) => {
             resolve({idUsina : 'ALUXG'});
@@ -12,10 +12,10 @@ describe('ListarUsinasController deve:', function () {
         let response = {
             send(value) {
                 expect(value.idUsina).toBe('ALUXG');
+                done();
             }
         }
         let request = {};
-        spyOn(response, 'send');
         listarUsinasController.listarUsinas(request, response);
     });
 

@@ -15,7 +15,7 @@ class ListarUsinasController {
      */
     listarUsinas(request, response) {
         this.usinaMediator.listarUsinas().
-            then(data => { response.send(data) }).
+            then(data => {response.send(data) }).
             catch(e => {
                 console.log(`Erro durante a consulta de usinas: ${e.toString()}`);
                 response.status(400).send({ error: error.toString() });
