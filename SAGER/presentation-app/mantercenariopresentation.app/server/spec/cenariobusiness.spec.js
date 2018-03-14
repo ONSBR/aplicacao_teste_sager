@@ -117,6 +117,43 @@ describe('CenarioBusiness: ', function () {
         });
     });
 
+    it('Inserir cenário, sem definir identificador no cenário.', () => {
+        
+        var cenario = datatest.cenario;
+        cenario.idCenario = null;
+        
+        cenarioBusiness.inserirCenario(cenario).then(res => {
+            
+            var listapersist = result[config.URL_CENARIO_SAGER_PERSIST + 'res'];
+
+            var cenariotest = listapersist[0];
+            var regra1 = listapersist[1];
+            var regra2 = listapersist[2];
+
+            expect(cenariotest.idCenario).toBeDefined();
+            expect(cenariotest.nomeCenario).toEqual(cenario.nomeCenario);
+            expect(cenariotest.dataInicioVigencia).toEqual(cenario.dataInicioVigencia);
+            expect(cenariotest.dataFimVigencia).toEqual(cenario.dataFimVigencia);
+            expect(cenariotest.justificativa).toEqual(cenario.justificativa);
+            expect(cenariotest._metadata.changeTrack).toEqual("create");
+
+            expect(regra1.idCenario).toEqual(cenariotest.idCenario);
+            expect(regra1.nomeRegra).toEqual(cenario.regras[0].nomeRegra);
+            expect(regra1.regraDe).toEqual(cenario.regras[0].regraDe);
+            expect(regra1.regraPara).toEqual(cenario.regras[0].regraPara);
+            expect(regra1.tipoRegra).toEqual(cenario.regras[0].tipoRegra);
+            expect(regra1._metadata.changeTrack).toEqual("create");
+
+            expect(regra2.idCenario).toEqual(cenariotest.idCenario);
+            expect(regra2.nomeRegra).toEqual(cenario.regras[1].nomeRegra);
+            expect(regra2.regraDe).toEqual(cenario.regras[1].regraDe);
+            expect(regra2.regraPara).toEqual(cenario.regras[1].regraPara);
+            expect(regra2.tipoRegra).toEqual(cenario.regras[1].tipoRegra);
+            expect(regra2._metadata.changeTrack).toEqual("create");
+
+        });
+    });
+
     it('Excluir cenário.', () => {
         
         var cenariobd = datatest.cenariobd;
