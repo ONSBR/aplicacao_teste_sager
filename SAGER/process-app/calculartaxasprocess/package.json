@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "istanbul cover --include-all-sources jasmine-node spec"
+        "test": "nyc jasmine"
     },
     "keywords": [],
     "author": "",
@@ -12,10 +12,18 @@
     "dependencies": {
         "csvtojson": "^1.1.9",
         "jasmine-core": "^2.9.1",
-        "jasmine-node": "^1.14.5",
         "linq": "^3.0.9",
         "moment": "^2.20.1",
         "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master",
         "unirest": "^0.5.1"
+    },
+    "devDependencies": {
+      "nyc": "^11.6.0"
+    }, 
+    "nyc": {
+      "exclude": [
+        "*spec.js", "*Spec.js"
+      ],
+      "all": true
     }
 }
