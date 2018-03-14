@@ -7,22 +7,31 @@ describe('EventoMediator deve:', function () {
     beforeEach(function () {
         eventoMediator = new EventoMediator();
         let promiseUge = new Promise((resolve) => {
-            return [{idUge: 'ALUXG-1'}, {idUge: 'ALUXG-2'}];
+            resolve([{idUge: 'ALUXG-1'}, {idUge: 'ALUXG-2'}]);
         });
         let promiseEventos = new Promise((resolve) => {
-            return [{id: '1'}, {id: '2'}];
+            resolve([{id: '1'}, {id: '2'}]);
         });
         spyOn(eventoMediator.eventoDAO, 'pesquisarUGEs').and.returnValue(promiseUge);
         spyOn(eventoMediator.eventoDAO, 'getEventosPorDataeUGe').and.returnValue(promiseEventos);
+
+        let parseFileTemplate = {
+            parse() {
+                return 'planilha';
+            }
+        };
+
+        spyOn(eventoMediator.parseEventosXlsx, 'factory').and.returnValue(parseFileTemplate);
     });
 
-    it('Retornar uma planilha com eventos com base na pesquisa:', () => {
-        // eventoMediator.pesquisarEventos('ALUXG', new Date(2018, 01, 01), new Date(2018, 12, 31)).then(data => {
-        //     done();
-        // }).catch(error => {
-        //     console.log('test error:' + error);
-        //     done();
-        // });
+    it('Retornar uma planilha com eventos com base na pesquisa:', (done) => {
+        eventoMediator.pesquisarEventos('ALUXG', new Date(2018, 01, 01), new Date(2018, 12, 31)).then(data => {
+            expect(data).toBe('planilha');
+            done();
+        }).catch(error => {
+            console.log('test error:' + error);
+            done();
+        });
     });
 
     it('Extrair ids das uges para um array:', () => {

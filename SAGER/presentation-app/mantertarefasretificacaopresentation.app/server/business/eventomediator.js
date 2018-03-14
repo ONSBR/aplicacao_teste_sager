@@ -13,7 +13,6 @@ class EventoMediator {
                 let uges;
                 this.eventoDAO.pesquisarUGEs(idsUsinas).
                     then(ugesPesquisa => {
-                        console.log('-------------------');
                         uges = ugesPesquisa;
                         return this.eventoDAO.getEventosPorDataeUGe(this.extrairIdsUges(uges).join(';'),
                             dataInicial.toISOString().slice(0, 10), dataFinal.toISOString().slice(0, 10));
@@ -32,7 +31,6 @@ class EventoMediator {
     }
 
     downloadPlanilhaEventos(uges, eventos, dataInicial, dataFinal) {
-        console.log('++++++++++');
         let parseFileTemplate = this.parseEventosXlsx.factory(uges, dataInicial, dataFinal, eventos);
         let contentXlsx = parseFileTemplate.parse();
         return contentXlsx;

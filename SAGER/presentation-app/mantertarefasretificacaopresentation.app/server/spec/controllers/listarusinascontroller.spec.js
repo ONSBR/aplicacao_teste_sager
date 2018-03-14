@@ -11,13 +11,14 @@ describe('ListarUsinasController deve:', function () {
 
         let response = {
             send(value) {
+                expect(value.idUsina).toBe('ALUXG');
             }
         }
         let request = {};
         spyOn(response, 'send');
         listarUsinasController.listarUsinas(request, response);
-        expect(response.send).toHaveBeenCalled();
     });
+
 });
 
 
