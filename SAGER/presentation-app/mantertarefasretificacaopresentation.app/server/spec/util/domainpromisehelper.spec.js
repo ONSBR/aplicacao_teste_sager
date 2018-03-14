@@ -13,7 +13,7 @@ describe('domainpromisehelperspec deve:', function () {
         });
     });
 
-    it('Gerar uma promise para realizar um post:', () => {
+    it('Gerar uma promise para realizar um post:', (done) => {
         let domainPromiseHelper = new DomainPromiseHelper();
         let promise = domainPromiseHelper.postDomainPromise('urlTeste');
 
