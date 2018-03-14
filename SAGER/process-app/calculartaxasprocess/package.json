@@ -22,7 +22,7 @@
     }, 
     "nyc": {
       "exclude": [
-        "*spec.js", "*Spec.js"
+        "./spec/*spec.js", "*Spec.js", "./spec/_script/load_data_test.js"
       ],
       "all": true
     }
