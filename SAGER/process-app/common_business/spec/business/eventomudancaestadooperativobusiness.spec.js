@@ -1,11 +1,7 @@
 const EventoMudancaEstadoOperativoBusiness = require('../../business/eventomudancaestadooperativobusiness');
 
 describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
-    let eventoMudancaEstadoOperativoBusiness;
-
-    beforeEach(function () {
-        eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
-    });
+    let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
     it('Validar a existência de um evento de Entrada Em Operação comercial(EOC):', () => {
         let eventosComUmEOC = [{ idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'LIG' },
@@ -25,19 +21,19 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     it('Preencher o campo disponibilidade com a potência vigente quando a condição operativa for NOR, NOT ou TST:', () => {
         let uge = { potenciaDisponivel: 250 };
 
-        let eventoNOR = { idCondicaoOperativa: 'NOR', potenciaDisponivel: undefined };
+        let eventoNOR = { idCondicaoOperativa: 'NOR', potenciaDisponivel: undefined, idEstadoOperativo: 'LIG' };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoNOR, uge);
         expect(eventoNOR.potenciaDisponivel).toEqual(uge.potenciaDisponivel);
 
-        let eventoNOT = { idCondicaoOperativa: 'NOT', potenciaDisponivel: undefined };
+        let eventoNOT = { idCondicaoOperativa: 'NOT', potenciaDisponivel: undefined, idEstadoOperativo: 'LIG' };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoNOT, uge);
         expect(eventoNOT.potenciaDisponivel).toEqual(uge.potenciaDisponivel);
 
-        let eventoTST = { idCondicaoOperativa: 'TST', potenciaDisponivel: undefined };
+        let eventoTST = { idCondicaoOperativa: 'TST', potenciaDisponivel: undefined, idEstadoOperativo: 'LIG' };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoTST, uge);
         expect(eventoTST.potenciaDisponivel).toEqual(uge.potenciaDisponivel);
 
-        let eventoComDisponibilidadePreenchida = { idCondicaoOperativa: 'TST', potenciaDisponivel: 500 };
+        let eventoComDisponibilidadePreenchida = { idCondicaoOperativa: 'TST', potenciaDisponivel: 500, idEstadoOperativo: 'LIG' };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoComDisponibilidadePreenchida, uge);
         expect(eventoComDisponibilidadePreenchida.potenciaDisponivel).toEqual(500);
     });
@@ -45,22 +41,34 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     it('Preencher o campo disponibilidade com zero quando o estado operativo for desligado exceto DCO:', () => {
         let uge = { potenciaDisponivel: 250 };
 
-        let eventoDEM = { idCondicaoOperativa: 'DEM', potenciaDisponivel: undefined };
+        let eventoDEM = { idEstadoOperativo: 'DEM', potenciaDisponivel: undefined };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDEM, uge);
         expect(eventoDEM.potenciaDisponivel).toEqual(0);
 
-        let eventoDCA = { idCondicaoOperativa: 'DCA', potenciaDisponivel: undefined };
+        let eventoDCA = { idEstadoOperativo: 'DCA', potenciaDisponivel: undefined };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCA, uge);
         expect(eventoDCA.potenciaDisponivel).toEqual(0);
 
-        let eventoTST = { idCondicaoOperativa: 'DES', potenciaDisponivel: undefined };
+        let eventoTST = { idEstadoOperativo: 'DES', potenciaDisponivel: undefined };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoTST, uge);
         expect(eventoTST.potenciaDisponivel).toEqual(0);
 
-        let eventoDCO = { idCondicaoOperativa: 'DCO', potenciaDisponivel: undefined };
+        let eventoDCO = { idEstadoOperativo: 'DCO', potenciaDisponivel: undefined };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCO, uge);
         expect(eventoDCO.potenciaDisponivel).toBeUndefined();
     });
+
+    it('Verificar Evento DCO Apos Lig:', () => {
+        let listaComUmEvento = [{id: '1'}];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(listaComUmEvento)).toBeTruthy();
+
+        let eventos = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300 }];
+
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventos)).toBeTruthy();
+    });
+
 
 });
 
