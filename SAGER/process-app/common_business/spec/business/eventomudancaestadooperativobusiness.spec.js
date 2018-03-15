@@ -18,8 +18,48 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
         let eventosComDoisEOC = [{ idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'LIG' },
         { idEstadoOperativo: 'EOC' }];
-        
+
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
+    });
+
+    it('Preencher o campo disponibilidade com a potência vigente quando a condição operativa for NOR, NOT ou TST:', () => {
+        let uge = { potenciaDisponivel: 250 };
+
+        let eventoNOR = { idCondicaoOperativa: 'NOR', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoNOR, uge);
+        expect(eventoNOR.potenciaDisponivel).toEqual(uge.potenciaDisponivel);
+
+        let eventoNOT = { idCondicaoOperativa: 'NOT', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoNOT, uge);
+        expect(eventoNOT.potenciaDisponivel).toEqual(uge.potenciaDisponivel);
+
+        let eventoTST = { idCondicaoOperativa: 'TST', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoTST, uge);
+        expect(eventoTST.potenciaDisponivel).toEqual(uge.potenciaDisponivel);
+
+        let eventoComDisponibilidadePreenchida = { idCondicaoOperativa: 'TST', potenciaDisponivel: 500 };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoComDisponibilidadePreenchida, uge);
+        expect(eventoComDisponibilidadePreenchida.potenciaDisponivel).toEqual(500);
+    });
+
+    it('Preencher o campo disponibilidade com zero quando o estado operativo for desligado exceto DCO:', () => {
+        let uge = { potenciaDisponivel: 250 };
+
+        let eventoDEM = { idCondicaoOperativa: 'DEM', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDEM, uge);
+        expect(eventoDEM.potenciaDisponivel).toEqual(0);
+
+        let eventoDCA = { idCondicaoOperativa: 'DCA', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCA, uge);
+        expect(eventoDCA.potenciaDisponivel).toEqual(0);
+
+        let eventoTST = { idCondicaoOperativa: 'DES', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoTST, uge);
+        expect(eventoTST.potenciaDisponivel).toEqual(0);
+
+        let eventoDCO = { idCondicaoOperativa: 'DCO', potenciaDisponivel: undefined };
+        eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCO, uge);
+        expect(eventoDCO.potenciaDisponivel).toBeUndefined();
     });
 
 });
