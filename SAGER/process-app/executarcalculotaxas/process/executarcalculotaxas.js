@@ -6,8 +6,9 @@ const executor = require("./business/executorcalculotaxas");
  */
 SDK.run((context, resolve, reject, eventManager) => {
 
+    console.log("ENTRYPOINT PRINCIPAL DO PROCESSO");
     console.log("Executando o calculo de taxas");
-
+    //console.log(JSON.stringify(context,null,4));
     try {
         executor.executarCalculoTaxas(context, eventManager);
         resolve();

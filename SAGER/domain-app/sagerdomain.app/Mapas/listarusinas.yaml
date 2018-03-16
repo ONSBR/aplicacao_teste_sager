@@ -15,9 +15,7 @@ usina:
       required: true
     agente:
       column: agente
-      required: true      
+      required: true
   filters:
-    byName:
-      nome: :nome 
-    byIdUsina:
-      id: :idUsina  
+    byName: "nome = :nome"
+    byIdUsina: "id_usina = :idUsina"

@@ -18,10 +18,15 @@ cenario:
     idUsina:
       column: id_usina
   filters:
+<<<<<<< HEAD
     byNome: 
       nome: :nomeCenario
     byId: 
       idCenario: :idCenario  
+=======
+    byNome: "nome = :nomeCenario"
+    byId: "id = :idCenario"
+>>>>>>> origin/feature/migracao-padrao-novo
 
 regracenario:
   model: tb_regra_cenario
@@ -37,6 +42,7 @@ regracenario:
     idCenario:
       column: id_cenario
   filters:
+<<<<<<< HEAD
     byIdCenario: 
       idCenario: :idCenario
     byId: 
@@ -73,3 +79,7 @@ usina:
   filters:
     all:
       
+=======
+    byIdCenario: "id_cenario = :idCenario"
+    byId: "id = :idRegra"
+>>>>>>> origin/feature/migracao-padrao-novo

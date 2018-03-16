@@ -8,9 +8,9 @@ const PeriodoCalculo = require("./periodocalculo");
 /**
  * @description Inicia a execução dos cálculos de taxas para o fechamento, para todas as usina.
  * Dispara a solicitação de cálculo de taxa para todas as usinas do sistema.
- * 
- * @param {Context} contexto 
- * @param {EventManagerClient} eventManager 
+ *
+ * @param {Context} contexto
+ * @param {EventManagerClient} eventManager
  */
 module.exports.executarCalculoTaxas = function (contexto, eventManager) {
 
@@ -27,7 +27,7 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
     var dataAtual = evento.reference_date ? evento.reference_date : new Date();
 
     if (!fechamento) {
-        // Na aplicação de testes o fechamento por não existir, 
+        // Na aplicação de testes o fechamento por não existir,
         // então é criada para efeito de cálculo
         fechamento = new FechamentoMensal(
             utils.guid(),
@@ -74,18 +74,18 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
 /**
  * @description Responsável por emitir os eventos de execução do cálculo de taxas para as usinas,
  * tanto taxas mensais quanto acumuladas.
- * 
+ *
  * @function eventEmitTaxByUsina
- * @param {EventManagerClient} eventManager 
- * @param {json} _payload 
+ * @param {EventManagerClient} eventManager
+ * @param {json} _payload
  */
 function eventEmitTaxByUsina(eventManager, _payload) {
 
     eventManager.emit({
         name: eventCatalog.calculate_tax_by_usina,
         payload: _payload
-    }).then(result => {
-        console.log("Usina: " + it.idUsina);
+    }).then(it => {
+        console.log("Evento disparado");
     }).catch(error => {
         console.log("Error Usina: " + error.stack);
     });

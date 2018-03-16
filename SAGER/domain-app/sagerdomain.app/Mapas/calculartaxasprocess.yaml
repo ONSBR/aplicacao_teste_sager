@@ -1,5 +1,5 @@
 execucaocalculofechamento:
-  model: tb_execucao_calculo_fechamento
+  model: tb_exec_calc_fech
   fields:
     id:
       column: id
@@ -16,9 +16,7 @@ execucaocalculofechamento:
     idFechamento:
       column: id_fechamento
   filters:
-    byId:
-      - id:
-          $eq: :idExecucaoCalculo
+    byId: "id = :idExecucaoCalculo"
 
 fechamentomensal:
   model: tb_fechamento_mensal
@@ -32,9 +30,7 @@ fechamentomensal:
     dataCriacao:
       column: data_criacao
   filters:
-    byId:
-      - id:
-          $eq: :idFechamento
+    byId: "id = :idFechamento"
 
 taxa:
   model: tb_taxa
@@ -48,12 +44,7 @@ taxa:
     idUsina:
       column: id_usina
   filters:
-    byUsinaEFechamento:
-      $and:
-        - idUsina:
-            $eq: :idUsina
-        - idFechamento:
-            $eq: :idFechamento
+    byUsinaEFechamento: "id_usina = :idUsina and id_fechamento = :idFechamento"
 
 usina:
   model: tb_usina
@@ -68,9 +59,7 @@ usina:
       column: nome
       required: true
   filters:
-    byIdUsina:
-      - idUsina:
-          $eq: :idUsina
+    byIdUsina: "id_usina = :idUsina"
 
 unidadegeradora:
   model: tb_unidade_geradora
@@ -78,40 +67,34 @@ unidadegeradora:
     idUge:
       column: id_uge
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     dataInicioOperacao:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
   filters:
-    byIdUsina:
-      - idUsina:
-          $eq: :idUsina
+    byIdUsina: "id_usina = :idUsina"
 
-eventomudancaestadooperativo: 
-  model: tb_evento_mudanca_estado_operativo
+eventomudancaestadooperativo:
+  model: tb_evt_estado_oper
   fields:
-    idEvento: 
+    idEvento:
       column: id_evento
     idUge:
       column: id_uge
     idClassificacaoOrigem:
-      column: id_classificacao_origem
+      column: id_class_origem
     idEstadoOperativo:
-      column: id_tipo_estado_operativo
+      column: id_tp_estado_oper
     idCondicaoOperativa:
-      column: id_condicao_operativa
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
   filters:
-    byIntervaloDatas:
-      $and:
-        - dataVerificada:
-            $gte: :dataInicialEvento
-        - dataVerificada:
-            $lte: :dataFinalEvento
+    byIntervaloDatas: "data_verificada >= :dataInicialEvento and data_verificada <= :dataFinalEvento"
+
 
 parametrotaxa:
   model: tb_parametro_taxa
@@ -123,17 +106,12 @@ parametrotaxa:
     idUge:
       column: id_uge
     idFechamento:
-      column: id_fechamento    
+      column: id_fechamento
     idExecucaoCalculoFechamento:
-      column: id_execucao_calculo_fechamento
+      column: id_exec_calc_fech
     mes:
       column: mes
     ano:
       column: ano
   filters:
-    byUsinaEFechamento:
-      $and:
-        - idFechamento:
-            $eq: :idFechamento
-        - idExecucaoCalculoFechamento:
-            $eq: :idExecucaoCalculo
+    byUsinaEFechamento: "id_fechamento = :idFechamento and id_exec_calc_fech = :idExecucaoCalculo"

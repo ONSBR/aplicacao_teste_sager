@@ -7,11 +7,10 @@ tb_parametro_taxa:
     - string
   id_fechamento:
     - string
-  id_execucao_calculo_fechamento:
+  id_exec_calc_fech:
     - string
   mes:
     - integer
   ano:
     - integer
 
-    
