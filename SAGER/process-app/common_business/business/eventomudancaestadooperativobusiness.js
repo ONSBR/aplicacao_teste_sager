@@ -85,7 +85,7 @@ class EventoMudancaEstadoOperativoBusiness {
     refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos) {
         for (let i = 0; i < eventos.length; i++) {
             if (this.isEventoAlteracao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
-                this.refletirAlteracoesParaEventosEspelhos(eventos[i], eventos, i+1);
+                this.refletirAlteracoesParaEventosEspelhos(eventos[i], eventos, i + 1);
             }
         }
     }
@@ -103,7 +103,7 @@ class EventoMudancaEstadoOperativoBusiness {
 
     isEventoEspelho(evento, eventoAnterior) {
         return eventoAnterior != undefined &&
-            eventoAnterior.dataVerificada.getMonth() != evento.dataVerificada.getMonth() && 
+            eventoAnterior.dataVerificada.getMonth() != evento.dataVerificada.getMonth() &&
             evento.dataVerificada.getDate() == 1 && evento.dataVerificada.getHours() == 0 && evento.dataVerificada.getMinutes() == 0;
     }
 
@@ -115,7 +115,22 @@ class EventoMudancaEstadoOperativoBusiness {
         return eventoPosterior != undefined &&
             evento.dataVerificada.getMonth() != eventoPosterior.dataVerificada.getMonth();
     }
+    /**
+     * RNI095 - Exclusão do evento origem do "Evento-Espelho"
+     * Caso o evento origem do"Evento-Espelho" seja excluído, ele passará a acompanhar as alterações do ‘novo’ último evento do mês anterior.
+     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     */
+    refletirAlteracoesQuandoUltimoEventoMesExcluido(eventos) { 
+        for (let i = 0; i < eventos.length; i++) {
+            if(this.isEventoExclusao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
+                this.refletirAlteracoesParaEventosEspelhos(eventos[i-1], eventos, i + 1);
+            }
+        }
+    }
 
+    isEventoExclusao(evento) {
+        return evento.operacao != undefined && evento.operacao == 'E';
+    }
 }
 
 module.exports = EventoMudancaEstadoOperativoBusiness;
