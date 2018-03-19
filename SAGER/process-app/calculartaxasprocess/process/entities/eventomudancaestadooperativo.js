@@ -6,7 +6,7 @@ const BaseEntity = require("./_baseentity");
  * @description Entidade que representa o evento da mudança de estado operativo da undidade geradora.
  */
 module.exports = class EventoMudancaEstadoOperativo extends BaseEntity {
-    
+
     constructor(id, idEvento, idUge, idClassificacaoOrigem, idEstadoOperativo, idCondicaoOperativa, dataVerificada, potenciaDisponivel) {
         super();
         this.id = id;
@@ -22,8 +22,8 @@ module.exports = class EventoMudancaEstadoOperativo extends BaseEntity {
 
     /**
      * @method gerarDataVerificadaEmSegundos
-     * @param {EventoMudancaEstadoOperativo} evento 
-     * @description Método para gerar o campo de data verificada equivalente em segundos, para usar em cálculos e comparações, 
+     * @param {EventoMudancaEstadoOperativo} evento
+     * @description Método para gerar o campo de data verificada equivalente em segundos, para usar em cálculos e comparações,
      * na mais baixa unidade de tempo considerada nos cálculos.
      */
     static gerarDataVerificadaEmSegundos(evento) {

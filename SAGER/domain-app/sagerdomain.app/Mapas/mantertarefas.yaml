@@ -4,43 +4,34 @@ unidadegeradora:
     idUge:
       column: id_uge
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     dataInicioOperacao:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
   filters:
-    byIdUsina: 
-      idUsina:
-        $in: 
-          - :idsUsinas
+    byIdUsina:  "id_usina in ($idsUsinas)"
 
-eventomudancaestadooperativo: 
-  model: tb_evento_mudanca_estado_operativo
+eventomudancaestadooperativo:
+  model: tb_evt_estado_oper
   fields:
-    idEvento: 
+    idEvento:
       column: id_evento
     idUge:
       column: id_uge
     idClassificacaoOrigem:
-      column: id_classificacao_origem
+      column: id_class_origem
     idEstadoOperativo:
-      column: id_tipo_estado_operativo
+      column: id_tp_estado_oper
     idCondicaoOperativa:
-      column: id_condicao_operativa
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
   filters:
-    byIntervaloDatas:
-      $and:
-        - dataVerificada:
-            $gte: :dataInicial
-        - dataVerificada:
-            $lte: :dataFinal
-        - idUge:
-            $in: $idsUges
+    byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
+
 
 usina:
   model: tb_usina
@@ -59,12 +50,10 @@ usina:
       required: true
     agente:
       column: agente
-      required: true      
+      required: true
   filters:
-    byName:
-      nome: :nome 
-    byIdUsina:
-      id: :idUsina              
+    byName: "nome = :nome"
+    byIdUsina: "id_usina = :idUsina"
 
 tarefaretificacao:
   model: tb_tarefa_retificacao
@@ -73,29 +62,28 @@ tarefaretificacao:
       column: nome
       required: true
 
-eventomudancaestadooperativotarefa: 
-  model: tb_evento_mudanca_estado_operativo_tarefa
+eventomudancaestadooperativotarefa:
+  model: tb_evt_estado_oper_tarefa
   fields:
-    idUsina: 
+    idUsina:
       column: id_usina
-    idEvento: 
+    idEvento:
       column: id_evento
-    nomeTarefa: 
-      column: nome_tarefa  
+    nomeTarefa:
+      column: nome_tarefa
     idUge:
       column: id_uge
     idClassificacaoOrigem:
-      column: id_classificacao_origem
+      column: id_class_origem
     idEstadoOperativo:
-      column: id_tipo_estado_operativo
+      column: id_tp_estado_oper
     idCondicaoOperativa:
-      column: id_condicao_operativa
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     operacao:
-      column: operacao      
+      column: operacao
   filters:
-    byNomeTarefa:
-      nomeTarefa: :nometarefa 
+    byNomeTarefa: "nome_tarefa = :nometarefa"

@@ -18,10 +18,8 @@ cenario:
     idUsina:
       column: id_usina
   filters:
-    byNome: 
-      nome: :nomeCenario
-    byId: 
-      idCenario: :idCenario  
+    byNome: "nome = :nomeCenario"
+    byId: "id = :idCenario"
 
 regracenario:
   model: tb_regra_cenario
@@ -37,10 +35,8 @@ regracenario:
     idCenario:
       column: id_cenario
   filters:
-    byIdCenario: 
-      idCenario: :idCenario
-    byId: 
-      id: :idRegra
+    byIdCenario: "id_cenario = :idCenario"
+    byId: "id = :idRegra"
 
 unidadegeradora:
   model: tb_unidade_geradora
@@ -54,9 +50,7 @@ unidadegeradora:
     idUsina:
       column: id_usina
   filters:
-    byIdUsina:
-      - idUsina:
-          $eq: :idUsina
+    byIdUsina: "id_usina = :idUsina"
 
 usina:
   model: tb_usina
