@@ -68,6 +68,8 @@ class EventoMudancaEstadoOperativoBusiness {
             return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) &&
                 (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) &&
                 (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)
+        } else {
+            return true;
         }
     }
 
