@@ -115,6 +115,7 @@ class EventoMudancaEstadoOperativoBusiness {
         return eventoPosterior != undefined &&
             evento.dataVerificada.getMonth() != eventoPosterior.dataVerificada.getMonth();
     }
+
     /**
      * RNI095 - Exclusão do evento origem do "Evento-Espelho"
      * Caso o evento origem do"Evento-Espelho" seja excluído, ele passará a acompanhar as alterações do ‘novo’ último evento do mês anterior.
@@ -130,6 +131,27 @@ class EventoMudancaEstadoOperativoBusiness {
 
     isEventoExclusao(evento) {
         return evento.operacao != undefined && evento.operacao == 'E';
+    }
+
+    /**
+     * RNI205 - Eventos de mudança de estado operativo consecutivos com os mesmos valores de estado operativo, condição operativa, 
+     * origem e disponibilidade: Caso existam eventos de mudança de estado operativo consecutivos com os mesmos valores de estado 
+     * operativo, condição operativa, origem e disponibilidade, exceto no caso do evento espelho, preservar o primeiro evento e 
+     * excluir os demais eventos consecutivos que estão com os mesmos valores de estado operativo, condição operativa, 
+     * origem e disponibilidade, exceto o evento espelho.
+     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     */
+    excluirEventosConsecutivosSemelhantes(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            for (let j = i+1; j < eventos.length; j++) {
+                if(eventos[i].idEstadoOperativo == eventos[j].idEstadoOperativo && 
+                    eventos[i].idCondicaoOperativa == eventos[j].idCondicaoOperativa && 
+                    eventos[i].idClassificacaoOrigem == eventos[j].idClassificacaoOrigem && 
+                    eventos[i].potenciaDisponivel == eventos[j].potenciaDisponivel && !this.isEventoEspelho(eventos[j], eventos[j-1])) {
+                        eventos[j].operacao = 'E';
+                }
+            }
+        }
     }
 }
 
