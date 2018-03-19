@@ -4,17 +4,28 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
     it('Validar a existência de um evento de Entrada Em Operação comercial(EOC):', () => {
-        let eventosComUmEOC = [{ idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'LIG' },
-        { idEstadoOperativo: 'LCC' }];
+        let eventosComUmEOC = [{ idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 100}, 
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 100}, 
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200},
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300}];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC)).toBeTruthy();
 
-        let eventosComUmEOC2 = [{ idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' },
-        { idEstadoOperativo: 'LCC' }];
+        let eventosComUmEOC2 = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100}, 
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200}, 
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200},
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300}];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2)).toBeTruthy();
 
-        let eventosComDoisEOC = [{ idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'LIG' },
-        { idEstadoOperativo: 'EOC' }];
+        let eventosComDoisEOC = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100}, 
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200}, 
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200},
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300}];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
 
+        let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100}, 
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200}, 
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 300},
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 400}];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
     });
 

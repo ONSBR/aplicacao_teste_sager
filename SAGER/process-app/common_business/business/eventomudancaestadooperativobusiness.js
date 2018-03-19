@@ -8,18 +8,31 @@ class EventoMudancaEstadoOperativoBusiness {
      */
     verificarUnicidadeEventoEntradaOperacaoComercial(eventosMudancasEstadosOperativos) {
         let countEventosEOC = 0;
+        let tempoEmSegundosEOC;
+        let encontrouEventoSimultaneoAoEOC = false;
+
         eventosMudancasEstadosOperativos.forEach(evento => {
             // FIXME constantes
             if (evento.idEstadoOperativo == 'EOC') {
                 countEventosEOC++;
+                tempoEmSegundosEOC = evento.dataVerificadaEmSegundos;
+                console.log('tempoEmSegundosEOC = ' +tempoEmSegundosEOC);
+            }
+
+            console.log('-----------------');
+            console.log(evento.idEstadoOperativo != 'EOC');
+            console.log(tempoEmSegundosEOC != undefined);
+            console.log(evento.dataVerificadaEmSegundos == tempoEmSegundosEOC);
+            console.log('-----------------');
+            
+            if (evento.idEstadoOperativo != 'EOC' && tempoEmSegundosEOC != undefined &&
+                evento.dataVerificadaEmSegundos == tempoEmSegundosEOC) {
+                encontrouEventoSimultaneoAoEOC = true;
             }
         });
 
-        if (countEventosEOC > 1) {
-            return false;
-        }
 
-        return true;
+        return countEventosEOC == 1 && encontrouEventoSimultaneoAoEOC;
     }
 
     /**
