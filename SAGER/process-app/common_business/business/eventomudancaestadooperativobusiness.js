@@ -16,21 +16,13 @@ class EventoMudancaEstadoOperativoBusiness {
             if (evento.idEstadoOperativo == 'EOC') {
                 countEventosEOC++;
                 tempoEmSegundosEOC = evento.dataVerificadaEmSegundos;
-                console.log('tempoEmSegundosEOC = ' +tempoEmSegundosEOC);
             }
 
-            console.log('-----------------');
-            console.log(evento.idEstadoOperativo != 'EOC');
-            console.log(tempoEmSegundosEOC != undefined);
-            console.log(evento.dataVerificadaEmSegundos == tempoEmSegundosEOC);
-            console.log('-----------------');
-            
             if (evento.idEstadoOperativo != 'EOC' && tempoEmSegundosEOC != undefined &&
                 evento.dataVerificadaEmSegundos == tempoEmSegundosEOC) {
                 encontrouEventoSimultaneoAoEOC = true;
             }
         });
-
 
         return countEventosEOC == 1 && encontrouEventoSimultaneoAoEOC;
     }
@@ -84,6 +76,44 @@ class EventoMudancaEstadoOperativoBusiness {
         } else {
             return true;
         }
+    }
+
+    /**
+     * RNH064 - Reflexão de alteração de último evento em evento espelho
+     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     */
+    refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (this.isEventoAlteracao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
+                this.refletirAlteracoesParaEventosEspelhos(eventos[i], eventos, i+1);
+            }
+        }
+    }
+
+    refletirAlteracoesParaEventosEspelhos(eventoAlterado, eventos, indicePosteriorEventoAlterado) {
+        for (let i = indicePosteriorEventoAlterado; i < eventos.length; i++) {
+            if (this.isEventoEspelho(eventos[i], eventos[i - 1])) {
+                eventos[i].idClassificacaoOrigem = eventoAlterado.idClassificacaoOrigem;
+                eventos[i].idEstadoOperativo = eventoAlterado.idEstadoOperativo;
+                eventos[i].idCondicaoOperativa = eventoAlterado.idCondicaoOperativa;
+                eventos[i].potenciaDisponivel = eventoAlterado.potenciaDisponivel;
+            }
+        }
+    }
+
+    isEventoEspelho(evento, eventoAnterior) {
+        return eventoAnterior != undefined &&
+            eventoAnterior.dataVerificada.getMonth() != evento.dataVerificada.getMonth() && 
+            evento.dataVerificada.getDate() == 1 && evento.dataVerificada.getHours() == 0 && evento.dataVerificada.getMinutes() == 0;
+    }
+
+    isEventoAlteracao(evento) {
+        return evento.operacao != undefined && evento.operacao == 'A';
+    }
+
+    isUltimoEventoMes(evento, eventoPosterior) {
+        return eventoPosterior != undefined &&
+            evento.dataVerificada.getMonth() != eventoPosterior.dataVerificada.getMonth();
     }
 
 }

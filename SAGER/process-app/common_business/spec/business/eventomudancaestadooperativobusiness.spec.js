@@ -4,28 +4,28 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
     it('Validar a existência de um evento de Entrada Em Operação comercial(EOC):', () => {
-        let eventosComUmEOC = [{ idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 100}, 
-        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 100}, 
-        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200},
-        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300}];
+        let eventosComUmEOC = [{ idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC)).toBeTruthy();
 
-        let eventosComUmEOC2 = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100}, 
-        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200}, 
-        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200},
-        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300}];
+        let eventosComUmEOC2 = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2)).toBeTruthy();
 
-        let eventosComDoisEOC = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100}, 
-        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200}, 
-        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200},
-        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300}];
+        let eventosComDoisEOC = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
 
-        let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100}, 
-        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200}, 
-        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 300},
-        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 400}];
+        let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 300 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 400 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
     });
 
@@ -70,26 +70,49 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     });
 
     it('Verificar Evento DCO Apos Lig:', () => {
-        let listaComUmEvento = [{id: '1'}];
+        let listaComUmEvento = [{ id: '1' }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(listaComUmEvento)).toBeTruthy();
 
         let eventosRFO = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
+        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
         { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RFO' }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRFO)).toBeTruthy();
 
         let eventosRPR = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
+        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
         { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRPR)).toBeTruthy();
 
 
         let eventosLIG = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
+        { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
         { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosLIG)).toBeTruthy();
     });
 
+
+    it('Refletir ultima alteração do mês em evento espelho:', () => {
+        let eventos = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'A'},
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I'},
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR',  idClassificacaoOrigem: 'GGE',potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        let eventosAlterados = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'A'},
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+        
+        eventoMudancaEstadoOperativoBusiness.refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos);
+        expect(eventos).toEqual(eventosAlterados);
+    });
 
 });
 
