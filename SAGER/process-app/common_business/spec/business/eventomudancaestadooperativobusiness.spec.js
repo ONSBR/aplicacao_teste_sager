@@ -55,18 +55,31 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
         let eventoDCO = { idEstadoOperativo: 'DCO', potenciaDisponivel: undefined };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCO, uge);
-        expect(eventoDCO.potenciaDisponivel).toBeUndefined();
+        expect(eventoDCO.potenciaDisponivel).toBe(uge.potenciaDisponivel);
     });
 
     it('Verificar Evento DCO Apos Lig:', () => {
         let listaComUmEvento = [{id: '1'}];
         expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(listaComUmEvento)).toBeTruthy();
 
-        let eventos = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        let eventosRFO = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
         { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
-        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300 }];
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RFO' }];
 
-        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventos)).toBeTruthy();
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRFO)).toBeTruthy();
+
+        let eventosRPR = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
+
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRPR)).toBeTruthy();
+
+
+        let eventosLIG = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
+
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosLIG)).toBeTruthy();
     });
 
 

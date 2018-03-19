@@ -8,18 +8,18 @@ class EventoMudancaEstadoOperativoBusiness {
      */
     verificarUnicidadeEventoEntradaOperacaoComercial(eventosMudancasEstadosOperativos) {
         let countEventosEOC = 0;
-        let retorno = true;
         eventosMudancasEstadosOperativos.forEach(evento => {
             // FIXME constantes
             if (evento.idEstadoOperativo == 'EOC') {
                 countEventosEOC++;
-                if (countEventosEOC > 1) {
-                    retorno = false;
-                }
             }
         });
 
-        return retorno;
+        if (countEventosEOC > 1) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -34,13 +34,13 @@ class EventoMudancaEstadoOperativoBusiness {
         if (!evento.potenciaDisponivel) {
 
             const NOR_NOT_TST = ['NOR', 'NOT', 'TST'];
+            const ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
             if (NOR_NOT_TST.includes(evento.idCondicaoOperativa)) {
                 evento.potenciaDisponivel = uge.potenciaDisponivel;
-            }
-
-            const ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
-            if (ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO.includes(evento.idEstadoOperativo)) {
+            } else if (ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO.includes(evento.idEstadoOperativo)) {
                 evento.potenciaDisponivel = 0;
+            } else {
+                evento.potenciaDisponivel = uge.potenciaDisponivel;
             }
         }
     }
@@ -63,11 +63,11 @@ class EventoMudancaEstadoOperativoBusiness {
     }
 
     compararEventos(eventoAnterior, evento) {
-        if (eventoAnterior.idEstadoOperativo == 'LIG' && evento.idEstadoOperativo == 'DCO' &&
-            evento.idClassificacaoOrigem != 'GRE') {
-            return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) && 
-                        (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) && 
-                            (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel) 
+        if (eventoAnterior.idEstadoOperativo == 'LIG' && (eventoAnterior.idCondicaoOperativa == 'RFO' || eventoAnterior.idCondicaoOperativa == 'RPR')
+            && eventoAnterior.idClassificacaoOrigem != 'GRE' && evento.idEstadoOperativo == 'DCO') {
+            return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) &&
+                (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) &&
+                (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)
         }
     }
 
