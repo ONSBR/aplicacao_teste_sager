@@ -174,7 +174,7 @@ class EventoMudancaEstadoOperativoBusiness {
 
             if (UtilCalculoParametro.gte_10_2014(eventos[i]) && 
                 eventos[i].idClassificacaoOrigem == 'GIC' &&
-                eventos[i].dataVerificada > dataVerificadaEOCApos24Meses) {
+                eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos24Meses.getTotalSeconds()) {
                 throw new Error('Evento GIC após 24 meses do EOC.');    
             }
         }
