@@ -1,3 +1,7 @@
+const UtilCalculoParametro = require('./utilcalculoparametro');
+const extensions = require("./extensions");
+var moment = require("moment");
+
 class EventoMudancaEstadoOperativoBusiness {
 
     /**
@@ -143,13 +147,35 @@ class EventoMudancaEstadoOperativoBusiness {
      */
     excluirEventosConsecutivosSemelhantes(eventos) {
         for (let i = 0; i < eventos.length; i++) {
-            if(eventos[i+1] != undefined) {
-                if (eventos[i].idEstadoOperativo == eventos[i+1].idEstadoOperativo &&
-                    eventos[i].idCondicaoOperativa == eventos[i+1].idCondicaoOperativa &&
-                    eventos[i].idClassificacaoOrigem == eventos[i+1].idClassificacaoOrigem &&
-                    eventos[i].potenciaDisponivel == eventos[i+1].potenciaDisponivel && !this.isEventoEspelho(eventos[i+1], eventos[i])) {
-                    eventos[i+1].operacao = 'E';
+            if (eventos[i + 1] != undefined) {
+                if (eventos[i].idEstadoOperativo == eventos[i + 1].idEstadoOperativo &&
+                    eventos[i].idCondicaoOperativa == eventos[i + 1].idCondicaoOperativa &&
+                    eventos[i].idClassificacaoOrigem == eventos[i + 1].idClassificacaoOrigem &&
+                    eventos[i].potenciaDisponivel == eventos[i + 1].potenciaDisponivel && !this.isEventoEspelho(eventos[i + 1], eventos[i])) {
+                    eventos[i + 1].operacao = 'E';
                 }
+            }
+        }
+    }
+    /**
+     *  RNI207 - Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014
+     *  Não pode haver registro de evento de Mudança de Estado Operativo com Origem “GIC” após 24 meses de operação comercial do Equipamento.
+     *  Regra válida antes de 10/2014:
+     *  Não pode haver registro de evento de Mudança de Estado Operativo com Origem “GIC” após 15000 horas de operação comercial do Equipamento (horas em serviço).
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarTempoLimiteFranquiaGIC(eventos) {
+        let dataVerificadaEOCApos24Meses;
+        for (let i = 0; i < eventos.length; i++) {
+
+            if (eventos[i].idEstadoOperativo == 'EOC') {
+                dataVerificadaEOCApos24Meses = moment(eventos[i].dataVerificada).add(24, 'month').toDate();
+            }
+
+            if (UtilCalculoParametro.gte_10_2014(eventos[i]) && 
+                eventos[i].idClassificacaoOrigem == 'GIC' &&
+                eventos[i].dataVerificada > dataVerificadaEOCApos24Meses) {
+                throw new Error('Evento GIC após 24 meses do EOC.');    
             }
         }
     }
