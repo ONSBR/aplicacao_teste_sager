@@ -30,12 +30,13 @@ class ReproducaoController {
         var evento = {
             name: "system.events.reproduction.request",
             reproduction: {
-                instance_id: request.body.instance_id,
-                //owner: request.body.presentationId,
-                //taxa_id: request.body.taxa_id
-                owner: request.body.taxa_id
+                instanceId: request.body.instance_id,
+                owner: request.body.presentationId,
+                externalId: request.body.taxa_id
             }
         };
+
+        console.log("evento: " + JSON.stringify(evento));
 
         //this.eventManager.emit(evento).then(res => {response.send(res)});
         return this.eventPromiseHelper.putEventPromise(evento).then(res => { response.send(res) });

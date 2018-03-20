@@ -14,16 +14,18 @@
         "jasmine-core": "^2.9.1",
         "linq": "^3.0.9",
         "moment": "^2.20.1",
-        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#feature/migracao-nova-versao",
+        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master",
         "unirest": "^0.5.1"
     },
     "devDependencies": {
-      "nyc": "^11.6.0"
-    }, 
+        "nyc": "^11.6.0"
+    },
     "nyc": {
-      "exclude": [
-        "./spec/*spec.js", "*Spec.js", "./spec/_script/load_data_test.js"
-      ],
-      "all": true
+        "exclude": [
+            "./spec/*spec.js",
+            "*Spec.js",
+            "./spec/_script/load_data_test.js"
+        ],
+        "all": true
     }
 }

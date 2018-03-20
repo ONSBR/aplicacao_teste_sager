@@ -18,7 +18,7 @@ cenario:
     idUsina:
       column: id_usina
   filters:
-    byNome: "nome = :nomeCenario"
+    byNome: "nome like :nomeCenario"
     byId: "id = :idCenario"
 
 regracenario:
@@ -44,7 +44,7 @@ unidadegeradora:
     idUge:
       column: id_uge
     potenciaDisponivel:
-      column: potencia_disponivel
+      column: pot_disp
     dataInicioOperacao:
       column: data_inicio_operacao
     idUsina:
