@@ -5,7 +5,6 @@ import { TarefaRetificacao } from '../model/TarefaRetificacao';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ResponseContentType } from '@angular/http';
-import { saveAs } from 'file-saver/FileSaver';
 import { RequestOptions } from '@angular/http/src/base_request_options';
 
 @Component({

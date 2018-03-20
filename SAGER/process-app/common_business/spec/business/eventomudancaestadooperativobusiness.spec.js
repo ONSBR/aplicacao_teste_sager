@@ -4,17 +4,28 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
     it('Validar a existência de um evento de Entrada Em Operação comercial(EOC):', () => {
-        let eventosComUmEOC = [{ idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'LIG' },
-        { idEstadoOperativo: 'LCC' }];
+        let eventosComUmEOC = [{ idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC)).toBeTruthy();
 
-        let eventosComUmEOC2 = [{ idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' },
-        { idEstadoOperativo: 'LCC' }];
+        let eventosComUmEOC2 = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2)).toBeTruthy();
 
-        let eventosComDoisEOC = [{ idEstadoOperativo: 'EOC' }, { idEstadoOperativo: 'LIG' }, { idEstadoOperativo: 'LIG' },
-        { idEstadoOperativo: 'EOC' }];
+        let eventosComDoisEOC = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
 
+        let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
+        { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
+        { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 300 },
+        { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 400 }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
     });
 
@@ -55,20 +66,240 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
         let eventoDCO = { idEstadoOperativo: 'DCO', potenciaDisponivel: undefined };
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCO, uge);
-        expect(eventoDCO.potenciaDisponivel).toBeUndefined();
+        expect(eventoDCO.potenciaDisponivel).toBe(uge.potenciaDisponivel);
     });
 
     it('Verificar Evento DCO Apos Lig:', () => {
-        let listaComUmEvento = [{id: '1'}];
+        let listaComUmEvento = [{ id: '1' }];
         expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(listaComUmEvento)).toBeTruthy();
 
-        let eventos = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300},
-        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300 }];
+        let eventosRFO = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RFO' }];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRFO)).toBeTruthy();
 
-        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventos)).toBeTruthy();
+        let eventosRPR = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRPR)).toBeTruthy();
+
+
+        let eventosLIG = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
+        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosLIG)).toBeTruthy();
     });
 
+
+    it('Refletir ultima alteração do mês em evento espelho:', () => {
+        let eventos = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'A' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        let eventosAlterados = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'A' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        eventoMudancaEstadoOperativoBusiness.refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos);
+        expect(eventos).toEqual(eventosAlterados);
+    });
+
+    it('Refletir ultima alteração do mês em eventos espelhos:', () => {
+        let eventos = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'A' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        let eventosAlterados = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'A' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        eventoMudancaEstadoOperativoBusiness.refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos);
+        expect(eventos).toEqual(eventosAlterados);
+    });
+
+    it('Não deve refletir alteração quando não for último evento do mês:', () => {
+        let eventos = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 30), operacao: 'A' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        let eventosAlterados = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 30), operacao: 'A' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        eventoMudancaEstadoOperativoBusiness.refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos);
+        expect(eventos).toEqual(eventosAlterados);
+    });
+
+    it('Quando o último evento do mês for excluído os eventos espelho passam a refletir o novo ultimo evento dos mês anterior:', () => {
+        let eventos = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 30) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'E' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        let eventosAlterados = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 30) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31), operacao: 'E' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 3, 1, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 4, 1, 9, 0), operacao: 'I' },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 700, dataVerificada: new Date(2017, 4, 15, 0, 0) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        eventoMudancaEstadoOperativoBusiness.refletirAlteracoesQuandoUltimoEventoMesExcluido(eventos);
+        expect(eventos).toEqual(eventosAlterados);
+    });
+
+    it('Quando um evento é excluído e ele não é o ultimo do mês nada deve ser refletido:', () => {
+        let eventos = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 30), operacao: 'E' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        let eventosAlterados = [
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 30), operacao: 'E' },
+            { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31) },
+            { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 5, 1, 9, 15), operacao: 'A' }];
+
+        eventoMudancaEstadoOperativoBusiness.refletirAlteracoesQuandoUltimoEventoMesExcluido(eventos);
+        expect(eventos).toEqual(eventosAlterados);
+    });
+
+    it('Eventos consecutivos com mesmo estado operativo, condição operativa, origem e disponibilidade, exceto no caso do evento espelho, o primeiro evento deve ser preservado ' +
+        'e os demais devem ser excluídos', () => {
+
+            let eventos = [
+                { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 30) },
+                { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 31) },
+                { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 1, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 2, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 3, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 400, dataVerificada: new Date(2017, 2, 1, 1, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 2, 30, 0, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 3, 2, 0, 0) }
+            ];
+
+            let eventosAlterados = [
+                { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 30) },
+                { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2017, 0, 31), operacao: 'E' },
+                { idEstadoOperativo: 'DUR', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 400, dataVerificada: new Date(2017, 0, 31) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 0, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 1, 0), operacao: 'E' },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 2, 0), operacao: 'E' },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 1, 1, 3, 0), operacao: 'E' },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 400, dataVerificada: new Date(2017, 2, 1, 1, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 2, 30, 0, 0) },
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 3, 2, 0, 0), operacao: 'E' }
+            ];
+
+            eventoMudancaEstadoOperativoBusiness.excluirEventosConsecutivosSemelhantes(eventos);
+            expect(eventos).toEqual(eventosAlterados);
+        });
+
+    it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014. Tempo limite para utilização da' +
+        'franquia GIC: Regra válida após 10/2014', () => {
+
+            let eventos = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 2) }
+            ];
+
+            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+
+            let eventosComGICApos24Meses = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
+            ];
+
+            try {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
+            } catch (error) {
+                expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
+            }
+        });
+
+    it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014', () => {
+
+            let eventos = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 2) }
+            ];
+
+            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+
+            let eventosComGICApos24Meses = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
+            ];
+
+            try {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
+            } catch (error) {
+                expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
+            }
+        });
+
+    it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida antes 10/2014.', () => {
+
+            let eventos = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 2) }
+            ];
+
+            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+
+            let eventosComGICApos15000Horas = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2005, 8, 18, 2, 0, 1) }
+            ];
+
+            try {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas);
+            } catch (error) {
+                expect(error.message).toBe('Evento GIC após 15000 horas do EOC.');
+            }
+        });
 
 });
 

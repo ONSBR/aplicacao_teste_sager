@@ -1,3 +1,7 @@
+const UtilCalculoParametro = require('./utilcalculoparametro');
+const extensions = require("./extensions");
+var moment = require("moment");
+
 class EventoMudancaEstadoOperativoBusiness {
 
     /**
@@ -8,18 +12,23 @@ class EventoMudancaEstadoOperativoBusiness {
      */
     verificarUnicidadeEventoEntradaOperacaoComercial(eventosMudancasEstadosOperativos) {
         let countEventosEOC = 0;
-        let retorno = true;
+        let tempoEmSegundosEOC;
+        let encontrouEventoSimultaneoAoEOC = false;
+
         eventosMudancasEstadosOperativos.forEach(evento => {
             // FIXME constantes
             if (evento.idEstadoOperativo == 'EOC') {
                 countEventosEOC++;
-                if (countEventosEOC > 1) {
-                    retorno = false;
-                }
+                tempoEmSegundosEOC = evento.dataVerificadaEmSegundos;
+            }
+
+            if (evento.idEstadoOperativo != 'EOC' && tempoEmSegundosEOC != undefined &&
+                evento.dataVerificadaEmSegundos == tempoEmSegundosEOC) {
+                encontrouEventoSimultaneoAoEOC = true;
             }
         });
 
-        return retorno;
+        return countEventosEOC == 1 && encontrouEventoSimultaneoAoEOC;
     }
 
     /**
@@ -34,13 +43,13 @@ class EventoMudancaEstadoOperativoBusiness {
         if (!evento.potenciaDisponivel) {
 
             const NOR_NOT_TST = ['NOR', 'NOT', 'TST'];
+            const ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
             if (NOR_NOT_TST.includes(evento.idCondicaoOperativa)) {
                 evento.potenciaDisponivel = uge.potenciaDisponivel;
-            }
-
-            const ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
-            if (ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO.includes(evento.idEstadoOperativo)) {
+            } else if (ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO.includes(evento.idEstadoOperativo)) {
                 evento.potenciaDisponivel = 0;
+            } else {
+                evento.potenciaDisponivel = uge.potenciaDisponivel;
             }
         }
     }
@@ -63,14 +72,125 @@ class EventoMudancaEstadoOperativoBusiness {
     }
 
     compararEventos(eventoAnterior, evento) {
-        if (eventoAnterior.idEstadoOperativo == 'LIG' && evento.idEstadoOperativo == 'DCO' &&
-            evento.idClassificacaoOrigem != 'GRE') {
-            return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) && 
-                        (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) && 
-                            (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel) 
+        if (eventoAnterior.idEstadoOperativo == 'LIG' && (eventoAnterior.idCondicaoOperativa == 'RFO' || eventoAnterior.idCondicaoOperativa == 'RPR')
+            && eventoAnterior.idClassificacaoOrigem != 'GRE' && evento.idEstadoOperativo == 'DCO') {
+            return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) &&
+                (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) &&
+                (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)
+        } else {
+            return true;
         }
     }
 
+    /**
+     * RNH064 - Reflexão de alteração de último evento em evento espelho
+     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     */
+    refletirAlteracaoDeUltimoEventoEmEventoespelho(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (this.isEventoAlteracao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
+                this.refletirAlteracoesParaEventosEspelhos(eventos[i], eventos, i + 1);
+            }
+        }
+    }
+
+    refletirAlteracoesParaEventosEspelhos(eventoAlterado, eventos, indicePosteriorEventoAlterado) {
+        for (let i = indicePosteriorEventoAlterado; i < eventos.length; i++) {
+            if (this.isEventoEspelho(eventos[i], eventos[i - 1])) {
+                eventos[i].idClassificacaoOrigem = eventoAlterado.idClassificacaoOrigem;
+                eventos[i].idEstadoOperativo = eventoAlterado.idEstadoOperativo;
+                eventos[i].idCondicaoOperativa = eventoAlterado.idCondicaoOperativa;
+                eventos[i].potenciaDisponivel = eventoAlterado.potenciaDisponivel;
+            }
+        }
+    }
+
+    isEventoEspelho(evento, eventoAnterior) {
+        return eventoAnterior != undefined &&
+            eventoAnterior.dataVerificada.getMonth() != evento.dataVerificada.getMonth() &&
+            evento.dataVerificada.getDate() == 1 && evento.dataVerificada.getHours() == 0 && evento.dataVerificada.getMinutes() == 0;
+    }
+
+    isEventoAlteracao(evento) {
+        return evento.operacao != undefined && evento.operacao == 'A';
+    }
+
+    isUltimoEventoMes(evento, eventoPosterior) {
+        return eventoPosterior != undefined &&
+            evento.dataVerificada.getMonth() != eventoPosterior.dataVerificada.getMonth();
+    }
+
+    /**
+     * RNI095 - Exclusão do evento origem do "Evento-Espelho"
+     * Caso o evento origem do"Evento-Espelho" seja excluído, ele passará a acompanhar as alterações do ‘novo’ último evento do mês anterior.
+     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     */
+    refletirAlteracoesQuandoUltimoEventoMesExcluido(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (this.isEventoExclusao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
+                this.refletirAlteracoesParaEventosEspelhos(eventos[i - 1], eventos, i + 1);
+            }
+        }
+    }
+
+    isEventoExclusao(evento) {
+        return evento.operacao != undefined && evento.operacao == 'E';
+    }
+
+    /**
+     * RNI205 - Eventos de mudança de estado operativo consecutivos com os mesmos valores de estado operativo, condição operativa, 
+     * origem e disponibilidade: Caso existam eventos de mudança de estado operativo consecutivos com os mesmos valores de estado 
+     * operativo, condição operativa, origem e disponibilidade, exceto no caso do evento espelho, preservar o primeiro evento e 
+     * excluir os demais eventos consecutivos que estão com os mesmos valores de estado operativo, condição operativa, 
+     * origem e disponibilidade, exceto o evento espelho.
+     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     */
+    excluirEventosConsecutivosSemelhantes(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (eventos[i + 1] != undefined) {
+                if (eventos[i].idEstadoOperativo == eventos[i + 1].idEstadoOperativo &&
+                    eventos[i].idCondicaoOperativa == eventos[i + 1].idCondicaoOperativa &&
+                    eventos[i].idClassificacaoOrigem == eventos[i + 1].idClassificacaoOrigem &&
+                    eventos[i].potenciaDisponivel == eventos[i + 1].potenciaDisponivel && !this.isEventoEspelho(eventos[i + 1], eventos[i])) {
+                    eventos[i + 1].operacao = 'E';
+                }
+            }
+        }
+    }
+    /**
+     *  RNI207 - Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014
+     *  Não pode haver registro de evento de Mudança de Estado Operativo com Origem “GIC” após 24 meses de operação comercial do Equipamento.
+     *  Regra válida antes de 10/2014:
+     *  Não pode haver registro de evento de Mudança de Estado Operativo com Origem “GIC” após 15000 horas de operação comercial do Equipamento (horas em serviço).
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarTempoLimiteFranquiaGIC(eventos) {
+        let dataVerificadaEOCApos24Meses;
+        let dataVerificadaEOCApos15000;
+        for (let i = 0; i < eventos.length; i++) {
+
+            if (eventos[i].idEstadoOperativo == 'EOC') {
+                dataVerificadaEOCApos24Meses = moment(eventos[i].dataVerificada).add(24, 'month').toDate();
+                dataVerificadaEOCApos15000 = moment(eventos[i].dataVerificada).add(15000, 'hours').toDate();
+            }
+
+            if(UtilCalculoParametro.gte_10_2014(eventos[i])) {
+                if(this.isEventoGIC(eventos[i]) &&
+                eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos24Meses.getTotalSeconds()) {
+                    throw new Error('Evento GIC após 24 meses do EOC.');    
+                }
+            } else {
+                if(this.isEventoGIC(eventos[i]) &&
+                    eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos15000.getTotalSeconds()) {
+                        throw new Error('Evento GIC após 15000 horas do EOC.');    
+                }
+            }
+        }
+    }
+
+    isEventoGIC(evento){
+        return evento.idClassificacaoOrigem == 'GIC';
+    }
 }
 
 module.exports = EventoMudancaEstadoOperativoBusiness;
