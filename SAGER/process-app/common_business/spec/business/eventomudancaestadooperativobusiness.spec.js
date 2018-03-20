@@ -255,6 +255,52 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             }
         });
 
+    it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014', () => {
+
+            let eventos = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 2) }
+            ];
+
+            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+
+            let eventosComGICApos24Meses = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
+            ];
+
+            try {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
+            } catch (error) {
+                expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
+            }
+        });
+
+    it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida antes 10/2014.', () => {
+
+            let eventos = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 2) }
+            ];
+
+            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+
+            let eventosComGICApos15000Horas = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2005, 8, 18, 2, 0, 1) }
+            ];
+
+            try {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas);
+            } catch (error) {
+                expect(error.message).toBe('Evento GIC após 15000 horas do EOC.');
+            }
+        });
+
 });
 
 

@@ -166,18 +166,30 @@ class EventoMudancaEstadoOperativoBusiness {
      */
     verificarTempoLimiteFranquiaGIC(eventos) {
         let dataVerificadaEOCApos24Meses;
+        let dataVerificadaEOCApos15000;
         for (let i = 0; i < eventos.length; i++) {
 
             if (eventos[i].idEstadoOperativo == 'EOC') {
                 dataVerificadaEOCApos24Meses = moment(eventos[i].dataVerificada).add(24, 'month').toDate();
+                dataVerificadaEOCApos15000 = moment(eventos[i].dataVerificada).add(15000, 'hours').toDate();
             }
 
-            if (UtilCalculoParametro.gte_10_2014(eventos[i]) && 
-                eventos[i].idClassificacaoOrigem == 'GIC' &&
+            if(UtilCalculoParametro.gte_10_2014(eventos[i])) {
+                if(this.isEventoGIC(eventos[i]) &&
                 eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos24Meses.getTotalSeconds()) {
-                throw new Error('Evento GIC após 24 meses do EOC.');    
+                    throw new Error('Evento GIC após 24 meses do EOC.');    
+                }
+            } else {
+                if(this.isEventoGIC(eventos[i]) &&
+                    eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos15000.getTotalSeconds()) {
+                        throw new Error('Evento GIC após 15000 horas do EOC.');    
+                }
             }
         }
+    }
+
+    isEventoGIC(evento){
+        return evento.idClassificacaoOrigem == 'GIC';
     }
 }
 
