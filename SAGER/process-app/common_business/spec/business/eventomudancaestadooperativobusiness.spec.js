@@ -225,7 +225,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
                 { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 300, dataVerificada: new Date(2017, 2, 1, 0, 0) },
                 { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 400, dataVerificada: new Date(2017, 2, 1, 1, 0) },
                 { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 2, 30, 0, 0) },
-                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 3, 2, 0, 0) }
+                { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2017, 3, 2, 0, 0), operacao: 'E' }
             ];
 
             eventoMudancaEstadoOperativoBusiness.excluirEventosConsecutivosSemelhantes(eventos);

@@ -121,10 +121,10 @@ class EventoMudancaEstadoOperativoBusiness {
      * Caso o evento origem do"Evento-Espelho" seja excluído, ele passará a acompanhar as alterações do ‘novo’ último evento do mês anterior.
      * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
      */
-    refletirAlteracoesQuandoUltimoEventoMesExcluido(eventos) { 
+    refletirAlteracoesQuandoUltimoEventoMesExcluido(eventos) {
         for (let i = 0; i < eventos.length; i++) {
-            if(this.isEventoExclusao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
-                this.refletirAlteracoesParaEventosEspelhos(eventos[i-1], eventos, i + 1);
+            if (this.isEventoExclusao(eventos[i]) && this.isUltimoEventoMes(eventos[i], eventos[i + 1])) {
+                this.refletirAlteracoesParaEventosEspelhos(eventos[i - 1], eventos, i + 1);
             }
         }
     }
@@ -143,12 +143,12 @@ class EventoMudancaEstadoOperativoBusiness {
      */
     excluirEventosConsecutivosSemelhantes(eventos) {
         for (let i = 0; i < eventos.length; i++) {
-            for (let j = i+1; j < eventos.length; j++) {
-                if(eventos[i].idEstadoOperativo == eventos[j].idEstadoOperativo && 
-                    eventos[i].idCondicaoOperativa == eventos[j].idCondicaoOperativa && 
-                    eventos[i].idClassificacaoOrigem == eventos[j].idClassificacaoOrigem && 
-                    eventos[i].potenciaDisponivel == eventos[j].potenciaDisponivel && !this.isEventoEspelho(eventos[j], eventos[j-1])) {
-                        eventos[j].operacao = 'E';
+            if(eventos[i+1] != undefined) {
+                if (eventos[i].idEstadoOperativo == eventos[i+1].idEstadoOperativo &&
+                    eventos[i].idCondicaoOperativa == eventos[i+1].idCondicaoOperativa &&
+                    eventos[i].idClassificacaoOrigem == eventos[i+1].idClassificacaoOrigem &&
+                    eventos[i].potenciaDisponivel == eventos[i+1].potenciaDisponivel && !this.isEventoEspelho(eventos[i+1], eventos[i])) {
+                    eventos[i+1].operacao = 'E';
                 }
             }
         }
