@@ -1,11 +1,11 @@
 var config = {};
 
 const DOMAIN_PORT = 8087;
-const DOMAIN_HOST = 'localhost';
-const PROCESS_MEMORY_HOST = 'localhost';
-const EVENT_MANAGER_HOST = 'localhost';
+const DOMAIN_HOST = 'sager-domain';
+const PROCESS_MEMORY_HOST = 'process_memory';
+const EVENT_MANAGER_HOST = 'event_manager';
 
-config.PORT = 8182;
+config.PORT = process.env.PORT || 8182;
 config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/mantertarefas/usina`;
 config.URL_TAREFAS = `http://localhost:${DOMAIN_PORT}/mantertarefas/tarefaretificacao`;
 
@@ -22,7 +22,7 @@ config.getUrlInserirTarefa = function getUrlInserirTarefa() {
 }
 
 config.getEventosRetificacaoPorNomeTarefa = function getEventosRetificacaoPorNomeTarefa(nomeTarefa) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=${nomeTarefa}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=${nomeTarefa}`;
 }
 
 

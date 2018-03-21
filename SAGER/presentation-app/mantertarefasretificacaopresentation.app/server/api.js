@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fileUpload = require('express-fileupload')
 const config = require('./config');
+var path     = require('path');
 const ListarUsinasController = require('./controllers/listarusinascontroller');
 const PesquisarEventosController = require('./controllers/pesquisareventoscontroller');
 const ManterTarefasController = require('./controllers/mantertarefascontroller');
@@ -12,7 +13,8 @@ const PORT = config.PORT;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
-app.use(express.static('dist'));
+//app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
