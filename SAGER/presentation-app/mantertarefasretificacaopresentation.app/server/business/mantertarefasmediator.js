@@ -2,6 +2,7 @@ const TarefaDAO = require('../dao/tarefadao');
 const XLSX = require('xlsx');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
+const dispatcher = require("../dispatcher/dispatcher");
 
 class ManterTarefasMediator {
 
@@ -10,15 +11,16 @@ class ManterTarefasMediator {
         this.XLSX = XLSX;
         this.parseEventosXlsx = parseEventosXlsx;
     }
-
+    //É uma transação independente
     inserirTarefa(nomeTarefa) {
-        return this.tarefaDAO.inserirTarefa(nomeTarefa);
+        return dispatcher.dispatch("presentation.insere.tarefa.request", {nomeTarefa: nomeTarefa});
     }
-
+    //Apenas Consulta
     listarTarefas() {
         return this.tarefaDAO.listarTarefas();
     }
 
+    //É uma outra Transação independente
     uploadplanilha(nomeTarefa, file) {
         let planilha = this.XLSX.read(file.data);
         return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
