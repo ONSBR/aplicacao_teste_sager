@@ -1,6 +1,5 @@
 const UtilCalculoParametro = require('./utilcalculoparametro');
 const extensions = require("./extensions");
-var moment = require("moment");
 
 class EventoMudancaEstadoOperativoBusiness {
 
@@ -170,27 +169,48 @@ class EventoMudancaEstadoOperativoBusiness {
         for (let i = 0; i < eventos.length; i++) {
 
             if (eventos[i].idEstadoOperativo == 'EOC') {
-                dataVerificadaEOCApos24Meses = moment(eventos[i].dataVerificada).add(24, 'month').toDate();
-                dataVerificadaEOCApos15000 = moment(eventos[i].dataVerificada).add(15000, 'hours').toDate();
+                dataVerificadaEOCApos24Meses = UtilCalculoParametro.adicionaMeses(eventos[i].dataVerificada, 24);
+                dataVerificadaEOCApos15000 = UtilCalculoParametro.adicionaHoras(eventos[i].dataVerificada, 15000);
             }
 
-            if(UtilCalculoParametro.gte_10_2014(eventos[i])) {
-                if(this.isEventoGIC(eventos[i]) &&
-                eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos24Meses.getTotalSeconds()) {
-                    throw new Error('Evento GIC após 24 meses do EOC.');    
+            if (UtilCalculoParametro.gte_10_2014(eventos[i])) {
+                if (this.isEventoGIC(eventos[i]) &&
+                    eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos24Meses.getTotalSeconds()) {
+                    throw new Error('Evento GIC após 24 meses do EOC.');
                 }
             } else {
-                if(this.isEventoGIC(eventos[i]) &&
+                if (this.isEventoGIC(eventos[i]) &&
                     eventos[i].dataVerificada.getTotalSeconds() > dataVerificadaEOCApos15000.getTotalSeconds()) {
-                        throw new Error('Evento GIC após 15000 horas do EOC.');    
+                    throw new Error('Evento GIC após 15000 horas do EOC.');
                 }
             }
         }
     }
+    /**
+     * RNI208 - Valor de horas limite para utilização da franquia GIC: Regra desde 01/01/2001
+     * Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.
+     * @param {EventoMudancaEstadoOperativo[]} eventos
+     */
+    verificarLimite960HorasEventoGIC(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (eventos[i + 1] != undefined) {
+                if (UtilCalculoParametro.gte_01_01_2001(eventos[i], eventos[i + 1])) {
+                    if (this.isEventoGIC(eventos[i]) &&
+                        UtilCalculoParametro.calcularIntervaloEmHoras(eventos[i].dataVerificada,
+                            eventos[i + 1].dataVerificada) > 960) {
+                        throw new Error('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
+                    }
+                }
+            }
+        }
 
-    isEventoGIC(evento){
+    }
+
+    isEventoGIC(evento) {
         return evento.idClassificacaoOrigem == 'GIC';
     }
+
+
 }
 
 module.exports = EventoMudancaEstadoOperativoBusiness;

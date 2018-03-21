@@ -301,6 +301,37 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             }
         });
 
+        it('Valor de horas limite para utilização da franquia GIC.', () => {
+
+            let eventosAntes01012001 = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2000, 8, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2000, 11, 31) }
+            ];
+
+            expect(eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosAntes01012001)).toBeUndefined();
+
+            let eventosApos01012001UltrapassaLimite = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 11, 31) }
+            ];
+
+            try{
+                eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimite);
+            } catch(error) {
+                expect(error.message).toBe('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
+            }
+
+            let eventosApos01012001NaoUltrapassaLimite = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 15) }
+            ];
+            
+            expect(eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001NaoUltrapassaLimite)).toBeUndefined();
+        });
+
 });
 
 
