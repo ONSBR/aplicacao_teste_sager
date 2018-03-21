@@ -1,8 +1,8 @@
-//const dispatcher = require("./dispatcher/dispatcher");
+const dispatcher = require("./dispatcher/dispatcher");
+const SDK = require("plataforma-sdk/worker/sdk");
 const api = require("./api");
-//const SDK = require("plataforma-sdk/worker/sdk");
 
-//SDK.bind(dispatcher).default(api);
-api()
+SDK.bind(dispatcher).serve(api);
+
 
 

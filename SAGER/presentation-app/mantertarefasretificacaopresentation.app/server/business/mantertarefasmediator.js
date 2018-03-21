@@ -20,6 +20,10 @@ class ManterTarefasMediator {
         return this.tarefaDAO.listarTarefas();
     }
 
+    atualizarTarefa(tarefa){
+        return dispatcher.dispatch("presentation.atualiza.tarefa.request", tarefa);
+    }
+
     //É uma outra Transação independente
     uploadplanilha(nomeTarefa, file) {
         let planilha = this.XLSX.read(file.data);

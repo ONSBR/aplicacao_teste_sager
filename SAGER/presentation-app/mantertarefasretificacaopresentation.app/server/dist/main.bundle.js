@@ -297,7 +297,7 @@ var FiltroEvento = /** @class */ (function () {
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost:8182/',
+    urlServerPresentation: 'http://localhost:8088/',
     listarUsinas: 'listarusinas',
     listarTarefas: 'listartarefas',
     pesquisarEventos: 'pesquisareventos',

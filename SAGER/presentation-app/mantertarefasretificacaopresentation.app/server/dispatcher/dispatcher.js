@@ -1,17 +1,24 @@
 
-/*const TarefaDAO = new (require("../dao/tarefadao"))();
+const TarefaDAO = new (require("../dao/tarefadao"))();
 
 const dispatcher = new (require('plataforma-sdk/worker/dispatcher'))();
 
 
 
-dispatcher.register("presentation.insere.tarefa.request", (context)=>{
-    var event = context.event;
-    var entity = TarefaDAO.createTarefaRetificacaoArgs(event.payload.nomeTarefa);
-    if (event.payload.nomeTarefa == ""){
-        throw new Error("Nome da tarefa não deve estar vazio");
-    }
-    context.entities.tarefaretificacao.insert(entity);
+dispatcher.register("presentation.insere.tarefa.request", (scope)=>{
+    return new Promise((resolve)=>{
+        var entity = TarefaDAO.createTarefaRetificacaoArgs(context.nomeTarefa);
+        console.log(entity);
+        resolve([entity]);
+    });
 });
 
-module.exports = dispatcher;*/
+dispatcher.register("presentation.atualiza.tarefa.request", (scope)=>{
+    return new Promise((resolve)=>{
+        scope.bind(scope.params.tarefa);
+        scope.context.save().then(resolve);
+    });
+});
+
+
+module.exports = dispatcher;

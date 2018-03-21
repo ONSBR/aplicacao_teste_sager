@@ -1,13 +1,13 @@
 var config = {};
 
-const DOMAIN_PORT = 8087;
+const DOMAIN_PORT = 9110;
 const DOMAIN_HOST = 'sager-domain';
 const PROCESS_MEMORY_HOST = 'process_memory';
 const EVENT_MANAGER_HOST = 'event_manager';
 
 config.PORT = process.env.PORT || 8182;
-config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/mantertarefas/usina`;
-config.URL_TAREFAS = `http://localhost:${DOMAIN_PORT}/mantertarefas/tarefaretificacao`;
+config.URL_USINA_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/usina`;
+config.URL_TAREFAS = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao`;
 
 config.getUrlUnidadesGeradorasAPartirUsina = function getUrlUnidadesGeradorasAPartirUsina(idsUsinas) {
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/unidadegeradora?filter=byIdUsina&idsUsinas=${idsUsinas}`;
