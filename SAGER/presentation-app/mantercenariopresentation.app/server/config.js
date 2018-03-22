@@ -1,6 +1,6 @@
 var config = {};
 
-const DOMAIN_PORT = 2117;
+const DOMAIN_PORT = 8087;
 const DOMAIN_HOST = 'localhost';
 
 config.DOMAIN_PORT = DOMAIN_PORT;

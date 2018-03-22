@@ -1,11 +1,7 @@
 const HttpClient = require("plataforma-sdk/http/client");
 var httpClient = new HttpClient(); 
 
-<<<<<<< HEAD
-const DOMAIN_PORT = 2174;
-=======
 const DOMAIN_PORT = 8087;
->>>>>>> origin/feature/migracao-padrao-novo
 
 var dataLoad = [];
 dataLoad.push(tipoTaxaInitialLoad());

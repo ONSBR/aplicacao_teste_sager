@@ -13,16 +13,13 @@
     "jasmine-core": "^2.9.1",
     "linq": "^3.0.9",
     "moment": "^2.20.1",
-<<<<<<< HEAD
     "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master"
-  }, 
+  },
   "nyc": {
     "exclude": [
-      "*spec.js", "*Spec.js"
+      "*spec.js",
+      "*Spec.js"
     ],
     "all": true
-=======
-    "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#feature/migracao-nova-versao"
->>>>>>> origin/feature/migracao-padrao-novo
   }
 }

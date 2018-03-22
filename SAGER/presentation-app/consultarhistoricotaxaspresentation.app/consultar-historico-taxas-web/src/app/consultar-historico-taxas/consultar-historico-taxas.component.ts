@@ -91,9 +91,9 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   linkResultadoReproducao(reproducao) {
     return environment.urlServerPresentation + environment.downloadComparacaoReproducaoXlsx +
-      '?instance_id=' + reproducao.instance_id +
-      '&original_id=' + reproducao.original_id +
-      '&taxa_id=' + reproducao.owner;
+      '?instance_id=' + reproducao.instanceId +
+      '&original_id=' + reproducao.originalId +
+      '&taxa_id=' + reproducao.externalId;
   }
 
   reproduzirCalculoTaxa(taxa) {
