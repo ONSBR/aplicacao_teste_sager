@@ -354,6 +354,20 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         }
     });
 
+    it('Verificar valor de horas limite para utilização da franquia GIC quando o evento GIC for o ultimo do mês.', () => {
+        let eventosComFechamentosNoMes = [
+            { idClassificacaoOrigem: 'GUM', dataVerificada: new Date(2002, 7, 15) },
+            { idClassificacaoOrigem: 'GIC', dataVerificada: new Date(2003, 0, 3) },
+            { idClassificacaoOrigem: 'GIC', dataVerificada: new Date(2003, 1, 1) }
+        ];
+        try {
+            eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosComFechamentosNoMes, true);
+        } catch (error) {
+            expect(error.message).toBe('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
+        }
+
+    });
+
 });
 
 

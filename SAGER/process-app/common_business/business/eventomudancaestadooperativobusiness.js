@@ -191,20 +191,18 @@ class EventoMudancaEstadoOperativoBusiness {
      * Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.
      * @param {EventoMudancaEstadoOperativo[]} eventos
      */
-    verificarLimite960HorasEventoGIC(eventos) {
+    verificarLimite960HorasEventoGIC(eventos, existeFechamentoParaOMes) {
         for (let i = 0; i < eventos.length; i++) {
             if (this.isEventoGIC(eventos[i]) && UtilCalculoParametro.gte_01_01_2001(eventos[i])) {
                 for (let j = i + 1; j < eventos.length; j++) {
                     if (!this.isEventoEspelho(eventos[j], eventos[j - 1])) {
-                        if (UtilCalculoParametro.calcularIntervaloEmHoras(eventos[i].dataVerificada,
-                            eventos[j].dataVerificada) > 960) {
+                        if (UtilCalculoParametro.calcularIntervaloEmHoras(eventos[i].dataVerificada, eventos[j].dataVerificada) > 960) {
                             throw new Error('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
                         }
                     }
                 }
             }
         }
-
     }
 
     isEventoGIC(evento) {
