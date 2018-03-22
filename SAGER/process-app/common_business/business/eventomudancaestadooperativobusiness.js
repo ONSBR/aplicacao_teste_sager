@@ -168,7 +168,7 @@ class EventoMudancaEstadoOperativoBusiness {
         let dataVerificadaEOCApos15000;
         for (let i = 0; i < eventos.length; i++) {
 
-            if (eventos[i].idEstadoOperativo == 'EOC') {
+            if (eventos[i].idEstadoOperativo == 'EOC' && dataVerificadaEOCApos24Meses == undefined && dataVerificadaEOCApos15000 == undefined) {
                 dataVerificadaEOCApos24Meses = UtilCalculoParametro.adicionaMeses(eventos[i].dataVerificada, 24);
                 dataVerificadaEOCApos15000 = UtilCalculoParametro.adicionaHoras(eventos[i].dataVerificada, 15000);
             }
@@ -194,7 +194,7 @@ class EventoMudancaEstadoOperativoBusiness {
     verificarLimite960HorasEventoGIC(eventos) {
         for (let i = 0; i < eventos.length; i++) {
             if (eventos[i + 1] != undefined) {
-                if (UtilCalculoParametro.gte_01_01_2001(eventos[i], eventos[i + 1])) {
+                if (UtilCalculoParametro.gte_01_01_2001(eventos[i])) {
                     if (this.isEventoGIC(eventos[i]) &&
                         UtilCalculoParametro.calcularIntervaloEmHoras(eventos[i].dataVerificada,
                             eventos[i + 1].dataVerificada) > 960) {

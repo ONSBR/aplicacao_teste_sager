@@ -257,80 +257,78 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
     it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014', () => {
 
-            let eventos = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 2) }
-            ];
+        let eventos = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 9, 2) }
+        ];
 
-            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+        expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
 
-            let eventosComGICApos24Meses = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
-            ];
+        let eventosComGICApos24Meses = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2015, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
+        ];
 
-            try {
-                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
-            } catch (error) {
-                expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
-            }
-        });
+        try {
+            eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
+        } catch (error) {
+            expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
+        }
+    });
 
     it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida antes 10/2014.', () => {
 
-            let eventos = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 2) }
-            ];
+        let eventos = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2014, 8, 2) }
+        ];
 
-            expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
+        expect(eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventos)).toBeUndefined();
 
-            let eventosComGICApos15000Horas = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2005, 8, 18, 2, 0, 1) }
-            ];
+        let eventosComGICApos15000Horas = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2002, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2005, 8, 18, 2, 0, 1) }
+        ];
 
-            try {
-                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas);
-            } catch (error) {
-                expect(error.message).toBe('Evento GIC após 15000 horas do EOC.');
-            }
-        });
+        try {
+            eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas);
+        } catch (error) {
+            expect(error.message).toBe('Evento GIC após 15000 horas do EOC.');
+        }
+    });
 
-        it('Valor de horas limite para utilização da franquia GIC.', () => {
+    it('Valor de horas limite para utilização da franquia GIC.', () => {
 
-            let eventosAntes01012001 = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2000, 8, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2000, 11, 31) }
-            ];
+        let eventosAntes01012001 = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2000, 8, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2000, 11, 31) }
+        ];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosAntes01012001)).toBeUndefined();
 
-            expect(eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosAntes01012001)).toBeUndefined();
+        let eventosApos01012001UltrapassaLimite = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 11, 31) }
+        ];
+        try {
+            eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimite);
+        } catch (error) {
+            expect(error.message).toBe('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
+        }
 
-            let eventosApos01012001UltrapassaLimite = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 11, 31) }
-            ];
-
-            try{
-                eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimite);
-            } catch(error) {
-                expect(error.message).toBe('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
-            }
-
-            let eventosApos01012001NaoUltrapassaLimite = [
-                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
-                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 15) }
-            ];
-            
-            expect(eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001NaoUltrapassaLimite)).toBeUndefined();
-        });
+        let eventosApos01012001NaoUltrapassaLimite = [
+            { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
+            { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 15) }
+        ];
+        expect(eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001NaoUltrapassaLimite)).toBeUndefined();
+    });
 
 });
 
