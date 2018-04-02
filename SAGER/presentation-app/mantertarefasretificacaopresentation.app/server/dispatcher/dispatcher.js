@@ -5,19 +5,16 @@ const dispatcher = new (require('plataforma-sdk/worker/dispatcher'))();
 
 
 
-dispatcher.register("presentation.insere.tarefa.request", (scope)=>{
-    return new Promise((resolve)=>{
-        var entity = TarefaDAO.createTarefaRetificacaoArgs(context.nomeTarefa);
-        console.log(entity);
-        resolve([entity]);
-    });
+dispatcher.register("presentation.insere.tarefa.request", (scope, ok, error)=>{
+    console.log(scope);
+    ok([scope]);
 });
 
-dispatcher.register("presentation.atualiza.tarefa.request", (scope)=>{
-    return new Promise((resolve)=>{
-        scope.bind(scope.params.tarefa);
-        scope.context.save().then(resolve);
-    });
+dispatcher.register("presentation.atualiza.tarefa.request", (scope, ok, error)=>{
+    scope.bind(scope.params.tarefa);
+    var a = 1;
+    scope.context.save().then(ok).catch(error);
+
 });
 
 
