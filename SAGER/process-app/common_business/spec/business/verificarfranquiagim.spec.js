@@ -13,17 +13,24 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             ];
             expect(eventoMudancaEstadoOperativoBusiness.verificarRestricaoTempoUtilizacaoFranquiaGIM(eventosAntes01102014)).toBeUndefined();
 
-            let eventosApos01102014 = [
+            let eventosApos01102014ComEventoGIMAntes120Meses = [
                 { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 10, 1) },
                 { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 10, 1) },
                 { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIM', potenciaDisponivel: 500, dataVerificada: new Date(2015, 11, 31) }
             ];
-
             expect(
                 function () {
-                    eventoMudancaEstadoOperativoBusiness.verificarRestricaoTempoUtilizacaoFranquiaGIM(eventosApos01102014)
+                    eventoMudancaEstadoOperativoBusiness.verificarRestricaoTempoUtilizacaoFranquiaGIM(eventosApos01102014ComEventoGIMAntes120Meses)
                 }
             ).toThrowError('Não pode haver registro de evento com Origem “GIM” antes do Equipamento completar 120 meses de entrada em operação comercial.');
+
+            let eventosApos01102014ComEventoGIMDepois120Meses = [
+                { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 10, 1) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 10, 1, 0, 0, 0) },
+                { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIM', potenciaDisponivel: 500, dataVerificada: new Date(2024, 10, 2, 0, 0, 0) }
+            ];
+            expect(eventoMudancaEstadoOperativoBusiness.verificarRestricaoTempoUtilizacaoFranquiaGIM(eventosApos01102014ComEventoGIMDepois120Meses)).toBeUndefined();
+
 
         });
 

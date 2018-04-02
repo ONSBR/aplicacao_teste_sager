@@ -230,10 +230,9 @@ class EventoMudancaEstadoOperativoBusiness {
                 }
 
                 if(this.isEventoGIM(eventos[i])) {
-                    UtilCalculoParametro.veficarTempoInferior120Meses(eventos[i].dataVerificada.getTotalSeconds(), tempoEmSegundosEOC);
+                    UtilCalculoParametro.veficarTempoInferior120Meses(tempoEmSegundosEOC, eventos[i].dataVerificada.getTotalSeconds());
                 }
             }
-
         }
     }
 
