@@ -16,18 +16,22 @@ class EventoMudancaEstadoOperativoBusiness {
 
         eventosMudancasEstadosOperativos.forEach(evento => {
             // FIXME constantes
-            if (evento.idEstadoOperativo == 'EOC') {
+            if (this.isEventoEOC(evento)) {
                 countEventosEOC++;
                 tempoEmSegundosEOC = evento.dataVerificadaEmSegundos;
             }
 
-            if (evento.idEstadoOperativo != 'EOC' && tempoEmSegundosEOC != undefined &&
+            if (!this.isEventoEOC(evento) && tempoEmSegundosEOC != undefined &&
                 evento.dataVerificadaEmSegundos == tempoEmSegundosEOC) {
                 encontrouEventoSimultaneoAoEOC = true;
             }
         });
 
         return countEventosEOC == 1 && encontrouEventoSimultaneoAoEOC;
+    }
+
+    isEventoEOC(evento) {
+        return evento.idEstadoOperativo == 'EOC';    
     }
 
     /**
@@ -186,6 +190,7 @@ class EventoMudancaEstadoOperativoBusiness {
             }
         }
     }
+
     /**
      * RNI208 - Valor de horas limite para utilização da franquia GIC: Regra desde 01/01/2001
      * Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.
@@ -209,6 +214,31 @@ class EventoMudancaEstadoOperativoBusiness {
 
     isEventoGIC(evento) {
         return evento.idClassificacaoOrigem == 'GIC';
+    }
+
+    /**
+     * Não pode haver registro de evento com Origem “GIM” antes do Equipamento completar 120 meses de entrada em operação comercial.
+     * Regra Válida após 01/10/14.
+     * @param {EventoMudancaEstadoOperativo[]} eventos
+     */
+    verificarRestricaoTempoUtilizacaoFranquiaGIM(eventos) {
+        let tempoEmSegundosEOC;
+        for (let i = 0; i < eventos.length; i++) {
+            if(UtilCalculoParametro.gte_10_2014(eventos[i])) {
+                if(this.isEventoEOC(eventos[i])) {
+                    tempoEmSegundosEOC = eventos[i].dataVerificada.getTotalSeconds();
+                }
+
+                if(this.isEventoGIM(eventos[i])) {
+                    UtilCalculoParametro.veficarTempoInferior120Meses(eventos[i].dataVerificada.getTotalSeconds(), tempoEmSegundosEOC);
+                }
+            }
+
+        }
+    }
+
+    isEventoGIM(evento) {
+        return evento.idClassificacaoOrigem == 'GIM';
     }
 
 }

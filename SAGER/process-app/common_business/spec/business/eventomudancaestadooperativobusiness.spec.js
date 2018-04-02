@@ -350,7 +350,6 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 4, 31) }
         ];
 
-
         expect(
             function() {
                 eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimiteComEventoGICEspelho);
