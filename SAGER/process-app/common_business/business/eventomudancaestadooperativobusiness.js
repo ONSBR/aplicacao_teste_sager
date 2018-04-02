@@ -198,6 +198,8 @@ class EventoMudancaEstadoOperativoBusiness {
                     if (!this.isEventoEspelho(eventos[j], eventos[j - 1])) {
                         if (UtilCalculoParametro.calcularIntervaloEmHoras(eventos[i].dataVerificada, eventos[j].dataVerificada) > 960) {
                             throw new Error('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
+                        } else {
+                            break;
                         }
                     }
                 }
