@@ -248,12 +248,11 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
                 { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
             ];
 
-            try {
-                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
-                fail('error expected');
-            } catch (error) {
-                expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
-            }
+            expect(
+                function() {
+                    eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
+                }
+            ).toThrowError('Evento GIC após 24 meses do EOC.');
         });
 
     it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014', () => {
@@ -272,12 +271,12 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2017, 1, 2) }
         ];
 
-        try {
-            eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
-            fail('error expected');
-        } catch (error) {
-            expect(error.message).toBe('Evento GIC após 24 meses do EOC.');
-        }
+
+        expect(
+            function() {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
+            }
+        ).toThrowError('Evento GIC após 24 meses do EOC.');
     });
 
     it('Verificar Tempo limite para utilização da  franquia GIC: Regra válida antes 10/2014.', () => {
@@ -296,12 +295,11 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2005, 8, 18, 2, 0, 1) }
         ];
 
-        try {
-            eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas);
-            fail('error expected');
-        } catch (error) {
-            expect(error.message).toBe('Evento GIC após 15000 horas do EOC.');
-        }
+        expect(
+            function() {
+                eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas)
+            }
+        ).toThrowError('Evento GIC após 15000 horas do EOC.');
     });
 
     it('Valor de horas limite para utilização da franquia GIC.', () => {
@@ -317,12 +315,12 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIC', potenciaDisponivel: 500, dataVerificada: new Date(2001, 0, 1) },
             { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 11, 31) }
         ];
-        try {
-            eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimite);
-            fail('error expected');
-        } catch (error) {
-            expect(error.message).toBe('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
-        }
+
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimite);
+            }
+        ).toThrowError('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
 
         let eventosApos01012001NaoUltrapassaLimite = [
             { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2000, 7, 15) },
@@ -352,12 +350,12 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GGE', potenciaDisponivel: 500, dataVerificada: new Date(2001, 4, 31) }
         ];
 
-        try {
-            eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimiteComEventoGICEspelho);
-            fail('error expected');
-        } catch (error) {
-            expect(error.message).toBe('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
-        }
+
+        expect(
+            function() {
+                eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimiteComEventoGICEspelho);
+            }
+        ).toThrowError('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
     });
 
 });
