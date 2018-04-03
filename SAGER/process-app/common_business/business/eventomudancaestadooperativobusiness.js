@@ -252,6 +252,21 @@ class EventoMudancaEstadoOperativoBusiness {
         return evento.idClassificacaoOrigem == 'GIM';
     }
 
+    /**
+     * RNR063 - Restrição ao COSR quanto a retificações/revisões diretas em eventos espelho:
+     * Não são permitidas ao ator COSR retificações/revisões diretamente em eventos-espelho (evento zero-hora).
+     * @param {EventoMudancaEstadoOperativo[]} eventos
+     */
+    validarAlteracoesDiretasEventosEspelhos(eventos) {
+        if(eventos.length > 1) {
+            for (let i = 1; i < eventos.length; i++) {
+                if(this.isEventoAlteracao(eventos[i]) && this.isEventoEspelho(eventos[i], eventos[i-1])) {
+                    throw new Error('Não são permitidas ao ator COSR retificações/revisões diretamente em eventos-espelho (evento zero-hora).');
+                }
+            }
+        }
+    }
+
 }
 
 module.exports = EventoMudancaEstadoOperativoBusiness;

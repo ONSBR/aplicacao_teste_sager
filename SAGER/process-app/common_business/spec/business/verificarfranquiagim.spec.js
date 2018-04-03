@@ -41,7 +41,6 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
                 { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIM', potenciaDisponivel: 500, dataVerificada: new Date(2024, 10, 2, 0, 0, 0) },
                 { idEstadoOperativo: 'LIG', idClassificacaoOrigem: 'GIM', potenciaDisponivel: 500, dataVerificada: new Date(2025, 10, 3, 0, 0, 0) }
             ];
-
             expect(
                 function () {
                     eventoMudancaEstadoOperativoBusiness.verificarRestricaoTempoUtilizacaoFranquiaGIM(eventosQueExcedem12Meses);
