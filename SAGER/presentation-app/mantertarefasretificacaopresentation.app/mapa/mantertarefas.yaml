@@ -61,6 +61,8 @@ tarefaretificacao:
     nome:
       column: nome
       required: true
+  filters:
+    byId: "id = :id"
 
 eventomudancaestadooperativotarefa:
   model: tb_evt_estado_oper_tarefa

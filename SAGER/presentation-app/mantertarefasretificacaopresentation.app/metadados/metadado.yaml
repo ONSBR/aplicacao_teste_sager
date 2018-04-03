@@ -5,3 +5,6 @@ operations:
   - name: presentation.atualiza.tarefa.request
     event: presentation.atualiza.tarefa.request
     commit: true
+  - name: presentation.exclui.tarefa.request
+    event: presentation.exclui.tarefa.request
+    commit: true

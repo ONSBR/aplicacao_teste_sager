@@ -74,8 +74,8 @@ class ManterTarefasMediator {
             }
         });
     }
-
-    excluirTarefa(tarefa) {
+    //original
+    /*excluirTarefa(tarefa) {
         return new Promise((resolve, reject) => {
             try {
                 this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
@@ -87,6 +87,11 @@ class ManterTarefasMediator {
                 reject(error);
             }
         });
+    }*/
+
+
+    excluirTarefa(tarefa) {
+        return dispatcher.dispatch("presentation.exclui.tarefa.request", {tarefa: tarefa});
     }
 
 

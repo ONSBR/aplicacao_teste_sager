@@ -12,8 +12,9 @@ dispatcher.register("presentation.insere.tarefa.request", (context, resolve, rej
     resolve(entity);
 });
 
-dispatcher.register("presentation.atualiza.tarefa.request", (scope, ok, error)=>{
-
+dispatcher.register("presentation.exclui.tarefa.request", (context, resolve, reject)=>{
+    console.log(context);
+    resolve({"msg":"Executou o exclui"});
 });
 
 
