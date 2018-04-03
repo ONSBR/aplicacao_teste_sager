@@ -217,22 +217,34 @@ class EventoMudancaEstadoOperativoBusiness {
     }
 
     /**
-     * Não pode haver registro de evento com Origem “GIM” antes do Equipamento completar 120 meses de entrada em operação comercial.
+     * RNI216 - Não pode haver registro de evento com Origem “GIM” antes do Equipamento completar 120 meses de entrada em operação comercial.
      * Regra Válida após 01/10/14.
+     * RNI217- Não pode haver registro de evento com Origem “GIM” que ultrapasse o limite de 12 meses, 
+     * contados a partir de 120 meses da data de entrada em operação comercial
      * @param {EventoMudancaEstadoOperativo[]} eventos
      */
     verificarRestricaoTempoUtilizacaoFranquiaGIM(eventos) {
         let tempoEmSegundosEOC;
         for (let i = 0; i < eventos.length; i++) {
+
             if(UtilCalculoParametro.gte_10_2014(eventos[i])) {
+
                 if(this.isEventoEOC(eventos[i])) {
                     tempoEmSegundosEOC = eventos[i].dataVerificada.getTotalSeconds();
                 }
-
                 if(this.isEventoGIM(eventos[i])) {
-                    UtilCalculoParametro.veficarTempoInferior120Meses(tempoEmSegundosEOC, eventos[i].dataVerificada.getTotalSeconds());
+                    let tempoEmSegundosGIM = eventos[i].dataVerificada.getTotalSeconds();
+                    UtilCalculoParametro.veficarTempoSuperior120Meses(tempoEmSegundosEOC, tempoEmSegundosGIM);
+                    
+                    if(eventos[i+1] != undefined) {
+                        let tempoEmSegundosProximoEvento = eventos[i+1].dataVerificada.getTotalSeconds();
+                        UtilCalculoParametro.veficarTempoInferior12Meses(tempoEmSegundosGIM, tempoEmSegundosProximoEvento);
+                    }
+
                 }
+
             }
+
         }
     }
 
