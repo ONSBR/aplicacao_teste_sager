@@ -15,8 +15,11 @@ class ManterTarefasController {
      */
     inserirTarefa(request, response) {
         let nomeTarefa = request.body.nomeTarefa;
-        this.manterTarefasMediator.inserirTarefa(nomeTarefa).then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a inserção da tarefa: ${e.toString()}`) });
+        this.manterTarefasMediator.inserirTarefa(nomeTarefa).then(data => {
+            console.log(data);
+            console.log("******************************************************************");
+            response.send(data);
+        }).catch(e => { console.log(`Erro durante a inserção da tarefa: ${e.toString()}`) });
     }
 
     /**
@@ -74,10 +77,10 @@ class ManterTarefasController {
     */
    excluirTarefa(request, response) {
         let tarefa = request.body.tarefa;
-        this.manterTarefasMediator.excluirTarefa(tarefa).then(data => { response.send(data) }).
-            catch(e => { 
+        this.manterTarefasMediator.excluirTarefa(tarefa).then(data => { response.send(data); }).
+            catch(e => {
                 console.log(`Erro durante a exclusão da tarefa: ${e.toString()}`);
-                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`); 
+                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`);
             });
    }
 

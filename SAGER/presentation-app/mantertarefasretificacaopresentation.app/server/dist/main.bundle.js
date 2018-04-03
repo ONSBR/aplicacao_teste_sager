@@ -178,7 +178,7 @@ var MantertarefaComponent = /** @class */ (function () {
             this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirTarefa, body).subscribe(function (data) {
                 _this.listarTarefas();
             }, function (error) {
-                console.log("Erro ao inserir tarefa: " + error);
+                console.log("Erro ao inserir tarefa: ", error);
             });
         }
     };
