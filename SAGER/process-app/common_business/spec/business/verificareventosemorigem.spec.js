@@ -20,9 +20,47 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
                 eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDEMSemOrigem);
             }
         ).toThrowError(MSG_ERRO);
+
+        eventosDURSemOrigem = [{ idEstadoOperativo: 'DUR' }];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDURSemOrigem);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosDAUSemOrigem = [{ idEstadoOperativo: 'DAU' }];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDAUSemOrigem);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosDPRSemOrigem = [{ idEstadoOperativo: 'DPR' }];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDPRSemOrigem);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosDPASemOrigem = [{ idEstadoOperativo: 'DPA' }];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDPASemOrigem);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosDCASemOrigem = [{ idEstadoOperativo: 'DCA' }];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDCASemOrigem);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosLIGSemOrigem = [{ idEstadoOperativo: 'LIG' }];
+        eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosLIGSemOrigem);
     });
 
-    it('Permitir evento de mudança de estado operativo com origem preenchida origem.', () => {
+    it('Permitir evento de mudança de estado operativo com origem preenchida.', () => {
         let eventosDEMComOrigemPreenchida = [{ idEstadoOperativo: 'DEM', idClassificacaoOrigem: 'GUM' }];
         eventoMudancaEstadoOperativoBusiness.verificarClassificacaoOrigem(eventosDEMComOrigemPreenchida);
     });
