@@ -7,20 +7,32 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
     it('Restringir evento de mudança de estado operativo sem condição operativa.', () => {
 
-        let eventosLigSemCondicaoOperativa = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: '' }];
+        let eventosLIGSemCondicaoOperativa = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: '' }];
         expect(
             function () {
-                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLigSemCondicaoOperativa);
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLIGSemCondicaoOperativa);
             }
         ).toThrowError(MSG_ERRO);
 
-        eventosLigSemCondicaoOperativa = [{ idEstadoOperativo: 'LIG'}];
+        eventosLIGSemCondicaoOperativa = [{ idEstadoOperativo: 'LIG'}];
         expect(
             function () {
-                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLigSemCondicaoOperativa);
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLIGSemCondicaoOperativa);
             }
         ).toThrowError(MSG_ERRO);
 
+        eventosLCSSemCondicaoOperativa = [{ idEstadoOperativo: 'LCS'}];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLCSSemCondicaoOperativa);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosDEMSemCondicaoOperativa = [{ idEstadoOperativo: 'DEM'}];
+        eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosDEMSemCondicaoOperativa);
+    });
+
+    it('Permitir evento de mudança de estado operativo com condição operativa.', () => {
         let eventosLig = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'NOR' }];
         eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLig);
     });
