@@ -13,14 +13,17 @@ dispatcher.register("presentation.insere.tarefa.request", (context, resolve, rej
 });
 
 dispatcher.register("presentation.exclui.tarefa.request", (context, resolve, reject)=>{
-    //tem que apagar todos os eventos de estado operativo
     var ds = context.dataset;
     var tarefa = context.event.payload.tarefa;
     ds.eventomudancaestadooperativotarefa.collection.forEach(obj => {
         ds.eventomudancaestadooperativotarefa.delete(obj);
     });
-    ds.tarefaretificacao.delete(tarefa);
-    resolve({"msg":"Executou o exclui"});
+    try{
+        ds.tarefaretificacao.delete(tarefa);
+        resolve({"msg":"Executou o exclui"});
+    }catch(e){
+        reject(e);
+    }
 });
 
 
