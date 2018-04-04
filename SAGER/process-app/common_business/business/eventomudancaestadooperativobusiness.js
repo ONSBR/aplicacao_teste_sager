@@ -31,7 +31,7 @@ class EventoMudancaEstadoOperativoBusiness {
     }
 
     isEventoEOC(evento) {
-        return evento.idEstadoOperativo == 'EOC';    
+        return evento.idEstadoOperativo == 'EOC';
     }
 
     /**
@@ -227,17 +227,17 @@ class EventoMudancaEstadoOperativoBusiness {
         let tempoEmSegundosEOC;
         for (let i = 0; i < eventos.length; i++) {
 
-            if(UtilCalculoParametro.gte_10_2014(eventos[i])) {
+            if (UtilCalculoParametro.gte_10_2014(eventos[i])) {
 
-                if(this.isEventoEOC(eventos[i])) {
+                if (this.isEventoEOC(eventos[i])) {
                     tempoEmSegundosEOC = eventos[i].dataVerificada.getTotalSeconds();
                 }
-                if(this.isEventoGIM(eventos[i])) {
+                if (this.isEventoGIM(eventos[i])) {
                     let tempoEmSegundosGIM = eventos[i].dataVerificada.getTotalSeconds();
                     UtilCalculoParametro.veficarTempoSuperior120Meses(tempoEmSegundosEOC, tempoEmSegundosGIM);
-                    
-                    if(eventos[i+1] != undefined) {
-                        let tempoEmSegundosProximoEvento = eventos[i+1].dataVerificada.getTotalSeconds();
+
+                    if (eventos[i + 1] != undefined) {
+                        let tempoEmSegundosProximoEvento = eventos[i + 1].dataVerificada.getTotalSeconds();
                         UtilCalculoParametro.veficarTempoInferior12Meses(tempoEmSegundosGIM, tempoEmSegundosProximoEvento);
                     }
 
@@ -258,9 +258,9 @@ class EventoMudancaEstadoOperativoBusiness {
      * @param {EventoMudancaEstadoOperativo[]} eventos
      */
     validarAlteracoesDiretasEventosEspelhos(eventos) {
-        if(eventos.length > 1) {
+        if (eventos.length > 1) {
             for (let i = 1; i < eventos.length; i++) {
-                if(this.isEventoAlteracao(eventos[i]) && this.isEventoEspelho(eventos[i], eventos[i-1])) {
+                if (this.isEventoAlteracao(eventos[i]) && this.isEventoEspelho(eventos[i], eventos[i - 1])) {
                     throw new Error('Não são permitidas ao ator COSR retificações/revisões diretamente em eventos-espelho (evento zero-hora).');
                 }
             }
@@ -275,20 +275,34 @@ class EventoMudancaEstadoOperativoBusiness {
     verificarPotenciaNegativaOuSuperiorPotencia(unidadeGeradora, eventos) {
         for (let i = 0; i < eventos.length; i++) {
 
-            if(eventos[i].potenciaDisponivel == undefined) {
+            if (eventos[i].potenciaDisponivel == undefined) {
                 throw new Error('Valor disponibilidade não pode ser vazio.');
             }
 
-            if(eventos[i].potenciaDisponivel < 0) {
+            if (eventos[i].potenciaDisponivel < 0) {
                 throw new Error('Valor disponibilidade não pode ser negativo.');
             }
 
-            if(eventos[i].potenciaDisponivel > unidadeGeradora.potenciaDisponivel) {
+            if (eventos[i].potenciaDisponivel > unidadeGeradora.potenciaDisponivel) {
                 throw new Error('Valor disponibilidade superior a da unidade geradora.');
             }
-            
 
         }
+    }
+
+    /**
+     * RNR071 - Restrição de evento de mudança de estado operativo sem condição operativa.
+     * @param {EventoMudancaEstadoOperativo[]} eventos  
+     */
+    verificarCondicaoOperativa(eventos) {
+        let estadosOperativos = ['LIG', 'LCS', 'LCC', 'LCI', 'DCO', 'RDP'];
+
+        eventos.forEach(evento => {
+            if(estadosOperativos.includes(evento.idEstadoOperativo) && 
+                (evento.idCondicaoOperativa == undefined || evento.idCondicaoOperativa == '')) {
+                    throw new Error('Não pode haver evento de Mudança de Estado Operativo sem a Condição Operativa preenchida quando o Estados Operativos for igual a “LIG”, “LCS”, “LCC”, “LCI”, “DCO” ou “RDP”.');
+            }
+        });
     }
 
 }

@@ -3,7 +3,7 @@ const EventoMudancaEstadoOperativoBusiness = require('../../business/eventomudan
 describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
-    it('Impedir a alteração diretas de eventos espelhos', () => {
+    it('Impedir a alterações diretas de eventos espelhos', () => {
 
         let eventosComAlteracoes = [
             { idEstadoOperativo: 'EOC', idClassificacaoOrigem: 'GUM', potenciaDisponivel: 500, dataVerificada: new Date(2014, 10, 1) },
