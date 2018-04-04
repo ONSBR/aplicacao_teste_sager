@@ -4,31 +4,31 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
     it('Restringir mudança de estado operativo sem valor ou com valor negativo:', () => {
-
-        let eventos = [{ potenciaDisponivel: 500 }, { potenciaDisponivel: 300 }];
-        let unidadeGeradora = { potenciaDisponivel: 500 };
-        eventoMudancaEstadoOperativoBusiness.verificarPotenciaNegativaOuSuperiorPotencia(unidadeGeradora, eventos);
-
-        let eventosComPotenciaDisponivelNegativa = [{ potenciaDisponivel: -500 }, { potenciaDisponivel: 300 }];
+        let eventosComPotenciaDisponivelVazia = [{ operacao: 'A', dataVerificada: new Date() }];
         expect(
             function () {
-                eventoMudancaEstadoOperativoBusiness.verificarPotenciaNegativaOuSuperiorPotencia({}, eventosComPotenciaDisponivelNegativa);
+                eventoMudancaEstadoOperativoBusiness.verificarAtributosObrigatorios(eventosComPotenciaDisponivelVazia);
             }
-        ).toThrowError('Valor disponibilidade não pode ser negativo.');
+        ).toThrowError('Valor disponibilidade deve ser preenchido.');
 
-        let eventosComPotenciaDisponivelVazia = [{ potenciaDisponivel: 500 }, { operacao: 'A' }];
+        let eventosComDataVazia = [{ operacao: 'A', potenciaDisponivel: 500 }];
         expect(
             function () {
-                eventoMudancaEstadoOperativoBusiness.verificarPotenciaNegativaOuSuperiorPotencia({}, eventosComPotenciaDisponivelVazia);
+                eventoMudancaEstadoOperativoBusiness.verificarAtributosObrigatorios(eventosComDataVazia);
             }
-        ).toThrowError('Valor disponibilidade não pode ser vazio.');
+        ).toThrowError('Data deve ser preenchida.');
 
-        let eventosComPotenciaDisponivelAcimaDaUnidadeGeradora = [{ potenciaDisponivel: 600 }];
+        let eventosSemEstadoOperativo = [{ operacao: 'A', potenciaDisponivel: 500, dataVerificada: new Date() }];
         expect(
-            function() {
-                eventoMudancaEstadoOperativoBusiness.verificarPotenciaNegativaOuSuperiorPotencia(unidadeGeradora, eventosComPotenciaDisponivelAcimaDaUnidadeGeradora);
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarAtributosObrigatorios(eventosSemEstadoOperativo);
             }
-        ).toThrowError('Valor disponibilidade superior a da unidade geradora.');
+        ).toThrowError('Estado operativo deve ser preenchido.');
 
+        let eventosComCamposObrigatorios = [{
+            operacao: 'A', potenciaDisponivel: 500, dataVerificada: new Date(),
+            idEstadoOperativo: 'LIG'
+        }];
+        eventoMudancaEstadoOperativoBusiness.verificarAtributosObrigatorios(eventosComCamposObrigatorios);
     });
 });

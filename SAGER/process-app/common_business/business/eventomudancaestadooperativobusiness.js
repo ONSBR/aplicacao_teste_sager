@@ -268,16 +268,35 @@ class EventoMudancaEstadoOperativoBusiness {
     }
 
     /**
-     * RNR070 - Restrição de Mudança de Estado Operativo sem valor ou com valor negativo: 
+     * RNR069 - Eventos sem valores de potência vigente ou demais parâmetros.
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarAtributosObrigatorios(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+
+            if (eventos[i].potenciaDisponivel == undefined) {
+                throw new Error('Valor disponibilidade deve ser preenchido.');
+            }
+
+            if (eventos[i].dataVerificada == undefined) {
+                throw new Error('Data deve ser preenchida.');
+            }
+
+            if(eventos[i].idEstadoOperativo == undefined) {
+                throw new Error('Estado operativo deve ser preenchido.');
+            }
+
+        }
+    }
+
+    /**
+     * RNR069 - Eventos sem valores de potência vigente ou demais parâmetros.
+     * RNR070 - Restrição de Mudança de Estado Operativo sem valor ou com valor negativo.
      * @param {UnidadeGeradora} unidadeGeradora 
      * @param {EventoMudancaEstadoOperativo[]} eventos 
      */
     verificarPotenciaNegativaOuSuperiorPotencia(unidadeGeradora, eventos) {
         for (let i = 0; i < eventos.length; i++) {
-
-            if (eventos[i].potenciaDisponivel == undefined) {
-                throw new Error('Valor disponibilidade não pode ser vazio.');
-            }
 
             if (eventos[i].potenciaDisponivel < 0) {
                 throw new Error('Valor disponibilidade não pode ser negativo.');
