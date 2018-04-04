@@ -267,6 +267,30 @@ class EventoMudancaEstadoOperativoBusiness {
         }
     }
 
+    /**
+     * RNR070 - Restrição de Mudança de Estado Operativo sem valor ou com valor negativo: 
+     * @param {UnidadeGeradora} unidadeGeradora 
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarPotenciaNegativaOuSuperiorPotencia(unidadeGeradora, eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+
+            if(eventos[i].potenciaDisponivel == undefined) {
+                throw new Error('Valor disponibilidade não pode ser vazio.');
+            }
+
+            if(eventos[i].potenciaDisponivel < 0) {
+                throw new Error('Valor disponibilidade não pode ser negativo.');
+            }
+
+            if(eventos[i].potenciaDisponivel > unidadeGeradora.potenciaDisponivel) {
+                throw new Error('Valor disponibilidade superior a da unidade geradora.');
+            }
+            
+
+        }
+    }
+
 }
 
 module.exports = EventoMudancaEstadoOperativoBusiness;
