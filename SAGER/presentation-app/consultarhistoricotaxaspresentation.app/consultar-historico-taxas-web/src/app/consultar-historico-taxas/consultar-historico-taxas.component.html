@@ -45,10 +45,10 @@
           <ul>
             <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of execucoes">
               <b *ngIf="execucaoSelecionada.id == execucao.id">
-                Execução: {{ execucao.protocolo }}
+                Execução: {{ execucao.protocolo }} - {{ execucao.dataInicio | date: 'dd/MM/yyyy' }}
               </b>
               <span *ngIf="execucaoSelecionada.id != execucao.id" style="cursor: pointer">
-                Execução: {{ execucao.protocolo }}
+                Execução: {{ execucao.protocolo }} - {{ execucao.dataInicio | date: 'dd/MM/yyyy' }}
               </span>
             </li>
           </ul>
@@ -63,7 +63,7 @@
           <ul>
             <li *ngFor="let taxa of taxas">
               <a href="{{linkMemoriaTaxa(taxa)}}">Valor: {{ (taxa.valor?taxa.valor:0) }}</a>
-              <input type="button" (click)="reproduzirCalculoTaxa(taxa)" value="Reproduzir" />
+              <input type="button" (click)="reproduzirCalculoTaxa(taxa)" value="Reproduzir" /> ({{printIdentify(taxa._metadata.instance_id)}})
             </li>
           </ul>
         </span>
@@ -108,7 +108,8 @@
           <span>
             <ul>
               <li *ngFor="let reproducao of reproducoes">
-                <a href="{{linkResultadoReproducao(reproducao)}}">{{ reproducao.start_date }}</a>
+                <a href="{{linkResultadoReproducao(reproducao)}}">{{ reproducao.start_date | date: 'dd/MM/yyyy HH:mm:ss' }}</a> 
+                ({{printIdentify(reproducao.originalId)}})
               </li>
             </ul>
           </span>
