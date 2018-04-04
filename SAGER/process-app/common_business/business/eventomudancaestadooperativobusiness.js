@@ -282,7 +282,7 @@ class EventoMudancaEstadoOperativoBusiness {
                 throw new Error('Data deve ser preenchida.');
             }
 
-            if(eventos[i].idEstadoOperativo == undefined) {
+            if (eventos[i].idEstadoOperativo == undefined) {
                 throw new Error('Estado operativo deve ser preenchido.');
             }
 
@@ -290,7 +290,6 @@ class EventoMudancaEstadoOperativoBusiness {
     }
 
     /**
-     * RNR069 - Eventos sem valores de potência vigente ou demais parâmetros.
      * RNR070 - Restrição de Mudança de Estado Operativo sem valor ou com valor negativo.
      * @param {UnidadeGeradora} unidadeGeradora 
      * @param {EventoMudancaEstadoOperativo[]} eventos 
@@ -339,6 +338,24 @@ class EventoMudancaEstadoOperativoBusiness {
                     'operativo for igual a “DEM”, “DUR”, “DAU”, “DPR”, “DPA” ou “DCA”.');
             }
         });
+    }
+
+    /**
+     * RNR073 - Restrição de evento de mudança de estado operativo sem dados preenchidos: Não pode haver evento de 
+     * Mudança de Estado Operativo com Condição Operativa RPR ou RFO e sem valor de Disponibilidade e Origem.
+     * @param {EventoMudancaEstadoOperativo[]} eventos  
+     */
+    verificarCondicaoOperacaoOperativaRPROuRFO(eventos) {
+        let condicoesOperativas = ['RPR', 'RFO'];
+
+        eventos.forEach(evento => {
+            if (condicoesOperativas.includes(evento.idCondicaoOperativa) && (evento.potenciaDisponivel == undefined ||
+                evento.idClassificacaoOrigem == undefined)) {
+                throw new Error('Não pode haver evento de Mudança de Estado Operativo com Condição Operativa RPR ou RFO e sem' +
+                    ' valor de Disponibilidade, Origem');
+            }
+        });
+
     }
 
 }
