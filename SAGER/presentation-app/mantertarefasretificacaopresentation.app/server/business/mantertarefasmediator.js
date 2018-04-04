@@ -91,7 +91,7 @@ class ManterTarefasMediator {
 
 
     excluirTarefa(tarefa) {
-        return dispatcher.dispatch("presentation.exclui.tarefa.request", {tarefa: tarefa});
+        return dispatcher.dispatch("presentation.exclui.tarefa.request", {tarefa: tarefa, nometarefa:tarefa.nome});
     }
 
 
