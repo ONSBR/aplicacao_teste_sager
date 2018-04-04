@@ -1,5 +1,6 @@
 const UtilCalculoParametro = require('./utilcalculoparametro');
 const extensions = require("./extensions");
+const ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
 
 class EventoMudancaEstadoOperativoBusiness {
 
@@ -46,7 +47,6 @@ class EventoMudancaEstadoOperativoBusiness {
         if (!evento.potenciaDisponivel) {
 
             const NOR_NOT_TST = ['NOR', 'NOT', 'TST'];
-            const ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO = ['DEM', 'DUR', 'DAU', 'DCA', 'DPR', 'DPA', 'DAP', 'DES', 'DOM'];
             if (NOR_NOT_TST.includes(evento.idCondicaoOperativa)) {
                 evento.potenciaDisponivel = uge.potenciaDisponivel;
             } else if (ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO.includes(evento.idEstadoOperativo)) {
@@ -356,6 +356,22 @@ class EventoMudancaEstadoOperativoBusiness {
             }
         });
 
+    }
+
+    /**
+     * RNR078 - Estado Operativo de desligamento e condição operativa.
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarEstadoOperativoDesligamento(eventos) {
+        eventos.forEach(evento => {
+            if (ESTADOS_OPERATIVOS_DESLIGADO_EXCETO_DCO.includes(evento.idEstadoOperativo) &&
+                (UtilCalculoParametro.isCampoStringPreenchido(evento.idCondicaoOperativa) ||
+                    evento.potenciaDisponivel != 0 ||
+                    !UtilCalculoParametro.isCampoStringPreenchido(evento.idClassificacaoOrigem))) {
+                throw new Error('Um evento de Mudança de Estado Operativo com Estado Operativo de Desligamento, exceto “DCO”,' +
+                    ' tem que ter: Condição Operativa em branco, Valor de Disponibilidade igual a zero e Origem preenchida.');
+            }
+        });
     }
 
 }
