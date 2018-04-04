@@ -28,6 +28,34 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             }
         ).toThrowError(MSG_ERRO);
 
+        eventosLCCSemCondicaoOperativa = [{ idEstadoOperativo: 'LCC'}];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLCCSemCondicaoOperativa);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosLCISemCondicaoOperativa = [{ idEstadoOperativo: 'LCI'}];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLCISemCondicaoOperativa);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosDCOSemCondicaoOperativa = [{ idEstadoOperativo: 'DCO'}];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosDCOSemCondicaoOperativa);
+            }
+        ).toThrowError(MSG_ERRO);
+
+        eventosRDPSemCondicaoOperativa = [{ idEstadoOperativo: 'RDP'}];
+        expect(
+            function () {
+                eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosRDPSemCondicaoOperativa);
+            }
+        ).toThrowError(MSG_ERRO);
+
         eventosDEMSemCondicaoOperativa = [{ idEstadoOperativo: 'DEM'}];
         eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosDEMSemCondicaoOperativa);
     });
