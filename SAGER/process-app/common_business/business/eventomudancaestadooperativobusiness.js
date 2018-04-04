@@ -298,9 +298,26 @@ class EventoMudancaEstadoOperativoBusiness {
         let estadosOperativos = ['LIG', 'LCS', 'LCC', 'LCI', 'DCO', 'RDP'];
 
         eventos.forEach(evento => {
-            if(estadosOperativos.includes(evento.idEstadoOperativo) && 
+            if (estadosOperativos.includes(evento.idEstadoOperativo) &&
                 (evento.idCondicaoOperativa == undefined || evento.idCondicaoOperativa == '')) {
-                    throw new Error('Não pode haver evento de Mudança de Estado Operativo sem a Condição Operativa preenchida quando o Estados Operativos for igual a “LIG”, “LCS”, “LCC”, “LCI”, “DCO” ou “RDP”.');
+                throw new Error('Não pode haver evento de Mudança de Estado Operativo sem a Condição Operativa preenchida ' +
+                    'quando o estado operativo for igual a “LIG”, “LCS”, “LCC”, “LCI”, “DCO” ou “RDP”.');
+            }
+        });
+    }
+
+    /**
+     * RNR072 - Restrição de evento de mudança de estado operativo sem origem.
+     * @param {EventoMudancaEstadoOperativo[]} eventos  
+     */
+    verificarClassificacaoOrigem(eventos) {
+        let estadosOperativos = ['DEM', 'DUR', 'DAU', 'DPR', 'DPA', 'DCA'];
+
+        eventos.forEach(evento => {
+            if (estadosOperativos.includes(evento.idEstadoOperativo) &&
+                (evento.idClassificacaoOrigem == undefined || evento.idClassificacaoOrigem == '')) {
+                throw new Error('Não pode haver evento de Mudança de Estado Operativo sem a Origem preenchida quando o estado ' +
+                    'operativo for igual a “DEM”, “DUR”, “DAU”, “DPR”, “DPA” ou “DCA”.');
             }
         });
     }

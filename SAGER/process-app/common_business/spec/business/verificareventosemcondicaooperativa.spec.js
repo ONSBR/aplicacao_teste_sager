@@ -2,7 +2,7 @@ const EventoMudancaEstadoOperativoBusiness = require('../../business/eventomudan
 
 describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
     const MSG_ERRO = 'Não pode haver evento de Mudança de Estado Operativo sem a Condição Operativa preenchida quando'
-        + ' o Estados Operativos for igual a “LIG”, “LCS”, “LCC”, “LCI”, “DCO” ou “RDP”.'
+        + ' o estado operativo for igual a “LIG”, “LCS”, “LCC”, “LCI”, “DCO” ou “RDP”.'
     let eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
 
     it('Restringir evento de mudança de estado operativo sem condição operativa.', () => {
@@ -56,11 +56,11 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             }
         ).toThrowError(MSG_ERRO);
 
-        eventosDEMSemCondicaoOperativa = [{ idEstadoOperativo: 'DEM'}];
+        eventosDEMSemCondicaoOperativa = [{ idEstadoOperativo: 'DEM', idClassificacaoOrigem: 'GUM'}];
         eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosDEMSemCondicaoOperativa);
     });
 
-    it('Permitir evento de mudança de estado operativo com condição operativa.', () => {
+    it('Permitir evento de mudança de estado operativo com condição operativa preenchida.', () => {
         let eventosLig = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'NOR' }];
         eventoMudancaEstadoOperativoBusiness.verificarCondicaoOperativa(eventosLig);
     });
