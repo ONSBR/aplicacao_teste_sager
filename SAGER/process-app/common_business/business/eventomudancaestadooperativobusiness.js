@@ -75,19 +75,21 @@ class EventoMudancaEstadoOperativoBusiness {
             for (let i = 1; i < eventos.length; i++) {
                 return this.compararEventos(eventos[i - 1], eventos[i]);
             }
-        } else {
-            return true;
         }
     }
 
     compararEventos(eventoAnterior, evento) {
         if (eventoAnterior.idEstadoOperativo == 'LIG' && (eventoAnterior.idCondicaoOperativa == 'RFO' || eventoAnterior.idCondicaoOperativa == 'RPR')
             && eventoAnterior.idClassificacaoOrigem != 'GRE' && evento.idEstadoOperativo == 'DCO') {
-            return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) &&
-                (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) &&
-                (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)
-        } else {
-            return true;
+
+            if (!(eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa &&
+                eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem &&
+                eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)) {
+                throw new Error('Um evento de Mudança de Estado Operativo com Estado Operativo “DCO” posterior' +
+                    ' a um evento com Estado Operativo “LIG” e Condição Operativa “RFO” ou “RPR” deve ter a mesma Condição Operativa,' +
+                    ' origem e valor de Disponibilidade do evento predecessor, exceto se for Origem “GRE”');
+            }
+
         }
     }
 
