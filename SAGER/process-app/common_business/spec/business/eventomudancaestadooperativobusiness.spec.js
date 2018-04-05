@@ -8,25 +8,34 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC)).toBeTruthy();
+        eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC);
 
         let eventosComUmEOC2 = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2)).toBeTruthy();
+        eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2);
 
         let eventosComDoisEOC = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
+
+        expect(
+            () => {
+                eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC);
+            }            
+        ).toThrowError('É obrigatória a existência de um, e somente um, evento com o estado operativo EOC.');
 
         let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 300 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 400 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
+        expect(
+            () => {
+                eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOCESemEventoSimultaneo);
+            }            
+        ).toThrowError('Deve existir um evento com a mesma data/hora do evento EOC.');
     });
 
     it('Preencher o campo disponibilidade com a potência vigente quando a condição operativa for NOR, NOT ou TST:', () => {

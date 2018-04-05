@@ -8,14 +8,14 @@ class EventoMudancaEstadoOperativoBusiness {
      * RNI080 - Entrada em Operação Comercial de um equipamento. 
      * É obrigatória a existência de um, e somente um, evento com o estado operativo EOC para 
      * indicar a entrada em operação comercial de um equipamento.
-     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     * @param {EventoMudancaEstadoOperativo[]} eventos - array de eventos.
      */
-    verificarUnicidadeEventoEntradaOperacaoComercial(eventosMudancasEstadosOperativos) {
+    verificarUnicidadeEventoEntradaOperacaoComercial(eventos) {
         let countEventosEOC = 0;
         let tempoEmSegundosEOC;
         let encontrouEventoSimultaneoAoEOC = false;
 
-        eventosMudancasEstadosOperativos.forEach(evento => {
+        eventos.forEach(evento => {
             // FIXME constantes
             if (this.isEventoEOC(evento)) {
                 countEventosEOC++;
@@ -28,7 +28,13 @@ class EventoMudancaEstadoOperativoBusiness {
             }
         });
 
-        return countEventosEOC == 1 && encontrouEventoSimultaneoAoEOC;
+        if(countEventosEOC != 1) {
+            throw new Error('É obrigatória a existência de um, e somente um, evento com o estado operativo EOC.');
+        }
+
+        if(!encontrouEventoSimultaneoAoEOC) {
+            throw new Error('Deve existir um evento com a mesma data/hora do evento EOC.');
+        }
     }
 
     isEventoEOC(evento) {
