@@ -6,7 +6,7 @@ const DOMAIN_HOST = 'localhost';
 config.DOMAIN_PORT = DOMAIN_PORT;
 config.DOMAIN_HOST = DOMAIN_HOST;
 
-config.PORT = 8181;
+config.PORT = 8183;
 config.URL_CENARIO_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantercenario/cenario`;
 
 config.URL_CENARIO_SAGER_PERSIST = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantercenario/persist`;

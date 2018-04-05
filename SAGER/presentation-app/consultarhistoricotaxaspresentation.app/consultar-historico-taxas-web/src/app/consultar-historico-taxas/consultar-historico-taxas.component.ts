@@ -105,6 +105,10 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     });
   }
 
+  printIdentify(ident) {
+    return ident && ident.length > 20? ident.substring(0,20)+"...": ident;
+  }
+
   listarReproducoes(self) {
 
     self.http.get(environment.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
