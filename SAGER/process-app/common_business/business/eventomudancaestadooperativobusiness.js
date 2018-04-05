@@ -28,11 +28,11 @@ class EventoMudancaEstadoOperativoBusiness {
             }
         });
 
-        if(countEventosEOC != 1) {
+        if (countEventosEOC != 1) {
             throw new Error('É obrigatória a existência de um, e somente um, evento com o estado operativo EOC.');
         }
 
-        if(!encontrouEventoSimultaneoAoEOC) {
+        if (!encontrouEventoSimultaneoAoEOC) {
             throw new Error('Deve existir um evento com a mesma data/hora do evento EOC.');
         }
     }
@@ -385,7 +385,17 @@ class EventoMudancaEstadoOperativoBusiness {
      * @param {EventoMudancaEstadoOperativo[]} eventos 
      */
     verificarEventosNaMesmaDataHora(eventos) {
-
+        for (let i = 0; i < eventos.length; i++) {
+            if (!this.isEventoEOC(eventos[i])) {
+                for (let j = i + 1; j < eventos.length; j++) {
+                    if (eventos[i].dataVerificadaEmSegundos == eventos[j].dataVerificadaEmSegundos) {
+                        throw new Error('Não podem existir dois ou mais eventos com a mesma Data/Hora Verificada e mesmo Estágio de Operação' +
+                            ' (comissionamento ou operação comercial), exceto no caso de evento de Mudança de Estado Operativo com' +
+                            ' Estado Operativo “EOC”.');
+                    }
+                }
+            }
+        }
     }
 
 }

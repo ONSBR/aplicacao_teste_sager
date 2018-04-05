@@ -24,7 +24,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         expect(
             () => {
                 eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC);
-            }            
+            }
         ).toThrowError('É obrigatória a existência de um, e somente um, evento com o estado operativo EOC.');
 
         let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
@@ -34,7 +34,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         expect(
             () => {
                 eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOCESemEventoSimultaneo);
-            }            
+            }
         ).toThrowError('Deve existir um evento com a mesma data/hora do evento EOC.');
     });
 
@@ -258,7 +258,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             ];
 
             expect(
-                function() {
+                function () {
                     eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
                 }
             ).toThrowError('Evento GIC após 24 meses do EOC.');
@@ -282,7 +282,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
 
         expect(
-            function() {
+            function () {
                 eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
             }
         ).toThrowError('Evento GIC após 24 meses do EOC.');
@@ -305,7 +305,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         ];
 
         expect(
-            function() {
+            function () {
                 eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas)
             }
         ).toThrowError('Evento GIC após 15000 horas do EOC.');
@@ -360,7 +360,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         ];
 
         expect(
-            function() {
+            function () {
                 eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimiteComEventoGICEspelho);
             }
         ).toThrowError('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
