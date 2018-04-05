@@ -374,6 +374,14 @@ class EventoMudancaEstadoOperativoBusiness {
         });
     }
 
+    /**
+     * RNR078 - Estado Operativo de desligamento e condição operativa.
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarEventosNaMesmaDataHora(eventos) {
+
+    }
+
 }
 
 module.exports = EventoMudancaEstadoOperativoBusiness;
