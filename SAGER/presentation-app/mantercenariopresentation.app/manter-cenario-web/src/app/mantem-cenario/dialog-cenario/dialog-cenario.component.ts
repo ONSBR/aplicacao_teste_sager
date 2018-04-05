@@ -4,6 +4,38 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
 import { environment } from '../../../environments/environment';
 
+const ClassificacaoOrigem = {
+    
+  // responsabilidade
+  GUM : "GUM",    // turbina e equipamentos associados à produção de potência mecânica
+  GGE : "GGE",    // gerador e equipamentos associados à produção de potência elétrica
+  GTR : "GTR",    // transformador elevador de tensão e equipamentos associados 
+  GOT : "GOT",    // equipamentos ou sistemas eletromecânicos associados aos serviços auxiliares
+  GAC : "GAC",    // restrição elétrica imposta por ativos de conexão de uso exclusivo do empreendimento de geração
+  GAG : "GAG",    // origens não caracterizadas por equipamentos ou sistemas eletromecânicos
+  GCB : "GCB",    // restrições em unidades geradoras termelétricas associadas ao fornecimento do combustível
+
+  // não responsabilidade sem taxas
+  GCI : "GCI",    // restrições em unidades geradoras termelétricas associadas ao fornecimento do combustível
+  GIS : "GIS",    // instalação de sistemas por determinação do ons
+  GIC : "GIC",    // indisponibilidades associadas ao início de operação comercial de unidade geradora
+  GIM : "GIM",    // indisponibilidades associadas à modernização ou reforma que traga ganhos operativos ao sistema elétrico
+  GVO : "GVO",    // indisponibilidades atípicas associadas ao início de operação comercial de unidade geradora
+  GMP : "GMP",    // indisponibilidades associadas a medidas de caráter preventivo de combate à proliferação
+  GMT : "GMT",    // indisponibilidades associadas às intervenções de limpeza 
+
+  // não responsabilidade
+  GHN : "GHN",    // restrição devido à navegação que não caracterize responsabilidade do agente
+  GHT : "GHT",    // restrição devido ao turismo que não caracterize responsabilidade do agente
+  GHI : "GHI",    // restrição devido à irrigação ou outras captações que não caracterize responsabilidade do agente
+  GHC : "GHC",    // restrição devido ao controle de cheia e a inundações que não caracterize responsabilidade do agente
+  GRE : "GRE",    // restrição de potência por redução de queda útil
+  GRB : "GRB",    // restrição elétrica imposta pela rede básica
+  GOU : "GOU",    // restrição elétrica imposta por outros sistemas de transmissão ou pelo sistema de distribuição
+  GOO : "GOO",    // restrição por outras origens que não caracterize responsabilidade do empreendimento de geração
+  GHM : "GHM"     // restrição devido ao meio ambiente
+}
+
 @Component({
   selector: 'app-dialog-cenario',
   templateUrl: './dialog-cenario.component.html',
@@ -17,7 +49,14 @@ export class DialogCenarioComponent implements OnInit {
 
   usinas: Usina[] = [];
 
-  origens: string[] = [];
+  origens: string[] = [
+    ClassificacaoOrigem.GUM,ClassificacaoOrigem.GGE, ClassificacaoOrigem.GTR, ClassificacaoOrigem.GOT, 
+      ClassificacaoOrigem.GAC, ClassificacaoOrigem.GAG, ClassificacaoOrigem.GCB, 
+    ClassificacaoOrigem.GCI, ClassificacaoOrigem.GIS, ClassificacaoOrigem.GIC, ClassificacaoOrigem.GIM, 
+      ClassificacaoOrigem.GVO, ClassificacaoOrigem.GMP, ClassificacaoOrigem.GMT,
+    ClassificacaoOrigem.GHN, ClassificacaoOrigem.GHT, ClassificacaoOrigem.GHI, ClassificacaoOrigem.GHC, 
+      ClassificacaoOrigem.GRE, ClassificacaoOrigem.GRB, ClassificacaoOrigem.GOU, ClassificacaoOrigem.GOO, ClassificacaoOrigem.GHM
+  ];
 
   get idUsina() {
     return this.data.idUsina;
