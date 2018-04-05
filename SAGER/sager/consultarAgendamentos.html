@@ -1,0 +1,527 @@
+	<!DOCTYPE html>
+	<html lang="pt" ng-app="app">
+	<head>
+		<!-- Metas Gerais -->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">	
+
+		<title>ONS - SAGER</title>
+
+		<!-- CSS Web Fonts -->
+		<link rel="stylesheet" href="./css/angular-material-custom.css">
+
+		<!-- CSS Web Fonts -->
+		<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+		
+		<!-- Formatação / Alinhamentos e visual -->
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="./css/style.css">	
+		<link rel="stylesheet" href="./css/sky-forms.css">
+		<link rel="stylesheet" href="./css/custom-sky-forms.css">
+		<!-- CSS com as cutomizações -->
+		<link rel="stylesheet" href="./css/custom.css">
+		
+		<!-- CSS MENU -->
+		<link rel="stylesheet" href="./css/menu-sliding.css">
+		
+		<!-- <script type="text/javascript" src="./js/menu-sliding.js"></script> -->
+		
+		<!-- Estilos ui-grid -->	
+		<!-- <link rel="stylesheet" href="css/bootstrap-flatly.css" /> -->
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /> -->
+		<!-- <link rel="stylesheet" href="http://ui-grid.info/css/site.css" /> -->
+		<!-- Estilo/JS tabela -->
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+		<script type="text/javascript" language="javascript" src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="./css/dataTables.bootstrap.min.css">
+
+ 		<link rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.min.css">
+    	<script src="bower_components/angular/angular.js"></script>
+    	<script src="bower_components/angular-animate/angular-animate.js"></script>
+    	<script src="bower_components/angular-aria/angular-aria.js"></script>
+    	<script src="bower_components/angular-ui-grid/ui-grid.min.js"></script>
+
+
+		
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		
+		<script src="bower_components/angular-material/angular-material.js"></script>
+
+		<script src="app.js"></script>
+		<script type="text/javascript" class="init">
+			$(document).ready(function() {
+				$('#example').DataTable(
+					{
+						"language": {
+		                	"url": "js/Portuguese-Brasil.json"
+		                }
+					}
+				);
+				//add collapse to all tags hiden and showed by select mystuff
+				//$('#filtrosCalculo').hide();
+				//$('#resultCalculo').hide();
+
+				//on change hide all divs linked to select and show only linked to selected option
+				$('#tipo').change(function(){
+				    //Saves in a variable the wanted div
+				    var selected = $(this).val();
+
+				    if(selected == 0) {
+				    	$('#filtrosCalculo').show();
+						$('#resultCalculo').show();
+				    }
+				});
+			} );
+		</script>
+
+
+		<style type="text/css">
+
+			<!-- * { -->
+				<!-- -webkit-box-sizing: border-box; -->
+				<!-- -moz-box-sizing: border-box; -->
+				<!-- box-sizing: border-box  -->
+				<!-- } -->
+
+				<!-- *:before, -->
+				<!-- *:after { -->
+					<!-- -webkit-box-sizing: border-box; -->
+					<!-- -moz-box-sizing: border-box; -->
+					<!-- /* box-sizing: border-box */ -->
+					<!-- } -->
+
+
+					table.dataTable thead>tr>th.sorting_asc, table.dataTable thead>tr>th.sorting_desc, table.dataTable thead>tr>th.sorting, table.dataTable thead>tr>td.sorting_asc, table.dataTable thead>tr>td.sorting_desc, table.dataTable thead>tr>td.sorting {
+						vertical-align:top!important;
+						padding-right: 8px!important;
+					}
+
+					table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+
+						bottom :10px !important;
+						right: 10px !important;
+					}
+
+				</style>
+
+
+			</head>
+
+			<body>
+
+				<div>
+					<!--=== Conteúdo ===-->
+					<div class="container content">
+
+						<div class="header">
+
+							<!-- LOGOS -->
+							<div id="cabecalho-logos">
+								<img src="./imagens/logo-4-full.jpg"/>
+								<div style="float:right;" class="img-torres-target">
+									<img src="./imagens/bg-header.jpg">
+								</div>
+							</div>
+							<div class="row">
+								<!-- Inicio -->
+								<div class="col-md-9">
+									<!-- bloco 1 -->
+									<form action="#" id="associado-form" class="sky-form sky-form-campos">
+										<header style="background-color: #486018;">
+											<!-- MENU -->
+											<div class="col-md-7">
+												<a href="#" class="btn btn-u btn-u-yellow side-bar-left-menu-open" style="width:120px;" title="Abrir Menu">MENU</a>
+												<div class="side-menu-overlay" style="width: 0px; opacity: 0;"></div>
+												<div class="side-menu-wrapper">
+													<a href="#" class="menu-close">×</a><p></p>
+													<!-- ITENS DO MENU  -->
+													<div class="nav-side-menu">
+														<div class="menu-list">
+															<ul>
+																<li class="pai-nav-side-menu"><a href="index.html" title="Sistema de Gestão para o Desenvolvimento do Sistema de Apuração da Geração">Página Inicial</a></li>
+																<ul id="menu-content">
+																	<li data-toggle="collapse" data-target="#SAGER" class="pai-nav-side-menu">
+																		<a href="#">SAGER<span class="arrow"></span></a>
+																	</li>
+																	<ul class="sub-menu collapse" id="SAGER">
+																		<li class="active"><a href="solicitarcalculo.html">Solicitar Cálculo de Taxas</a></li>
+																		<li class="active"><a href="consultarTaxas.html">Consultar Taxas</a></li>
+																		<li class="active"><a href="consultarTaxasReferencia.html">Consultar Taxas de Referência</a></li>
+																		<li class="active"><a href="consultarParametrizacao.html">Manter Parametrização</a></li>
+																		<li class="active"><a href="consultarDisponibilidade.html">Consultar Disponibilidade</a></li>
+																		<li class="active"><a href="consultarEventos.html">Consultar Eventos (UC2407)</a></li>
+																		<li class="active"><a href="consultarEventosConsolidados.html">Consultar Eventos (UC0604)</a></li>
+																		<li class="active"><a href="gerarRelatorio.html">Gerar relatórios</a></li>
+																		<li class="active"><a href="consultarAgendamentos.html">Manter Agendamento</a></li>
+																		<li class="active"><a href="consultarCenarios.html">Manter Cenários</a></li>
+																		<li class="active"><a href="manterRegras.html">Manter Regras</a></li>
+																		<li class="active"><a href="manterWSRR.html">Manter Catálogo de Serviços</a></li>
+																	</ul>
+																</ul>
+																
+																
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+											<!-- Dados do usuário -->
+											<div class="col-md-5" style="font-size:15px; text-align: right;">
+												<ul class="list-inline badge-lists">
+													<li>
+														<span style="color:#fff;">Bem Vindo, <strong>jose.silva - Perfil CNOS</strong></span>    
+													</li>
+													<li>
+														<a class="btn-u btn-u-xs btn-u-default" href="index.html">Notificações</a>
+														<span class="badge badge-blue">7</span>
+													</li>
+													<li>
+														<a class="btn-u btn-u-xs btn-u-dark" href="tarefas.html">Tarefas</a>
+														<span class="badge badge-red rounded-2x">9</span>
+													</li>
+												</ul>
+											</div>
+
+											<div style="clear:both;"></div>
+
+										</header>
+
+										<!-- / breadcrumb -->
+										<ol class="breadcrumb">
+											<li><a href="#">SAGER</a></li>
+											<li class="active">Consultar Agendamentos</li>
+										</ol>
+
+									</form>
+									<!-- Fim Form -->
+
+									<!-- Bloco 1 -->
+									<form action="#" id="sky-form" class="sky-form sky-form-campos" style="border:0px;" ng-controller="ConsultarAgendamentoCtrl as ctrl">
+										<header>Consultar Agendamentos</header>
+										<fieldset>
+
+											<section class="col col-3">
+												<label class="label">Tipo de Agendamento</label>
+												<label class="select">
+													<select id="tipo" ng-change="selecionar()" ng-model="tipoSelecionado">
+														<option value=""></option>
+														<option value="0">Cálculo de Taxas</option>
+														<option value="1">Retificação</option>
+														<option value="2">Cenário de Cálculo</option>
+													</select>
+													<i></i>
+												</label>
+											</section>
+											<section class="col col-9 col-xs-offset-1">&nbsp;</section>
+
+											<!-- FILTROS CALCULO -->
+											<div class="row" ng-if="flagCalculo">
+
+												<section class="col col-6">
+													<label class="label">Data inicial</label>
+													<label class="input">
+														<i class="icon-append fa fa-calendar"></i>
+														<input type="text" name="start" id="start" placeholder="Data inicial">
+													</label>
+												</section>
+												<section class="col col-6">
+													<label class="label">Data final</label>
+													<label class="input">
+														<i class="icon-append fa fa-calendar"></i>
+														<input type="text" name="finish" id="finish" placeholder="Data final">
+													</label>
+												</section>
+												
+
+												<section class="col col-11" ng-controller="MainCtrl">
+													<label class="label">Instalação</label>
+													<!-- seletor de instalacoes -->
+													<fieldset>
+														<div class="row">
+															<div class="tab-v1">
+																<ul class="nav nav-tabs">
+																	<li class="active"><a href="#usinas" data-toggle="tab" aria-expanded="true">USINAS</a></li>
+																	<li><a href="#interligacoes" data-toggle="tab" aria-expanded="false">INTERLIGAÇÕES INTERNACIONAIS</a></li>
+																</ul>
+																<div class="tab-content">
+																	
+																	<!-- Tab 1 -->
+																	<div class="tab-pane fade active in" id="usinas">
+
+
+																		<!-- ui-grid -- Para definir o tamanho do grid mude a classe -->
+
+
+																		<div id="grid1" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+
+																	</div>
+																	<!-- Tab 2 -->
+																	<div class="tab-pane fade" id="interligacoes">
+																		<div id="grid1b" ui-grid="gridOptions2" ui-grid-selection class="grid"></div>
+																	</div>
+
+																	
+																</div>
+															</div>
+														</div>
+
+													</fieldset>
+													<!-- fim seletor de instalacoes -->
+												</section>
+
+
+												<section class="col col-11">
+													<button class="btn-u" src="#" type="button">Pesquisar</button>
+												</section>
+
+												<div style="clear:both;"></div>
+
+											</div>
+											<!-- FIM FILTROS CALCULO -->
+
+											<!-- FILTROS RETIFICACAO -->
+											<div class="row" ng-if="flagRetificacao">
+
+												<section class="col col-6">
+													<label class="label">Data inicial</label>
+													<label class="input">
+														<i class="icon-append fa fa-calendar"></i>
+														<input type="text" name="start" id="start" placeholder="Data inicial">
+													</label>
+												</section>
+												<section class="col col-6">
+													<label class="label">Data final</label>
+													<label class="input">
+														<i class="icon-append fa fa-calendar"></i>
+														<input type="text" name="finish" id="finish" placeholder="Data final">
+													</label>
+												</section>
+												
+
+												<section class="col col-11">
+													<button class="btn-u" src="#" type="button">Pesquisar</button>
+												</section>
+
+												<div style="clear:both;"></div>
+
+											</div>
+											<!-- FIM FILTROS RETIFICACAO -->
+
+											<!-- FILTROS CENARIO -->
+											<div class="row" ng-if="flagCenario">
+
+												<section class="col col-6">
+													<label class="label">Data inicial</label>
+													<label class="input">
+														<i class="icon-append fa fa-calendar"></i>
+														<input type="text" name="start" id="start" placeholder="Data inicial">
+													</label>
+												</section>
+												<section class="col col-6">
+													<label class="label">Data final</label>
+													<label class="input">
+														<i class="icon-append fa fa-calendar"></i>
+														<input type="text" name="finish" id="finish" placeholder="Data final">
+													</label>
+												</section>
+												
+
+												<section class="col col-11">
+													<button class="btn-u" src="#" type="button">Pesquisar</button>
+												</section>
+
+												<div style="clear:both;"></div>
+
+											</div>
+											<!-- FIM FILTROS CENARIO -->
+
+										</fieldset>
+
+										<div class="margin-bottom-10"></div>
+
+										<!-- Tabs resultado -->
+										<header>Resultado da Pesquisa</header>
+										<fieldset>
+											
+
+											<div class="content" ng-if="flagCalculo">
+
+
+												<!-- Tabela -->
+												<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+													<thead>
+														<tr>
+															<th class="thCOE">Protocolo</th>
+															<th class="thCOE">Instalação</th>
+															<th class="thCOE">Data/Hora</th>
+															<th class="thCOE">Solicitante</th>
+															<th class="thCOE">Mês Inicial</th>
+															<th class="thCOE">Mês Final</th>
+															<th class="thCOE">Status</th>
+															<th class="thCOE">Resultado</th>
+															
+														</tr>
+													</thead>
+													<tbody>
+														<!-- Inicio data 1 -->
+														<tr>
+															<td>20160401-001</td>
+															<td>CAMPOS</td>
+															<td>01/04/2016 00:00</td>
+															<td>cnos</td>
+															<td>01/2010</td>
+															<td>12/2010</td>
+															<td>AGENDADO</td>
+															<td>-</td>
+															
+														</tr>
+														<!-- Fim data 1 -->
+														<!-- Inicio data 2 -->
+														<tr>
+															<td>20160401-001</td>
+															<td>CAMPOS</td>
+															<td>01/04/2016 00:00</td>
+															<td>cnos</td>
+															<td>01/2010</td>
+															<td>12/2010</td>
+															<td>FINALIZADA</td>
+															<td>SUCESSO</td>
+															
+														</tr>
+														<!-- Fim data 2 -->
+														<!-- <inicio data 3 -->
+														<tr>
+															<td>20160401-001</td>
+															<td>CAMPOS</td>
+															<td>01/04/2016 00:00</td>
+															<td>cnos</td>
+															<td>01/2010</td>
+															<td>12/2010</td>
+															<td>FINALIZADA</td>
+															<td>ERRO</td>
+														</tr>
+														<!-- Fim data 3 -->
+													</tbody>
+												</table>
+												<footer class="text-right">
+											
+													<button type="submit" class="btn-u" >Executar Agora</button>
+													<button type="submit" class="btn-u" >Reagendar</button>
+													<button type="submit" class="btn-u" >Cancelar</button>
+												</footer>
+
+											</div>								
+
+
+											<div class="content" ng-if="flagRetificacao">
+
+												<div id="gridRet" ui-grid="gridOptionsRetificacao" ui-grid-selection class="grid"></div>
+												<footer class="text-right">
+											
+													<button type="submit" class="btn-u" >Executar Agora</button>
+													<button type="submit" class="btn-u" >Reagendar</button>
+												</footer>
+											</div>								
+
+											<div class="content" ng-if="flagCenario">
+
+												<!-- Tabela -->
+												<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+													<thead>
+														<tr>
+															<th class="thCOE">Cenário</th>
+															<th class="thCOE">Instalação</th>
+															<th class="thCOE">Data Início Vigência</th>
+															<th class="thCOE">Data Término Vigência</th>
+															<th class="thCOE">Justificativa</th>
+															<th class="thCOE">Data/Hora</th>
+															<th class="thCOE">Situação</th>
+															<th class="thCOE">Resultado</th>
+															
+														</tr>
+													</thead>
+													<tbody>
+														<!-- Inicio data 1 -->
+														<tr>
+															<td>Cenário XYZ</td>
+															<td>PORTO PECEM II</td>
+															<td>01/01/2001 00:00:00</td>
+															<td></td>
+															<td>Processo XXX</td>
+															<td>01/01/2001 00:00:00</td>
+															<td>FINALIZADO</td>
+															<td>o</td>
+														</tr>
+														
+														<!-- Fim data 3 -->
+													</tbody>
+												</table>
+											</div>								
+
+										</fieldset>
+										<!-- Final Resultado -->
+										<!-- Botões -->
+										<footer class="text-right">
+
+										</footer>
+									</form>
+
+								</div>
+							</div>
+						</div>
+						<!--=== Final conteúdo ===-->
+					</div>
+					<!-- Incorporando algumas funções de validação -->
+					<!-- <script type="text/javascript"> -->
+					<!-- jQuery(document).ready(function() { -->
+					<!-- AssociadoForm.initAssociadoForm(); -->
+					<!-- EventosForm.initEventosForm(); -->
+					<!-- }); -->
+					<!-- </script> -->
+
+
+
+					<!-- Incorporando as funções do menu-sliding -->
+					<script type="text/javascript">
+	var slidebar_width  = 340; //slidebar width + padding size
+	var slide_bar       = $(".side-menu-wrapper"); //slidebar
+	var slide_open_btn  = $(".side-bar-left-menu-open"); //slidebar close btn
+	var slide_close_btn = $(".menu-close"); //slidebar close btn
+	var overlay         = $(".side-menu-overlay"); //slidebar close btn
+
+	slide_open_btn.click(function(e){
+		e.preventDefault();
+	    slide_bar.css( {"left": "0px"}); //change to "right" for right positioned menu
+	    overlay.css({"opacity":"1", "width":"100%"});
+	});
+	slide_close_btn.click(function(e){
+		e.preventDefault();
+	    slide_bar.css({"left": "-"+ slidebar_width + "px"}); //change to "right" for right positioned menu
+	    overlay.css({"opacity":"0", "width":"0"});  
+	});
+</script>
+<script>$('pre code').each(function(i, block) {hljs.initHighlightingOnLoad();});</script>
+
+<!-- <script type="text/javascript"> -->
+<!-- jQuery(document).ready(function() { -->
+<!-- App.init(); -->
+<!-- Masking.initMasking(); -->
+<!-- Datepicker.initDatepicker(); -->
+<!-- Validation.initValidation(); -->
+<!-- StyleSwitcher.initStyleSwitcher(); -->
+<!-- }); -->
+<!-- </script> -->
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+ <!-- Metas Gerais -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">	
+    
+    <title>ONS - SAGER</title>
+
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+
+		<!-- CSS Web Fonts -->
+		<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+		
+		<!-- Formatação / Alinhamentos e visual -->
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="./css/style.css">	
+		<link rel="stylesheet" href="./css/sky-forms.css">
+		<link rel="stylesheet" href="./css/custom-sky-forms.css">
+		<!-- CSS com as cutomizações -->
+		<link rel="stylesheet" href="./css/custom.css">
+		
+		<!-- CSS MENU -->
+		<link rel="stylesheet" href="./css/menu-sliding.css">
+		
+		<!-- <script type="text/javascript" src="./js/menu-sliding.js"></script> -->
+		
+		<!-- Estilos ui-grid -->	
+		<!-- <link rel="stylesheet" href="css/bootstrap-flatly.css" /> -->
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /> -->
+		<!-- <link rel="stylesheet" href="http://ui-grid.info/css/site.css" /> -->
+		<!-- Estilo/JS tabela -->
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+		<script type="text/javascript" language="javascript" src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="./css/dataTables.bootstrap.min.css">
+
+ 		<link rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.min.css">
+    	<script src="bower_components/angular/angular.js"></script>
+    	<script src="bower_components/angular-animate/angular-animate.js"></script>
+    	<script src="bower_components/angular-aria/angular-aria.js"></script>
+    	<script src="bower_components/angular-ui-grid/ui-grid.min.js"></script>
+
+
+		
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		
+		<script src="bower_components/angular-material/angular-material.js"></script>
+
+		<script src="app.js"></script>
+
+
+</head>
+
+<body>
+<div>
+    <!--=== Conteúdo ===-->
+    <div class="container content">
+	
+	<div class="header">
+		
+		<!-- LOGOS -->
+		<div id="cabecalho-logos">
+			<img src="./imagens/logo-4-full.jpg"/>
+			<div style="float:right;" class="img-torres-target">
+				<img src="./imagens/bg-header.jpg">
+			</div>
+		</div>
+        <div class="row">
+            <!-- Inicio -->
+            <div class="col-md-9">
+                 <!-- Validar -->
+                 <form action="#" id="associado-form" class="sky-form sky-form-campos">
+                    <header style="background-color: #486018;">
+						
+						<div class="col-md-7">
+												<a href="#" class="btn btn-u btn-u-yellow side-bar-left-menu-open" style="width:120px;" title="Abrir Menu">MENU</a>
+												<div class="side-menu-overlay" style="width: 0px; opacity: 0;"></div>
+												<div class="side-menu-wrapper">
+													<a href="#" class="menu-close">×</a><p></p>
+													<!-- ITENS DO MENU  -->
+													<div class="nav-side-menu">
+														<div class="menu-list">
+															<ul>
+																<li class="pai-nav-side-menu"><a href="index.html" title="Sistema de Gestão para o Desenvolvimento do Sistema de Apuração da Geração">Página Inicial</a></li>
+																<ul id="menu-content">
+																	<li data-toggle="collapse" data-target="#SAGER" class="pai-nav-side-menu">
+																		<a href="#">SAGER<span class="arrow"></span></a>
+																	</li>
+																	<ul class="sub-menu collapse" id="SAGER">
+																		<li class="active"><a href="#" onclick="goMenu('http://localhost:4200/')">Solicitar Cálculo de Taxas</a></li>
+																		<li class="active"><a href="#" onclick="goMenu('http://localhost:4200/')">Consultar Taxas</a></li>
+																		<li class="active"><a href="#" onclick="goMenu('http://localhost:4202/')">Manter Cenários</a></li>
+																		<li class="active"><a href="#" onclick="goMenu('http://localhost:4201/')">Manter Retificação</a></li>
+																	</ul>
+																</ul>
+																
+																
+														</div>
+													</div>
+												</div>
+											</div>
+						 <div class="col-md-5" style="font-size:15px; text-align: right;">
+						 
+						 <ul class="list-inline badge-lists">
+			
+									<li>
+										<span style="color:#fff;">Bem Vindo, <strong>jose.silva - Perfil CNOS</strong></span>    
+									</li>
+									<li>
+										<a class="btn-u btn-u-xs btn-u-default" href="index.html">Notificações</a>
+										<span class="badge badge-blue">7</span>
+									</li>
+									<li>
+										<a class="btn-u btn-u-xs btn-u-dark" href="tarefas.html">Tarefas</a>
+										<span class="badge badge-red rounded-2x">9</span>
+									</li>
+									
+						</ul>
+						
+					
+						 </div>
+						 
+			  <div style="clear:both;"></div>
+						
+					</header>
+					<!-- <div style="background-color:#fff;"> -->
+						<!-- <label class="texto">Notificações</label> -->
+					<!-- </div> -->
+					
+					<!-- / breadcrumb -->
+					<!-- <ol class="breadcrumb"> -->
+					  <!-- <li><a href="#">SAGER</a></li> -->
+					  <!-- <li class="active">Notificações</li> -->
+					<!-- </ol> -->
+					
+					<fieldset>
+					
+					<section class="col col-9">
+						<iframe name="main" id="main" class="conteudo" src="blank.html" frameborder="0" width="1050px" height="1000px"></iframe>
+
+					</section>
+					<!--
+					<section class="col col-3">
+						
+						<div class="headline"><h2>Tarefas</h2></div>
+						
+						<div class="table-responsive">
+						
+						<table class="table">
+						<thead>
+							<tr>
+								<th>Tarefa</th>
+								<th class="hidden-sm">Responsável</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Retificar</td>
+								<td>Maria P.</td>
+								<td><span class="label label-warning">Expirado</span></td>
+							</tr>
+							<tr>
+								<td>Retificar</td>
+								<td>Paulo João</td>
+								<td><span class="label label-success">Sucesso</span></td>
+							</tr>
+							<tr>
+								<td>Retificar</td>
+								<td>Artur Justino</td>
+								<td><span class="label label-danger">Erro!</span></td>
+							</tr>
+							<tr>
+								<td>Retificar</td>
+								<td>João Marques</td>
+								<td><span class="label label-info">Pendente</span></td>
+							</tr>
+							
+										<tr>
+								<td>Retificar</td>
+								<td>Maria P.</td>
+								<td><span class="label label-warning">Expirado</span></td>
+							</tr>
+							<tr>
+								<td>Retificar</td>
+								<td>Paulo João</td>
+								<td><span class="label label-success">Sucesso</span></td>
+							</tr>
+							<tr>
+								<td>Retificar</td>
+								<td>Artur Justino</td>
+								<td><span class="label label-danger">Erro!</span></td>
+							</tr>
+
+						</tbody>
+					</table>
+					
+					</div>
+					
+					</section>-->
+					
+					</fieldset>
+					
+					<div style="clear:both;"></div>
+					
+                    <fieldset>
+                        <div class="row">
+                            
+                            
+							<!-- MODAL DETALHES PROTOCOLO -->
+							<form action="#" id="esqueci_senha" class="sky-form sky-form-campos">
+							<div class="modal fade" id="responsive" tabindex="-1" style="display: none;">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">×</button>
+											<h4 class="modal-title" id="myModalLabel4">Detalhe protocolo: XXXXXXX-XXX</h4>
+										</div>
+										<div class="modal-body">
+											<div class="row">
+											<div class="col-md-12" style="margin-bottom:20px;">Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi.
+											</div>
+												
+																					
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn-u" data-dismiss="modal">Fechar</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							</form>
+						<!-- FIM MODAL -->
+                        </div>
+                    </fieldset>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <!--=== Final conteúdo ===-->
+</div>
+
+
+<!-- Incorporando as funções do menu-sliding-->
+<script type="text/javascript">
+var slidebar_width  = 290; //slidebar width + padding size
+var slide_bar       = $(".side-menu-wrapper"); //slidebar
+var slide_open_btn  = $(".side-bar-left-menu-open"); //slidebar close btn
+var slide_close_btn = $(".menu-close"); //slidebar close btn
+var overlay         = $(".side-menu-overlay"); //slidebar close btn
+
+slide_open_btn.click(function(e){
+    e.preventDefault();
+    slide_bar.css( {"left": "0px"}); //change to "right" for right positioned menu
+    overlay.css({"opacity":"1", "width":"100%"});
+});
+slide_close_btn.click(function(e){
+    e.preventDefault();
+    slide_bar.css({"left": "-"+ slidebar_width + "px"}); //change to "right" for right positioned menu
+    overlay.css({"opacity":"0", "width":"0"});  
+});
+</script><script>$('pre code').each(function(i, block) {hljs.initHighlightingOnLoad();});</script>
+
+
+</body>
+</html>
