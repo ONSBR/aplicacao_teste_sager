@@ -63,7 +63,7 @@
             </td>
             <td>
               <select [(ngModel)]="regra.tipoRegra">
-                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra" (onChange)="regra.regraPara = ''">
+                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra"> 
                   {{tipoRegra}}
                 </option>
               </select>
