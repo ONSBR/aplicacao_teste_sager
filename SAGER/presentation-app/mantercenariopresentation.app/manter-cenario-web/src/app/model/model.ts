@@ -43,7 +43,9 @@ export class Usina {
 export enum TipoRegra {
     PotenciaDisponivel = 'Potência Disponível',
     Franquia = 'Franquia',
-    OrigemEvento = 'Origem do Evento'
+    OrigemEvento = 'Classificação de Origem do Evento',
+    EstadoOperativo = 'Estado Operativo do Evento',
+    CondicaoOperativo = 'Condição Operativa do Evento',
 }
 
 export enum SituacaoCenario {

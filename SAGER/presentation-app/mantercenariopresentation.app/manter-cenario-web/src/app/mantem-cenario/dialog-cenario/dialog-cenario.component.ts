@@ -3,6 +3,7 @@ import { HttpClient} from '@angular/common/http';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
 import { environment } from '../../../environments/environment';
+import { ClassificacaoOrigem, EstadoOperativo, CondicaoOperativa } from '../constants';
 
 @Component({
   selector: 'app-dialog-cenario',
@@ -11,13 +12,29 @@ import { environment } from '../../../environments/environment';
 })
 export class DialogCenarioComponent implements OnInit {
 
-  tiposRegras: TipoRegra[] = [TipoRegra.PotenciaDisponivel, TipoRegra.Franquia, TipoRegra.OrigemEvento];
+  tiposRegras: TipoRegra[] = Object.values(TipoRegra);
 
   uges: UnidadeGeradora[] = [];
 
   usinas: Usina[] = [];
 
-  origens: string[] = [];
+  origens_type: string[] = Object.values(ClassificacaoOrigem);
+  estados_type: string[] = Object.values(EstadoOperativo);
+  condicoes_type: string[] = Object.values(CondicaoOperativa);
+
+  getOrigens(tipoRegra): string[]  {
+    var retorno = [];
+    if (tipoRegra == this.tiposRegras[2]) {
+      retorno = this.origens_type;
+    }
+    else if (tipoRegra == this.tiposRegras[3]) {
+      retorno = this.estados_type;
+    }
+    else if (tipoRegra == this.tiposRegras[4]) {
+      retorno = this.condicoes_type;
+    }
+    return retorno;
+  }
 
   get idUsina() {
     return this.data.idUsina;

@@ -3,7 +3,7 @@
 <table border="0">
   <tr>
     <td width="1000" style="vertical-align:top">
-      <fieldset style="height: 110px">
+      <fieldset style="height: 120px">
         <div>
           <span>Nome do Cenário:
             <input type="text" [(ngModel)]="filtroConsulta.nome" />
@@ -33,20 +33,21 @@
       </fieldset>
       <div>
         <span>
-          <h2>Cenários:</h2>
-          <table border="1" width="1000">
+          <h3>Cenários:</h3>
+          <table border="0" width="1000" class="grid-entidades">
             <tr>
-              <th width="200">Id</th>
+              <th width="130">Id</th>
               <th width="150">Nome</th>
               <th width="90">Dt.Ini Vig.</th>
               <th width="90">Dt.Fim Vig.</th>
-              <th>justificativa</th>
+              <th>Justificativa</th>
+              <th width="50">Usina</th>
               <th width="80">Situação</th>
               <th width="150">Opções</th>
             </tr>
             <tr *ngFor="let cenario of cenarios" style="cursor: pointer">
-              <td (click)='alterar(cenario)'>
-                {{cenario.idCenario}}
+              <td (click)='alterar(cenario)' [title]="cenario.idCenario">
+                {{printIdentify(cenario.idCenario)}}
               </td>
               <td (click)='alterar(cenario)'>
                 <b *ngIf="cenarioSelecionado.idCenario == cenario.idCenario">
@@ -56,9 +57,10 @@
                   {{ cenario.nomeCenario }}
                 </span>
               </td>
-              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia}}</td>
-              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia}}</td>
+              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia | date: 'dd/MM/yyyy' }}</td>
+              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia | date: 'dd/MM/yyyy' }}</td>
               <td (click)='alterar(cenario)'>{{cenario.justificativa}}</td>
+              <td (click)='alterar(cenario)'>{{cenario.idUsina}}</td>
               <td>{{cenario.situacao}}</td>
               <td>
                 <button class="button" (click)='excluir(cenario)'>Excluir</button>

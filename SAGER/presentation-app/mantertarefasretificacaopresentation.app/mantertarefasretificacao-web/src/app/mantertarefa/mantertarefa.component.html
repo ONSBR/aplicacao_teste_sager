@@ -3,6 +3,7 @@
 </h2>
 
 <fieldset>
+  <div><b>Download de Eventos</b></div> <br>
   <div *ngIf="camposObrigatoriosPesquisaEventos.length > 0" [ngStyle]="{'color':'red'}">
     <span>Campos obrigatórios:</span>
     <ul>
@@ -33,7 +34,9 @@
     </span>
   </div>
 </fieldset>
-
+<h3>
+    Lista de tarefas
+  </h3>
 <fieldset>
   <div *ngIf="camposObrigatoriosTarefa.length > 0" [ngStyle]="{'color':'red'}">
     <span>Campos obrigatórios:</span>
@@ -52,11 +55,12 @@
       <button class="button" (click)='inserirTarefa($event)'>Salvar tarefa</button>
     </span>
   </div>
+  <br>
   <div>
-    <table border="1">
-      <tr>Tarefas</tr>
+    <table class="grid-entidades" width="100%">
+      <tr><th colspan="5">Tarefas</th></tr>
       <tr *ngFor="let tarefa of tarefas">
-        <td>
+        <td width="250">
           {{ tarefa.nome }}
         </td>
         <td>
@@ -64,13 +68,13 @@
           <input type="file" (change)='uploadPlanilha(tarefa, $event.target.files)' />
         </td>
         <td>
-          <button class="button" (click)='downloadPlanilha(tarefa, $event)'>Download da planilha</button>
+          <button class="button" (click)='downloadPlanilha(tarefa, $event)'  width="50">Download da planilha</button>
         </td>
         <td>
-          <button class="button" (click)='aplicar($event)'>Aplicar</button>
+          <button class="button" (click)='aplicar($event)'  width="50">Aplicar</button>
         </td>
         <td>
-          <button class="button" (click)='excluir(tarefa)'>Excluir</button>
+          <button class="button" (click)='excluir(tarefa)'  width="50">Excluir</button>
         </td>
       </tr>
     </table>

@@ -41,6 +41,10 @@ export class MantemCenarioComponent implements OnInit {
     });
   }
 
+  printIdentify(ident) {
+    return ident && ident.length > 20? ident.substring(0,20)+"...": ident;
+  }
+
   excluir(cenario) {
 
     if (confirm('Confirma a exclusão do cenário?')) {
@@ -113,7 +117,7 @@ export class MantemCenarioComponent implements OnInit {
   openDialog() {
 
     let dialogRef = this.dialog.open(DialogCenarioComponent, {
-      width: '1000px', height: '350px',
+      width: '1050px', height: '450px',
       data: this.cenarioSelecionado
     });
 
