@@ -8,25 +8,34 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC)).toBeTruthy();
+        eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC);
 
         let eventosComUmEOC2 = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2)).toBeTruthy();
+        eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOC2);
 
         let eventosComDoisEOC = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 300 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
+
+        expect(
+            () => {
+                eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC);
+            }
+        ).toThrowError('É obrigatória a existência de um, e somente um, evento com o estado operativo EOC.');
 
         let eventosComUmEOCESemEventoSimultaneo = [{ idEstadoOperativo: 'DCA', dataVerificadaEmSegundos: 100 },
         { idEstadoOperativo: 'EOC', dataVerificadaEmSegundos: 200 },
         { idEstadoOperativo: 'LIG', dataVerificadaEmSegundos: 300 },
         { idEstadoOperativo: 'LCC', dataVerificadaEmSegundos: 400 }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComDoisEOC)).toBeFalsy();
+        expect(
+            () => {
+                eventoMudancaEstadoOperativoBusiness.verificarUnicidadeEventoEntradaOperacaoComercial(eventosComUmEOCESemEventoSimultaneo);
+            }
+        ).toThrowError('Deve existir um evento com a mesma data/hora do evento EOC.');
     });
 
     it('Preencher o campo disponibilidade com a potência vigente quando a condição operativa for NOR, NOT ou TST:', () => {
@@ -68,28 +77,6 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         eventoMudancaEstadoOperativoBusiness.preencherCampoDisponibilidadeVazio(eventoDCO, uge);
         expect(eventoDCO.potenciaDisponivel).toBe(uge.potenciaDisponivel);
     });
-
-    it('Verificar Evento DCO Apos Lig:', () => {
-        let listaComUmEvento = [{ id: '1' }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(listaComUmEvento)).toBeTruthy();
-
-        let eventosRFO = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RFO' }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRFO)).toBeTruthy();
-
-        let eventosRPR = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'DCO', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosRPR)).toBeTruthy();
-
-
-        let eventosLIG = [{ idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'LIG', idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GOT', potenciaDisponivel: 300 },
-        { idEstadoOperativo: 'LIG', potenciaDisponivel: 300, idCondicaoOperativa: 'RPR' }];
-        expect(eventoMudancaEstadoOperativoBusiness.verificarEventoDCOAposLig(eventosLIG)).toBeTruthy();
-    });
-
 
     it('Refletir ultima alteração do mês em evento espelho:', () => {
         let eventos = [
@@ -249,7 +236,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
             ];
 
             expect(
-                function() {
+                function () {
                     eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
                 }
             ).toThrowError('Evento GIC após 24 meses do EOC.');
@@ -273,7 +260,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
 
 
         expect(
-            function() {
+            function () {
                 eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos24Meses);
             }
         ).toThrowError('Evento GIC após 24 meses do EOC.');
@@ -296,7 +283,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         ];
 
         expect(
-            function() {
+            function () {
                 eventoMudancaEstadoOperativoBusiness.verificarTempoLimiteFranquiaGIC(eventosComGICApos15000Horas)
             }
         ).toThrowError('Evento GIC após 15000 horas do EOC.');
@@ -351,7 +338,7 @@ describe('EventoMudancaEstadoOperativoBusiness deve:', function () {
         ];
 
         expect(
-            function() {
+            function () {
                 eventoMudancaEstadoOperativoBusiness.verificarLimite960HorasEventoGIC(eventosApos01012001UltrapassaLimiteComEventoGICEspelho);
             }
         ).toThrowError('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');

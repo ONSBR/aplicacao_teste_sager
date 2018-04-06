@@ -8,14 +8,14 @@ class EventoMudancaEstadoOperativoBusiness {
      * RNI080 - Entrada em Operação Comercial de um equipamento. 
      * É obrigatória a existência de um, e somente um, evento com o estado operativo EOC para 
      * indicar a entrada em operação comercial de um equipamento.
-     * @param {EventoMudancaEstadoOperativo[]} eventosMudancasEstadosOperativos - array de eventos.
+     * @param {EventoMudancaEstadoOperativo[]} eventos - array de eventos.
      */
-    verificarUnicidadeEventoEntradaOperacaoComercial(eventosMudancasEstadosOperativos) {
+    verificarUnicidadeEventoEntradaOperacaoComercial(eventos) {
         let countEventosEOC = 0;
         let tempoEmSegundosEOC;
         let encontrouEventoSimultaneoAoEOC = false;
 
-        eventosMudancasEstadosOperativos.forEach(evento => {
+        eventos.forEach(evento => {
             // FIXME constantes
             if (this.isEventoEOC(evento)) {
                 countEventosEOC++;
@@ -28,7 +28,13 @@ class EventoMudancaEstadoOperativoBusiness {
             }
         });
 
-        return countEventosEOC == 1 && encontrouEventoSimultaneoAoEOC;
+        if (countEventosEOC != 1) {
+            throw new Error('É obrigatória a existência de um, e somente um, evento com o estado operativo EOC.');
+        }
+
+        if (!encontrouEventoSimultaneoAoEOC) {
+            throw new Error('Deve existir um evento com a mesma data/hora do evento EOC.');
+        }
     }
 
     isEventoEOC(evento) {
@@ -69,19 +75,21 @@ class EventoMudancaEstadoOperativoBusiness {
             for (let i = 1; i < eventos.length; i++) {
                 return this.compararEventos(eventos[i - 1], eventos[i]);
             }
-        } else {
-            return true;
         }
     }
 
     compararEventos(eventoAnterior, evento) {
         if (eventoAnterior.idEstadoOperativo == 'LIG' && (eventoAnterior.idCondicaoOperativa == 'RFO' || eventoAnterior.idCondicaoOperativa == 'RPR')
             && eventoAnterior.idClassificacaoOrigem != 'GRE' && evento.idEstadoOperativo == 'DCO') {
-            return (eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa) &&
-                (eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem) &&
-                (eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)
-        } else {
-            return true;
+
+            if (!(eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa &&
+                eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem &&
+                eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel)) {
+                throw new Error('Um evento de Mudança de Estado Operativo com Estado Operativo “DCO” posterior' +
+                    ' a um evento com Estado Operativo “LIG” e Condição Operativa “RFO” ou “RPR” deve ter a mesma Condição Operativa,' +
+                    ' origem e valor de Disponibilidade do evento predecessor, exceto se for Origem “GRE”');
+            }
+
         }
     }
 
@@ -372,6 +380,24 @@ class EventoMudancaEstadoOperativoBusiness {
                     ' tem que ter: Condição Operativa em branco, Valor de Disponibilidade igual a zero e Origem preenchida.');
             }
         });
+    }
+
+    /**
+     * RNR078 - Estado Operativo de desligamento e condição operativa.
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarEventosNaMesmaDataHora(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (!this.isEventoEOC(eventos[i])) {
+                for (let j = i + 1; j < eventos.length; j++) {
+                    if (eventos[i].dataVerificadaEmSegundos == eventos[j].dataVerificadaEmSegundos) {
+                        throw new Error('Não podem existir dois ou mais eventos com a mesma Data/Hora Verificada e mesmo Estágio de Operação' +
+                            ' (comissionamento ou operação comercial), exceto no caso de evento de Mudança de Estado Operativo com' +
+                            ' Estado Operativo “EOC”.');
+                    }
+                }
+            }
+        }
     }
 
 }
