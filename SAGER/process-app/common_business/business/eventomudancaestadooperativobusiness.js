@@ -73,12 +73,12 @@ class EventoMudancaEstadoOperativoBusiness {
     verificarEventoDCOAposLig(eventos) {
         if (eventos.length > 1) {
             for (let i = 1; i < eventos.length; i++) {
-                return this.compararEventos(eventos[i - 1], eventos[i]);
+                return this.compararEventosDCOLIG(eventos[i - 1], eventos[i]);
             }
         }
     }
 
-    compararEventos(eventoAnterior, evento) {
+    compararEventosDCOLIG(eventoAnterior, evento) {
         if (eventoAnterior.idEstadoOperativo == 'LIG' && (eventoAnterior.idCondicaoOperativa == 'RFO' || eventoAnterior.idCondicaoOperativa == 'RPR')
             && eventoAnterior.idClassificacaoOrigem != 'GRE' && evento.idEstadoOperativo == 'DCO') {
 
@@ -107,7 +107,7 @@ class EventoMudancaEstadoOperativoBusiness {
 
     refletirAlteracoesParaEventosEspelhos(eventoAlterado, eventos, indicePosteriorEventoAlterado) {
         for (let i = indicePosteriorEventoAlterado; i < eventos.length; i++) {
-            if (this.isEventoEspelho(eventos[i], eventos[i - 1])) {
+            if (this.isEventoEspelho(eventos[i - 1], eventos[i])) {
                 eventos[i].idClassificacaoOrigem = eventoAlterado.idClassificacaoOrigem;
                 eventos[i].idEstadoOperativo = eventoAlterado.idEstadoOperativo;
                 eventos[i].idCondicaoOperativa = eventoAlterado.idCondicaoOperativa;
@@ -116,7 +116,7 @@ class EventoMudancaEstadoOperativoBusiness {
         }
     }
 
-    isEventoEspelho(evento, eventoAnterior) {
+    isEventoEspelho(eventoAnterior, evento) {
         return eventoAnterior != undefined &&
             eventoAnterior.dataVerificada.getMonth() != evento.dataVerificada.getMonth() &&
             evento.dataVerificada.getDate() == 1 && evento.dataVerificada.getHours() == 0 && evento.dataVerificada.getMinutes() == 0;
@@ -162,12 +162,13 @@ class EventoMudancaEstadoOperativoBusiness {
                 if (eventos[i].idEstadoOperativo == eventos[i + 1].idEstadoOperativo &&
                     eventos[i].idCondicaoOperativa == eventos[i + 1].idCondicaoOperativa &&
                     eventos[i].idClassificacaoOrigem == eventos[i + 1].idClassificacaoOrigem &&
-                    eventos[i].potenciaDisponivel == eventos[i + 1].potenciaDisponivel && !this.isEventoEspelho(eventos[i + 1], eventos[i])) {
+                    eventos[i].potenciaDisponivel == eventos[i + 1].potenciaDisponivel && !this.isEventoEspelho(eventos[i], eventos[i + 1])) {
                     eventos[i + 1].operacao = 'E';
                 }
             }
         }
     }
+    
     /**
      *  RNI207 - Tempo limite para utilização da  franquia GIC: Regra válida após 10/2014
      *  Não pode haver registro de evento de Mudança de Estado Operativo com Origem “GIC” após 24 meses de operação comercial do Equipamento.
@@ -208,7 +209,7 @@ class EventoMudancaEstadoOperativoBusiness {
         for (let i = 0; i < eventos.length; i++) {
             if (this.isEventoGIC(eventos[i]) && UtilCalculoParametro.gte_01_01_2001(eventos[i])) {
                 for (let j = i + 1; j < eventos.length; j++) {
-                    if (!this.isEventoEspelho(eventos[j], eventos[j - 1])) {
+                    if (!this.isEventoEspelho(eventos[j - 1], eventos[j])) {
                         if (UtilCalculoParametro.calcularIntervaloEmHoras(eventos[i].dataVerificada, eventos[j].dataVerificada) > 960) {
                             throw new Error('Não pode haver registro de evento com Origem “GIC” que ultrapasse o limite de 960 horas.');
                         } else {
@@ -268,7 +269,7 @@ class EventoMudancaEstadoOperativoBusiness {
     validarAlteracoesDiretasEventosEspelhos(eventos) {
         if (eventos.length > 1) {
             for (let i = 1; i < eventos.length; i++) {
-                if (this.isEventoAlteracao(eventos[i]) && this.isEventoEspelho(eventos[i], eventos[i - 1])) {
+                if (this.isEventoAlteracao(eventos[i]) && this.isEventoEspelho(eventos[i - 1], eventos[i])) {
                     throw new Error('Não são permitidas ao ator COSR retificações/revisões diretamente em eventos-espelho (evento zero-hora).');
                 }
             }
@@ -398,6 +399,27 @@ class EventoMudancaEstadoOperativoBusiness {
                 }
             }
         }
+    }
+
+    /**
+     * RNR081 - Restrição para dois eventos consecutivos de mudança de estado operativo.
+     * @param {EventoMudancaEstadoOperativo[]} eventos 
+     */
+    verificarEventosConsecutivos(eventos) {
+        for (let i = 0; i < eventos.length; i++) {
+            if (!this.isEventoEspelho(eventos[i - 1], eventos[i]) && this.compararEventosConsecutivos(eventos[i - 1], eventos[i])) {
+                throw new Error('Não pode haver dois ou mais eventos consecutivos de Mudança de Estado Operativo' +
+                    ' com os mesmos valores de Estado Operativo, Condição Operativa, Origem e Disponibilidade, exceto no caso do evento espelho.');
+            }
+        }
+    }
+
+    compararEventosConsecutivos(eventoAnterior, evento) {
+        return eventoAnterior != undefined &&
+            eventoAnterior.idEstadoOperativo == evento.idEstadoOperativo &&
+            eventoAnterior.idCondicaoOperativa == evento.idCondicaoOperativa &&
+            eventoAnterior.idClassificacaoOrigem == evento.idClassificacaoOrigem &&
+            eventoAnterior.potenciaDisponivel == evento.potenciaDisponivel
     }
 
 }
