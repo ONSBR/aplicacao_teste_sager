@@ -1965,9 +1965,9 @@ pkg-dir@^1.0.0:
   dependencies:
     find-up "^1.0.0"
 
-"plataforma-sdk@git+https://github.com/ONSBR/Plataforma-SDK#feature/inline-execution":
+"plataforma-sdk@git+https://github.com/ONSBR/Plataforma-SDK#master":
   version "1.0.0"
-  resolved "git+https://github.com/ONSBR/Plataforma-SDK#f97fcd544e81deabed44b904f0f17605c8b3da62"
+  resolved "git+https://github.com/ONSBR/Plataforma-SDK#33adbf842d6a5a5621c4144b98aaa0c0496ca4bd"
   dependencies:
     handlebars "^4.0.11"
     jasmine "^2.9.0"
