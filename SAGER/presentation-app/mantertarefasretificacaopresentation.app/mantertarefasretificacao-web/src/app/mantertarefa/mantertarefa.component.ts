@@ -52,6 +52,7 @@ export class MantertarefaComponent implements OnInit {
       let body = { 'nomeTarefa': this.nomeTarefa };
       this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
         data => {
+          this.mensagemUploadPlanilha = "Tarefa inserida com sucesso!";
           this.listarTarefas();
         }, error => {
           console.log(`Erro ao inserir tarefa: ${error}`);
@@ -140,6 +141,7 @@ export class MantertarefaComponent implements OnInit {
     let body = { 'tarefa': tarefa };
     this.http.post(environment.urlServerPresentation + environment.excluirTarefa, body).subscribe(
       data => {
+        this.mensagemUploadPlanilha = "Tarefa excluída com sucesso!";
         this.listarTarefas();
       }
     );
