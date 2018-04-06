@@ -3,7 +3,7 @@
 <table border="0">
   <tr>
     <td width="500" style="vertical-align:top">
-      <fieldset style="height: 160px">
+      <fieldset style="height: 170px">
         <mat-dialog-content>
           <div>
             <span>Nome do Cenário:
@@ -49,21 +49,21 @@
       </fieldset>
       <span *ngIf="data.regras && data.regras.length > 0">
         <h3>Regras Críticas</h3>
-        <table border="1" width="800">
+        <table width="800" class="grid-entidades">
           <tr>
-            <th>Nome</th>
-            <th>Tipo de Mudança</th>
+            <th width="100">Nome</th>
+            <th width="200">Tipo de Mudança</th>
             <th>De</th>
             <th>Para</th>
             <th>Opção</th>
           </tr>
           <tr *ngFor="let regra of data.regras">
             <td>
-              <input type="text" [(ngModel)]="regra.nomeRegra" />
+              <input type="text" size="15" [(ngModel)]="regra.nomeRegra" />
             </td>
             <td>
               <select [(ngModel)]="regra.tipoRegra">
-                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra">
+                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra" (onChange)="regra.regraPara = ''">
                   {{tipoRegra}}
                 </option>
               </select>
@@ -76,9 +76,9 @@
               </select>
               - {{getUge(regra.regraDe).potenciaDisponivel}}
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[2]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]">
               <select [(ngModel)]="regra.regraDe">
-                <option *ngFor="let origem of origens" [ngValue]="origem">
+                <option *ngFor="let origem of getOrigens(regra.tipoRegra)" [ngValue]="origem">
                   {{origem}}
                 </option>
               </select>
@@ -86,9 +86,9 @@
             <td *ngIf="regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1]">
               <input type="text" [(ngModel)]="regra.regraPara" />
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[2]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]">
               <select [(ngModel)]="regra.regraPara">
-                <option *ngFor="let origem of origens" [ngValue]="origem">
+                <option *ngFor="let origem of getOrigens(regra.tipoRegra)" [ngValue]="origem">
                   {{origem}}
                 </option>
               </select>
