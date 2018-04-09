@@ -1,8 +1,8 @@
 const TarefaDAO = require('../dao/tarefadao');
 const XLSX = require('xlsx');
+const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
-const dispatcher = require("../dispatcher/dispatcher");
 
 class ManterTarefasMediator {
 
@@ -11,20 +11,18 @@ class ManterTarefasMediator {
         this.XLSX = XLSX;
         this.parseEventosXlsx = parseEventosXlsx;
     }
-    //É uma transação independente
-    inserirTarefa(nomeTarefa) {
-        return dispatcher.dispatch("presentation.insere.tarefa.request", {nomeTarefa: nomeTarefa});
+
+    inserirTarefa(context, resolve, reject) {
+        console.log('inserir tarefa');
+        var entity = new TarefaRetificacao(context.event.payload.nomeTarefa);
+        context.dataset.tarefaretificacao.insert(entity);
+        resolve(entity);
     }
-    //Apenas Consulta
+
     listarTarefas() {
         return this.tarefaDAO.listarTarefas();
     }
 
-    atualizarTarefa(tarefa){
-        return dispatcher.dispatch("presentation.atualiza.tarefa.request", tarefa);
-    }
-
-    //É uma outra Transação independente
     uploadplanilha(nomeTarefa, file) {
         let planilha = this.XLSX.read(file.data);
         return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
@@ -74,24 +72,19 @@ class ManterTarefasMediator {
             }
         });
     }
-    //original
-    /*excluirTarefa(tarefa) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
-                    let deleteEventos = this.tarefaDAO.excluirTarefa(tarefa.id, eventos);
-                    resolve(deleteEventos);
-                });
-            } catch (error) {
-                console.log(`Erro ao excluir tarefa: ${error}`);
-                reject(error);
-            }
+
+    excluirTarefa(context, resolve, reject) {
+        var ds = context.dataset;
+        var tarefa = context.event.payload.tarefa;
+        ds.eventomudancaestadooperativotarefa.collection.forEach(obj => {
+            ds.eventomudancaestadooperativotarefa.delete(obj);
         });
-    }*/
-
-
-    excluirTarefa(tarefa) {
-        return dispatcher.dispatch("presentation.exclui.tarefa.request", {tarefa: tarefa, nometarefa:tarefa.nome});
+        try{
+            ds.tarefaretificacao.delete(tarefa);
+            resolve({"msg":"Executou o exclui"});
+        }catch(e){
+            reject(e);
+        };
     }
 
 
