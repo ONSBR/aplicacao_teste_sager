@@ -3,17 +3,17 @@ const XLSX = require('xlsx');
 const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
+var moment = require('moment');
+const formatDateExcel = "DD/MM/YYYY HH:mm:ss";
 
 class ManterTarefasMediator {
 
     constructor() {
         this.tarefaDAO = new TarefaDAO();
-        this.XLSX = XLSX;
         this.parseEventosXlsx = parseEventosXlsx;
     }
 
     inserirTarefa(context, resolve, reject) {
-        console.log('inserir tarefa');
         var entity = new TarefaRetificacao(context.event.payload.nomeTarefa);
         context.dataset.tarefaretificacao.insert(entity);
         resolve(entity);
@@ -23,14 +23,11 @@ class ManterTarefasMediator {
         return this.tarefaDAO.listarTarefas();
     }
 
-    uploadplanilha(nomeTarefa, file) {
-        let planilha = this.XLSX.read(file.data);
-        return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
-    }
-
-    preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha) {
-        let eventosRetificacao = [];
+    uploadPlanilha(context, resolve, reject) {
+        let nomeTarefa = context.event.payload.nomeTarefa;
+        let planilha = XLSX.read(new Buffer(context.event.payload.planilha.data));
         let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
+        let retificacoes = [];
         for (let i = 3; i <= sheetLength; i++) {
             let eventoMudancaEstadoOperativoTarefa = new EventoMudancaEstadoOperativoTarefa();
             eventoMudancaEstadoOperativoTarefa.nomeTarefa = nomeTarefa;
@@ -40,14 +37,16 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
             eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
             eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
-            eventoMudancaEstadoOperativoTarefa.dataVerificada = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
+            eventoMudancaEstadoOperativoTarefa.dataVerificada = moment(this.getSheetValue(planilha.Sheets.eventos, 'G', i), formatDateExcel).toDate();
             eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
             eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
-            eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
+            context.dataset.eventomudancaestadooperativotarefa.insert(eventoMudancaEstadoOperativoTarefa);
+            retificacoes.push(eventoMudancaEstadoOperativoTarefa);
         }
-        return eventosRetificacao;
-    }
 
+        resolve(retificacoes);
+    }
+    
     getSheetValue(sheet, column, row) {
         let value = sheet[column + row];
         if (value) {

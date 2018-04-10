@@ -88,4 +88,5 @@ eventomudancaestadooperativotarefa:
     operacao:
       column: operacao
   filters:
+    byId: "id = :id"
     byNomeTarefa: "nome_tarefa = :nometarefa"

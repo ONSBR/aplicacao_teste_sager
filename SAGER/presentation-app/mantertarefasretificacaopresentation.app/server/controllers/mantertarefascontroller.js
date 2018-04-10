@@ -42,9 +42,13 @@ class ManterTarefasController {
         if (!request.files) {
             return response.status(400).send('No files were uploaded.');
         }
-        this.manterTarefasMediator.uploadplanilha(request.body.nomeTarefa, request.files.planilha).then(data => { response.send(data) }).
+
+        let nomeTarefa = request.body.nomeTarefa;
+        let planilha = request.files.planilha;
+
+        dispatcher.dispatch("presentation.uploadplanilha.tarefa.request", { nomeTarefa: nomeTarefa, planilha: planilha }).then(data => { response.send(data) }).
             catch(e => {
-                console.log(`Erro no upload de eventos=:${e.toString()}`);
+                console.log(`Erro no upload de eventos=:${e}`);
                 response.status(400).send(`Erro no upload de eventos=:${e.toString()}`);
             });
     }

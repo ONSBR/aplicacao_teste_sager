@@ -2,8 +2,8 @@ operations:
   - name: presentation.insere.tarefa.request
     event: presentation.insere.tarefa.request
     commit: true
-  - name: presentation.atualiza.tarefa.request
-    event: presentation.atualiza.tarefa.request
+  - name: presentation.uploadplanilha.tarefa.request
+    event: presentation.uploadplanilha.tarefa.request
     commit: true
   - name: presentation.exclui.tarefa.request
     event: presentation.exclui.tarefa.request
