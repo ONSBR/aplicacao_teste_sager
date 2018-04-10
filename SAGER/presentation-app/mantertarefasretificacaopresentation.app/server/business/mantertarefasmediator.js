@@ -3,8 +3,7 @@ const XLSX = require('xlsx');
 const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
-var moment = require('moment');
-const formatDateExcel = "DD/MM/YYYY HH:mm:ss";
+const Util = require('../helpers/util');
 
 class ManterTarefasMediator {
 
@@ -37,7 +36,7 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
             eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
             eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
-            eventoMudancaEstadoOperativoTarefa.dataVerificada = moment(this.getSheetValue(planilha.Sheets.eventos, 'G', i), formatDateExcel).toDate();
+            eventoMudancaEstadoOperativoTarefa.dataVerificada = Util.excelStrToDate(this.getSheetValue(planilha.Sheets.eventos, 'G', i));;
             eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
             eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
             context.dataset.eventomudancaestadooperativotarefa.insert(eventoMudancaEstadoOperativoTarefa);
