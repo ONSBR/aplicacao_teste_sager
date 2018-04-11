@@ -30,8 +30,8 @@ describe('ReproducaoController: ', function () {
         request.body = { instance_id: instance_id, taxa_id: taxa_id};
         reproducaoController.reproduzirCalculoTaxa(request, response);
         
-        expect(response.data.reproduction.instance_id).toEqual(instance_id);
-        expect(response.data.reproduction.owner).toEqual(taxa_id);
+        expect(response.data.reproduction.instanceId).toEqual(instance_id);
+        expect(response.data.reproduction.externalId).toEqual(taxa_id);
     });
 
     it('Listar reproduções.', () => {
