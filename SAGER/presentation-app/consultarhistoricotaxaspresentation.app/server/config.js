@@ -29,8 +29,8 @@ config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId, idsFe
 }
 
 config.getUrlFiltroFechamentos =
-    function getUrlFiltroFechamentos(mesInicial, anoInicial, mesFinal, anoFinal) {
-        return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/fechamentomensal?filter=byData&mesInicial=${mesInicial}&anoInicial=${anoInicial}&mesFinal=${mesFinal}&anoFinal=${anoFinal}`;
+    function getUrlFiltroFechamentos() {
+        return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/fechamentomensal`;
     }
 
 config.getUrlFiltroTaxasAPartirIdFechamento =

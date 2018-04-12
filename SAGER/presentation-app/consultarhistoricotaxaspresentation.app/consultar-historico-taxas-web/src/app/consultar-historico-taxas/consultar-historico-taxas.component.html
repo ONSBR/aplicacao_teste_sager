@@ -24,13 +24,27 @@
           </span>
         </div>
         <div>
-          <span>Data Inicial:
-            <input type="date" [(ngModel)]="filtroConsulta.dataInicial" />
+          <span>
+            Mês Inicial:
+            <select [(ngModel)]="filtroConsulta.mesInicial">
+              <option *ngFor="let mes of meses" [ngValue]="mes">
+                {{mes}}
+              </option>
+            </select>
+            Ano Inicial:
+            <input [(ngModel)]="filtroConsulta.anoInicial" size="4"/>
           </span>
         </div>
         <div>
-          <span>Data Final:
-            <input type="date" [(ngModel)]="filtroConsulta.dataFinal" />
+          <span>
+            Mês Final:
+            <select [(ngModel)]="filtroConsulta.mesFinal">
+              <option *ngFor="let mes of meses" [ngValue]="mes">
+                {{mes}}
+              </option>
+            </select>
+            Ano Final:
+            <input [(ngModel)]="filtroConsulta.anoFinal" size="4"/>
           </span>
         </div>
         <div>
@@ -108,7 +122,7 @@
           <span>
             <ul>
               <li *ngFor="let reproducao of reproducoes">
-                <a href="{{linkResultadoReproducao(reproducao)}}">{{ reproducao.start_date | date: 'dd/MM/yyyy HH:mm:ss' }}</a> 
+                <a href="{{linkResultadoReproducao(reproducao)}}">{{ reproducao.start_date | date: 'dd/MM/yyyy HH:mm:ss' }}</a>
                 ({{printIdentify(reproducao.originalId)}})
               </li>
             </ul>

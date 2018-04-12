@@ -28,7 +28,6 @@ fechamentomensal:
     ano:
       column: ano
   filters:
-    byData: "mes >= :mesInicial and ano >= :anoInicial and mes <= :mesFinal and ano <= :anoFinal"
     byId: "id = :id"
 
 tarefa-retificacao:

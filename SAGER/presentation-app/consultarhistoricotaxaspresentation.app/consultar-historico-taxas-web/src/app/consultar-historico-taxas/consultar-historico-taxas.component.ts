@@ -25,17 +25,19 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public taxas;
   public fechamentoMensal;
   public environment;
+  public meses;
 
   public fechamentoParaCalculo = { 'mes': '', 'ano': '' };
 
   public reproducoes: Reproducao[] = [];
 
   constructor(private http: HttpClient) {
-    this.filtroConsulta = new FiltroConsulta(null, null, null, null);
+    this.filtroConsulta = new FiltroConsulta(null, null, null, null, null, null);
     this.environment = environment;
   }
 
   ngOnInit() {
+    this.meses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     this.listarUsinas();
     this.execucaoSelecionada = { 'protocolo': '' };
     this.fechamentoMensal = { 'mes': '', 'ano': '' };

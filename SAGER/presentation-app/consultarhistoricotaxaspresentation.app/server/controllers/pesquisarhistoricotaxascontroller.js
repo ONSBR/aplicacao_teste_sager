@@ -6,7 +6,7 @@ const Lookup = require('plataforma-sdk/ioc/lookup');
 class PesquisarHistoricoTaxasController {
 
     constructor(domainPromiseHelper) {
-        if(!domainPromiseHelper) {
+        if (!domainPromiseHelper) {
             this.domainPromiseHelper = new DomainPromiseHelper();
         } else {
             this.domainPromiseHelper = domainPromiseHelper;
@@ -23,11 +23,33 @@ class PesquisarHistoricoTaxasController {
      * @description Pesquisa histórico de execuções de calculo.
      */
     pesquisarHistorico(request, response) {
-        this.pesquisarFechamentos(request).
-            then(fechamentosMensais => { return this.pesquisarTaxas(request, fechamentosMensais); }).
+        this.pesquisarFechamentos().
+            then(fechamentosMensais => {
+                return this.pesquisarTaxas(request, this.filtrarFechamentos(request, fechamentosMensais));
+            }).
             then(taxas => { return this.pesquisarExecucoesCalculo(taxas); }).
             then(historicoExecucoes => { response.send(historicoExecucoes); }).
             catch(e => { console.log(`Erro durante a consulta de histórico de execuções: ${e.toString()}`) });
+    }
+
+    filtrarFechamentos(request, fechamentosMensais) {
+        let mesInicial = request.body.filtroConsulta.mesInicial;
+        let anoInicial = request.body.filtroConsulta.anoInicial;
+        let mesFinal = request.body.filtroConsulta.mesFinal;
+        let anoFinal = request.body.filtroConsulta.anoFinal;
+        let dataInicial = new Date(anoInicial, mesInicial-1);
+        let dataFinal = new Date(anoFinal, mesFinal-1);
+
+        let fechamentosFiltrados = fechamentosMensais.filter(fechamento => {
+            let dataFechamento = this.getDataFechamento(fechamento);
+            return dataFechamento >= dataInicial && dataFechamento <= dataFinal;
+        });
+
+        return fechamentosFiltrados;
+    }
+
+    getDataFechamento(fechamento) {
+        return new Date(fechamento.ano, fechamento.mes-1);
     }
 
     /**
@@ -51,13 +73,13 @@ class PesquisarHistoricoTaxasController {
     calcularTaxas(request, response) {
         console.log("Payload: " + JSON.stringify(request.body));
         var evento = {
-            name: "calculate.tax.request", 
-            payload: { mesFechamento: request.body.mesFechamento, anoFechamento: request.body.anoFechamento }, 
-            owner: request.body.presentationId 
+            name: "calculate.tax.request",
+            payload: { mesFechamento: request.body.mesFechamento, anoFechamento: request.body.anoFechamento },
+            owner: request.body.presentationId
         };
-        
+
         //return this.eventManager.emit(evento).then(res => {response.send(res)});
-        return this.eventPromiseHelper.putEventPromise(evento).then(res => {response.send(res)});
+        return this.eventPromiseHelper.putEventPromise(evento).then(res => { response.send(res) });
     }
 
 
@@ -107,18 +129,14 @@ class PesquisarHistoricoTaxasController {
         return config.getUrlFiltroTaxas(usinaId, tipoTaxaId, idsFechamentos.join(';'))
     }
 
-    pesquisarFechamentos(request) {
-        let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais(request);
+    pesquisarFechamentos() {
+        let urlFiltroFechamentosMensais = this.getUrlFiltroFechamentosMensais();
         console.log('urlFiltroFechamentosMensais: ' + urlFiltroFechamentosMensais);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroFechamentosMensais);
     }
 
-    getUrlFiltroFechamentosMensais(request) {
-        let dataInicial = new Date(this.getDataInicial(request));
-        let dataFinal = new Date(this.getDataFinal(request));
-
-        return config.getUrlFiltroFechamentos(dataInicial.getUTCMonth() + 1, dataInicial.getUTCFullYear(),
-            dataFinal.getUTCMonth() + 1, dataFinal.getUTCFullYear());
+    getUrlFiltroFechamentosMensais() {
+        return config.getUrlFiltroFechamentos();
     }
 
     pesquisarExecucoesCalculo(taxas) {
@@ -157,14 +175,6 @@ class PesquisarHistoricoTaxasController {
 
     getTipoTaxa(request) {
         return request.body.filtroConsulta.tipoTaxa.idTipoTaxa;
-    }
-
-    getDataInicial(request) {
-        return request.body.filtroConsulta.dataInicial
-    }
-
-    getDataFinal(request) {
-        return request.body.filtroConsulta.dataFinal;
     }
 
 }
