@@ -18,8 +18,6 @@ class ManterCenarioController {
     pesquisarCenarios(request, response) {
         
         let filtroNome = request.body.nome;
-        console.log(request.body.dataInicial);
-        console.log(request.body.dataFinal);
         let filtroDataInicial;
         let filtroDataFinal;
         if(request.body.dataInicial) {
@@ -28,8 +26,6 @@ class ManterCenarioController {
         if(request.body.dataFinal) {
             filtroDataFinal = new Date(request.body.dataFinal).toISOString().slice(0, 10);    
         }
-        console.log(filtroDataInicial);
-        console.log(filtroDataFinal);
         let filtroAtivo = request.body.ativo;
         let url = config.getUrlFiltroCenario(filtroNome, filtroDataInicial, filtroDataFinal);
         
