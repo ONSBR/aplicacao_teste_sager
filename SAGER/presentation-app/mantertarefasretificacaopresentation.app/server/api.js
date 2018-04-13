@@ -13,7 +13,6 @@ const PORT = config.PORT;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
-//app.use(express.static('dist'));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');

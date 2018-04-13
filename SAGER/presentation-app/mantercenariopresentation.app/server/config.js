@@ -1,12 +1,12 @@
 var config = {};
 
-const DOMAIN_PORT = 2117;
-const DOMAIN_HOST = 'localhost';
+const DOMAIN_PORT = 9110;
+const DOMAIN_HOST = 'sager-domain';
 
 config.DOMAIN_PORT = DOMAIN_PORT;
 config.DOMAIN_HOST = DOMAIN_HOST;
 
-config.PORT = 8181;
+config.PORT = process.env.PORT || 8181;
 config.URL_CENARIO_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantercenario/cenario`;
 
 config.URL_CENARIO_SAGER_PERSIST = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantercenario/persist`;
@@ -27,7 +27,7 @@ config.getUrlFiltroUnidadeGeradora = function (idUsina) {
 
 config.getUrlFiltroCenarioPorId = function (idCenario) {
     // TODO o filtro deveria ser byIdCenario, mas teve erro de atualização do mapa, apenas funciona com byId
-    return `${config.URL_CENARIO_SAGER}?filter=byIdCenario&idCenario=${idCenario}`;
+    return `${config.URL_CENARIO_SAGER}?filter=byIdCenario&id=${idCenario}`;
 }
 
 config.getUrlFiltroRegrasPorIdCenario = function (idCenario) {
