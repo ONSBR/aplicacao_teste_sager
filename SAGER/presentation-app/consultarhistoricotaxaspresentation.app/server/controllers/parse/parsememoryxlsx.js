@@ -123,7 +123,7 @@ class ParseMemoryFileTemplate {
 
             for (var i = 0; i < qtdTipos; i++, curRow++) {
                 
-                this.sheet[this.colsEvent[0] + curRow] = { v: it.idEvento };
+                this.sheet[this.colsEvent[0] + curRow] = { v: it.numONS };
                 this.sheet[this.colsEvent[1] + curRow] = { v: it.idUge };
                 this.sheet[this.colsEvent[2] + curRow] = { v: util.textToExcel(it.idEstadoOperativo) };
                 this.sheet[this.colsEvent[3] + curRow] = { v: util.textToExcel(it.idCondicaoOperativa) };
@@ -135,6 +135,8 @@ class ParseMemoryFileTemplate {
                 var tpparam = containTipo ? it.tiposParametrosComputados[i] : "";
 
                 this.sheet[this.colsEvent[8] + curRow] = { v: tpparam };
+
+                this.sheet[this.colsEvent[9] + curRow] = { v: it.id };
             }
 
         });

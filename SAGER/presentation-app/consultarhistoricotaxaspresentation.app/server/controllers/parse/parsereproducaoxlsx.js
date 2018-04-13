@@ -171,7 +171,7 @@ class ParseResultadoReproducaoFile {
 
         this.curRow++;
 
-        this.sheet["A" + this.curRow] = header("desger_id");
+        this.sheet["A" + this.curRow] = header("numons");
         this.sheet["B" + this.curRow] = header("uge_id");
 
         this.sheet["C" + this.curRow] = header("tpestoper_id");
@@ -182,12 +182,14 @@ class ParseResultadoReproducaoFile {
         this.sheet["H" + this.curRow] = header("duração");
         this.sheet["I" + this.curRow] = header("computado");
         this.sheet["J" + this.curRow] = header("tipo_mudanca");
+        this.sheet["K" + this.curRow] = header("versao");
 
-        this.sheet["K" + this.curRow] = headerReproducao("tpestoper_id");
-        this.sheet["L" + this.curRow] = headerReproducao("panocr_id");
-        this.sheet["M" + this.curRow] = headerReproducao("ogresdes_id");
-        this.sheet["N" + this.curRow] = headerReproducao("dtini_verif");
-        this.sheet["O" + this.curRow] = headerReproducao("valdisp");
+        this.sheet["L" + this.curRow] = headerReproducao("tpestoper_id");
+        this.sheet["M" + this.curRow] = headerReproducao("panocr_id");
+        this.sheet["N" + this.curRow] = headerReproducao("ogresdes_id");
+        this.sheet["O" + this.curRow] = headerReproducao("dtini_verif");
+        this.sheet["P" + this.curRow] = headerReproducao("valdisp");
+        this.sheet["Q" + this.curRow] = headerReproducao("versao");
 
         this.curRow++;
     }
@@ -206,7 +208,7 @@ class ParseResultadoReproducaoFile {
 
             for (var i = 0; i < qtdTipos; i++ , this.curRow++) {
 
-                this.sheet["A" + this.curRow] = { v: dadosComuns.idEvento };
+                this.sheet["A" + this.curRow] = { v: dadosComuns.numONS };
                 this.sheet["B" + this.curRow] = { v: dadosComuns.idUge };
                 if (it.original) {
 
@@ -215,6 +217,7 @@ class ParseResultadoReproducaoFile {
                     this.sheet["E" + this.curRow] = { v: util.textToExcel(it.original.idClassificacaoOrigem) };
                     this.sheet["F" + this.curRow] = { v: util.formatDate(it.original.dataVerificada) };
                     this.sheet["G" + this.curRow] = { v: it.original.potenciaDisponivel };
+                    this.sheet["K" + this.curRow] = { v: it.original.id };
                 }
                 this.sheet["H" + this.curRow] = { v: util.secondToHour(dadosComuns.duracaoEmSegundos) };
 
@@ -225,12 +228,14 @@ class ParseResultadoReproducaoFile {
 
                 if (it.reproducao) {
 
-                    this.sheet["K" + this.curRow] = { v: util.textToExcel(it.reproducao.idEstadoOperativo) };
-                    this.sheet["L" + this.curRow] = { v: util.textToExcel(it.reproducao.idCondicaoOperativa) };
-                    this.sheet["M" + this.curRow] = { v: util.textToExcel(it.reproducao.idClassificacaoOrigem) };
-                    this.sheet["N" + this.curRow] = { v: util.formatDate(it.reproducao.dataVerificada) };
-                    this.sheet["O" + this.curRow] = { v: it.reproducao.potenciaDisponivel };
+                    this.sheet["L" + this.curRow] = { v: util.textToExcel(it.reproducao.idEstadoOperativo) };
+                    this.sheet["M" + this.curRow] = { v: util.textToExcel(it.reproducao.idCondicaoOperativa) };
+                    this.sheet["N" + this.curRow] = { v: util.textToExcel(it.reproducao.idClassificacaoOrigem) };
+                    this.sheet["O" + this.curRow] = { v: util.formatDate(it.reproducao.dataVerificada) };
+                    this.sheet["P" + this.curRow] = { v: it.reproducao.potenciaDisponivel };
+                    this.sheet["Q" + this.curRow] = { v: it.reproducao.id };
                 }
+
             }
 
         });

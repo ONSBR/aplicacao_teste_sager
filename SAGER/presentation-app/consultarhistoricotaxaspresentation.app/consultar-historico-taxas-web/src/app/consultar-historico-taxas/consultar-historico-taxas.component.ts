@@ -17,6 +17,11 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   private presentationId: string = Guid.newGuid();
 
+  maxViewReproduction = 10;
+  maxViewBusinessEvents = 20;
+
+  filterEvts = { horas: 1, qtd: 20};
+
   public filtroConsulta;
   public tiposTaxa;
   public usinas: Array<Usina>;
@@ -26,9 +31,10 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   public fechamentoMensal;
   public environment;
 
-  public fechamentoParaCalculo = { 'mes': '', 'ano': '' };
+  public fechamentoParaCalculo = { 'mes': '', 'ano': '', 'mesIntervalo': '', 'anoIntervalo': '' };
 
   public reproducoes: Reproducao[] = [];
+  public businessEvents = [];
 
   constructor(private http: HttpClient) {
     this.filtroConsulta = new FiltroConsulta(null, null, null, null);
@@ -38,12 +44,58 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   ngOnInit() {
     this.listarUsinas();
     this.execucaoSelecionada = { 'protocolo': '' };
-    this.fechamentoMensal = { 'mes': '', 'ano': '' };
+    this.fechamentoMensal = { 'mes': '', 'ano': '', 'mesIntervalo': '', 'anoIntervalo': '' };
     this.listarTipoTaxa();
+    
     var self = this;
+    
+    this.pollingConsultaReproducao(self);  
+    this.pollingConsultaBusinessEvents(self);  
+  }
+
+  pollingConsultaBusinessEvents(self) {
+    var listarBusinessEvents = this.listarBusinessEvents;
+    listarBusinessEvents(self);
+    setInterval(function () { listarBusinessEvents(self) }, 5000);
+  }
+
+  pollingConsultaReproducao(self) {
     var listarReproducoes = this.listarReproducoes;
     listarReproducoes(self);
     setInterval(function () { listarReproducoes(self) }, 5000);
+  }
+
+  descBusinessEvent(businessEvent) {
+    
+    var retorno = { data: new Date(businessEvent.timestamp), msg: '' };
+
+    if (businessEvent.name == "calculate.tax.request") {
+      retorno.msg = "Solicitação de cálculo de " + 
+        "taxas do fechamento (" + businessEvent.payload.mesFechamento + "/" + 
+        businessEvent.payload.anoFechamento + ") recebida.";
+    } 
+    else if (businessEvent.name == "calculate.tax.by.usina" ) {
+      retorno.msg = "Solicitação de cálculo de " + 
+        "taxas " + (businessEvent.payload.acumulada ? "acumuladas" :"") + " da usina (" + 
+        businessEvent.payload.idUsina + ") realizada.";
+    }
+    else if (businessEvent.name == "calculate.tax.done" ) {
+      retorno.msg = "Solicitado cálculo de taxas do fechamento.";
+    }
+    else if (businessEvent.name == "calculate.tax.by.done" ) {
+      retorno.msg = "Cálculo de taxas da usina realizado com sucesso.";
+    }
+    else if (businessEvent.name == "calculate.tax.error" ) {
+      retorno.msg = "Error na solicitação de cálculo de " + 
+        "taxas, error: " + businessEvent.payload.message;
+    }
+    else if (businessEvent.name == "calculate.tax.by.error" ) {
+      retorno.msg = "Error na solicitação de cálculo de " + 
+        "taxas da usina, error: " + businessEvent.payload.message;
+    }
+    
+    return retorno;
+  
   }
 
   pesquisar() {
@@ -56,24 +108,99 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     });
   }
 
+  isLeapYear(year) { 
+    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+  };
+
+  getDaysInMonth(year, month) {
+      return [31, (this.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+  };
+
+  private addMonths(data: Date, value) {
+    var n = data.getDate();
+    data.setDate(1);
+    data.setMonth(data.getMonth() + value);
+    data.setDate(Math.min(n, this.getDaysInMonth(data.getFullYear(), data.getMonth())));
+    return data;
+  }
+
+  gerarMesAnoIntervalo(mes, ano, mesIntervalo, anoIntervalo) {
+    
+    var mesAno = new Date(ano, mes-1, 1);
+    var mesAnoIntervalo = null;
+    
+    if (mesIntervalo > 0 && mesIntervalo <= 12 && anoIntervalo >= 2000) {
+      mesAnoIntervalo = new Date(anoIntervalo, mesIntervalo-1, 1);
+    }
+
+    var retorno = [];
+    do {
+      retorno.push(new Date(mesAno));
+      mesAno = this.addMonths(mesAno, 1);
+    } while(mesAnoIntervalo && mesAno.getTime() <= mesAnoIntervalo.getTime());
+    
+    return retorno;
+  }
+
+  validarMesAnoCalculoTaxas(mes, ano, contemMesIntervalo, contemAnoIntervalo, mesIntervalo, anoIntervalo) {
+  
+    var valido = true;
+    if (mes <= 0 || mes > 12 || ano < 2000) {
+      valido = false;
+    }
+    else if (contemMesIntervalo && contemAnoIntervalo && (mesIntervalo <= 0 || mesIntervalo > 12 || anoIntervalo < 2000)) {
+      valido = false;
+    }
+
+    return valido;
+  }
+
+  converterInt(valor) {
+    var retorno = 0;
+    try {
+      retorno = parseInt(valor);
+    } catch (error) { }
+    return retorno;
+  }
+
+  enviarSolicitacaoCalculoTaxa(mes, ano) {
+    const url = environment.urlServerPresentation + environment.calcularTaxas;
+    const body = { presentationId: this.presentationId, mesFechamento: mes, anoFechamento: ano };
+
+    return this.http.post(url, body).toPromise();
+  }
+
   calcularTaxas() {
 
-    var mesFechamento = 0;
-    var anoFechamento = 0;
-    try {
-      mesFechamento = parseInt(this.fechamentoParaCalculo.mes);
-    } catch (error) { }
-    try {
-      anoFechamento = parseInt(this.fechamentoParaCalculo.ano);
-    } catch (error) { }
+    var mesFechamento = this.converterInt(this.fechamentoParaCalculo.mes);
+    var anoFechamento = this.converterInt(this.fechamentoParaCalculo.ano);
 
-    if (mesFechamento > 0 && mesFechamento <= 12 && anoFechamento >= 2000) {
+    var mesIntervalo = this.converterInt(this.fechamentoParaCalculo.mesIntervalo);
+    var anoIntervalo = this.converterInt(this.fechamentoParaCalculo.anoIntervalo);
 
-      const url = environment.urlServerPresentation + environment.calcularTaxas;
-      const body = { presentationId: this.presentationId, mesFechamento: mesFechamento, anoFechamento: anoFechamento };
+    if (this.validarMesAnoCalculoTaxas(
+          mesFechamento, anoFechamento, this.fechamentoParaCalculo.mesIntervalo, 
+          this.fechamentoParaCalculo.anoIntervalo, mesIntervalo, anoIntervalo)) {
 
-      this.http.post(url, body).toPromise().then(result => {
-        var msg = 'Enviada solicitação de cálculo de taxas com sucesso';
+      var intervaloCalculo = this.gerarMesAnoIntervalo(mesFechamento, anoFechamento, mesIntervalo, anoIntervalo);
+
+      var solicitacoesCalculo = [];
+      var listaMesAno = "";
+      intervaloCalculo.forEach(it => {
+        
+        var mes = it.getMonth() + 1;
+        var ano = it.getFullYear();
+
+        if (listaMesAno) {
+          listaMesAno += ", ";
+        }
+        listaMesAno +=  mes + "/" + ano;
+        
+        solicitacoesCalculo.push(this.enviarSolicitacaoCalculoTaxa(mes, ano));
+      });
+
+      Promise.all(solicitacoesCalculo).then(result => {
+        var msg = 'Solicitação de cálculo(s) de taxa(s) enviado(s) com sucesso. Fechamento(s): ' + listaMesAno;
         console.log(msg);
         alert(msg);
       });
@@ -116,11 +243,34 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       var reprods = <Reproducao[]>data;
       
       var newlist: Reproducao[] = [];
-      for (var i = reprods.length - 1; i >= 0; i--) {
+      for (var i = reprods.length - 1; i >= reprods.length - self.maxViewReproduction && i >= 0; i--) {
         newlist.push(reprods[i]);
       }
       
       self.reproducoes = newlist;
+    });
+  }
+
+  listarBusinessEvents(self) {
+
+    var url = environment.urlServerPresentation + environment.listarBusinessEvents;
+    url += "?horas=" + self.filterEvts.horas;
+
+    var qtd = self.converterInt(self.filterEvts.qtd);
+    if (qtd <= 0) {
+      qtd = self.maxViewBusinessEvents;
+    }
+
+    self.http.get(url).subscribe(data => {
+      
+      var newlist = [];
+      if (data && data.length > 0) {
+        for (var i = data.length - 1; i >= data.length - qtd && i >= 0; i--) {
+          newlist.push( self.descBusinessEvent(data[i]));
+        }
+      }
+      
+      self.businessEvents = newlist;
     });
   }
 

@@ -19,3 +19,5 @@ tb_evt_estado_oper_tarefa:
     - double
   operacao:
     - string
+  numero_ons:
+    - string

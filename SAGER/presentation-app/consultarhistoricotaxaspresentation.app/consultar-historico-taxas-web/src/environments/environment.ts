@@ -16,5 +16,6 @@ export const environment = {
   downloadMemoriaProcessamentoXlsx: 'downloadMemoriaProcessamentoXlsx',
   reproduzirCalculoTaxa: 'reproduzirCalculoTaxa',
   listarReproducoes: 'listarReproducoes',
+  listarBusinessEvents: 'listarBusinessEvents',
   downloadComparacaoReproducaoXlsx: 'downloadComparacaoReproducaoXlsx'
 };

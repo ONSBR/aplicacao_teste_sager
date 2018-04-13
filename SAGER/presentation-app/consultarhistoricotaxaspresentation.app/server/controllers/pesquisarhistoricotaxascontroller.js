@@ -2,6 +2,7 @@ const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const EventPromiseHelper = require('../helpers/eventpromisehelper');
 const Lookup = require('plataforma-sdk/ioc/lookup');
+const Enumerable = require('linq');
 
 class PesquisarHistoricoTaxasController {
 
@@ -127,6 +128,34 @@ class PesquisarHistoricoTaxasController {
         let urlFiltroExecucoesCalculo = this.getUrlFiltroExecucao(idsFechamentos.join(";"));
         console.log('urlFiltroExecucoesCalculo: ' + urlFiltroExecucoesCalculo);
         return this.domainPromiseHelper.getDomainPromise(urlFiltroExecucoesCalculo);
+    }
+
+    listarBusinessEvents(request, response, next) {
+
+        var filters = {};
+
+        var horas = request.query.horas;
+        var qtd = request.query.qtd;
+
+        filters["last"] = horas ? horas+"h": "1h";
+
+        var url = config.getUrlFiltroEvents(filters);
+
+        this.domainPromiseHelper.getDomainPromise(url).then(result => {
+            
+            var retorno = [];
+            if (result && result.result && result.result.length > 0) {
+
+                var eventos = Enumerable.from(result.result);
+                retorno = eventos.where(it => { return it.name.startsWith("calculate.tax.") }).toArray();
+            }
+
+            response.send(retorno);
+        }).catch(e => { 
+            console.log(`Erro durante a consulta de eventos de negócio: ${e.toString()}`); 
+            response.statusCode = 400;
+            if (next) next(e);
+        });
     }
 
     extrairIdsFechamentosDeTaxas(taxas) {

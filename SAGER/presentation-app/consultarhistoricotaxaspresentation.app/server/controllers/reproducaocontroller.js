@@ -70,7 +70,7 @@ class ReproducaoController {
                     console.log(error);
                     response.send(400);
                 }
-            }).catch(e => { console.log(`Erro durante a consulta da memória de processamento: ${e.toString()}`) });;
+            }).catch(e => { console.log(`Erro durante a consulta da memória de processamento: ${e.toString()}`) });
     }
 
     listarReproducoes(request, response) {

@@ -48,6 +48,26 @@ config.getProcessMemoryUrl =
         return `http://${PROCESS_MEMORY_HOST}:9091/${processInstanceId}/head`
     }
 
+function objFilterToQueryString(filtersArray) {
+    var queryString = "";
+    var keys = Object.keys(filtersArray);
+    for(var i=0; i < keys.length; i++) {
+        if (queryString) {
+            queryString += "&";
+        }
+        var key = keys[i];
+        queryString += key + "=" + filtersArray[key];
+    }
+    if (queryString) {
+        queryString = "?" + queryString;
+    }
+    return queryString;
+}
+
+config.getUrlFiltroEvents = function (filtersArray) {
+    return `http://${EVENT_MANAGER_HOST}:8081/events` + objFilterToQueryString(filtersArray);
+}
+
 config.getEventManagerUrl = function () {
     return `http://${EVENT_MANAGER_HOST}:8081/sendevent`
 }

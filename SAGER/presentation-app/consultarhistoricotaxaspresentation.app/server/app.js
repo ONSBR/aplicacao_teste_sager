@@ -75,6 +75,10 @@ app.get("/listarReproducoes", (req, res) => {
     reproducaoController.listarReproducoes(req, res);
 });
 
+app.get("/listarBusinessEvents", (req, res, next) => {
+    pesquisarHistoricoTaxasController.listarBusinessEvents(req, res, next);
+});
+
 
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);

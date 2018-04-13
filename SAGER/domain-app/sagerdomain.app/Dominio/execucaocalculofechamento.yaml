@@ -1,8 +1,8 @@
 tb_exec_calc_fech:
   data_inicio:
-    - date
+    - datetime
   data_fim:
-    - date
+    - datetime
   id_fechamento:
     - string
   id_cenario:

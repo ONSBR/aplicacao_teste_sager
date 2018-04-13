@@ -92,6 +92,8 @@ eventomudancaestadooperativo:
       column: data_verificada
     potenciaDisponivel:
       column: pot_disp
+    numONS:
+      column: numero_ons
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicialEvento and data_verificada <= :dataFinalEvento"
 
