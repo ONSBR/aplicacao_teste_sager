@@ -17,12 +17,17 @@ class ManterCenarioController {
      */
     pesquisarCenarios(request, response) {
         
-        var filtroNome = request.body.nome;
-        var filtroDataInicial = request.body.dataInicial;
-        var filtroDataFinal = request.body.dataFinal;
-        var filtroAtivo = request.body.ativo;
-
-        var url = config.getUrlFiltroCenario(filtroNome);
+        let filtroNome = request.body.nome;
+        let filtroDataInicial;
+        let filtroDataFinal;
+        if(request.body.dataInicial) {
+            filtroDataInicial = new Date(request.body.dataInicial).toISOString().slice(0, 10);
+        }        
+        if(request.body.dataFinal) {
+            filtroDataFinal = new Date(request.body.dataFinal).toISOString().slice(0, 10);    
+        }
+        let filtroAtivo = request.body.ativo;
+        let url = config.getUrlFiltroCenario(filtroNome, filtroDataInicial, filtroDataFinal);
         
         this.domainPromiseHelper.getDomainPromise(url).
             then(data => { response.send(data); }).

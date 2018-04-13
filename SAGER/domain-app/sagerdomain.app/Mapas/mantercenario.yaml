@@ -18,7 +18,7 @@ cenario:
     idUsina:
       column: id_usina
   filters:
-    byNome: "nome like :nomeCenario"
+    byNomeAndData: "1=1 [and nome like :nomeCenario] [and data_inicio >= :dataInicial] [and data_fim <= :dataFinal]"
     byId: "id = :idCenario"
 
 regracenario:
