@@ -2,8 +2,8 @@ var config = {};
 
 const DOMAIN_PORT = 9110;
 const DOMAIN_HOST = 'sager-domain';
-const PROCESS_MEMORY_HOST = 'processmemory';
-const EVENT_MANAGER_HOST = 'event-manager';
+const PROCESS_MEMORY_HOST = 'process_memory';
+const EVENT_MANAGER_HOST = 'event_manager';
 
 const CORE_HOST = 'apicore';
 const CORE_PORT = 9110;
