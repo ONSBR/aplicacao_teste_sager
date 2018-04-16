@@ -84,7 +84,7 @@ class ManterCenarioController {
     }
 
     /**
-     * @description Inseri o cenário informado
+     * @description Insere o cenário informado
      * @param {Request} request 
      * @param {Response} response 
      */

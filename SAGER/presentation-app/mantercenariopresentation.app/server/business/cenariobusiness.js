@@ -21,8 +21,10 @@ class CenarioBusiness {
     }
 
     /**
-     * @description Altera os dados de um cenário informado
-     * @param {Cenario} cenario 
+     * 
+     * @param {context} context 
+     * @param {resolve} resolve 
+     * @param {reject} reject 
      */
     alterarCenario(context, resolve, reject) {
         let cenario = context.event.payload.cenario;
@@ -62,9 +64,10 @@ class CenarioBusiness {
     }
 
     /**
-     * @description Inseri o cenário informado
-     * @param {Request} request 
-     * @param {Response} response 
+     * @description Insere o cenário informado
+     * @param {context} context 
+     * @param {resolve} resolve 
+     * @param {reject} reject 
      */
     inserirCenario(context, resolve, reject) {
         var listapersist = [];
@@ -89,8 +92,9 @@ class CenarioBusiness {
 
     /**
      * @description Exclui um cenário informado
-     * @param {Request} request 
-     * @param {Response} response 
+     * @param {context} context 
+     * @param {resolve} resolve 
+     * @param {reject} reject
      */
     excluirCenario(context, resolve, reject) {
         context.dataset.cenario.collection.forEach(cenario => {
@@ -104,7 +108,9 @@ class CenarioBusiness {
 
     /**
      * @description Ativa ou inativa um cenário.
-     * @param {string} idCenario
+     * @param {context} context 
+     * @param {resolve} resolve 
+     * @param {reject} reject
      */
     ativarInativarCenario(context, resolve, reject) {
         context.dataset.cenario.collection.forEach(cenario => {
