@@ -81,6 +81,16 @@ class ManterTarefasController {
             });
    }
 
+   /**
+     * @param {Request} request Objeto de request
+     * @param {Response} response Objeto de response
+     * @description cadastra a tarefa de retificação
+     */
+    aplicarTarefa(request, response) {
+        let nomeTarefa = request.body.nomeTarefa;
+        this.manterTarefasMediator.aplicarTarefa(nomeTarefa).then(data => { response.send(data) }).
+            catch(e => { console.log(`Erro durante a aplicação da tarefa: ${e.toString()}`) });
+    }
 }
 
 module.exports = ManterTarefasController

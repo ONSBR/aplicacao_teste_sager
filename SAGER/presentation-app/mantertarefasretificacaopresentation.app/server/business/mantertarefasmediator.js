@@ -1,14 +1,20 @@
 const TarefaDAO = require('../dao/tarefadao');
+const EventoDAO = require('../dao/eventodao');
 const XLSX = require('xlsx');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
+const EventPromiseHelper = require('../helpers/eventpromisehelper');
+
+const CHANGETRACK_UPDATE = "update";
 
 class ManterTarefasMediator {
 
     constructor() {
         this.tarefaDAO = new TarefaDAO();
+        this.eventoDAO = new EventoDAO();
         this.XLSX = XLSX;
         this.parseEventosXlsx = parseEventosXlsx;
+        this.eventPromiseHelper = new EventPromiseHelper();
     }
 
     inserirTarefa(nomeTarefa) {
@@ -83,7 +89,123 @@ class ManterTarefasMediator {
         });
     }
 
+    aplicarTarefa(nomeTarefa) {
 
+        return new Promise((resolve, reject) => {
+            try {
+
+                var listapersist = [];
+
+                this.tarefaDAO.obterRetificacaoPorNome(nomeTarefa).then(tarefa => {
+                
+                    if (tarefa) {
+                        this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(nomeTarefa).then(dataEvt => {
+                            
+                            if (dataEvt && dataEvt.length > 0) {
+
+                                var eventosRetificacoes = Enumerable.from(dataEvt).where(
+                                    evtRet => { return (evtRet.operacao? true: false) });
+                                
+                                var evtRectIds = eventosRetificacoes.select(evtRet => {
+                                    return evtRet.id;
+                                });
+
+                                var minDataEventoAlterado = Date.now;
+                                eventosRetificacoes.forEach(evtRet => {
+                                    if (evtRet.dataVerificada.getTime() < minDataEventoAlterado.getTime()) {
+                                        minDataEventoAlterado = evtRet.dataVerificada;
+                                    }
+                                });
+
+                                this.eventoDAO.consultarEventoMudancaEstadoPorIds(evtRectIds).then(evts => {
+
+                                    this.validarEventos(evts);
+
+                                    var eventos = Enumerable.from(evts ? evts : []);
+
+                                    eventosRetificacoes.forEach(evtRet => {
+
+                                        var evtEstado = eventos.firstOrDefault(evt => { return evtRet.idEvento == evt.idEvento })
+
+                                        if (evtEstado) {
+                                            evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
+                                            evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
+                                            evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
+                                            evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
+
+                                            evtEstado._metadata.changeTrack = CHANGETRACK_UPDATE;
+                                            listapersist.push(evtEstado);
+                                        }
+
+                                    });
+
+                                    tarefa.situacao = "aplicado";
+                                    tarefa._metadata.changeTrack = CHANGETRACK_UPDATE;
+                                    listapersist.push(tarefa);
+                                    
+                                    this.eventoDAO.persistEventosMudancaEstado(listapersist).then(persisted => {
+
+                                        var mesFechamento = minDataEventoAlterado.getMonth() + 1;
+                                        var anoFechamento =  minDataEventoAlterado.getYear();
+
+                                        // obtem fechamentos
+                                        this.eventoDAO.consultarFechamentosPorMesAno(mesFechamento, anoFechamento).then(fechs => {
+
+                                            if (fechs && fechs.length > 0) {
+                                                
+                                                var fechamentos = Enumerable.from(fechs);
+                                                
+                                                fechamentos.forEach(fch => {
+                                                    var evento = {
+                                                        name: "calculate.tax.request",
+                                                        payload: { mesFechamento: fch.mes, anoFechamento: fch.ano },
+                                                        owner: "reprocess"
+                                                    };
+            
+                                                    this.eventPromiseHelper.putEventPromise(evento);
+                                                });    
+                                            }
+
+                                            resolve("OK");
+
+                                        }).catch(error => { this.catchError(error, 'consulta de fechamentos', nomeTarefa, reject) });
+
+                                    }).catch(error => { this.catchError(error, 'atualização de eventos', nomeTarefa, reject) });
+                    
+                                }).catch(error => { this.catchError(error, 'consulta de eventos', nomeTarefa, reject) });
+                                
+                            } else {
+                                throw new Error(`Não encontrados eventos da retificação[${nomeTarefa}].`);
+                            }
+
+                        }).catch(error => { this.catchError(error, 'eventos da retificação', nomeTarefa, reject) });
+                    } else {
+                        throw new Error(`Não encontrada retificação[${nomeTarefa}].`);
+                    }
+
+                }).catch(error => { this.catchError(error, 'obtenção de tarefa', nomeTarefa, reject) });
+
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+
+    }
+
+    validarEventos(eventos) {
+        if (!eventos || eventos.length == 0) {
+            var error = new Error(`Eventos de mudança de estado não encontrados.`)
+            throw error;
+        }
+    }
+
+    catchError(error, msgPart, nomeTarefa, reject) {
+        console.log(`Erro ao executar [${msgPart}] ao aplicar retificação[${nomeTarefa}]: ${error.toString()}`);
+        if (reject) {
+            reject(error);
+        }
+    }
 }
 
 module.exports = ManterTarefasMediator

@@ -98,6 +98,12 @@ class TarefaDAO {
             data: entities, headers: { "Content-Type": "application/json" }
         }
     }
+
+    obterRetificacaoPorNome(nomeTarefa) {
+        let urlRetificacaoPorNomeTarefa = config.getUrlRetificacaoPorNomeTarefa(nomeTarefa);
+        console.log('urlRetificacaoPorNomeTarefa=' + urlRetificacaoPorNomeTarefa);
+        return this.domainPromiseHelper.getDomainPromise(urlRetificacaoPorNomeTarefa);
+    }
 }
 
 module.exports = TarefaDAO

@@ -31,6 +31,7 @@ eventomudancaestadooperativo:
       column: pot_disp
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
+    byIdsEventos:  "id_evento in ($idsEventos)"
 
 
 usina:
@@ -61,6 +62,10 @@ tarefaretificacao:
     nome:
       column: nome
       required: true
+    situacao:
+      column: situacao
+  filters:
+    byNomeTarefa: "nome = :nomeTarefa"      
 
 eventomudancaestadooperativotarefa:
   model: tb_evt_estado_oper_tarefa
@@ -87,3 +92,17 @@ eventomudancaestadooperativotarefa:
       column: operacao
   filters:
     byNomeTarefa: "nome_tarefa = :nometarefa"
+
+fechamentomensal:
+  model: tb_fechamento_mensal
+  fields:
+    id:
+      column: id
+    mes:
+      column: mes
+    ano:
+      column: ano
+    dataCriacao:
+      column: data_criacao
+  filters:
+    byAcimaMesAno: "mes >= :mesFechamento and ano >= :anoFechamento"

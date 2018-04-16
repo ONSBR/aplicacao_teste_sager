@@ -61,7 +61,7 @@
       <tr><th colspan="5">Tarefas</th></tr>
       <tr *ngFor="let tarefa of tarefas">
         <td width="250">
-          {{ tarefa.nome }}
+          {{ tarefa.nome }} <b *ngIf="tarefa.situacao"><i>({{tarefa.situacao}})</i></b>
         </td>
         <td>
           <label for="file">Upload da planilha</label>

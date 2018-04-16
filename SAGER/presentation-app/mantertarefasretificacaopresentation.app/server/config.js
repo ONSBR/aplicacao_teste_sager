@@ -25,5 +25,28 @@ config.getEventosRetificacaoPorNomeTarefa = function getEventosRetificacaoPorNom
     return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=${nomeTarefa}`;
 }
 
+config.getUrlConsultaEventoMudancaEstadoPorIds = function(idsEventos) {
+    return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=byIdsEventos&idsEventos=${idsEventos}`;
+}
+
+config.getUrlPersist = function() {
+    return `http://localhost:${DOMAIN_PORT}/mantertarefas/persist`;
+}
+
+config.getEventManagerUrl = function () {
+    return `http://${EVENT_MANAGER_HOST}:8081/sendevent`
+}
+
+config.getUrlConsultaFechamentosPorMesAno = function(mesFechamento, anoFechamento) {
+    return `http://localhost:${DOMAIN_PORT}/mantertarefas/fechamentomensal?filter=byAcimaMesAno&mesFechamento=${mesFechamento}&anoFechamento=${anoFechamento}`;
+}
+
+config.getUrlRetificacaoPorNomeTarefa = function (nomeTarefa) {
+    return `http://localhost:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
+}
+
+
+filters:
+    byName: "nome = :nome"
 
 module.exports = config;

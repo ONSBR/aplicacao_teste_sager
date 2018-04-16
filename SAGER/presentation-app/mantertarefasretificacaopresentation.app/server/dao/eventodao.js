@@ -13,6 +13,31 @@ class EventoDAO {
         return this.domainPromiseHelper.getDomainPromise(urlUnidadesGeradorasAPartirUsina);
     }
 
+    consultarEventoMudancaEstadoPorIds(idsEventos) {
+        var strIdsEventos = idsEventos.toArray().join(';');
+        let urlConsultaEventoMudancaEstadoPorIds = config.getUrlConsultaEventoMudancaEstadoPorIds(strIdsEventos);
+        console.log('urlConsultaEventoMudancaEstadoPorIds = ' + urlConsultaEventoMudancaEstadoPorIds);
+        return this.domainPromiseHelper.getDomainPromise(urlConsultaEventoMudancaEstadoPorIds);
+    }
+
+    consultarFechamentosPorMesAno(mesFechamento, anoFechamento) {
+        let urlConsultaFechamentosPorMesAno = config.getUrlConsultaFechamentosPorMesAno(mesFechamento, anoFechamento);
+        console.log('urlConsultaFechamentosPorMesAno = ' + urlConsultaFechamentosPorMesAno);
+        return this.domainPromiseHelper.getDomainPromise(urlConsultaFechamentosPorMesAno);
+    }
+
+    persistEventosMudancaEstado(eventos) {
+
+        var promiseUpdate = this.domainPromiseHelper.postDomainPromise(
+            config.getUrlPersist(), eventos);
+
+        /* TODO promiseUpdate.then(result => { res(result) }).catch(
+            error => { catchError(error, 'atualização de eventos', rej) }
+        );*/
+
+        return promiseUpdate;
+    }
+
     getUrlUnidadesGeradorasAPartirUsina(idsUsinas) {
         return config.getUrlUnidadesGeradorasAPartirUsina(idsUsinas);
     }

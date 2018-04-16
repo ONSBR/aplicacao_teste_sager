@@ -1,3 +1,5 @@
 tb_tarefa_retificacao:  
   nome:
     - string
+  situacao:
+    - string  
