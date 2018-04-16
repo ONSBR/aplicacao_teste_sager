@@ -1,5 +1,4 @@
 const Client = require('node-rest-client').Client;
-const util = require('../util');
 const config = require('../config');
 
 class EventPromiseHelper {

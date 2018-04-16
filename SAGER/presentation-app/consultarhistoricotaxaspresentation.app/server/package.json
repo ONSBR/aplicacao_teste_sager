@@ -24,10 +24,13 @@
     "node-rest-client": "^3.1.0",
     "xlsx": "^0.12.0",
     "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master"
-  }, 
+  },
   "nyc": {
     "exclude": [
-      "./*/*spec.js", "./app.js", "./helpers/*.*", "./spec/script/load_data_test.js"
+      "./*/*spec.js",
+      "./app.js",
+      "./helpers/*.*",
+      "./spec/script/load_data_test.js"
     ],
     "all": true
   }
