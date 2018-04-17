@@ -12,5 +12,6 @@ export const environment = {
   inserirTarefa: 'inserirtarefa',
   uploadPlanilha: 'uploadplanilha',
   downloadplanilha: 'downloadplanilha',
-  excluirTarefa: 'excluirtarefa'
+  excluirTarefa: 'excluirtarefa',
+  aplicarTarefa: 'aplicartarefa'
 };

@@ -4,7 +4,10 @@ const XLSX = require('xlsx');
 const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
-const Util = require('../helpers/util');
+const EventPromiseHelper = require('../helpers/eventpromisehelper');
+const Enumerable = require('linq');
+
+const CHANGETRACK_UPDATE = "update";
 
 class ManterTarefasMediator {
 
@@ -94,9 +97,12 @@ class ManterTarefasMediator {
 
                 var listapersist = [];
 
-                this.tarefaDAO.obterRetificacaoPorNome(nomeTarefa).then(tarefa => {
-                
+                this.tarefaDAO.obterRetificacaoPorNome(nomeTarefa).then(arrayTarefa => {
+                    
+                    var tarefa = arrayTarefa && arrayTarefa.length > 0 ? arrayTarefa[0] : null;
+
                     if (tarefa) {
+                        
                         this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(nomeTarefa).then(dataEvt => {
                             
                             if (dataEvt && dataEvt.length > 0) {
@@ -105,10 +111,9 @@ class ManterTarefasMediator {
                                     evtRet => { return (evtRet.operacao? true: false) });
                                 
                                 var evtRectIds = eventosRetificacoes.select(evtRet => {
-                                    return evtRet.id;
+                                    return evtRet.idEvento;
                                 });
-
-                                var minDataEventoAlterado = Date.now;
+                                var minDataEventoAlterado = new Date();
                                 eventosRetificacoes.forEach(evtRet => {
                                     if (evtRet.dataVerificada.getTime() < minDataEventoAlterado.getTime()) {
                                         minDataEventoAlterado = evtRet.dataVerificada;
@@ -120,28 +125,30 @@ class ManterTarefasMediator {
                                     this.validarEventos(evts);
 
                                     var eventos = Enumerable.from(evts ? evts : []);
-
+                                    
                                     eventosRetificacoes.forEach(evtRet => {
 
                                         var evtEstado = eventos.firstOrDefault(evt => { return evtRet.idEvento == evt.idEvento })
-
+                                        
                                         if (evtEstado) {
                                             evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
                                             evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
                                             evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
                                             evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
-
                                             evtEstado._metadata.changeTrack = CHANGETRACK_UPDATE;
+                                            
                                             listapersist.push(evtEstado);
-                                        }
+                                        } 
 
                                     });
-
+                                    
                                     tarefa.situacao = "aplicado";
                                     tarefa._metadata.changeTrack = CHANGETRACK_UPDATE;
                                     listapersist.push(tarefa);
                                     
                                     this.eventoDAO.persistEventosMudancaEstado(listapersist).then(persisted => {
+
+                                        console.log("persisted[" + persisted.length + "]: " + persisted);
 
                                         var mesFechamento = minDataEventoAlterado.getMonth() + 1;
                                         var anoFechamento =  minDataEventoAlterado.getYear();
@@ -159,12 +166,11 @@ class ManterTarefasMediator {
                                                         payload: { mesFechamento: fch.mes, anoFechamento: fch.ano },
                                                         owner: "reprocess"
                                                     };
-            
+
                                                     this.eventPromiseHelper.putEventPromise(evento);
                                                 });    
                                             }
-
-                                            resolve("OK");
+                                            resolve({msg: "OK"});
 
                                         }).catch(error => { this.catchError(error, 'consulta de fechamentos', nomeTarefa, reject) });
 

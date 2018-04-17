@@ -28,12 +28,9 @@ class EventoDAO {
 
     persistEventosMudancaEstado(eventos) {
 
-        var promiseUpdate = this.domainPromiseHelper.postDomainPromise(
-            config.getUrlPersist(), eventos);
-
-        /* TODO promiseUpdate.then(result => { res(result) }).catch(
-            error => { catchError(error, 'atualização de eventos', rej) }
-        );*/
+        var url = config.getUrlPersist();
+        console.log('urlPersist = ' + url);
+        var promiseUpdate = this.domainPromiseHelper.postDomainPromise(url, eventos);
 
         return promiseUpdate;
     }
