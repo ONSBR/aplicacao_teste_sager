@@ -1,0 +1,70 @@
+cenario:
+  model: tb_cenario
+  fields:
+    idCenario:
+      column: id_cenario
+    nomeCenario:
+      column: nome
+    dataInicioVigencia:
+      column: data_inicio
+    dataFimVigencia:
+      column: data_fim
+    dataExecucao:
+      column: data_execucao
+    justificativa:
+      column: justificativa
+    situacao:
+      column: situacao
+    idUsina:
+      column: id_usina
+  filters:
+    byNome: "nome like :nomeCenario"
+    byId: "id = :id"
+    byIdCenario: "id_cenario = :idCenario"
+
+regracenario:
+  model: tb_regra_cenario
+  fields:
+    nomeRegra:
+      column: nome
+    regraDe:
+      column: regra_de
+    regraPara:
+      column: regra_para
+    tipoRegra:
+      column: tipo_regra
+    idCenario:
+      column: id_cenario
+  filters:
+    byIdCenario: "id_cenario = :idCenario"
+    byId: "id = :id"
+
+unidadegeradora:
+  model: tb_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: pot_disp
+    dataInicioOperacao:
+      column: data_inicio_operacao
+    idUsina:
+      column: id_usina
+  filters:
+    byIdUsina: "id_usina = :idUsina"
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+  filters:
+    all:
+      

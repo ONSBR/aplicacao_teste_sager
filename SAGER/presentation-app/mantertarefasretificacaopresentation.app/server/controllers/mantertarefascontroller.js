@@ -1,5 +1,6 @@
 const config = require('../config');
 const ManterTarefasMediator = require('../business/mantertarefasmediator');
+const dispatcher = require("../dispatcher/dispatcher");
 
 class ManterTarefasController {
 
@@ -15,8 +16,9 @@ class ManterTarefasController {
      */
     inserirTarefa(request, response) {
         let nomeTarefa = request.body.nomeTarefa;
-        this.manterTarefasMediator.inserirTarefa(nomeTarefa).then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a inserção da tarefa: ${e.toString()}`) });
+        dispatcher.dispatch("presentation.insere.tarefa.request", { nomeTarefa: nomeTarefa }).then(data => {
+            response.send(data);
+        }).catch(e => { console.log(`Erro durante a inserção da tarefa: ${e.toString()}`) });
     }
 
     /**
@@ -40,9 +42,13 @@ class ManterTarefasController {
         if (!request.files) {
             return response.status(400).send('No files were uploaded.');
         }
-        this.manterTarefasMediator.uploadplanilha(request.body.nomeTarefa, request.files.planilha).then(data => { response.send(data) }).
+
+        let nomeTarefa = request.body.nomeTarefa;
+        let planilha = request.files.planilha;
+
+        dispatcher.dispatch("presentation.uploadplanilha.tarefa.request", { nomeTarefa: nomeTarefa, planilha: planilha }).then(data => { response.send(data) }).
             catch(e => {
-                console.log(`Erro no upload de eventos=:${e.toString()}`);
+                console.log(`Erro no upload de eventos=:${e}`);
                 response.status(400).send(`Erro no upload de eventos=:${e.toString()}`);
             });
     }
@@ -72,14 +78,14 @@ class ManterTarefasController {
      * @param {Response} response Objeto de response
      * @description Exclui a tarefa e os eventos de retificação associados.
     */
-   excluirTarefa(request, response) {
+    excluirTarefa(request, response) {
         let tarefa = request.body.tarefa;
-        this.manterTarefasMediator.excluirTarefa(tarefa).then(data => { response.send(data) }).
-            catch(e => { 
+        dispatcher.dispatch("presentation.exclui.tarefa.request", { tarefa: tarefa, nometarefa: tarefa.nome }).then(data => { response.send(data); }).
+            catch(e => {
                 console.log(`Erro durante a exclusão da tarefa: ${e.toString()}`);
-                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`); 
+                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`);
             });
-   }
+    }
 
    /**
      * @param {Request} request Objeto de request

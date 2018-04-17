@@ -1,38 +1,34 @@
 const TarefaDAO = require('../dao/tarefadao');
 const EventoDAO = require('../dao/eventodao');
 const XLSX = require('xlsx');
+const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
-const EventPromiseHelper = require('../helpers/eventpromisehelper');
-
-const CHANGETRACK_UPDATE = "update";
+const Util = require('../helpers/util');
 
 class ManterTarefasMediator {
 
     constructor() {
         this.tarefaDAO = new TarefaDAO();
-        this.eventoDAO = new EventoDAO();
-        this.XLSX = XLSX;
         this.parseEventosXlsx = parseEventosXlsx;
         this.eventPromiseHelper = new EventPromiseHelper();
     }
 
-    inserirTarefa(nomeTarefa) {
-        return this.tarefaDAO.inserirTarefa(nomeTarefa);
+    inserirTarefa(context, resolve, reject) {
+        var entity = new TarefaRetificacao(context.event.payload.nomeTarefa);
+        context.dataset.tarefaretificacao.insert(entity);
+        resolve(entity);
     }
 
     listarTarefas() {
         return this.tarefaDAO.listarTarefas();
     }
 
-    uploadplanilha(nomeTarefa, file) {
-        let planilha = this.XLSX.read(file.data);
-        return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
-    }
-
-    preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha) {
-        let eventosRetificacao = [];
+    uploadPlanilha(context, resolve, reject) {
+        let nomeTarefa = context.event.payload.nomeTarefa;
+        let planilha = XLSX.read(new Buffer(context.event.payload.planilha.data));
         let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
+        let retificacoes = [];
         for (let i = 3; i <= sheetLength; i++) {
             let eventoMudancaEstadoOperativoTarefa = new EventoMudancaEstadoOperativoTarefa();
             eventoMudancaEstadoOperativoTarefa.nomeTarefa = nomeTarefa;
@@ -42,14 +38,16 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
             eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
             eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
-            eventoMudancaEstadoOperativoTarefa.dataVerificada = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
+            eventoMudancaEstadoOperativoTarefa.dataVerificada = Util.excelStrToDate(this.getSheetValue(planilha.Sheets.eventos, 'G', i));;
             eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
             eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
-            eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
+            context.dataset.eventomudancaestadooperativotarefa.insert(eventoMudancaEstadoOperativoTarefa);
+            retificacoes.push(eventoMudancaEstadoOperativoTarefa);
         }
-        return eventosRetificacao;
-    }
 
+        resolve(retificacoes);
+    }
+    
     getSheetValue(sheet, column, row) {
         let value = sheet[column + row];
         if (value) {
@@ -75,18 +73,18 @@ class ManterTarefasMediator {
         });
     }
 
-    excluirTarefa(tarefa) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
-                    let deleteEventos = this.tarefaDAO.excluirTarefa(tarefa.id, eventos);
-                    resolve(deleteEventos);
-                });
-            } catch (error) {
-                console.log(`Erro ao excluir tarefa: ${error}`);
-                reject(error);
-            }
+    excluirTarefa(context, resolve, reject) {
+        var ds = context.dataset;
+        var tarefa = context.event.payload.tarefa;
+        ds.eventomudancaestadooperativotarefa.collection.forEach(obj => {
+            ds.eventomudancaestadooperativotarefa.delete(obj);
         });
+        try{
+            ds.tarefaretificacao.delete(tarefa);
+            resolve({"msg":"Executou o exclui"});
+        }catch(e){
+            reject(e);
+        };
     }
 
     aplicarTarefa(nomeTarefa) {

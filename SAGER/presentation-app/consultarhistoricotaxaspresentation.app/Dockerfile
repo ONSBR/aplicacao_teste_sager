@@ -1,5 +1,5 @@
-
 FROM node:carbon
-WORKDIR /usr/src/ConsultarHistoricoTaxasPresentation.App
+WORKDIR /usr/src/consultarhistoricotaxaspresentation.app
 COPY . .
-CMD [ "node", "server/ConsultarHistoricoTaxasPresentation.App.js" ]
+ENV PORT 8088
+CMD [ "node", "--inspect=0.0.0.0", "server/app.js" ]

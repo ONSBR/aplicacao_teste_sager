@@ -6,5 +6,10 @@
         "description": "Presentation app UC00601-Manter tarefas de retificação.",
         "author": "",
         "id": "1448a166-a191-40e7-8c05-b1621f34ad73"
+    },
+     "solution": {
+        "name": "sager",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
     }
 }

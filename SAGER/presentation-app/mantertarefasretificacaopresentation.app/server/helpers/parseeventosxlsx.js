@@ -1,5 +1,6 @@
 const XLSX = require('xlsx');
 const Util = require('./util');
+const FORMAT_DATE_EXCEL = "DD/MM/YYYY HH:mm:ss";
 
 class ParseMemoryFileTemplate {
 
@@ -47,7 +48,7 @@ class ParseMemoryFileTemplate {
             linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
             linhaEvento.push(Util.textToExcel(evento.idCondicaoOperativa));
             linhaEvento.push(Util.textToExcel(evento.idClassificacaoOrigem));
-            linhaEvento.push(Util.formatDate(evento.dataVerificada, formatDD_MM_YYYY_HH_mm_ss));
+            linhaEvento.push(Util.dateToExcelStr(evento.dataVerificada));
             if (unidadeGeradora) {
                 linhaEvento.push(this.getDisponibilidade(unidadeGeradora, evento));
             } else {
