@@ -1,4 +1,5 @@
 const Client = require('node-rest-client').Client;
+const util = require('util');
 
 class DomainPromiseHelper {
 
@@ -15,11 +16,16 @@ class DomainPromiseHelper {
         });
     }
 
-    postDomainPromise(url, args) {
+    postDomainPromise(url, data) {
+
         return new Promise((resolve, reject) => {
             let client = new Client();
-            let request = client.post(url, args, function (data) {
-                resolve(data);
+            var args = {
+                data: data,
+                headers: { "Content-Type": "application/json" }
+            };
+            let request = client.post(url, args, function (result) {
+                resolve(result);
             });
             request.on('error', function (err) {
                 console.log('request error', err);

@@ -31,8 +31,7 @@ eventomudancaestadooperativo:
       column: pot_disp
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
-    byIdsEventos:  "id_evento in ($idsEventos)"
-
+    byIdsEventos:  "id_evento in ($idsEventos!)"
 
 usina:
   model: tb_usina

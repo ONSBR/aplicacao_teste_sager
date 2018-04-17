@@ -55,6 +55,10 @@ app.get("/downloadplanilha", (req, res) => {
     manterTarefasController.downloadPlanilha(req, res);
 });
 
+app.get("/aplicartarefa", (req, res) => {
+    manterTarefasController.aplicarTarefa(req, res);
+});
+
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
 });

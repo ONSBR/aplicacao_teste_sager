@@ -13,3 +13,5 @@ tb_evt_estado_oper:
     - datetime
   pot_disp:
     - double
+  numero_ons:
+    - string

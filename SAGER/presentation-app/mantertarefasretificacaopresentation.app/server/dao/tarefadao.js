@@ -16,16 +16,14 @@ class TarefaDAO {
     }
 
     createTarefaRetificacaoArgs(nomeTarefa) {
-        return {
-            data: [{
+        return [{
                 "nome": nomeTarefa,
                 "_metadata": {
                     "type": "tarefaretificacao",
                     "changeTrack": "create",
                     "branch": "master"
                 }
-            }], headers: { "Content-Type": "application/json" }
-        }
+            }];
     }
 
     excluirTarefa(tarefaId, eventos) {
@@ -38,16 +36,15 @@ class TarefaDAO {
     }
 
     createExcluirTarefaRetificacaoArgs(tarefaId) {
-        return {
-            data: [{
+        return [{
                 "id": tarefaId,
                 "_metadata": {
                     "type": "tarefaretificacao",
                     "changeTrack": "destroy",
                     "branch": "master"
                 }
-            }], headers: { "Content-Type": "application/json" }
-        }
+            }];
+        
     }
 
     modificarChangeTrack(entidades, changeTrack) {
@@ -94,9 +91,7 @@ class TarefaDAO {
             });
         });
 
-        return {
-            data: entities, headers: { "Content-Type": "application/json" }
-        }
+        return entities;
     }
 
     obterRetificacaoPorNome(nomeTarefa) {

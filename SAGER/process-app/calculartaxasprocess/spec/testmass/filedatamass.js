@@ -57,7 +57,7 @@ function mapCsvEvento(jsonObject) {
     evtEstOper.idEstadoOperativo = jsonObject.tpestoper_id;
     evtEstOper.idCondicaoOperativa = jsonObject.panocr_id;
     evtEstOper.idClassificacaoOrigem = jsonObject.ogresdes_id;
-    evtEstOper.potenciaDisponivel = jsonObject.valdisp;
+    evtEstOper.potenciaDisponivel = parseInt(jsonObject.valdisp);
     evtEstOper.numONS = jsonObject.numons;
 
     var dataVerificada = jsonObject.dtini_verif;

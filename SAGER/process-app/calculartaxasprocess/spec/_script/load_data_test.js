@@ -52,6 +52,28 @@ function getUrlAppDomain(map, entity, verb) {
     return url;
 }
 
+function postEventos() {
+    if (posevt < eventosToSend.length) {
+        var eventos = eventosToSend[posevt];
+        if (eventos) {
+            var url = getUrlAppDomain(null, null, "persist");
+            console.log('url: ' + url);
+            return httpClient.post(url, JSON.stringify(eventos)).then(result => {
+                console.log("Eventos incluídos[" + posevt + "]: " + result.length);
+                posevt++;
+                postEventos();
+            }).catch(error => {
+                console.error("error[" + posevt + "]: " + error.stack);
+                console.log("Eventos : " + JSON.stringify(eventosToSend[posevt]));
+                posevt++;
+                postEventos();
+            });
+        }
+    }
+}
+
+var eventosToSend = [];
+var posevt = 0;
 
 Promise.all(dataLoad).then(results => {
 
@@ -71,9 +93,38 @@ Promise.all(dataLoad).then(results => {
         console.log("Uges incluídas: " + Enumerable.from(uges).select(it => { return it.idUge }).toArray());
     }).catch(catch_error);
 
-    httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify(eventos)).then(result => {
-        console.log("Eventos incluídos: " + eventos.length);
-    }).catch(catch_error);
-    
+    const lenpage = 10000;
+    for(var i=0;i<eventos.length;i+=lenpage) {
+        var pageslice = i+lenpage >= eventos.length? eventos.length: i+lenpage;
+        eventosToSend.push(eventos.slice(i, pageslice));
+    }
+    console.log("eventosToSend.length: "+eventosToSend.length);
+    postEventos();
 
+    
+/*
+eventos = [eventos[8144]];
+
+    var oj = [];
+    var proevt = [];
+    for(var i =0;i< eventos.length;i++) {
+        proevt.push(httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([eventos[i]])).then(result => {
+            console.log("Eventos incluídos: " + eventos.length);
+            //oj.push(result[0].idEvento);
+        }).catch(error => { console.log(error) }));//.catch(catch_error);
+    }
+    
+    Promise.all(proevt).then(data => {
+        var total = 0;
+        console.log('oj: ' + JSON.stringify(oj))
+        for(var i =0;i< eventos.length;i++) {
+            var evento = eventos[i];
+            if (oj.indexOf(evento.idEvento)<0) {
+                total++;
+                console.log('error['+i+']: ' +evento.idEvento  );
+            }
+        }
+        console.log('total: ' +total );
+    });
+*/
 }).catch(catch_error);
