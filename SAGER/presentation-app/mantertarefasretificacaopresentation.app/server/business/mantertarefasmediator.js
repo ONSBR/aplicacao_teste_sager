@@ -4,17 +4,11 @@ const XLSX = require('xlsx');
 const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
-const EventPromiseHelper = require('../helpers/eventpromisehelper');
-const Enumerable = require('linq');
-
-const CHANGETRACK_UPDATE = "update";
 
 class ManterTarefasMediator {
 
     constructor() {
-        this.tarefaDAO = new TarefaDAO();
         this.parseEventosXlsx = parseEventosXlsx;
-        this.eventPromiseHelper = new EventPromiseHelper();
     }
 
     inserirTarefa(context, resolve, reject) {

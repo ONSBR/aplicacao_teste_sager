@@ -58,6 +58,7 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   ativarInativar(cenario) {
+   
     const url = environment.urlServerPresentation + environment.ativarInativarCenario;
     this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
       alert("Alteração de cenário realizada com sucesso!");
@@ -104,9 +105,11 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   confirmarAlteracao(cenario) {
+
     const url = environment.urlServerPresentation + environment.alterarCenario;
+
     this.http.post(url, cenario).subscribe(data => {
-      alert('Alteração de cenário realizada com sucesso!');
+      alert("Alteração de cenário realizada com sucesso!");
       this.pesquisar();
     });
   }

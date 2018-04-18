@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { HttpClient} from '@angular/common/http';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
 import { environment } from '../../../environments/environment';
 import { ClassificacaoOrigem, EstadoOperativo, CondicaoOperativa } from '../constants';
@@ -74,10 +74,12 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUges() {
+    
     if (this.data && this.data.idUsina) {
 
-      const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
-        '?idUsina=' + this.data.idUsina;
+      var url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
+       '?idUsina=' + this.data.idUsina;
+      
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });
@@ -93,7 +95,7 @@ export class DialogCenarioComponent implements OnInit {
 
       if (this.validarRegras()) {
         this.dialogRef.close(this.data);
-      }
+      } 
 
     } else {
       alert('Informe os campos: Nome do Cenário, Data Inicial, Data Final e Justificativa!');
@@ -102,9 +104,9 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   validarRegras() {
-
+    
     var retorno = true;
-
+    
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
@@ -122,7 +124,7 @@ export class DialogCenarioComponent implements OnInit {
 
   excluirRegra(regra) {
     var index = this.data.regras.indexOf(regra);
-    this.data.regras.splice(index, 1);
+    this.data.regras.splice(index,1);
   }
 
   incluirRegra() {
