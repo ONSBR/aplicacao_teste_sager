@@ -82,6 +82,7 @@ class TarefaDAO {
                 'idClassificacaoOrigem': evento.idClassificacaoOrigem,
                 'dataVerificada': Util.stringToDate(evento.dataVerificada, 'DD-MM-YYYY HH:mm:ss'),
                 'potenciaDisponivel': evento.potenciaDisponivel,
+                'numONS': evento.numONS,
                 'operacao': evento.operacao,
                 '_metadata': {
                     'type': 'eventomudancaestadooperativotarefa',

@@ -77,7 +77,7 @@
           <ul>
             <li *ngFor="let taxa of taxas">
               <a href="{{linkMemoriaTaxa(taxa)}}">Valor: {{ showValor(taxa.valor?taxa.valor:0, 8) }}</a>
-              <input type="button" (click)="reproduzirCalculoTaxa(taxa)" value="Reproduzir" /> ({{printIdentify(taxa._metadata.instance_id)}})
+              <input type="button" (click)="reproduzirCalculoTaxa(taxa)" value="Reproduzir" /> ({{printIdentify(taxa._metadata.instance_id)}}, versão:{{taxa._metadata.version}})
             </li>
           </ul>
         </span>

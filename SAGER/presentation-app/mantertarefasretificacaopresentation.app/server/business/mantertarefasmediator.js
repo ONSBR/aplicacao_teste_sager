@@ -179,10 +179,8 @@ class ManterTarefasMediator {
                                     
                                     this.eventoDAO.persistEventosMudancaEstado(listapersist).then(persisted => {
 
-                                        console.log("persisted[" + persisted.length + "]: " + persisted);
-
                                         var mesFechamento = minDataEventoAlterado.getMonth() + 1;
-                                        var anoFechamento =  minDataEventoAlterado.getYear();
+                                        var anoFechamento =  minDataEventoAlterado.getFullYear();
 
                                         // obtem fechamentos
                                         this.eventoDAO.consultarFechamentosPorMesAno(mesFechamento, anoFechamento).then(fechs => {
@@ -201,6 +199,7 @@ class ManterTarefasMediator {
                                                     this.eventPromiseHelper.putEventPromise(evento);
                                                 });    
                                             }
+                                            console.log("OK");
                                             resolve({msg: "OK"});
 
                                         }).catch(error => { this.catchError(error, 'consulta de fechamentos', nomeTarefa, reject) });
