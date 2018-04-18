@@ -199,6 +199,7 @@ class ManterTarefasMediator {
                                                     this.eventPromiseHelper.putEventPromise(evento);
                                                 });    
                                             }
+
                                             console.log("OK");
                                             resolve({msg: "OK"});
 
