@@ -99,7 +99,7 @@ class ParseResultadoReproducaoFile {
             this.sheet["F4"] = { v: util.formatDate(execucaoReproducao.dataInicio) };
         }
 
-        this.sheet["B5"] = { v: this.taxa.valorTaxa };
+        this.sheet["B5"] = { v: this.showValor(this.taxa.valorTaxa, 8) };
         if (this.resultado.taxaComparacao.reproducao) {
             this.sheet["E5"] = headerReproducao("Valor Taxa:");
             this.sheet["F5"] = { v: this.resultado.taxaComparacao.reproducao };
@@ -134,6 +134,13 @@ class ParseResultadoReproducaoFile {
         })
     }
 
+    showValor(val, round) {
+        if (!val) return '0';
+        if (!round) round = 2;
+        val = parseFloat(val.toFixed(round));
+        return (""+val).replace('.', ',');
+    }
+
     parseParametros() {
 
         this.mountHeaderParametros();
@@ -154,7 +161,7 @@ class ParseResultadoReproducaoFile {
                 var param = this.getParametroByItemGroup(it, ct.tipoParametro, ct.isoriginal);
 
                 if (param) {
-                    this.sheet[ct.columnLetter + this.curRow] = { v: util.numberToExcel(param.valorParametro) };
+                    this.sheet[ct.columnLetter + this.curRow] = { v: this.showValor(util.numberToExcel(param.valorParametro), 12) };
                 }
             });
 

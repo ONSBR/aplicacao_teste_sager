@@ -52,15 +52,17 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
     var usinas = dataset.usina.collection;
     usinas.forEach(it => {
 
-        eventEmitTaxByUsina(eventManager, {
-            idUsina: it.idUsina,
-            idFechamento: fechamento.id,
-            mesFechamento: fechamento.mes,
-            anoFechamento: fechamento.ano,
-            idExecucaoCalculo: execucaoCalculo.id,
-            dataInicialEvento: periodoCalculo.dataInicio,
-            dataFinalEvento: periodoCalculo.dataFim
-        });
+        if (fechamento.mes < 10 && fechamento.ano < 2014) {
+            eventEmitTaxByUsina(eventManager, {
+                idUsina: it.idUsina,
+                idFechamento: fechamento.id,
+                mesFechamento: fechamento.mes,
+                anoFechamento: fechamento.ano,
+                idExecucaoCalculo: execucaoCalculo.id,
+                dataInicialEvento: periodoCalculo.dataInicio,
+                dataFinalEvento: periodoCalculo.dataFim
+            });
+        }
 
         eventEmitTaxByUsina(eventManager, {
             acumulada: true,

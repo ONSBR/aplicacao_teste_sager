@@ -282,6 +282,13 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     });
   }
 
+  showValor(val, round) {
+    if (!val) return '0';
+    if (!round) round = 2;
+    val = parseFloat(val.toFixed(round));
+    return (""+val).replace('.', ',');
+  }
+  
   listarTipoTaxa() {
     this.http.get(environment.urlServerPresentation + environment.listarTipoTaxa).subscribe(data => {
       this.tiposTaxa = data;

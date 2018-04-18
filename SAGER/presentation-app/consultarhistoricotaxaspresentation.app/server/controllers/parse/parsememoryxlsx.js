@@ -60,6 +60,13 @@ class ParseMemoryFileTemplate {
         });
     }
 
+    showValor(val, round) {
+        if (!val) return '0';
+        if (!round) round = 2;
+        val = parseFloat(val.toFixed(round));
+        return (""+val).replace('.', ',');
+    }
+
     parseContent() {
 
         this.recoverData();
@@ -71,7 +78,7 @@ class ParseMemoryFileTemplate {
             this.sheet["B4"] = { v: util.formatDate(this.execucaoCalculo.dataInicio) };
         }
 
-        this.sheet["B5"] = { v: this.taxa.valorTaxa };
+        this.sheet["B5"] = { v: this.showValor(this.taxa.valorTaxa, 8) };
 
         this.sheet["B6"] = { v: (this.fechamento.mes.zeroFillLeft(2) + "/" + this.fechamento.ano) };
 
@@ -106,7 +113,7 @@ class ParseMemoryFileTemplate {
 
                 var param = this.getParametroByItemGroup(it, ct.tipoParametro);
 
-                this.sheet[ct.columnLetter + curRow] = { v: util.numberToExcel(param.valorParametro) };
+                this.sheet[ct.columnLetter + curRow] = { v: this.showValor(util.numberToExcel(param.valorParametro), 12) };
             });
 
             curRow++;
