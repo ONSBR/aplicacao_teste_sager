@@ -1,5 +1,5 @@
 const Client = require('node-rest-client').Client;
-const util = require('util');
+const util = require('./util');
 
 class DomainPromiseHelper {
 

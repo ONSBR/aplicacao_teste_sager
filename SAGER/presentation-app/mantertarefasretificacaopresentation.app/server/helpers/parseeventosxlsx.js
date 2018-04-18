@@ -44,6 +44,7 @@ class ParseMemoryFileTemplate {
 
             linhaEvento.push(evento.idUge);
             linhaEvento.push(evento.idEvento);
+            linhaEvento.push(evento.numONS);
             linhaEvento.push(Util.textToExcel(evento.idEstadoOperativo));
             linhaEvento.push(Util.textToExcel(evento.idCondicaoOperativa));
             linhaEvento.push(Util.textToExcel(evento.idClassificacaoOrigem));
@@ -76,7 +77,7 @@ class ParseMemoryFileTemplate {
     }
 
     getCabecalhoEventos() {
-        return ['id_usina', 'uge_id', 'desger_id', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
+        return ['id_usina', 'uge_id', 'desger_id', 'numons', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
     }
 
 }

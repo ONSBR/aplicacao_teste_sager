@@ -94,13 +94,32 @@ class PesquisarHistoricoTaxasController {
         let idFechamento = request.body.idFechamentoMensal;
         let filtroConsulta = request.body.filtroConsulta;
 
-        let getUrlFiltroTaxas = this.getUrlFiltroTaxasPorUsinaTipoTaxaIdsFechamentos(
+        let urlFiltroTaxas = this.getUrlFiltroTaxasPorUsinaTipoTaxaIdsFechamentos(
             filtroConsulta.usina.idUsina, filtroConsulta.tipoTaxa.idTipoTaxa, [idFechamento]);
 
-        console.log('getUrlFiltroTaxas:' + getUrlFiltroTaxas);
-        this.domainPromiseHelper.getDomainPromise(getUrlFiltroTaxas).
-            then(taxas => { response.send(taxas); }).
-            catch(e => { console.log(`Erro durante a consulta de histórico de taxas a partir das execuções: ${e.toString()}`) });;
+        console.log('getUrlFiltroTaxas:' + urlFiltroTaxas);
+        this.domainPromiseHelper.getDomainPromise(urlFiltroTaxas).then(taxas => { 
+            
+            var taxa = taxas && taxas.length > 0?taxas[0]:null;
+            if (taxa) {
+                var urlTaxaHistory = config.getUrlTaxaHistory(taxa.id);
+                console.log('urlTaxaHistory: ' + urlTaxaHistory);
+                this.domainPromiseHelper.getDomainPromise(urlTaxaHistory).then(taxasHistory => { 
+                    if (taxasHistory && taxasHistory.length) {
+                        taxasHistory.forEach(it => {
+                            it.id = taxa.id;
+                        });
+                    }
+                    response.send(taxasHistory); 
+                });
+            } else {
+                throw new Error("Erro ao obter taxas ");
+            }
+        }).catch(e => { 
+            console.log(`Erro durante a consulta de histórico de taxas a partir das execuções: ${e.toString()}`); 
+            response.statusCode = 400;
+            response.send(e);
+        });
     }
 
     /**

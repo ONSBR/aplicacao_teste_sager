@@ -6,7 +6,9 @@ const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 const EventPromiseHelper = require('../helpers/eventpromisehelper');
 const Enumerable = require('linq');
 
+const CHANGETRACK_CREATE = "create";
 const CHANGETRACK_UPDATE = "update";
+const CHANGETRACK_DELETE = "destroy";
 
 class ManterTarefasMediator {
 
@@ -40,12 +42,13 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.idUsina = this.getSheetValue(planilha.Sheets.eventos, 'A', i);
             eventoMudancaEstadoOperativoTarefa.idUge = this.getSheetValue(planilha.Sheets.eventos, 'B', i);
             eventoMudancaEstadoOperativoTarefa.idEvento = this.getSheetValue(planilha.Sheets.eventos, 'C', i);
-            eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
-            eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
-            eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
-            eventoMudancaEstadoOperativoTarefa.dataVerificada = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
-            eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
-            eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
+            eventoMudancaEstadoOperativoTarefa.numONS = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
+            eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
+            eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
+            eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
+            eventoMudancaEstadoOperativoTarefa.dataVerificada = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
+            eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
+            eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'J', i);
             eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
         }
         return eventosRetificacao;
@@ -130,15 +133,39 @@ class ManterTarefasMediator {
 
                                         var evtEstado = eventos.firstOrDefault(evt => { return evtRet.idEvento == evt.idEvento })
                                         
-                                        if (evtEstado) {
-                                            evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
-                                            evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
-                                            evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
-                                            evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
-                                            evtEstado._metadata.changeTrack = CHANGETRACK_UPDATE;
-                                            
+                                        if (evtEstado && evtRet.operacao == 'A' || evtRet.operacao == 'E') {
+
+                                            if (evtRet.operacao == 'A') {
+                                                console.log('evtEstado.dataverificada: ' +JSON.stringify(evtEstado.dataVerificada) + 
+                                                    ', evtRet.dataverificada: ' + JSON.stringify(evtRet.dataVerificada));
+                                                evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
+                                                evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
+                                                evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
+                                                evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
+                                                evtEstado._metadata.changeTrack = CHANGETRACK_UPDATE;
+                                            }  else {
+                                                evtEstado._metadata.changeTrack = CHANGETRACK_DELETE;
+                                            }
                                             listapersist.push(evtEstado);
-                                        } 
+                                        }
+                                        else if (evtRet.operacao == 'I') {
+                                            
+                                            evtEstado = { _metadata: { 
+                                                changeTrack: CHANGETRACK_CREATE, 
+                                                type: "eventomudancaestadooperativo" 
+                                            } };
+                                            evtEstado.idUsina = evtRet.idUsina;
+                                            evtEstado.idUge = evtRet.idUge;
+                                            evtEstado.idEvento = evtRet.idEvento;
+                                            evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
+                                            evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
+                                            evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
+                                            evtEstado.dataVerificada = evtRet.dataVerificada;
+                                            evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
+                                            evtEstado.numONS = evtRet.numONS;
+
+                                            listapersist.push(evtEstado);
+                                        }
 
                                     });
                                     

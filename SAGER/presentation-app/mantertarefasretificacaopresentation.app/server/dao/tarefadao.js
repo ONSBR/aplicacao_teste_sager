@@ -31,7 +31,7 @@ class TarefaDAO {
         console.log('urlExcluirTarefa= ' + urlExcluirTarefa);
         let args = this.createExcluirTarefaRetificacaoArgs(tarefaId);
         this.modificarChangeTrack(eventos, 'destroy');
-        args.data = args.data.concat(eventos);
+        args = args.concat(eventos);
         return this.domainPromiseHelper.postDomainPromise(urlExcluirTarefa, args);
     }
 
