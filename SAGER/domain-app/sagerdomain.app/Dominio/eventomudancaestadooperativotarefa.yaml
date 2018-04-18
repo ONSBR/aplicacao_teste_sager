@@ -21,3 +21,5 @@ tb_evt_estado_oper_tarefa:
     - string
   numero_ons:
     - string
+  eversao:
+    - integer

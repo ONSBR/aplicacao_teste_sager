@@ -31,6 +31,8 @@ eventomudancaestadooperativo:
       column: pot_disp
     numONS: 
       column: numero_ons
+    eversao:
+      column: eversao
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
     byIdsEventos:  "id_evento in ($idsEventos!)"
@@ -91,6 +93,8 @@ eventomudancaestadooperativotarefa:
       column: pot_disp
     numONS: 
       column: numero_ons
+    eversao:
+      column: eversao
     operacao:
       column: operacao
   filters:

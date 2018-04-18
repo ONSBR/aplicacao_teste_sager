@@ -54,6 +54,7 @@ class ParseMemoryFileTemplate {
             } else {
                 linhaEvento.push(evento.potenciaDisponivel);
             }
+            linhaEvento.push(evento.eversao);
             if (evento.operacao) {
                 linhaEvento.push(evento.operacao);
             }
@@ -77,7 +78,7 @@ class ParseMemoryFileTemplate {
     }
 
     getCabecalhoEventos() {
-        return ['id_usina', 'uge_id', 'desger_id', 'numons', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'operacao'];
+        return ['id_usina', 'uge_id', 'desger_id', 'numons', 'tpestoper_id', 'panocr_id', 'ogresdes_id', 'dtini_verif', 'valdisp', 'versao', 'operacao'];
     }
 
 }

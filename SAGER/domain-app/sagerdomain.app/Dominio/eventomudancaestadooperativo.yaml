@@ -15,3 +15,5 @@ tb_evt_estado_oper:
     - double
   numero_ons:
     - string
+  eversao:
+    - integer

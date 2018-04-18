@@ -47,8 +47,10 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
             eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
             eventoMudancaEstadoOperativoTarefa.dataVerificada = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
-            eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = this.getSheetValue(planilha.Sheets.eventos, 'I', i);
-            eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'J', i);
+            eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = parseFloat(this.getSheetValue(planilha.Sheets.eventos, 'I', i));
+            eventoMudancaEstadoOperativoTarefa.eversao = parseInt(this.getSheetValue(planilha.Sheets.eventos, 'J', i));
+            eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'K', i);
+            
             eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
         }
         return eventosRetificacao;
@@ -142,6 +144,7 @@ class ManterTarefasMediator {
                                                 evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
                                                 evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
                                                 evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
+                                                evtEstado.eversao++;
                                                 evtEstado._metadata.changeTrack = CHANGETRACK_UPDATE;
                                             }  else {
                                                 evtEstado._metadata.changeTrack = CHANGETRACK_DELETE;
@@ -163,6 +166,7 @@ class ManterTarefasMediator {
                                             evtEstado.dataVerificada = evtRet.dataVerificada;
                                             evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
                                             evtEstado.numONS = evtRet.numONS;
+                                            evtEstado.eversao = 1;
 
                                             listapersist.push(evtEstado);
                                         }

@@ -217,7 +217,7 @@ class ParseResultadoReproducaoFile {
                     this.sheet["E" + this.curRow] = { v: util.textToExcel(it.original.idClassificacaoOrigem) };
                     this.sheet["F" + this.curRow] = { v: util.formatDate(it.original.dataVerificada) };
                     this.sheet["G" + this.curRow] = { v: it.original.potenciaDisponivel };
-                    this.sheet["K" + this.curRow] = { v: it.original.id };
+                    this.sheet["K" + this.curRow] = { v: it.original.eversao };
                 }
                 this.sheet["H" + this.curRow] = { v: util.secondToHour(dadosComuns.duracaoEmSegundos) };
 
@@ -233,7 +233,7 @@ class ParseResultadoReproducaoFile {
                     this.sheet["N" + this.curRow] = { v: util.textToExcel(it.reproducao.idClassificacaoOrigem) };
                     this.sheet["O" + this.curRow] = { v: util.formatDate(it.reproducao.dataVerificada) };
                     this.sheet["P" + this.curRow] = { v: it.reproducao.potenciaDisponivel };
-                    this.sheet["Q" + this.curRow] = { v: it.reproducao.id };
+                    this.sheet["Q" + this.curRow] = { v: it.reproducao.eversao };
                 }
 
             }

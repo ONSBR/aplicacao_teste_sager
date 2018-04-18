@@ -55,6 +55,8 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
         eventEmitTaxByUsina(eventManager, {
             idUsina: it.idUsina,
             idFechamento: fechamento.id,
+            mesFechamento: fechamento.mes,
+            anoFechamento: fechamento.ano,
             idExecucaoCalculo: execucaoCalculo.id,
             dataInicialEvento: periodoCalculo.dataInicio,
             dataFinalEvento: periodoCalculo.dataFim
@@ -64,6 +66,8 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
             acumulada: true,
             idUsina: it.idUsina,
             idFechamento: fechamento.id,
+            mesFechamento: fechamento.mes,
+            anoFechamento: fechamento.ano,
             idExecucaoCalculo: execucaoCalculo.id,
             dataInicialEvento: periodoAcumulado.dataInicio,
             dataFinalEvento: periodoAcumulado.dataFim
