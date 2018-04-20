@@ -6,5 +6,11 @@ dispatcher.register("presentation.uploadplanilha.tarefa.request", (context, reso
 });
 dispatcher.register("presentation.insere.tarefa.request", manterTarefasMediator.inserirTarefa);
 dispatcher.register("presentation.exclui.tarefa.request", manterTarefasMediator.excluirTarefa);
+dispatcher.register("presentation.aplica.tarefa.request", (context, resolve, reject, eventManager)=>{
+    manterTarefasMediator.aplicarTarefa(context, resolve, reject);
+});
+dispatcher.register("presentation.executaretificacao.tarefa.request", (context, resolve, reject, eventManager)=>{
+    manterTarefasMediator.executarRetificacao(context, resolve, reject, eventManager);
+});
 
 module.exports = dispatcher;

@@ -1,7 +1,7 @@
 #!/bin/bash
 echo 'Iniciando build da aplicação web'
-npm i mantertarefasretificacao-web/
 cd mantertarefasretificacao-web/
+npm install
 ng build
 echo 'Build da aplicação web finalizado'
 echo 'Cópia da dist web'

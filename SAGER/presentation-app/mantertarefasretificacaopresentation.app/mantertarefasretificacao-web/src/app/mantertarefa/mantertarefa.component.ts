@@ -120,7 +120,7 @@ export class MantertarefaComponent implements OnInit {
   }
 
   getUrlDownloadPlanilha(nomeTarefa) {
-    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nometarefa=${nomeTarefa}`;
+    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nomeTarefa=${nomeTarefa}`;
   }
 
   getUrlPesquisarEventos() {
@@ -148,10 +148,8 @@ export class MantertarefaComponent implements OnInit {
   }
 
   aplicar(tarefa) {
-
     this.limparMensagens();
     var url = environment.urlServerPresentation + environment.aplicarTarefa + "?nomeTarefa=" + tarefa.nome;
-    
     this.http.get(url).subscribe(
       data => {
         this.mensagemUploadPlanilha = "Retificação aplicada com sucesso!";

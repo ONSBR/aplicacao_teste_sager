@@ -29,9 +29,14 @@ eventomudancaestadooperativo:
       column: data_verificada
     potenciaDisponivel:
       column: pot_disp
+    numONS: 
+      column: numero_ons
+    eversao:
+      column: eversao  
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
     byIdsEventos:  "id_evento in ($idsEventos!)"
+    all:
 
 usina:
   model: tb_usina
@@ -88,10 +93,14 @@ eventomudancaestadooperativotarefa:
       column: data_verificada
     potenciaDisponivel:
       column: pot_disp
+    numONS: 
+      column: numero_ons
+    eversao:
+      column: eversao      
     operacao:
       column: operacao
   filters:
-    byNomeTarefa: "nome_tarefa = :nometarefa"
+    byNomeTarefa: "nome_tarefa = :nomeTarefa"
 
 fechamentomensal:
   model: tb_fechamento_mensal
@@ -107,4 +116,3 @@ fechamentomensal:
   filters:
     byAcimaMesAno: "mes >= :mesFechamento and ano >= :anoFechamento"
     byId: "id = :id"
-    byNomeTarefa: "nome_tarefa = :nometarefa"

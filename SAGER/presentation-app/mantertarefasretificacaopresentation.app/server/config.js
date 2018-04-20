@@ -22,15 +22,15 @@ config.getUrlInserirTarefa = function getUrlInserirTarefa() {
 }
 
 config.getEventosRetificacaoPorNomeTarefa = function getEventosRetificacaoPorNomeTarefa(nomeTarefa) {
-    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=${nomeTarefa}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
 }
 
 config.getUrlConsultaEventoMudancaEstadoPorIds = function(idsEventos) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=byIdsEventos&idsEventos=${idsEventos}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=byIdsEventos&idsEventos=${idsEventos}`;
 }
 
 config.getUrlPersist = function() {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/persist`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/persist`;
 }
 
 config.getEventManagerUrl = function () {
@@ -38,11 +38,11 @@ config.getEventManagerUrl = function () {
 }
 
 config.getUrlConsultaFechamentosPorMesAno = function(mesFechamento, anoFechamento) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/fechamentomensal?filter=byAcimaMesAno&mesFechamento=${mesFechamento}&anoFechamento=${anoFechamento}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/fechamentomensal?filter=byAcimaMesAno&mesFechamento=${mesFechamento}&anoFechamento=${anoFechamento}`;
 }
 
 config.getUrlRetificacaoPorNomeTarefa = function (nomeTarefa) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
 }
 
 

@@ -60,7 +60,7 @@ class ManterTarefasController {
      * @description Realiza o download da planilha de eventos a partir da tarefa.
     */
     downloadPlanilha(request, response) {
-        let nomeTarefa = request.query.nometarefa;
+        let nomeTarefa = request.query.nomeTarefa;
         this.manterTarefasMediator.downloadPlanilha(nomeTarefa).then(contentXlsx => {
             response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
             response.setHeader('Content-Length', contentXlsx.length);
@@ -80,22 +80,27 @@ class ManterTarefasController {
     */
     excluirTarefa(request, response) {
         let tarefa = request.body.tarefa;
-        dispatcher.dispatch("presentation.exclui.tarefa.request", { tarefa: tarefa, nometarefa: tarefa.nome }).then(data => { response.send(data); }).
+        dispatcher.dispatch("presentation.exclui.tarefa.request", { tarefa: tarefa, nomeTarefa: tarefa.nome }).then(
+            data => { response.send(data); }).
             catch(e => {
                 console.log(`Erro durante a exclusão da tarefa: ${e.toString()}`);
                 response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`);
             });
     }
 
-   /**
-     * @param {Request} request Objeto de request
-     * @param {Response} response Objeto de response
-     * @description cadastra a tarefa de retificação
-     */
+    /**
+      * @param {Request} request Objeto de request
+      * @param {Response} response Objeto de response
+      * @description aplica a tarefa de retificação
+      */
     aplicarTarefa(request, response) {
         let nomeTarefa = request.query.nomeTarefa;
-        this.manterTarefasMediator.aplicarTarefa(nomeTarefa).then(data => { response.send(data); }).
-            catch(e => { console.log(`Erro durante a aplicação da tarefa: ${e.toString()}`) });
+        dispatcher.dispatch("presentation.aplica.tarefa.request", { nomeTarefa: nomeTarefa }).
+            then(menorDataEventoAlterado => {
+                dispatcher.dispatch("presentation.executaretificacao.tarefa.request", { menorDataEventoAlterado: menorDataEventoAlterado }).then(data => {
+                    response.send(data);
+                });
+            }).catch(e => { console.log(`Erro durante a aplicação da tarefa: ${e.toString()}`) });
     }
 }
 

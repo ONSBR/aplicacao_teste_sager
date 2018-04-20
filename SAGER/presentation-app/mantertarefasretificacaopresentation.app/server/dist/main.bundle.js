@@ -27,7 +27,7 @@ module.exports = ""
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n<div>\r\n  <app-mantertarefa></app-mantertarefa>\r\n</div>"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div>\n  <app-mantertarefa></app-mantertarefa>\n</div>"
 
 /***/ }),
 
@@ -120,7 +120,7 @@ module.exports = ""
 /***/ "./src/app/mantertarefa/mantertarefa.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>\r\n  Manter tarefas\r\n</h2>\r\n\r\n<fieldset>\r\n  <div *ngIf=\"camposObrigatoriosPesquisaEventos.length > 0\" [ngStyle]=\"{'color':'red'}\">\r\n    <span>Campos obrigatórios:</span>\r\n    <ul>\r\n      <li *ngFor=\"let campoObrigatorio of camposObrigatoriosPesquisaEventos\">\r\n        {{campoObrigatorio}}\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div>\r\n    <span>Usina:</span>\r\n    <span *ngFor=\"let usina of usinas\">\r\n      <input type=\"checkbox\" (change)=\"updateCheckedOptions($event, usina)\">{{usina.idUsina}}\r\n    </span>\r\n  </div>\r\n  <div>\r\n    <span>Data Inicial:\r\n      <input type=\"date\" [(ngModel)]=\"filtroEvento.dataInicial\" />\r\n    </span>\r\n  </div>\r\n  <div>\r\n    <span>Data Final:\r\n      <input type=\"date\" [(ngModel)]=\"filtroEvento.dataFinal\" />\r\n    </span>\r\n  </div>\r\n  <div>\r\n    <span>\r\n      <button class=\"button\" (click)='pesquisarEventos($event)'>Pesquisar eventos</button>\r\n    </span>\r\n  </div>\r\n</fieldset>\r\n\r\n<fieldset>\r\n  <div *ngIf=\"camposObrigatoriosTarefa.length > 0\" [ngStyle]=\"{'color':'red'}\">\r\n    <span>Campos obrigatórios:</span>\r\n    <ul>\r\n      <li *ngFor=\"let campoObrigatorioTarefa of camposObrigatoriosTarefa\">\r\n        {{campoObrigatorioTarefa}}\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div *ngIf=\"mensagemUploadPlanilha\" [ngStyle]=\"{'color':'green'}\">\r\n    <span>{{mensagemUploadPlanilha}}</span>\r\n  </div>\r\n  <div>\r\n    <span>Nome da tarefa:\r\n      <input type=\"text\" [(ngModel)]=\"nomeTarefa\" />\r\n      <button class=\"button\" (click)='inserirTarefa($event)'>Salvar tarefa</button>\r\n    </span>\r\n  </div>\r\n  <div>\r\n    <table border=\"1\">\r\n      <tr>Tarefas</tr>\r\n      <tr *ngFor=\"let tarefa of tarefas\">\r\n        <td>\r\n          {{ tarefa.nome }}\r\n        </td>\r\n        <td>\r\n          <label for=\"file\">Upload da planilha</label>\r\n          <input type=\"file\" (change)='uploadPlanilha(tarefa, $event.target.files)' />\r\n        </td>\r\n        <td>\r\n          <button class=\"button\" (click)='downloadPlanilha(tarefa, $event)'>Download da planilha</button>\r\n        </td>\r\n        <td>\r\n          <button class=\"button\" (click)='aplicar($event)'>Aplicar</button>\r\n        </td>\r\n        <td>\r\n          <button class=\"button\" (click)='excluir(tarefa)'>Excluir</button>\r\n        </td>\r\n      </tr>\r\n    </table>\r\n  </div>\r\n</fieldset>"
+module.exports = "<h2>\n  Manter tarefas\n</h2>\n\n<fieldset>\n  <div><b>Download de Eventos</b></div> <br>\n  <div *ngIf=\"camposObrigatoriosPesquisaEventos.length > 0\" [ngStyle]=\"{'color':'red'}\">\n    <span>Campos obrigatórios:</span>\n    <ul>\n      <li *ngFor=\"let campoObrigatorio of camposObrigatoriosPesquisaEventos\">\n        {{campoObrigatorio}}\n      </li>\n    </ul>\n  </div>\n  <div>\n    <span>Usina:</span>\n    <span *ngFor=\"let usina of usinas\">\n      <input type=\"checkbox\" (change)=\"updateCheckedOptions($event, usina)\">{{usina.idUsina}}\n    </span>\n  </div>\n  <div>\n    <span>Data Inicial:\n      <input type=\"date\" [(ngModel)]=\"filtroEvento.dataInicial\" />\n    </span>\n  </div>\n  <div>\n    <span>Data Final:\n      <input type=\"date\" [(ngModel)]=\"filtroEvento.dataFinal\" />\n    </span>\n  </div>\n  <div>\n    <span>\n      <button class=\"button\" (click)='pesquisarEventos($event)'>Pesquisar eventos</button>\n    </span>\n  </div>\n</fieldset>\n<h3>\n    Lista de tarefas\n  </h3>\n<fieldset>\n  <div *ngIf=\"camposObrigatoriosTarefa.length > 0\" [ngStyle]=\"{'color':'red'}\">\n    <span>Campos obrigatórios:</span>\n    <ul>\n      <li *ngFor=\"let campoObrigatorioTarefa of camposObrigatoriosTarefa\">\n        {{campoObrigatorioTarefa}}\n      </li>\n    </ul>\n  </div>\n  <div *ngIf=\"mensagemUploadPlanilha\" [ngStyle]=\"{'color':'green'}\">\n    <span>{{mensagemUploadPlanilha}}</span>\n  </div>\n  <div>\n    <span>Nome da tarefa:\n      <input type=\"text\" [(ngModel)]=\"nomeTarefa\" />\n      <button class=\"button\" (click)='inserirTarefa($event)'>Salvar tarefa</button>\n    </span>\n  </div>\n  <br>\n  <div>\n    <table class=\"grid-entidades\" width=\"100%\">\n      <tr><th colspan=\"5\">Tarefas</th></tr>\n      <tr *ngFor=\"let tarefa of tarefas\">\n        <td width=\"250\">\n          {{ tarefa.nome }} <b *ngIf=\"tarefa.situacao\"><i>({{tarefa.situacao}})</i></b>\n        </td>\n        <td>\n          <label for=\"file\" *ngIf=\"tarefa.situacao != 'aplicado'\">Upload da planilha</label>\n          <input type=\"file\" (change)='uploadPlanilha(tarefa, $event.target.files)' *ngIf=\"tarefa.situacao != 'aplicado'\" />\n        </td>\n        <td>\n          <button class=\"button\" (click)='downloadPlanilha(tarefa, $event)'  width=\"50\" *ngIf=\"tarefa.situacao != 'aplicado'\">Download da planilha</button>\n        </td>\n        <td>\n          <button class=\"button\" (click)='aplicar(tarefa)'  width=\"50\" *ngIf=\"tarefa.situacao != 'aplicado'\">Aplicar</button>\n        </td>\n        <td>\n          <button class=\"button\" (click)='excluir(tarefa)'  width=\"50\" *ngIf=\"tarefa.situacao != 'aplicado'\">Excluir</button>\n        </td>\n      </tr>\n    </table>\n  </div>\n</fieldset>"
 
 /***/ }),
 
@@ -176,9 +176,10 @@ var MantertarefaComponent = /** @class */ (function () {
         if (this.validarTarefa()) {
             var body = { 'nomeTarefa': this.nomeTarefa };
             this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirTarefa, body).subscribe(function (data) {
+                _this.mensagemUploadPlanilha = "Tarefa inserida com sucesso!";
                 _this.listarTarefas();
             }, function (error) {
-                console.log("Erro ao inserir tarefa: ", error);
+                console.log("Erro ao inserir tarefa: " + error);
             });
         }
     };
@@ -234,7 +235,7 @@ var MantertarefaComponent = /** @class */ (function () {
         window.location.href = url;
     };
     MantertarefaComponent.prototype.getUrlDownloadPlanilha = function (nomeTarefa) {
-        return "" + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadplanilha + "?nometarefa=" + nomeTarefa;
+        return "" + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadplanilha + "?nomeTarefa=" + nomeTarefa;
     };
     MantertarefaComponent.prototype.getUrlPesquisarEventos = function () {
         return "" + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarEventos + "?idsUsinas=" + this.filtroEvento.usinas.join(';') + "&dataInicial=" + this.filtroEvento.dataInicial + "&dataFinal=" + this.filtroEvento.dataFinal;
@@ -253,6 +254,16 @@ var MantertarefaComponent = /** @class */ (function () {
         this.limparMensagens();
         var body = { 'tarefa': tarefa };
         this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirTarefa, body).subscribe(function (data) {
+            _this.mensagemUploadPlanilha = "Tarefa excluída com sucesso!";
+            _this.listarTarefas();
+        });
+    };
+    MantertarefaComponent.prototype.aplicar = function (tarefa) {
+        var _this = this;
+        this.limparMensagens();
+        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].aplicarTarefa + "?nomeTarefa=" + tarefa.nome;
+        this.http.get(url).subscribe(function (data) {
+            _this.mensagemUploadPlanilha = "Retificação aplicada com sucesso!";
             _this.listarTarefas();
         });
     };
@@ -304,7 +315,8 @@ var environment = {
     inserirTarefa: 'inserirtarefa',
     uploadPlanilha: 'uploadplanilha',
     downloadplanilha: 'downloadplanilha',
-    excluirTarefa: 'excluirtarefa'
+    excluirTarefa: 'excluirtarefa',
+    aplicarTarefa: 'aplicartarefa'
 };
 
 

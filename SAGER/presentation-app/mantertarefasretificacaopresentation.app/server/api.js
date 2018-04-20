@@ -56,6 +56,10 @@ app.get("/downloadplanilha", (req, res) => {
     manterTarefasController.downloadPlanilha(req, res);
 });
 
+app.get("/aplicartarefa", (req, res) => {
+    manterTarefasController.aplicarTarefa(req, res);
+});
+
 module.exports = function(){
     app.listen(PORT, function () {
         console.log("App listening on PORT " + PORT);
