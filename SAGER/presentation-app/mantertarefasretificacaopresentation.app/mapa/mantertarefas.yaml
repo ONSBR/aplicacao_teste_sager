@@ -34,7 +34,9 @@ eventomudancaestadooperativo:
     eversao:
       column: eversao  
   filters:
-    byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges)"
+    menorQueData: "data_verificada < :data order by data_verificada"
+    maiorQueData: "data_verificada > :data order by data_verificada"
+    byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges) order by data_verificada"
     byIdsEventos:  "id_evento in ($idsEventos!)"
     all:
 

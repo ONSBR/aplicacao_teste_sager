@@ -49,10 +49,10 @@ export class MantertarefaComponent implements OnInit {
   inserirTarefa() {
     this.limparMensagens();
     if (this.validarTarefa()) {
-      let body = { 'nomeTarefa': this.nomeTarefa };
+      const body = { 'nomeTarefa': this.nomeTarefa };
       this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
         data => {
-          this.mensagemUploadPlanilha = "Tarefa inserida com sucesso!";
+          this.mensagemUploadPlanilha = 'Tarefa inserida com sucesso!';
           this.listarTarefas();
         }, error => {
           console.log(`Erro ao inserir tarefa: ${error}`);
@@ -108,7 +108,7 @@ export class MantertarefaComponent implements OnInit {
     const headers = new HttpHeaders();
     this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => {
       console.log(data);
-      this.mensagemUploadPlanilha = "Upload executado com sucesso";
+      this.mensagemUploadPlanilha = 'Upload executado com sucesso';
     }, error => {
       console.log(`Erro ao realizar upload da planilha: ${error}`);
     });
@@ -138,10 +138,10 @@ export class MantertarefaComponent implements OnInit {
 
   excluir(tarefa) {
     this.limparMensagens();
-    let body = { 'tarefa': tarefa };
+    const body = { 'tarefa': tarefa };
     this.http.post(environment.urlServerPresentation + environment.excluirTarefa, body).subscribe(
       data => {
-        this.mensagemUploadPlanilha = "Tarefa excluída com sucesso!";
+        this.mensagemUploadPlanilha = 'Tarefa excluída com sucesso!';
         this.listarTarefas();
       }
     );
@@ -149,10 +149,10 @@ export class MantertarefaComponent implements OnInit {
 
   aplicar(tarefa) {
     this.limparMensagens();
-    var url = environment.urlServerPresentation + environment.aplicarTarefa + "?nomeTarefa=" + tarefa.nome;
+    const url = environment.urlServerPresentation + environment.aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
     this.http.get(url).subscribe(
       data => {
-        this.mensagemUploadPlanilha = "Retificação aplicada com sucesso!";
+        this.mensagemUploadPlanilha = 'Retificação aplicada com sucesso!';
         this.listarTarefas();
       }
     );

@@ -5,10 +5,12 @@ const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 const Util = require('../helpers/util');
+const EventoMudancaEstadoOperativoBusiness = require('eventos_business_rules/business/eventomudancaestadooperativobusiness');
 
 class ManterTarefasMediator {
 
     constructor() {
+        this.eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
         this.tarefaDAO = new TarefaDAO();
         this.eventoDAO = new EventoDAO();
         this.parseEventosXlsx = parseEventosXlsx;
@@ -94,34 +96,40 @@ class ManterTarefasMediator {
     }
 
     aplicarTarefa(context, resolve, reject) {
-        try {
-            let eventosRetificacaoComOperacao = context.dataset.eventomudancaestadooperativotarefa.collection.toArray().filter(eventoRetificacao => {
-                return eventoRetificacao.operacao != undefined;
-            });
-
-            let minDataEventoAlterado = this.getDataMinimaEventoAlterado(eventosRetificacaoComOperacao);
+        let eventosPlanilha = context.dataset.eventomudancaestadooperativotarefa.collection.toArray();
+        this.validarEventos(eventosPlanilha);
+        let minDataEventoAlterado = this.getDataMinimaEventoAlterado(eventosPlanilha);
+        let maxDataEventoAlterado = this.getDataMaximaEventoAlterado(eventosPlanilha);
+        this.concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventosPlanilha).then(eventosParaValidacao => {
+            this.aplicarRegras(eventosParaValidacao);
 
             let eventosRetificacao = context.dataset.eventomudancaestadooperativo.collection.toArray();
             this.validarEventos(eventosRetificacao);
 
-            eventosRetificacaoComOperacao.forEach(eventoRetificacaoComOperacao => {
+            eventosParaValidacao.filter(this.filterByOperacaoNotNull).forEach(eventoRetificacaoComOperacao => {
                 let eventosRetificaoBD = eventosRetificacao.filter(eventoRetificacao => {
                     return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
                 });
                 this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
             });
-
             let tarefas = context.dataset.tarefaretificacao.collection.toArray();
             if (tarefas.length > 0) {
                 let tarefa = context.dataset.tarefaretificacao.collection.toArray()[0];
                 tarefa.situacao = 'aplicado';
                 context.dataset.tarefaretificacao.update(tarefa);
             }
-
             resolve(minDataEventoAlterado);
-        } catch (error) {
-            reject(error);
-        }
+        }).catch(error => { this.catchError(error, 'Aplicação da tarefa', '', reject) });
+    }
+
+    aplicarRegras(eventos) {
+        // this.eventoMudancaEstadoOperativoBusiness.aplicarRegras(eventos);
+    }
+
+    async concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventos) {
+        let eventosMenorQueData = await this.eventoDAO.consultarEventosMenorQueData(minDataEventoAlterado);
+        let eventosMaiorQueData = await this.eventoDAO.consultarEventosMaiorQueData(maxDataEventoAlterado);
+        return eventosMenorQueData.concat(eventos, eventosMaiorQueData);;
     }
 
     persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD) {
@@ -192,28 +200,42 @@ class ManterTarefasMediator {
     }
 
     isEventoAlteracao(eventoRetificacaoComOperacao) {
-        return eventoRetificacaoComOperacao.operacao == 'A'
+        return eventoRetificacaoComOperacao.operacao == 'A' || eventoRetificacaoComOperacao.operacao == 'AA';
     }
 
     isEventoInclusao(eventoRetificacaoComOperacao) {
-        return eventoRetificacaoComOperacao.operacao == 'I'
+        return eventoRetificacaoComOperacao.operacao == 'I';
     }
 
-    getDataMinimaEventoAlterado(eventosRetificacaoComOperacao) {
+    getDataMinimaEventoAlterado(eventosTarefa) {
+        let eventosRetificacaoComOperacao = eventosTarefa.filter(this.filterByOperacaoNotNull);
         let minDataEventoAlterado = new Date();
-
         eventosRetificacaoComOperacao.forEach(evtRet => {
             if (evtRet.dataVerificada.getTime() < minDataEventoAlterado.getTime()) {
                 minDataEventoAlterado = evtRet.dataVerificada;
             }
         });
-
         return minDataEventoAlterado;
+    }
+
+    getDataMaximaEventoAlterado(eventosTarefa) {
+        let eventosRetificacaoComOperacao = eventosTarefa.filter(this.filterByOperacaoNotNull);
+        let maxDataEventoAlterado = new Date();
+        eventosRetificacaoComOperacao.forEach(evtRet => {
+            if (evtRet.dataVerificada.getTime() > maxDataEventoAlterado.getTime()) {
+                maxDataEventoAlterado = evtRet.dataVerificada;
+            }
+        });
+        return maxDataEventoAlterado;
+    }
+
+    filterByOperacaoNotNull(eventoRetificacao) {
+        return eventoRetificacao.operacao != undefined;
     }
 
     validarEventos(eventos) {
         if (!eventos || eventos.length == 0) {
-            var error = new Error(`Eventos de mudança de estado não encontrados.`)
+            var error = new Error('Eventos de mudança de estado não encontrados.')
             throw error;
         }
     }

@@ -18,7 +18,9 @@ class ManterTarefasController {
         let nomeTarefa = request.body.nomeTarefa;
         dispatcher.dispatch("presentation.insere.tarefa.request", { nomeTarefa: nomeTarefa }).then(data => {
             response.send(data);
-        }).catch(e => { console.log(`Erro durante a inserção da tarefa: ${e.toString()}`) });
+        }).catch(e => {
+            this.responseError('Erro durante a inserção da tarefa', e, response);
+        });
     }
 
     /**
@@ -29,7 +31,9 @@ class ManterTarefasController {
     */
     listarTarefas(request, response) {
         this.manterTarefasMediator.listarTarefas().then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a consulta de tarefas: ${e.toString()}`) });
+            catch(e => {
+                this.responseError('Erro durante a consulta de tarefas', e, response);
+            });
     }
 
     /**
@@ -48,8 +52,7 @@ class ManterTarefasController {
 
         dispatcher.dispatch("presentation.uploadplanilha.tarefa.request", { nomeTarefa: nomeTarefa, planilha: planilha }).then(data => { response.send(data) }).
             catch(e => {
-                console.log(`Erro no upload de eventos=:${e}`);
-                response.status(400).send(`Erro no upload de eventos=:${e.toString()}`);
+                this.responseError('Erro no upload de eventos', e, response);
             });
     }
 
@@ -67,8 +70,7 @@ class ManterTarefasController {
             response.write(contentXlsx, 'binary');
             response.end();
         }).catch(e => {
-            console.log(`Erro no download da planilha=:${e.toString()}`);
-            response.status(400).send(`Erro no download da planilha=:${e.toString()}`);
+            this.responseError('Erro no download da planilha', e, response);
         });
     }
 
@@ -83,8 +85,7 @@ class ManterTarefasController {
         dispatcher.dispatch("presentation.exclui.tarefa.request", { tarefa: tarefa, nomeTarefa: tarefa.nome }).then(
             data => { response.send(data); }).
             catch(e => {
-                console.log(`Erro durante a exclusão da tarefa: ${e.toString()}`);
-                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`);
+                this.responseError('Erro durante a exclusão da tarefa', e, response);
             });
     }
 
@@ -100,7 +101,14 @@ class ManterTarefasController {
                 dispatcher.dispatch("presentation.executaretificacao.tarefa.request", { menorDataEventoAlterado: menorDataEventoAlterado }).then(data => {
                     response.send(data);
                 });
-            }).catch(e => { console.log(`Erro durante a aplicação da tarefa: ${e.toString()}`) });
+            }).catch(e => {
+                this.responseError('Erro durante a aplicação da tarefa', e, response);
+            });
+    }
+
+    responseError(message, e, response) {
+        let errorMessage = `${message}: ${e.toString()}`
+        response.status(500).send(errorMessage);
     }
 }
 

@@ -45,6 +45,17 @@ config.getUrlRetificacaoPorNomeTarefa = function (nomeTarefa) {
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
 }
 
+config.getUrlRetificacaoPorNomeTarefa = function (nomeTarefa) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
+}
+
+config.getUrlEventosMenorQueData = function (data) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=menorQueData&data=${data}`;
+}
+
+config.getUrlEventosMaiorQueData = function (data) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=maiorQueData&data=${data}`;
+}
 
 filters:
     byName: "nome = :nome"

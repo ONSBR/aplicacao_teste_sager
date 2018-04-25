@@ -14,7 +14,7 @@ class EventoDAO {
     }
 
     consultarEventoMudancaEstadoPorIds(idsEventos) {
-        var strIdsEventos = idsEventos.toArray().join(';');
+        let strIdsEventos = idsEventos.toArray().join(';');
         let urlConsultaEventoMudancaEstadoPorIds = config.getUrlConsultaEventoMudancaEstadoPorIds(strIdsEventos);
         console.log('urlConsultaEventoMudancaEstadoPorIds = ' + urlConsultaEventoMudancaEstadoPorIds);
         return this.domainPromiseHelper.getDomainPromise(urlConsultaEventoMudancaEstadoPorIds);
@@ -26,12 +26,22 @@ class EventoDAO {
         return this.domainPromiseHelper.getDomainPromise(urlConsultaFechamentosPorMesAno);
     }
 
+    consultarEventosMenorQueData(data) {
+        let urlEventosMenorQueData = config.getUrlEventosMenorQueData(data.toISOString().slice(0, 19).replace('T', ' '));
+        console.log(`urlEventosMenorQueData = ${urlEventosMenorQueData}`);
+        return this.domainPromiseHelper.getDomainPromise(urlEventosMenorQueData);
+    }
+
+    consultarEventosMaiorQueData(data) {
+        let urlEventosMaiorQueData = config.getUrlEventosMaiorQueData(data.toISOString().slice(0, 19).replace('T', ' '));
+        console.log(`urlEventosMaiorQueData = ${urlEventosMaiorQueData}`);
+        return this.domainPromiseHelper.getDomainPromise(urlEventosMaiorQueData);
+    }
+
     persistEventosMudancaEstado(eventos) {
-
-        var url = config.getUrlPersist();
+        let url = config.getUrlPersist();
         console.log('urlPersist = ' + url);
-        var promiseUpdate = this.domainPromiseHelper.postDomainPromise(url, eventos);
-
+        let promiseUpdate = this.domainPromiseHelper.postDomainPromise(url, eventos);
         return promiseUpdate;
     }
 
