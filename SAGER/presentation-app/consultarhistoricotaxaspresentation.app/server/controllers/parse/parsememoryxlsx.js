@@ -60,6 +60,13 @@ class ParseMemoryFileTemplate {
         });
     }
 
+    showValor(val, round) {
+        if (!val) return '0';
+        if (!round) round = 2;
+        val = parseFloat(val.toFixed(round));
+        return (""+val).replace('.', ',');
+    }
+
     parseContent() {
 
         this.recoverData();
@@ -71,7 +78,7 @@ class ParseMemoryFileTemplate {
             this.sheet["B4"] = { v: util.formatDate(this.execucaoCalculo.dataInicio) };
         }
 
-        this.sheet["B5"] = { v: this.taxa.valorTaxa };
+        this.sheet["B5"] = { v: this.showValor(this.taxa.valorTaxa, 8) };
 
         this.sheet["B6"] = { v: (this.fechamento.mes.zeroFillLeft(2) + "/" + this.fechamento.ano) };
 
@@ -106,7 +113,7 @@ class ParseMemoryFileTemplate {
 
                 var param = this.getParametroByItemGroup(it, ct.tipoParametro);
 
-                this.sheet[ct.columnLetter + curRow] = { v: util.numberToExcel(param.valorParametro) };
+                this.sheet[ct.columnLetter + curRow] = { v: this.showValor(util.numberToExcel(param.valorParametro), 12) };
             });
 
             curRow++;
@@ -129,14 +136,14 @@ class ParseMemoryFileTemplate {
                 this.sheet[this.colsEvent[3] + curRow] = { v: util.textToExcel(it.idCondicaoOperativa) };
                 this.sheet[this.colsEvent[4] + curRow] = { v: util.textToExcel(it.idClassificacaoOrigem) };
                 this.sheet[this.colsEvent[5] + curRow] = { v: util.formatDate(it.dataVerificada) };
-                this.sheet[this.colsEvent[6] + curRow] = { v: it.potenciaDisponivel };
+                this.sheet[this.colsEvent[6] + curRow] = { v: it.potenciaDisponivel ? it.potenciaDisponivel : 0 };
                 this.sheet[this.colsEvent[7] + curRow] = { v: util.secondToHour(it.duracaoEmSegundos) };
 
                 var tpparam = containTipo ? it.tiposParametrosComputados[i] : "";
 
                 this.sheet[this.colsEvent[8] + curRow] = { v: tpparam };
 
-                this.sheet[this.colsEvent[9] + curRow] = { v: it.id };
+                this.sheet[this.colsEvent[9] + curRow] = { v: it.eversao };
             }
 
         });
@@ -159,7 +166,7 @@ class ParseMemoryFileTemplate {
  */
 const teipMetadata = {
     suffixNameFile: "teip",
-    colsEvent: ["J", "K", "L", "M", "N", "O", "P", "Q", "R"],
+    colsEvent: ["J", "K", "L", "M", "N", "O", "P", "Q", "R", "S"],
     colsTipoParametro: [
         { columnLetter: "F", tipoParametro: TipoParametro.HDP },
         { columnLetter: "G", tipoParametro: TipoParametro.HEDP },
@@ -173,7 +180,7 @@ const teipMetadata = {
  */
 const teifaMetadata = {
     suffixNameFile: "teifa",
-    colsEvent: ["L", "M", "N", "O", "P", "Q", "R", "S", "T"],
+    colsEvent: ["L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"],
     colsTipoParametro: [
         { columnLetter: "F", tipoParametro: TipoParametro.HDF },
         { columnLetter: "G", tipoParametro: TipoParametro.HEDF },

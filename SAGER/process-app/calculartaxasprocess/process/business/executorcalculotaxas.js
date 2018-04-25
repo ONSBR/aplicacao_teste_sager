@@ -34,6 +34,15 @@ module.exports.calcularTaxasPorUsina = function (contexto) {
     var dataset = contexto.dataset; 
 
     var fechamento = contexto.dataset.fechamentomensal.collection.firstOrDefault();
+    if (!fechamento) {
+        fechamento = { 
+            id: evento.payload.idFechamento, 
+            mes: evento.payload.mesFechamento, 
+            ano: evento.payload.anoFechamento 
+        };
+        contexto.dataset.fechamentomensal.insert(fechamento);
+        fechamento._metadata.changeTrack = "";
+    }
 
     var idUsina = evento.payload.idUsina;
 

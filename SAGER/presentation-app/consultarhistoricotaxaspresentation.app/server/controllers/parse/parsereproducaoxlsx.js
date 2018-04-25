@@ -99,7 +99,7 @@ class ParseResultadoReproducaoFile {
             this.sheet["F4"] = { v: util.formatDate(execucaoReproducao.dataInicio) };
         }
 
-        this.sheet["B5"] = { v: this.taxa.valorTaxa };
+        this.sheet["B5"] = { v: this.showValor(this.taxa.valorTaxa, 8) };
         if (this.resultado.taxaComparacao.reproducao) {
             this.sheet["E5"] = headerReproducao("Valor Taxa:");
             this.sheet["F5"] = { v: this.resultado.taxaComparacao.reproducao };
@@ -134,6 +134,13 @@ class ParseResultadoReproducaoFile {
         })
     }
 
+    showValor(val, round) {
+        if (!val) return '0';
+        if (!round) round = 2;
+        val = parseFloat(val.toFixed(round));
+        return (""+val).replace('.', ',');
+    }
+
     parseParametros() {
 
         this.mountHeaderParametros();
@@ -154,7 +161,7 @@ class ParseResultadoReproducaoFile {
                 var param = this.getParametroByItemGroup(it, ct.tipoParametro, ct.isoriginal);
 
                 if (param) {
-                    this.sheet[ct.columnLetter + this.curRow] = { v: util.numberToExcel(param.valorParametro) };
+                    this.sheet[ct.columnLetter + this.curRow] = { v: this.showValor(util.numberToExcel(param.valorParametro), 12) };
                 }
             });
 
@@ -217,7 +224,7 @@ class ParseResultadoReproducaoFile {
                     this.sheet["E" + this.curRow] = { v: util.textToExcel(it.original.idClassificacaoOrigem) };
                     this.sheet["F" + this.curRow] = { v: util.formatDate(it.original.dataVerificada) };
                     this.sheet["G" + this.curRow] = { v: it.original.potenciaDisponivel };
-                    this.sheet["K" + this.curRow] = { v: it.original.id };
+                    this.sheet["K" + this.curRow] = { v: it.original.eversao };
                 }
                 this.sheet["H" + this.curRow] = { v: util.secondToHour(dadosComuns.duracaoEmSegundos) };
 
@@ -233,7 +240,7 @@ class ParseResultadoReproducaoFile {
                     this.sheet["N" + this.curRow] = { v: util.textToExcel(it.reproducao.idClassificacaoOrigem) };
                     this.sheet["O" + this.curRow] = { v: util.formatDate(it.reproducao.dataVerificada) };
                     this.sheet["P" + this.curRow] = { v: it.reproducao.potenciaDisponivel };
-                    this.sheet["Q" + this.curRow] = { v: it.reproducao.id };
+                    this.sheet["Q" + this.curRow] = { v: it.reproducao.eversao };
                 }
 
             }

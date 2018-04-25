@@ -31,7 +31,7 @@ class TarefaDAO {
         console.log('urlExcluirTarefa= ' + urlExcluirTarefa);
         let args = this.createExcluirTarefaRetificacaoArgs(tarefaId);
         this.modificarChangeTrack(eventos, 'destroy');
-        args.data = args.data.concat(eventos);
+        args = args.concat(eventos);
         return this.domainPromiseHelper.postDomainPromise(urlExcluirTarefa, args);
     }
 
@@ -82,6 +82,7 @@ class TarefaDAO {
                 'idClassificacaoOrigem': evento.idClassificacaoOrigem,
                 'dataVerificada': Util.stringToDate(evento.dataVerificada, 'DD-MM-YYYY HH:mm:ss'),
                 'potenciaDisponivel': evento.potenciaDisponivel,
+                'numONS': evento.numONS,
                 'operacao': evento.operacao,
                 '_metadata': {
                     'type': 'eventomudancaestadooperativotarefa',

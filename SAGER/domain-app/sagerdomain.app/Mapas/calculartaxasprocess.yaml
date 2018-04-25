@@ -94,6 +94,8 @@ eventomudancaestadooperativo:
       column: pot_disp
     numONS:
       column: numero_ons
+    eversao:
+      column: eversao  
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicialEvento and data_verificada <= :dataFinalEvento"
 

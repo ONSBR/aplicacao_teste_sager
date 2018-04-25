@@ -6,7 +6,7 @@ function dateReviver(key, value) {
     if (typeof value === 'string') {
         a = /\d{4}(-|\/)\d{2}(-|\/)\d{2}(((T| )\d{2}:\d{2}:\d{2})?|$)/.exec(value);
         if (a) {
-            return new Date(a[0]);
+            return moment.parseZone(a[0]).toDate();
         }
     }
     return value;

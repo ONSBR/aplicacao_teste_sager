@@ -1,5 +1,7 @@
 const EventoDAO = require('../dao/eventodao');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
+const Enumerable = require('linq');
+
 class EventoMediator {
 
     constructor() {
@@ -17,7 +19,14 @@ class EventoMediator {
                         return this.eventoDAO.getEventosPorDataeUGe(this.extrairIdsUges(uges).join(';'),
                             dataInicial.toISOString().slice(0, 10), dataFinal.toISOString().slice(0, 10));
                     }).then(eventos => {
-                        resolve(this.downloadPlanilhaEventos(uges, eventos, dataInicial, dataFinal));
+                        eventos = Enumerable.from(eventos);
+                        eventos = eventos.orderBy(it => { 
+                            if (it.dataVerificada && !it.dataVerificadaEmSegundos) {
+                                it.dataVerificadaEmSegundos = it.dataVerificada.getTime()/1000;
+                            }
+                            return it.idUge + "-" + it.dataVerificadaEmSegundos; 
+                        })
+                        resolve(this.downloadPlanilhaEventos(uges, eventos.toArray(), dataInicial, dataFinal));
                     }).
                     catch(error => {
                         console.log(`Erro durante a consulta de eventos: ${error.toString()}`);

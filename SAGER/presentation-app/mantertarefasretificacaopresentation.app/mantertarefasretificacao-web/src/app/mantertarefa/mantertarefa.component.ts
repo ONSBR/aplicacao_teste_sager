@@ -41,6 +41,7 @@ export class MantertarefaComponent implements OnInit {
   }
 
   listarTarefas() {
+    this.nomeTarefa = "";
     this.http.get(environment.urlServerPresentation + environment.listarTarefas).subscribe(data => {
       this.tarefas = <TarefaRetificacao[]>data;
     });

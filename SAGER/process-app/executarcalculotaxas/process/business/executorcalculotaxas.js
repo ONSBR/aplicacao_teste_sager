@@ -31,8 +31,8 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
         // então é criada para efeito de cálculo
         fechamento = new FechamentoMensal(
             utils.guid(),
-            payload.mesFechamento,
-            payload.anoFechamento,
+            parseInt(payload.mesFechamento),
+            parseInt(payload.anoFechamento),
             dataAtual
         );
         dataset.fechamentomensal.insert(fechamento);
@@ -52,18 +52,24 @@ module.exports.executarCalculoTaxas = function (contexto, eventManager) {
     var usinas = dataset.usina.collection;
     usinas.forEach(it => {
 
-        eventEmitTaxByUsina(eventManager, {
-            idUsina: it.idUsina,
-            idFechamento: fechamento.id,
-            idExecucaoCalculo: execucaoCalculo.id,
-            dataInicialEvento: periodoCalculo.dataInicio,
-            dataFinalEvento: periodoCalculo.dataFim
-        });
+        if (payload.mesFechamento < 10 && payload.anoFechamento <= 2014) {
+            eventEmitTaxByUsina(eventManager, {
+                idUsina: it.idUsina,
+                idFechamento: fechamento.id,
+                mesFechamento: payload.mesFechamento,
+                anoFechamento: payload.anoFechamento,
+                idExecucaoCalculo: execucaoCalculo.id,
+                dataInicialEvento: periodoCalculo.dataInicio,
+                dataFinalEvento: periodoCalculo.dataFim
+            });
+        }
 
         eventEmitTaxByUsina(eventManager, {
             acumulada: true,
             idUsina: it.idUsina,
             idFechamento: fechamento.id,
+            mesFechamento: payload.mesFechamento,
+            anoFechamento: payload.anoFechamento,
             idExecucaoCalculo: execucaoCalculo.id,
             dataInicialEvento: periodoAcumulado.dataInicio,
             dataFinalEvento: periodoAcumulado.dataFim

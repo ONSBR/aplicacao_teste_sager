@@ -28,6 +28,10 @@ config.getUrlFiltroTaxas = function getUrlFiltroTaxas(idUsina, tipoTaxaId, idsFe
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/taxa?filter=byUsinaTipoTaxaIdsFechamentos&idUsina=${idUsina}&tipoTaxa=${tipoTaxaId}&idsFechamentos=${idsFechamentos}`;
 }
 
+config.getUrlTaxaHistory = function (taxaId) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/taxa/history/${taxaId}`;
+}
+
 config.getUrlFiltroFechamentos =
     function getUrlFiltroFechamentos() {
         return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/fechamentomensal`;
