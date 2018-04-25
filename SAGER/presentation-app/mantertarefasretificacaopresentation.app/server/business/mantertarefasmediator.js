@@ -209,7 +209,7 @@ class ManterTarefasMediator {
 
     getDataMinimaEventoAlterado(eventosTarefa) {
         let eventosRetificacaoComOperacao = eventosTarefa.filter(this.filterByOperacaoNotNull);
-        let minDataEventoAlterado = new Date();
+        let minDataEventoAlterado = this.getPrimeiraData(eventosRetificacaoComOperacao);
         eventosRetificacaoComOperacao.forEach(evtRet => {
             if (evtRet.dataVerificada.getTime() < minDataEventoAlterado.getTime()) {
                 minDataEventoAlterado = evtRet.dataVerificada;
@@ -220,13 +220,17 @@ class ManterTarefasMediator {
 
     getDataMaximaEventoAlterado(eventosTarefa) {
         let eventosRetificacaoComOperacao = eventosTarefa.filter(this.filterByOperacaoNotNull);
-        let maxDataEventoAlterado = new Date();
+        let maxDataEventoAlterado = this.getPrimeiraData(eventosRetificacaoComOperacao);
         eventosRetificacaoComOperacao.forEach(evtRet => {
             if (evtRet.dataVerificada.getTime() > maxDataEventoAlterado.getTime()) {
                 maxDataEventoAlterado = evtRet.dataVerificada;
             }
         });
         return maxDataEventoAlterado;
+    }
+
+    getPrimeiraData(eventos) {
+        return eventos[0].dataVerificada;
     }
 
     filterByOperacaoNotNull(eventoRetificacao) {
