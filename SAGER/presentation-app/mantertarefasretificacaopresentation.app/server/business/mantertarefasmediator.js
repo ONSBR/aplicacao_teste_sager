@@ -119,10 +119,15 @@ class ManterTarefasMediator {
                 context.dataset.tarefaretificacao.update(tarefa);
             }
             resolve(minDataEventoAlterado);
-        }).catch(error => { this.catchError(error, 'Aplicação da tarefa', '', reject) });
+        }).catch(error => { this.catchError(error, 'aplicação da tarefa', '', reject) });
     }
 
     aplicarRegras(eventos) {
+        eventos.forEach(evento => {
+            if(!evento.potenciaDisponivel) {
+                throw new Error('Potencia disponivel vazia!');
+            }
+        });
         // this.eventoMudancaEstadoOperativoBusiness.aplicarRegras(eventos);
     }
 
@@ -196,7 +201,7 @@ class ManterTarefasMediator {
 
             resolve({ msg: "OK" });
 
-        }).catch(error => { this.catchError(error, 'consulta de fechamentos', '', reject) });
+        }).catch(error => { this.catchError(error, 'retificação', '', reject) });
     }
 
     isEventoAlteracao(eventoRetificacaoComOperacao) {
@@ -245,7 +250,7 @@ class ManterTarefasMediator {
     }
 
     catchError(error, msgPart, nomeTarefa, reject) {
-        console.log(`Erro ao executar [${msgPart}] ao aplicar retificação[${nomeTarefa}]: ${error.toString()}`);
+        console.log(`Erro ao executar [${msgPart}] ao aplicar retificação[${nomeTarefa}]: ${error.message}`);
         if (reject) {
             reject(error);
         }
