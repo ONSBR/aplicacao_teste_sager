@@ -244,7 +244,7 @@ class ManterTarefasMediator {
 
     validarEventos(eventos) {
         if (!eventos || eventos.length == 0) {
-            var error = new Error('Eventos de mudança de estado não encontrados.')
+            let error = new Error('Eventos de mudança de estado não encontrados.')
             throw error;
         }
     }
