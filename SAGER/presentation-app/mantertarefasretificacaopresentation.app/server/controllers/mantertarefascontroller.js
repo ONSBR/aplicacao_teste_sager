@@ -1,5 +1,6 @@
 const config = require('../config');
 const ManterTarefasMediator = require('../business/mantertarefasmediator');
+const dispatcher = require("../dispatcher/dispatcher");
 
 class ManterTarefasController {
 
@@ -15,8 +16,11 @@ class ManterTarefasController {
      */
     inserirTarefa(request, response) {
         let nomeTarefa = request.body.nomeTarefa;
-        this.manterTarefasMediator.inserirTarefa(nomeTarefa).then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a inserção da tarefa: ${e.toString()}`) });
+        dispatcher.dispatch("presentation.insere.tarefa.request", { nomeTarefa: nomeTarefa }).then(data => {
+            response.send(data);
+        }).catch(e => {
+            this.responseError('Erro durante a inserção da tarefa', e, response);
+        });
     }
 
     /**
@@ -27,7 +31,9 @@ class ManterTarefasController {
     */
     listarTarefas(request, response) {
         this.manterTarefasMediator.listarTarefas().then(data => { response.send(data) }).
-            catch(e => { console.log(`Erro durante a consulta de tarefas: ${e.toString()}`) });
+            catch(e => {
+                this.responseError('Erro durante a consulta de tarefas', e, response);
+            });
     }
 
     /**
@@ -40,10 +46,13 @@ class ManterTarefasController {
         if (!request.files) {
             return response.status(400).send('No files were uploaded.');
         }
-        this.manterTarefasMediator.uploadplanilha(request.body.nomeTarefa, request.files.planilha).then(data => { response.send(data) }).
+
+        let nomeTarefa = request.body.nomeTarefa;
+        let planilha = request.files.planilha;
+
+        dispatcher.dispatch("presentation.uploadplanilha.tarefa.request", { nomeTarefa: nomeTarefa, planilha: planilha }).then(data => { response.send(data) }).
             catch(e => {
-                console.log(`Erro no upload de eventos=:${e.toString()}`);
-                response.status(400).send(`Erro no upload de eventos=:${e.toString()}`);
+                this.responseError('Erro no upload de eventos', e, response);
             });
     }
 
@@ -54,15 +63,14 @@ class ManterTarefasController {
      * @description Realiza o download da planilha de eventos a partir da tarefa.
     */
     downloadPlanilha(request, response) {
-        let nomeTarefa = request.query.nometarefa;
+        let nomeTarefa = request.query.nomeTarefa;
         this.manterTarefasMediator.downloadPlanilha(nomeTarefa).then(contentXlsx => {
             response.setHeader('Content-disposition', `attachment; filename=eventos.xlsx`);
             response.setHeader('Content-Length', contentXlsx.length);
             response.write(contentXlsx, 'binary');
             response.end();
         }).catch(e => {
-            console.log(`Erro no download da planilha=:${e.toString()}`);
-            response.status(400).send(`Erro no download da planilha=:${e.toString()}`);
+            this.responseError('Erro no download da planilha', e, response);
         });
     }
 
@@ -72,24 +80,35 @@ class ManterTarefasController {
      * @param {Response} response Objeto de response
      * @description Exclui a tarefa e os eventos de retificação associados.
     */
-   excluirTarefa(request, response) {
+    excluirTarefa(request, response) {
         let tarefa = request.body.tarefa;
-        this.manterTarefasMediator.excluirTarefa(tarefa).then(data => { response.send(data) }).
-            catch(e => { 
-                console.log(`Erro durante a exclusão da tarefa: ${e.toString()}`);
-                response.status(400).send(`Erro durante a exclusão da tarefa: ${e.toString()}`); 
+        dispatcher.dispatch("presentation.exclui.tarefa.request", { tarefa: tarefa, nomeTarefa: tarefa.nome }).then(
+            data => { response.send(data); }).
+            catch(e => {
+                this.responseError('Erro durante a exclusão da tarefa', e, response);
             });
-   }
+    }
 
-   /**
-     * @param {Request} request Objeto de request
-     * @param {Response} response Objeto de response
-     * @description cadastra a tarefa de retificação
-     */
+    /**
+      * @param {Request} request Objeto de request
+      * @param {Response} response Objeto de response
+      * @description aplica a tarefa de retificação
+      */
     aplicarTarefa(request, response) {
         let nomeTarefa = request.query.nomeTarefa;
-        this.manterTarefasMediator.aplicarTarefa(nomeTarefa).then(data => { response.send(data); }).
-            catch(e => { console.log(`Erro durante a aplicação da tarefa: ${e.toString()}`) });
+        dispatcher.dispatch("presentation.aplica.tarefa.request", { nomeTarefa: nomeTarefa }).
+            then(menorDataEventoAlterado => {
+                dispatcher.dispatch("presentation.executaretificacao.tarefa.request", { menorDataEventoAlterado: menorDataEventoAlterado }).then(data => {
+                    response.send(data);
+                });
+            }).catch(e => {
+                this.responseError('Erro durante a aplicação da tarefa', e, response);
+            });
+    }
+
+    responseError(message, e, response) {
+        let errorMessage = `${message}: ${e.toString()}`
+        response.status(500).send(errorMessage);
     }
 }
 

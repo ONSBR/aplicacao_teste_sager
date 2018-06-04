@@ -1,41 +1,40 @@
 const TarefaDAO = require('../dao/tarefadao');
 const EventoDAO = require('../dao/eventodao');
 const XLSX = require('xlsx');
+const TarefaRetificacao = require('../domain/TarefaRetificacao');
 const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestadooperativotarefa');
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
-const EventPromiseHelper = require('../helpers/eventpromisehelper');
-const Enumerable = require('linq');
-
-const CHANGETRACK_CREATE = "create";
-const CHANGETRACK_UPDATE = "update";
-const CHANGETRACK_DELETE = "destroy";
+const Util = require('../helpers/util');
+const EventoMudancaEstadoOperativoBusiness = require('eventos_business_rules/business/eventomudancaestadooperativobusiness');
 
 class ManterTarefasMediator {
 
     constructor() {
+        this.eventoMudancaEstadoOperativoBusiness = new EventoMudancaEstadoOperativoBusiness();
         this.tarefaDAO = new TarefaDAO();
         this.eventoDAO = new EventoDAO();
-        this.XLSX = XLSX;
         this.parseEventosXlsx = parseEventosXlsx;
-        this.eventPromiseHelper = new EventPromiseHelper();
     }
 
-    inserirTarefa(nomeTarefa) {
-        return this.tarefaDAO.inserirTarefa(nomeTarefa);
+    inserirTarefa(context, resolve, reject) {
+        var entity = new TarefaRetificacao(context.event.payload.nomeTarefa);
+        context.dataset.tarefaretificacao.insert(entity);
+        resolve(entity);
     }
 
     listarTarefas() {
         return this.tarefaDAO.listarTarefas();
     }
 
-    uploadplanilha(nomeTarefa, file) {
-        let planilha = this.XLSX.read(file.data);
-        return this.tarefaDAO.inserirEventosRetificacao(this.preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha));
-    }
-
-    preencherEventosRetificacaoAPartirPlanilha(nomeTarefa, planilha) {
-        let eventosRetificacao = [];
+    uploadPlanilha(context, resolve, reject) {
+        let nomeTarefa = context.event.payload.nomeTarefa;
+        let planilha = XLSX.read(new Buffer(context.event.payload.planilha.data));
         let sheetLength = planilha.Sheets.eventos['!ref'].split(':')[1].substring(1);
+        let retificacoes = [];
+        context.dataset.eventomudancaestadooperativotarefa.collection.forEach(eventoMudancaEstadoOperativoTarefa => {
+            context.dataset.eventomudancaestadooperativotarefa.delete(eventoMudancaEstadoOperativoTarefa);
+        });
+
         for (let i = 3; i <= sheetLength; i++) {
             let eventoMudancaEstadoOperativoTarefa = new EventoMudancaEstadoOperativoTarefa();
             eventoMudancaEstadoOperativoTarefa.nomeTarefa = nomeTarefa;
@@ -46,14 +45,15 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
             eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
             eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
-            eventoMudancaEstadoOperativoTarefa.dataVerificada = this.getSheetValue(planilha.Sheets.eventos, 'H', i);
+            eventoMudancaEstadoOperativoTarefa.dataVerificada = Util.excelStrToDate(this.getSheetValue(planilha.Sheets.eventos, 'H', i));
             eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = parseFloat(this.getSheetValue(planilha.Sheets.eventos, 'I', i));
             eventoMudancaEstadoOperativoTarefa.eversao = parseInt(this.getSheetValue(planilha.Sheets.eventos, 'J', i));
-            eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'K', i);
-            
-            eventosRetificacao.push(eventoMudancaEstadoOperativoTarefa);
+            eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'K', i)
+            context.dataset.eventomudancaestadooperativotarefa.insert(eventoMudancaEstadoOperativoTarefa);
+            retificacoes.push(eventoMudancaEstadoOperativoTarefa);
         }
-        return eventosRetificacao;
+
+        resolve(retificacoes);
     }
 
     getSheetValue(sheet, column, row) {
@@ -81,162 +81,176 @@ class ManterTarefasMediator {
         });
     }
 
-    excluirTarefa(tarefa) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(tarefa.nome).then(eventos => {
-                    let deleteEventos = this.tarefaDAO.excluirTarefa(tarefa.id, eventos);
-                    resolve(deleteEventos);
-                });
-            } catch (error) {
-                console.log(`Erro ao excluir tarefa: ${error}`);
-                reject(error);
-            }
+    excluirTarefa(context, resolve, reject) {
+        let ds = context.dataset;
+        let tarefa = context.event.payload.tarefa;
+        ds.eventomudancaestadooperativotarefa.collection.forEach(obj => {
+            ds.eventomudancaestadooperativotarefa.delete(obj);
         });
+        try {
+            ds.tarefaretificacao.delete(tarefa);
+            resolve({ "msg": "Executou o exclui" });
+        } catch (e) {
+            reject(e);
+        };
     }
 
-    aplicarTarefa(nomeTarefa) {
+    aplicarTarefa(context, resolve, reject) {
+        let eventosPlanilha = context.dataset.eventomudancaestadooperativotarefa.collection.toArray();
+        this.validarEventos(eventosPlanilha);
+        let minDataEventoAlterado = this.getDataMinimaEventoAlterado(eventosPlanilha);
+        let maxDataEventoAlterado = this.getDataMaximaEventoAlterado(eventosPlanilha);
+        this.concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventosPlanilha).then(eventosParaValidacao => {
+            this.aplicarRegras(eventosParaValidacao);
 
-        return new Promise((resolve, reject) => {
-            try {
+            let eventosRetificacao = context.dataset.eventomudancaestadooperativo.collection.toArray();
+            this.validarEventos(eventosRetificacao);
 
-                var listapersist = [];
+            eventosParaValidacao.filter(this.filterByOperacaoNotNull).forEach(eventoRetificacaoComOperacao => {
+                let eventosRetificaoBD = eventosRetificacao.filter(eventoRetificacao => {
+                    return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
+                });
+                this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
+            });
+            let tarefas = context.dataset.tarefaretificacao.collection.toArray();
+            if (tarefas.length > 0) {
+                let tarefa = context.dataset.tarefaretificacao.collection.toArray()[0];
+                tarefa.situacao = 'aplicado';
+                context.dataset.tarefaretificacao.update(tarefa);
+            }
+            resolve(minDataEventoAlterado);
+        }).catch(error => { this.catchError(error, 'aplicação da tarefa', '', reject) });
+    }
 
-                this.tarefaDAO.obterRetificacaoPorNome(nomeTarefa).then(arrayTarefa => {
-                    
-                    var tarefa = arrayTarefa && arrayTarefa.length > 0 ? arrayTarefa[0] : null;
-
-                    if (tarefa) {
-                        
-                        this.tarefaDAO.consultarEventosRetificacaoPorNomeTarefa(nomeTarefa).then(dataEvt => {
-                            
-                            if (dataEvt && dataEvt.length > 0) {
-
-                                var eventosRetificacoes = Enumerable.from(dataEvt).where(
-                                    evtRet => { return (evtRet.operacao? true: false) });
-                                
-                                var evtRectIds = eventosRetificacoes.select(evtRet => {
-                                    return evtRet.idEvento;
-                                });
-                                var minDataEventoAlterado = new Date();
-                                eventosRetificacoes.forEach(evtRet => {
-                                    if (evtRet.dataVerificada.getTime() < minDataEventoAlterado.getTime()) {
-                                        minDataEventoAlterado = evtRet.dataVerificada;
-                                    }
-                                });
-
-                                this.eventoDAO.consultarEventoMudancaEstadoPorIds(evtRectIds).then(evts => {
-
-                                    this.validarEventos(evts);
-
-                                    var eventos = Enumerable.from(evts ? evts : []);
-                                    
-                                    eventosRetificacoes.forEach(evtRet => {
-
-                                        var evtEstado = eventos.firstOrDefault(evt => { return evtRet.idEvento == evt.idEvento })
-                                        
-                                        if (evtEstado && evtRet.operacao == 'A' || evtRet.operacao == 'E') {
-
-                                            if (evtRet.operacao == 'A') {
-                                                console.log('evtEstado.dataverificada: ' +JSON.stringify(evtEstado.dataVerificada) + 
-                                                    ', evtRet.dataverificada: ' + JSON.stringify(evtRet.dataVerificada));
-                                                evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
-                                                evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
-                                                evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
-                                                evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
-                                                evtEstado.eversao++;
-                                                evtEstado._metadata.changeTrack = CHANGETRACK_UPDATE;
-                                            }  else {
-                                                evtEstado._metadata.changeTrack = CHANGETRACK_DELETE;
-                                            }
-                                            listapersist.push(evtEstado);
-                                        }
-                                        else if (evtRet.operacao == 'I') {
-                                            
-                                            evtEstado = { _metadata: { 
-                                                changeTrack: CHANGETRACK_CREATE, 
-                                                type: "eventomudancaestadooperativo" 
-                                            } };
-                                            evtEstado.idUsina = evtRet.idUsina;
-                                            evtEstado.idUge = evtRet.idUge;
-                                            evtEstado.idEvento = evtRet.idEvento;
-                                            evtEstado.idEstadoOperativo = evtRet.idEstadoOperativo;
-                                            evtEstado.idCondicaoOperativa = evtRet.idCondicaoOperativa;
-                                            evtEstado.idClassificacaoOrigem = evtRet.idClassificacaoOrigem;
-                                            evtEstado.dataVerificada = evtRet.dataVerificada;
-                                            evtEstado.potenciaDisponivel = evtRet.potenciaDisponivel;
-                                            evtEstado.numONS = evtRet.numONS;
-                                            evtEstado.eversao = 1;
-
-                                            listapersist.push(evtEstado);
-                                        }
-
-                                    });
-                                    
-                                    tarefa.situacao = "aplicado";
-                                    tarefa._metadata.changeTrack = CHANGETRACK_UPDATE;
-                                    listapersist.push(tarefa);
-                                    
-                                    this.eventoDAO.persistEventosMudancaEstado(listapersist).then(persisted => {
-
-                                        var mesFechamento = minDataEventoAlterado.getMonth() + 1;
-                                        var anoFechamento =  minDataEventoAlterado.getFullYear();
-
-                                        // obtem fechamentos
-                                        this.eventoDAO.consultarFechamentosPorMesAno(mesFechamento, anoFechamento).then(fechs => {
-
-                                            if (fechs && fechs.length > 0) {
-                                                
-                                                var fechamentos = Enumerable.from(fechs);
-                                                
-                                                fechamentos.forEach(fch => {
-                                                    var evento = {
-                                                        name: "calculate.tax.request",
-                                                        payload: { mesFechamento: fch.mes, anoFechamento: fch.ano },
-                                                        owner: "reprocess"
-                                                    };
-
-                                                    this.eventPromiseHelper.putEventPromise(evento);
-                                                });    
-                                            }
-
-                                            console.log("OK");
-                                            resolve({msg: "OK"});
-
-                                        }).catch(error => { this.catchError(error, 'consulta de fechamentos', nomeTarefa, reject) });
-
-                                    }).catch(error => { this.catchError(error, 'atualização de eventos', nomeTarefa, reject) });
-                    
-                                }).catch(error => { this.catchError(error, 'consulta de eventos', nomeTarefa, reject) });
-                                
-                            } else {
-                                throw new Error(`Não encontrados eventos da retificação[${nomeTarefa}].`);
-                            }
-
-                        }).catch(error => { this.catchError(error, 'eventos da retificação', nomeTarefa, reject) });
-                    } else {
-                        throw new Error(`Não encontrada retificação[${nomeTarefa}].`);
-                    }
-
-                }).catch(error => { this.catchError(error, 'obtenção de tarefa', nomeTarefa, reject) });
-
-            } catch (error) {
-                console.log(error);
-                reject(error);
+    aplicarRegras(eventos) {
+        eventos.forEach(evento => {
+            if(!evento.potenciaDisponivel) {
+                throw new Error('Potencia disponivel vazia!');
             }
         });
+        // this.eventoMudancaEstadoOperativoBusiness.aplicarRegras(eventos);
+    }
 
+    async concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventos) {
+        let eventosMenorQueData = await this.eventoDAO.consultarEventosMenorQueData(minDataEventoAlterado);
+        let eventosMaiorQueData = await this.eventoDAO.consultarEventosMaiorQueData(maxDataEventoAlterado);
+        return eventosMenorQueData.concat(eventos, eventosMaiorQueData);;
+    }
+
+    persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD) {
+        if (this.isEventoAlteracao(eventoRetificacaoComOperacao)) {
+            if (eventosRetificaoBD.length > 0) {
+                this.alterarEventoRetificacao(context, eventoRetificacaoComOperacao, eventosRetificaoBD[0]);
+            }
+        } else if (this.isEventoInclusao(eventoRetificacaoComOperacao)) {
+            this.inserirEventoRetificacao(context, eventoRetificacaoComOperacao);
+        } else {
+            if (eventosRetificaoBD.length > 0) {
+                context.dataset.eventomudancaestadooperativo.delete(eventosRetificaoBD[0]);
+            }
+        }
+    }
+
+    alterarEventoRetificacao(context, eventoRetificacaoComOperacao, eventoRetificaoBD) {
+        eventoRetificaoBD.idEstadoOperativo = eventoRetificacaoComOperacao.idEstadoOperativo;
+        eventoRetificaoBD.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
+        eventoRetificaoBD.idCondicaoOperativa = eventoRetificacaoComOperacao.idCondicaoOperativa;
+        eventoRetificaoBD.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
+        eventoRetificaoBD.eversao++;
+        context.dataset.eventomudancaestadooperativo.update(eventoRetificaoBD);
+    }
+
+    inserirEventoRetificacao(context, eventoRetificacaoComOperacao) {
+        let novoEventoRetificacao = {
+            _metadata: {
+                type: "eventomudancaestadooperativo"
+            }
+        };
+        novoEventoRetificacao.idUsina = eventoRetificacaoComOperacao.idUsina;
+        novoEventoRetificacao.idUge = eventoRetificacaoComOperacao.idUge;
+        novoEventoRetificacao.idEvento = eventoRetificacaoComOperacao.idEvento;
+        novoEventoRetificacao.idEstadoOperativo = eventoRetificacaoComOperacao.idEstadoOperativo;
+        novoEventoRetificacao.idCondicaoOperativa = eventoRetificacaoComOperacao.idCondicaoOperativa;
+        novoEventoRetificacao.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
+        novoEventoRetificacao.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
+        novoEventoRetificacao.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
+        novoEventoRetificacao.numONS = eventoRetificacaoComOperacao.numONS;
+        novoEventoRetificacao.eversao = 1;
+        context.dataset.eventomudancaestadooperativo.insert(novoEventoRetificacao);
+    }
+
+    executarRetificacao(context, resolve, reject, eventManager) {
+        let menorDataEventoAlterado = context.event.payload.menorDataEventoAlterado;
+
+        var mesFechamento = menorDataEventoAlterado.getMonth() + 1;
+        var anoFechamento = menorDataEventoAlterado.getFullYear();
+
+        this.eventoDAO.consultarFechamentosPorMesAno(mesFechamento, anoFechamento).then(fechamentosMensais => {
+            if (fechamentosMensais && fechamentosMensais.length > 0) {
+                fechamentosMensais.forEach(fechamento => {
+                    var evento = {
+                        name: "calculate.tax.request",
+                        payload: { mesFechamento: fechamento.mes, anoFechamento: fechamento.ano },
+                        owner: "reprocess"
+                    };
+                    console.log('Emitir evento de cálculo de taxa:');
+                    console.log(evento);
+                    eventManager.emit(evento);
+                });
+            }
+
+            resolve({ msg: "OK" });
+
+        }).catch(error => { this.catchError(error, 'retificação', '', reject) });
+    }
+
+    isEventoAlteracao(eventoRetificacaoComOperacao) {
+        return eventoRetificacaoComOperacao.operacao == 'A' || eventoRetificacaoComOperacao.operacao == 'AA';
+    }
+
+    isEventoInclusao(eventoRetificacaoComOperacao) {
+        return eventoRetificacaoComOperacao.operacao == 'I';
+    }
+
+    getDataMinimaEventoAlterado(eventosTarefa) {
+        let eventosRetificacaoComOperacao = eventosTarefa.filter(this.filterByOperacaoNotNull);
+        let minDataEventoAlterado = this.getPrimeiraData(eventosRetificacaoComOperacao);
+        eventosRetificacaoComOperacao.forEach(evtRet => {
+            if (evtRet.dataVerificada.getTime() < minDataEventoAlterado.getTime()) {
+                minDataEventoAlterado = evtRet.dataVerificada;
+            }
+        });
+        return minDataEventoAlterado;
+    }
+
+    getDataMaximaEventoAlterado(eventosTarefa) {
+        let eventosRetificacaoComOperacao = eventosTarefa.filter(this.filterByOperacaoNotNull);
+        let maxDataEventoAlterado = this.getPrimeiraData(eventosRetificacaoComOperacao);
+        eventosRetificacaoComOperacao.forEach(evtRet => {
+            if (evtRet.dataVerificada.getTime() > maxDataEventoAlterado.getTime()) {
+                maxDataEventoAlterado = evtRet.dataVerificada;
+            }
+        });
+        return maxDataEventoAlterado;
+    }
+
+    getPrimeiraData(eventos) {
+        return eventos[0].dataVerificada;
+    }
+
+    filterByOperacaoNotNull(eventoRetificacao) {
+        return eventoRetificacao.operacao != undefined;
     }
 
     validarEventos(eventos) {
         if (!eventos || eventos.length == 0) {
-            var error = new Error(`Eventos de mudança de estado não encontrados.`)
+            let error = new Error('Eventos de mudança de estado não encontrados.')
             throw error;
         }
     }
 
     catchError(error, msgPart, nomeTarefa, reject) {
-        console.log(`Erro ao executar [${msgPart}] ao aplicar retificação[${nomeTarefa}]: ${error.toString()}`);
+        console.log(`Erro ao executar [${msgPart}] ao aplicar retificação[${nomeTarefa}]: ${error.message}`);
         if (reject) {
             reject(error);
         }

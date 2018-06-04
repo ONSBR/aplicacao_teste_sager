@@ -6,7 +6,7 @@
 export const environment = {
   
   production: false,
-  urlServerPresentation: 'http://localhost:8183/',
+  urlServerPresentation: 'http://localhost:8088/',
   
   pesquisarCenarios: 'pesquisarCenarios',
   inserirCenario: 'inserirCenario',

@@ -46,8 +46,11 @@
       </li>
     </ul>
   </div>
-  <div *ngIf="mensagemUploadPlanilha" [ngStyle]="{'color':'green'}">
-    <span>{{mensagemUploadPlanilha}}</span>
+  <div *ngIf="mensagemSucesso" [ngStyle]="{'color':'green'}">
+    <span>{{mensagemSucesso}}</span>
+  </div>
+  <div *ngIf="mensagemErro" [ngStyle]="{'color':'red'}">
+    <span>{{mensagemErro}}</span>
   </div>
   <div>
     <span>Nome da tarefa:

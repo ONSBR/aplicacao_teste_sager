@@ -1,13 +1,13 @@
 var config = {};
 
-const DOMAIN_PORT = 8087;
-const DOMAIN_HOST = 'localhost';
-const PROCESS_MEMORY_HOST = 'localhost';
-const EVENT_MANAGER_HOST = 'localhost';
+const DOMAIN_PORT = 9110;
+const DOMAIN_HOST = 'sager-domain';
+const PROCESS_MEMORY_HOST = 'process_memory';
+const EVENT_MANAGER_HOST = 'event_manager';
 
-config.PORT = 8182;
-config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/mantertarefas/usina`;
-config.URL_TAREFAS = `http://localhost:${DOMAIN_PORT}/mantertarefas/tarefaretificacao`;
+config.PORT = process.env.PORT || 8182;
+config.URL_USINA_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/usina`;
+config.URL_TAREFAS = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao`;
 
 config.getUrlUnidadesGeradorasAPartirUsina = function getUrlUnidadesGeradorasAPartirUsina(idsUsinas) {
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/unidadegeradora?filter=byIdUsina&idsUsinas=${idsUsinas}`;
@@ -22,15 +22,15 @@ config.getUrlInserirTarefa = function getUrlInserirTarefa() {
 }
 
 config.getEventosRetificacaoPorNomeTarefa = function getEventosRetificacaoPorNomeTarefa(nomeTarefa) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nometarefa=${nomeTarefa}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativotarefa?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
 }
 
 config.getUrlConsultaEventoMudancaEstadoPorIds = function(idsEventos) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=byIdsEventos&idsEventos=${idsEventos}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=byIdsEventos&idsEventos=${idsEventos}`;
 }
 
 config.getUrlPersist = function() {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/persist`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/persist`;
 }
 
 config.getEventManagerUrl = function () {
@@ -38,13 +38,24 @@ config.getEventManagerUrl = function () {
 }
 
 config.getUrlConsultaFechamentosPorMesAno = function(mesFechamento, anoFechamento) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/fechamentomensal?filter=byAcimaMesAno&mesFechamento=${mesFechamento}&anoFechamento=${anoFechamento}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/fechamentomensal?filter=byAcimaMesAno&mesFechamento=${mesFechamento}&anoFechamento=${anoFechamento}`;
 }
 
 config.getUrlRetificacaoPorNomeTarefa = function (nomeTarefa) {
-    return `http://localhost:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
 }
 
+config.getUrlRetificacaoPorNomeTarefa = function (nomeTarefa) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/tarefaretificacao?filter=byNomeTarefa&nomeTarefa=${nomeTarefa}`;
+}
+
+config.getUrlEventosMenorQueData = function (data) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=menorQueData&data=${data}`;
+}
+
+config.getUrlEventosMaiorQueData = function (data) {
+    return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantertarefas/eventomudancaestadooperativo?filter=maiorQueData&data=${data}`;
+}
 
 filters:
     byName: "nome = :nome"

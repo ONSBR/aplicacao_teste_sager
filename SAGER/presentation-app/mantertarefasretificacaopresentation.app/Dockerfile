@@ -1,6 +1,8 @@
 
-            FROM node:carbon
-            WORKDIR /usr/src/mantertarefasretificacaopresentation.app
-            COPY . .
-            CMD [ "node", "server/mantertarefasretificacaopresentation.app.js" ]
-            
+FROM node:carbon
+WORKDIR /usr/src/mantertarefasretificacaopresentation.app
+COPY server server
+COPY mapa mapa
+COPY metadados metadados
+ENV PORT 8088
+CMD [ "node", "--inspect=0.0.0.0", "server/app.js" ]

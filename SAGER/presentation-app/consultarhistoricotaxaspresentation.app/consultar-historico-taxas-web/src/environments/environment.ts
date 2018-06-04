@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  urlServerPresentation: 'http://localhost:8181/',
+  urlServerPresentation: 'http://localhost:8088/',
   listarUsinas: 'listarusinas',
   listarTipoTaxa: 'listartipotaxa',
   consultaFiltroInicial: 'filtroinicial',

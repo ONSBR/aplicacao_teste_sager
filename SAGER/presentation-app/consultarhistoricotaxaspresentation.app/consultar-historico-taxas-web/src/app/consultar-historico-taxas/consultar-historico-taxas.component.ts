@@ -48,11 +48,9 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.execucaoSelecionada = { 'protocolo': '' };
     this.fechamentoMensal = { 'mes': '', 'ano': '', 'mesIntervalo': '', 'anoIntervalo': '' };
     this.listarTipoTaxa();
-    
     var self = this;
-    
-    this.pollingConsultaReproducao(self);  
-    this.pollingConsultaBusinessEvents(self);  
+    this.pollingConsultaReproducao(self);
+    this.pollingConsultaBusinessEvents(self);
   }
 
   pollingConsultaBusinessEvents(self) {

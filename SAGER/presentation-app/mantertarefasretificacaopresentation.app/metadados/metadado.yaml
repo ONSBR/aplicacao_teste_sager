@@ -1,0 +1,16 @@
+operations:
+  - name: presentation.insere.tarefa.request
+    event: presentation.insere.tarefa.request
+    commit: true
+  - name: presentation.uploadplanilha.tarefa.request
+    event: presentation.uploadplanilha.tarefa.request
+    commit: true
+  - name: presentation.exclui.tarefa.request
+    event: presentation.exclui.tarefa.request
+    commit: true
+  - name: presentation.aplica.tarefa.request
+    event: presentation.aplica.tarefa.request
+    commit: true
+  - name: presentation.executaretificacao.tarefa.request
+    event: presentation.executaretificacao.tarefa.request
+    commit: true        

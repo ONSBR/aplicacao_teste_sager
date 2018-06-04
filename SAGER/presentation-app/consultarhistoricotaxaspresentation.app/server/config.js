@@ -1,11 +1,11 @@
 var config = {};
 
-const DOMAIN_PORT = 8087;
-const DOMAIN_HOST = 'localhost';
-const PROCESS_MEMORY_HOST = 'localhost';
-const EVENT_MANAGER_HOST = 'localhost';
+const DOMAIN_PORT = 9110;
+const DOMAIN_HOST = 'sager-domain';
+const PROCESS_MEMORY_HOST = 'process_memory';
+const EVENT_MANAGER_HOST = 'event_manager';
 
-const CORE_HOST = 'localhost';
+const CORE_HOST = 'apicore';
 const CORE_PORT = 9110;
 
 config.DOMAIN_PORT = DOMAIN_PORT;
@@ -16,9 +16,9 @@ config.EVENT_MANAGER_HOST = EVENT_MANAGER_HOST;
 config.CORE_HOST = CORE_HOST;
 config.CORE_PORT = CORE_PORT;
 
-config.PORT = 8181;
-config.URL_USINA_SAGER = `http://localhost:${DOMAIN_PORT}/listarusinas/usina`;
-config.URL_TIPO_TAXA_SAGER = `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/tipotaxa`;
+config.PORT = process.env.PORT || 8181;
+config.URL_USINA_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/usina`;
+config.URL_TIPO_TAXA_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/tipotaxa`;
 
 config.getUrlFiltroExecucao = function getUrlFiltroExecucao(idsFechamento) {
     return `http://${DOMAIN_HOST}:${DOMAIN_PORT}/consultarhistoricotaxas/execucaocalculofechamento?filter=byIdsFechamentos&idsFechamentos=${idsFechamento}`;

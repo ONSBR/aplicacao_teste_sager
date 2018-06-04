@@ -1,0 +1,100 @@
+execucaocalculofechamento:
+  model: tb_exec_calc_fech
+  fields:
+    id:
+      column: id
+    dataInicio:
+      column: data_inicio
+    dataFim:
+      column: data_fim
+    idCenario:
+      column: id_cenario
+    idTarefa:
+      column: id_tarefa
+    protocolo:
+      column: protocolo
+    idFechamento:
+      column: id_fechamento
+  filters:
+    byIdsFechamentos: "id_fechamento in ($idsFechamentos)"
+
+fechamentomensal:
+  model: tb_fechamento_mensal
+  fields:
+    id:
+      column: id
+    mes:
+      column: mes
+    ano:
+      column: ano
+  filters:
+    byData: "mes >= :mesInicial and ano >= :anoInicial and mes <= :mesFinal and ano <= :anoFinal"
+    byId: "id = :id"
+
+tarefa-retificacao:
+  model: tb_tarefa_retificacao
+  fields:
+    id:
+      column: id
+    nome:
+      column: nome
+  filters:
+    byName: "nome = :nome"
+
+
+cenario:
+  model: tb_cenario
+  fields:
+    nome:
+      column: nome
+    dataInicio:
+      column: data_inicio
+    dataFim:
+      column: data_fim
+    dataExecucao:
+      column: data_execucao
+
+taxa:
+  model: tb_taxa
+  fields:
+    tipoTaxa:
+      column: id_tipo_taxa
+    valor:
+      column: valor
+    idFechamento:
+      column: id_fechamento
+    idUsina:
+      column: id_usina
+  filters:
+    byUsinaTipoTaxaIdsFechamentos: "id_tipo_taxa = :tipoTaxa and id_usina = :idUsina and id_fechamento in ($idsFechamentos)"
+    byIdFechamento: "id_fechamento = :idFechamento"
+
+tipotaxa:
+  model: tb_tipo_taxa
+  fields:
+    idTipoTaxa:
+      column: id_tipo_taxa
+    nome:
+      column: nome
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+    tipo:
+      column: tipo
+      required: true
+    agente:
+      column: agente
+      required: true
+  filters:
+    byName: "nome = :nome"
+    byIdUsina: "id_usina = :idUsina"      

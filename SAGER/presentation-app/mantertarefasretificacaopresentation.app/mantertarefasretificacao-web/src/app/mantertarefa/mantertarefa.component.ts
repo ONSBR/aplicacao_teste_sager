@@ -20,7 +20,8 @@ export class MantertarefaComponent implements OnInit {
   public usinas: Array<Usina>;
   public camposObrigatoriosPesquisaEventos: Array<string>;
   public camposObrigatoriosTarefa: Array<string>;
-  public mensagemUploadPlanilha: string;
+  public mensagemSucesso: string;
+  public mensagemErro: string;
 
   constructor(private http: HttpClient) {
     this.filtroEvento = new FiltroEvento();
@@ -41,7 +42,7 @@ export class MantertarefaComponent implements OnInit {
   }
 
   listarTarefas() {
-    this.nomeTarefa = "";
+    this.nomeTarefa = '';
     this.http.get(environment.urlServerPresentation + environment.listarTarefas).subscribe(data => {
       this.tarefas = <TarefaRetificacao[]>data;
     });
@@ -50,10 +51,10 @@ export class MantertarefaComponent implements OnInit {
   inserirTarefa() {
     this.limparMensagens();
     if (this.validarTarefa()) {
-      let body = { 'nomeTarefa': this.nomeTarefa };
+      const body = { 'nomeTarefa': this.nomeTarefa };
       this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
         data => {
-          this.mensagemUploadPlanilha = "Tarefa inserida com sucesso!";
+          this.mensagemSucesso = 'Tarefa inserida com sucesso!';
           this.listarTarefas();
         }, error => {
           console.log(`Erro ao inserir tarefa: ${error}`);
@@ -65,7 +66,8 @@ export class MantertarefaComponent implements OnInit {
   limparMensagens() {
     this.camposObrigatoriosPesquisaEventos = [];
     this.camposObrigatoriosTarefa = [];
-    this.mensagemUploadPlanilha = undefined;
+    this.mensagemSucesso = undefined;
+    this.mensagemErro = undefined;
   }
 
   validarTarefa() {
@@ -109,7 +111,7 @@ export class MantertarefaComponent implements OnInit {
     const headers = new HttpHeaders();
     this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => {
       console.log(data);
-      this.mensagemUploadPlanilha = "Upload executado com sucesso";
+      this.mensagemSucesso = 'Upload executado com sucesso';
     }, error => {
       console.log(`Erro ao realizar upload da planilha: ${error}`);
     });
@@ -121,11 +123,13 @@ export class MantertarefaComponent implements OnInit {
   }
 
   getUrlDownloadPlanilha(nomeTarefa) {
-    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nometarefa=${nomeTarefa}`;
+    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nomeTarefa=${nomeTarefa}`;
   }
 
   getUrlPesquisarEventos() {
-    return `${environment.urlServerPresentation}${environment.pesquisarEventos}?idsUsinas=${this.filtroEvento.usinas.join(';')}&dataInicial=${this.filtroEvento.dataInicial}&dataFinal=${this.filtroEvento.dataFinal}`;
+    return `${environment.urlServerPresentation}${environment.pesquisarEventos}` +
+      `?idsUsinas=${this.filtroEvento.usinas.join(';')}&dataInicial=${this.filtroEvento.dataInicial}` +
+      `&dataFinal=${this.filtroEvento.dataFinal}`;
   }
 
   updateCheckedOptions(event, usina) {
@@ -139,24 +143,25 @@ export class MantertarefaComponent implements OnInit {
 
   excluir(tarefa) {
     this.limparMensagens();
-    let body = { 'tarefa': tarefa };
+    const body = { 'tarefa': tarefa };
     this.http.post(environment.urlServerPresentation + environment.excluirTarefa, body).subscribe(
       data => {
-        this.mensagemUploadPlanilha = "Tarefa excluída com sucesso!";
+        this.mensagemSucesso = 'Tarefa excluída com sucesso!';
         this.listarTarefas();
       }
     );
   }
 
   aplicar(tarefa) {
-
     this.limparMensagens();
-    var url = environment.urlServerPresentation + environment.aplicarTarefa + "?nomeTarefa=" + tarefa.nome;
-    
+    const url = environment.urlServerPresentation + environment.aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
     this.http.get(url).subscribe(
       data => {
-        this.mensagemUploadPlanilha = "Retificação aplicada com sucesso!";
+        this.mensagemSucesso = 'Retificação aplicada com sucesso!';
         this.listarTarefas();
+      }, error => {
+        console.log(`Erro ao aplicar tarefa: ${error}`);
+        this.mensagemErro = error.error;
       }
     );
   }

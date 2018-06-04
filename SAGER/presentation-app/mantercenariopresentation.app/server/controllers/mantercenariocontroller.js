@@ -1,6 +1,7 @@
 const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const CenarioBusiness = require('../business/cenariobusiness');
+const dispatcher = require("../dispatcher/dispatcher");
 
 class ManterCenarioController {
 
@@ -84,17 +85,17 @@ class ManterCenarioController {
      */
     alterarCenario(request, response) {
         var cenario = request.body;
-        this.cenarioBusiness.alterarCenario(cenario).then(result => { response.send(result) });
+        dispatcher.dispatch("presentation.atualiza.cenario.request", { cenario: cenario, idCenario: cenario.idCenario }).then(result => { response.send(result) });
     }
 
     /**
-     * @description Inseri o cenário informado
+     * @description Insere o cenário informado
      * @param {Request} request 
      * @param {Response} response 
      */
     inserirCenario(request, response) {
-        var cenario = request.body;
-        this.cenarioBusiness.inserirCenario(cenario).then(result => { response.send(result) });
+        let cenario = request.body;
+        dispatcher.dispatch("presentation.insere.cenario.request", { cenario: cenario }).then(result => { response.send(result) });
     }
 
     /**
@@ -103,8 +104,8 @@ class ManterCenarioController {
      * @param {Response} response 
      */
     excluirCenario(request, response) {
-        var idCenario = request.query.idCenario;
-        this.cenarioBusiness.excluirCenario(idCenario).then(result => { response.send(result) });
+        dispatcher.dispatch("presentation.exclui.cenario.request",
+            { idCenario: request.query.idCenario }).then(dispatcherResult => { response.send(dispatcherResult) });
     }
 
     /**
@@ -113,8 +114,7 @@ class ManterCenarioController {
      * @param {Response} response 
      */
     ativarInativarCenario(request, response) {
-        var idCenario = request.body.idCenario;
-        this.cenarioBusiness.ativarInativarCenario(idCenario).then(result => { response.send(result) });
+        dispatcher.dispatch("presentation.ativarinativarcenario.cenario.request", { idCenario: request.body.idCenario }).then(result => { response.send(result) });
     }
 }
 

@@ -75,3 +75,25 @@ tipotaxa:
       column: id_tipo_taxa
     nome:
       column: nome
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+    tipo:
+      column: tipo
+      required: true
+    agente:
+      column: agente
+      required: true
+  filters:
+    byName: "nome = :nome"
+    byIdUsina: "id_usina = :idUsina"      

@@ -1,4 +1,5 @@
 const moment = require('moment');
+const FORMAT_DATE_EXCEL = "DD/MM/YYYY HH:mm:ss";
 
 function dateReviver(key, value) {
     var a;
@@ -31,6 +32,14 @@ class Util {
 
     static stringToDate(strDate, format) {
         return strDate ? moment(strDate, format, true).format() : '';
+    }
+
+    static excelStrToDate(str) {
+        return moment(str, FORMAT_DATE_EXCEL).toDate();
+    }
+
+    static dateToExcelStr(date) {
+        return date ? moment(date).format(FORMAT_DATE_EXCEL) : ''
     }
 }
 
