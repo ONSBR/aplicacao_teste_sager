@@ -51,6 +51,7 @@ export class DialogCenarioComponent implements OnInit {
   ngOnInit() {
     this.listarUsinas();
     this.listarUges();
+    this.tiposRegras.forEach(regra => console.log(regra));
   }
 
   getUge(idUge) {
