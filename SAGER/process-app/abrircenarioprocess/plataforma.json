@@ -1,0 +1,11 @@
+{
+    "app": {
+        "type": "process",
+        "tecnology": "node",
+        "name": "abrircenarioprocess",
+        "version": "1.0",
+        "description": "",
+        "author": "",
+        "id": "0584aebc-a089-4f6e-8a98-7b40867092bd"
+    }
+}

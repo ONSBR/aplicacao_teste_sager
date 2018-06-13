@@ -1,0 +1,16 @@
+{
+    "name": "abrircenarioprocess",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "./node_modules/.bin/jasmine-node spec"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "jasmine": "^2.9.0",
+        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK"
+    }
+}

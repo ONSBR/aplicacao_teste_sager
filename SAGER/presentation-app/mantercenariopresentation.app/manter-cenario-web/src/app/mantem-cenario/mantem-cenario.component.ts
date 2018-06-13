@@ -37,20 +37,20 @@ export class MantemCenarioComponent implements OnInit {
       this.cenarios.forEach(it => {
         it.dataInicioVigencia = this.ajustarDataCalendario(it.dataInicioVigencia);
         it.dataFimVigencia = this.ajustarDataCalendario(it.dataFimVigencia);
-      })
+      });
     });
   }
 
   printIdentify(ident) {
-    return ident && ident.length > 20? ident.substring(0,20)+"...": ident;
+    return ident && ident.length > 20 ? ident.substring(0, 20) + '...' : ident;
   }
 
   excluir(cenario) {
 
     if (confirm('Confirma a exclusão do cenário?')) {
-      const url = environment.urlServerPresentation + environment.excluirCenario + "?idCenario=" + cenario.idCenario;
+      const url = environment.urlServerPresentation + environment.excluirCenario + '?idCenario=' + cenario.idCenario;
       this.http.delete(url).subscribe(data => {
-        alert("Exclusão de cenário realizada com sucesso!");
+        alert('Exclusão de cenário realizada com sucesso!');
         this.pesquisar();
       });
     }
@@ -58,17 +58,16 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   ativarInativar(cenario) {
-   
     const url = environment.urlServerPresentation + environment.ativarInativarCenario;
     this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
-      alert("Alteração de cenário realizada com sucesso!");
+      alert('Alteração de cenário realizada com sucesso!');
       this.pesquisar();
     });
   }
 
   private ajustarDataCalendario(dataAjuste) {
-    var idx = dataAjuste.indexOf('T');
-    return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;    
+    const idx = dataAjuste.indexOf('T');
+    return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;
   }
 
   alterar(cenario) {
@@ -77,7 +76,7 @@ export class MantemCenarioComponent implements OnInit {
     this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
     this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
 
-    var url = environment.urlServerPresentation + environment.obterRegrasCriticas +
+    const url = environment.urlServerPresentation + environment.obterRegrasCriticas +
       '?idCenario=' + this.cenarioSelecionado.idCenario;
 
     this.http.get(url).subscribe(data => {
@@ -99,7 +98,7 @@ export class MantemCenarioComponent implements OnInit {
     const url = environment.urlServerPresentation + environment.inserirCenario;
 
     this.http.put(url, cenario).subscribe(data => {
-      alert("Inclusão de cenário realizada com sucesso!");
+      alert('Inclusão de cenário realizada com sucesso!');
       this.pesquisar();
     });
   }
@@ -109,14 +108,14 @@ export class MantemCenarioComponent implements OnInit {
     const url = environment.urlServerPresentation + environment.alterarCenario;
 
     this.http.post(url, cenario).subscribe(data => {
-      alert("Alteração de cenário realizada com sucesso!");
+      alert('Alteração de cenário realizada com sucesso!');
       this.pesquisar();
     });
   }
 
   openDialog() {
 
-    let dialogRef = this.dialog.open(DialogCenarioComponent, {
+    const dialogRef = this.dialog.open(DialogCenarioComponent, {
       width: '1050px', height: '450px',
       data: this.cenarioSelecionado
     });
@@ -125,9 +124,8 @@ export class MantemCenarioComponent implements OnInit {
 
       if (result) {
 
-        var cenario = findCenario(this.cenarios, result);
+        let cenario = findCenario(this.cenarios, result);
         if (!cenario) {
-          
           cenario = result;
           cenario.idCenario = Guid.newGuid();
           cenario.situacao = SituacaoCenario.Ativo;
@@ -145,7 +143,7 @@ export class MantemCenarioComponent implements OnInit {
 }
 
 function findCenario(cenarios: Array<Cenario>, cenario: Cenario) {
-  var retorno: Cenario;
+  let retorno: Cenario;
   if (cenario && cenario.idCenario) {
     cenarios.forEach((it) => {
       if (it.idCenario == cenario.idCenario) {
@@ -163,7 +161,7 @@ function clone(value) {
 class Guid {
   static newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
