@@ -1,4 +1,4 @@
-const Cenario = require('../../process/abrircenario/cenario');
+const Cenario = require('../../../process/abrircenario/cenario');
 
 describe('Cenário: ', function () {
     
@@ -25,8 +25,8 @@ describe('Cenário: ', function () {
         expect(fork).toHaveBeenCalledWith(NOME_CENARIO, JUSTIFICATIVA_CENARIO);
     });
 
-    it('Aplicar critérios de potência.', () => {
-        cenario.regras = jasmine.createSpyObj('regras', ['aplicar']);
+    it('Aplicar critérios.', () => {
+        cenario.criterios = jasmine.createSpyObj('criterios', ['aplicar']);
 
         let regraPotenciaDisponivel = {tipoRegra: 'Potência Disponível', regraDe:'ALUXG-0UG1', regraPara:'500'};
         let regraFranquia = {tipoRegra: 'Franquia', regraDe:'ALUXG-0UG1', regraPara:'500'};
@@ -39,8 +39,8 @@ describe('Cenário: ', function () {
 
         cenario.aplicarCriterios(payload, dataset);
 
-        expect(cenario.regras.aplicar).toHaveBeenCalledWith(regraPotenciaDisponivel);
-        expect(cenario.regras.aplicar).toHaveBeenCalledWith(regraFranquia);
+        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraPotenciaDisponivel, dataset);
+        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraFranquia, dataset);
     });
 
 

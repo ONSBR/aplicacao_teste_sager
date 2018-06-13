@@ -1,9 +1,9 @@
-const Regras = require('./regras');
+const Criterios = require('../criterios/criterios');
 
 class Cenario {
 
     constructor() {
-        this.regras = new Regras();
+        this.criterios = new Criterios();
     }
 
     abrir(payload, fork) {
@@ -12,7 +12,7 @@ class Cenario {
 
     aplicarCriterios(payload, dataset) {
         payload.cenario.regras.forEach(regra => {
-            this.regras.aplicar(regra);
+            this.criterios.aplicar(regra, dataset);
         });
     }
 
