@@ -7,3 +7,5 @@ tb_usina:
     - string
   agente:
     - string
+  franquia:
+    - double

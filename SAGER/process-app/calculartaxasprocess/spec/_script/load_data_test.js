@@ -2,7 +2,6 @@ const FileDataMass = require("../testmass/filedatamass");
 const HttpClient = require("plataforma-sdk/http/client");
 const FechamentoMensal = require("../../process/entities/fechamentomensal");
 const Usina = require("../../process/entities/usina");
-const utils = require("../../utils");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
@@ -49,6 +48,8 @@ function getUrlAppDomain(map, entity, verb) {
     if (verb) {
         url += verb;
     }
+    console.log('---------');
+    console.log(url);
     return url;
 }
 
@@ -77,16 +78,18 @@ var posevt = 0;
 
 Promise.all(dataLoad).then(results => {
 
-    var uges = results[0];
-    var eventos = results[1].concat(results[2]);
+    let uges = results[0];
+    let eventos = results[1].concat(results[2]);
 
     loadFechamento();
 
-    var usina = new Usina();
+    let usina = new Usina();
     usina.idUsina = usina.nome = usina.tipo = usina.agente = "ALUXG";
+    usina.franquia = 1000;
     
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([usina])).then(result => {
         console.log("Usina incluída: " + usina.idUsina);
+        console.log(usina);
     }).catch(catch_error);
         
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify(uges)).then(result => {

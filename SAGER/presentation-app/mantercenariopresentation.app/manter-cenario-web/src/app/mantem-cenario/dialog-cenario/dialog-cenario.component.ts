@@ -23,14 +23,12 @@ export class DialogCenarioComponent implements OnInit {
   condicoes_type: string[] = Object.values(CondicaoOperativa);
 
   getOrigens(tipoRegra): string[]  {
-    var retorno = [];
+    let retorno = [];
     if (tipoRegra == this.tiposRegras[2]) {
       retorno = this.origens_type;
-    }
-    else if (tipoRegra == this.tiposRegras[3]) {
+    } else if (tipoRegra == this.tiposRegras[3]) {
       retorno = this.estados_type;
-    }
-    else if (tipoRegra == this.tiposRegras[4]) {
+    } else if (tipoRegra == this.tiposRegras[4]) {
       retorno = this.condicoes_type;
     }
     return retorno;
@@ -55,17 +53,13 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   getUge(idUge) {
-    var retorno = {};
+    let retorno = {};
     this.uges.forEach(it => {
       if (it.idUge == idUge) {
         retorno = it;
       }
     });
     return retorno;
-  }
-
-  get titulo() {
-    return this.data.idCenario ? "Alterar" : "Incluir";
   }
 
   listarUsinas() {
@@ -75,12 +69,9 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUges() {
-    
     if (this.data && this.data.idUsina) {
-
-      var url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
+      const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
        '?idUsina=' + this.data.idUsina;
-      
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });
@@ -96,7 +87,7 @@ export class DialogCenarioComponent implements OnInit {
 
       if (this.validarRegras()) {
         this.dialogRef.close(this.data);
-      } 
+      }
 
     } else {
       alert('Informe os campos: Nome do Cenário, Data Inicial, Data Final e Justificativa!');
@@ -105,9 +96,7 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   validarRegras() {
-    
-    var retorno = true;
-    
+    let retorno = true;
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
@@ -124,13 +113,12 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   excluirRegra(regra) {
-    var index = this.data.regras.indexOf(regra);
-    this.data.regras.splice(index,1);
+    const index = this.data.regras.indexOf(regra);
+    this.data.regras.splice(index, 1);
   }
 
   incluirRegra() {
-
-    var regra = new RegraCritica()
+    const regra = new RegraCritica();
     regra.idCenario = this.data.idCenario;
     this.data.regras.push(regra);
   }
