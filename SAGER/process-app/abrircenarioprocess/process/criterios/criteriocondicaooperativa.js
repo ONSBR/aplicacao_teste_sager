@@ -2,9 +2,9 @@ class CriterioCondicaoOperativa {
 
     aplicar(regra, dataset) {
         dataset.eventomudancaestadooperativo.collection.filter(evento => {
-            return evento.idEstadoOperativo == regra.regraDe
+            return evento.idCondicaoOperativa == regra.regraDe
         }).forEach(eventoToUpdate => {
-            eventoToUpdate.idEstadoOperativo = regra.regraPara;
+            eventoToUpdate.idCondicaoOperativa = regra.regraPara;
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
         });
     }
