@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { environment } from '../../environments/environment';
-import { Cenario, SituacaoCenario, RegraCritica } from '../model/model';
+import { Cenario, SituacaoCenario, RegraCritica, Usina } from '../model/model';
 import { DialogCenarioComponent } from './dialog-cenario/dialog-cenario.component';
 
 import { MatDialog, MatDialogConfig, DialogPosition } from '@angular/material';
@@ -37,6 +37,7 @@ export class MantemCenarioComponent implements OnInit {
       this.cenarios.forEach(it => {
         it.dataInicioVigencia = this.ajustarDataCalendario(it.dataInicioVigencia);
         it.dataFimVigencia = this.ajustarDataCalendario(it.dataFimVigencia);
+        this.preencherUsina(it);
       });
     });
   }
@@ -70,12 +71,18 @@ export class MantemCenarioComponent implements OnInit {
     return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;
   }
 
+  private preencherUsina(cenario: Cenario) {
+    const url = environment.urlServerPresentation + environment.pesquisarUsinaPorIdUsina;
+    this.http.post(url, { idUsina: cenario.idUsina }).subscribe(data => {
+      cenario.usina = data[0] as Usina;
+    });
+  }
+
   alterar(cenario) {
 
     this.cenarioSelecionado = clone(cenario);
     this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
     this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
-
     const url = environment.urlServerPresentation + environment.obterRegrasCriticas +
       '?idCenario=' + this.cenarioSelecionado.idCenario;
 
@@ -83,7 +90,6 @@ export class MantemCenarioComponent implements OnInit {
       this.cenarioSelecionado.regras = <RegraCritica[]>data;
       this.openDialog();
     });
-
   }
 
   incluir() {
@@ -114,7 +120,8 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   openDialog() {
-
+    console.log('cenario selecionado');
+    console.log(this.cenarioSelecionado);
     const dialogRef = this.dialog.open(DialogCenarioComponent, {
       width: '1050px', height: '450px',
       data: this.cenarioSelecionado
@@ -129,11 +136,8 @@ export class MantemCenarioComponent implements OnInit {
           cenario = result;
           cenario.idCenario = Guid.newGuid();
           cenario.situacao = SituacaoCenario.Ativo;
-
           this.confirmarInclusao(cenario);
-
         } else {
-
           this.confirmarAlteracao(result);
         }
       }

@@ -23,6 +23,10 @@ app.post("/pesquisarCenarios", (req, res) => {
     manterCenarioController.pesquisarCenarios(req, res);
 });
 
+app.post("/pesquisarUsinaPorIdUsina", (req, res) => {
+    manterCenarioController.pesquisarUsinaPorIdUsina(req, res);
+});
+
 app.get("/listarUsinas", (req, res) => {
     manterCenarioController.listarUsinas(req, res);
 });

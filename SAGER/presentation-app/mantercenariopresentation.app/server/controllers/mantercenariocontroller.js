@@ -17,19 +17,34 @@ class ManterCenarioController {
      * @description Pesquisa os cenáios cadastrados no sistema
      */
     pesquisarCenarios(request, response) {
-        
+
         let filtroNome = request.body.nome;
         let filtroDataInicial;
         let filtroDataFinal;
-        if(request.body.dataInicial) {
+        if (request.body.dataInicial) {
             filtroDataInicial = new Date(request.body.dataInicial).toISOString().slice(0, 10);
-        }        
-        if(request.body.dataFinal) {
-            filtroDataFinal = new Date(request.body.dataFinal).toISOString().slice(0, 10);    
+        }
+        if (request.body.dataFinal) {
+            filtroDataFinal = new Date(request.body.dataFinal).toISOString().slice(0, 10);
         }
         let filtroAtivo = request.body.ativo;
         let url = config.getUrlFiltroCenario(filtroNome, filtroDataInicial, filtroDataFinal);
-        
+
+        this.domainPromiseHelper.getDomainPromise(url).
+            then(data => { response.send(data); }).
+            catch(e => { console.log(`Erro durante a consulta de cenários: ${e.toString()}`) });
+    }
+
+    /**
+     * @method pesquisarUsinaPorIdUsina
+     * @param {Request} request Objeto de request
+     * @param {Response} response Objeto de response
+     * @description Pesquisa usina por id da usina
+    */
+    pesquisarUsinaPorIdUsina(request, response) {
+        let idUsina = request.body.idUsina;
+        let url = config.getUrlFiltroUsina(idUsina);
+        console.log(url);
         this.domainPromiseHelper.getDomainPromise(url).
             then(data => { response.send(data); }).
             catch(e => { console.log(`Erro durante a consulta de cenários: ${e.toString()}`) });

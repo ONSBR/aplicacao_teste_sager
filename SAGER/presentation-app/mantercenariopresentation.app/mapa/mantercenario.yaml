@@ -65,6 +65,10 @@ usina:
     nome:
       column: nome
       required: true
+    franquia:
+      column: franquia
+      required: true      
   filters:
     all:
+    byIdUsina: "id_usina = :idUsina"
       

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
 import { environment } from '../../../environments/environment';
 import { ClassificacaoOrigem, EstadoOperativo, CondicaoOperativa } from '../constants';
@@ -22,7 +22,7 @@ export class DialogCenarioComponent implements OnInit {
   estados_type: string[] = Object.values(EstadoOperativo);
   condicoes_type: string[] = Object.values(CondicaoOperativa);
 
-  getOrigens(tipoRegra): string[]  {
+  getOrigens(tipoRegra): string[] {
     let retorno = [];
     if (tipoRegra == this.tiposRegras[2]) {
       retorno = this.origens_type;
@@ -34,22 +34,14 @@ export class DialogCenarioComponent implements OnInit {
     return retorno;
   }
 
-  get idUsina() {
-    return this.data.idUsina;
-  }
-
-  set idUsina(value) {
-    this.data.idUsina = value;
-    this.listarUges();
-  }
-
   constructor(private dialogRef: MatDialogRef<DialogCenarioComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: Cenario, private http: HttpClient) { }
+    @Inject(MAT_DIALOG_DATA) private data: Cenario, private http: HttpClient) {
+    this.data = data;
+  }
 
   ngOnInit() {
     this.listarUsinas();
     this.listarUges();
-    this.tiposRegras.forEach(regra => console.log(regra));
   }
 
   getUge(idUge) {
@@ -69,16 +61,18 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUges() {
-    if (this.data && this.data.idUsina) {
+    console.log('listar uges');
+    console.log(this.data);
+    if (this.data && this.data.usina && this.data.usina.idUsina) {
+      console.log('listar 2');
       const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
-       '?idUsina=' + this.data.idUsina;
+        '?idUsina=' + this.data.usina.idUsina;
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });
     } else {
       this.uges = [];
     }
-
   }
 
   confirmar(): void {
@@ -86,6 +80,7 @@ export class DialogCenarioComponent implements OnInit {
     if (this.data.nomeCenario && this.data.dataInicioVigencia && this.data.justificativa) {
 
       if (this.validarRegras()) {
+        this.data.idUsina = this.data.usina.idUsina;
         this.dialogRef.close(this.data);
       }
 
@@ -99,6 +94,11 @@ export class DialogCenarioComponent implements OnInit {
     let retorno = true;
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
+
+        if (it.tipoRegra == this.tiposRegras[1]) {
+          it.regraDe = this.data.usina.idUsina;
+        }
+
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
           alert('Informe os dados da regra!');
           retorno = false;

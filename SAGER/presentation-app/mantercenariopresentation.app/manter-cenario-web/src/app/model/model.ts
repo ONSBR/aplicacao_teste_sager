@@ -1,11 +1,11 @@
 export class Cenario {
-    
     public idCenario: string;
     public nomeCenario: string;
     public dataInicioVigencia: Date;
     public dataFimVigencia: Date;
     public justificativa: string;
     public idUsina: string;
+    public usina: Usina;
     public situacao: SituacaoCenario;
 
     public regras: RegraCritica[] = [];
@@ -13,31 +13,26 @@ export class Cenario {
     constructor() {
     }
 }
-
 export class RegraCritica {
-
     id: string;
     idCenario: string;
     nomeRegra: string;
     regraDe: string;
     regraPara: string;
     tipoRegra: TipoRegra;
-
 }
 
 export class UnidadeGeradora {
-
     idUge: string;
     idUsina: string;
     potenciaDisponivel: number;
-    
 }
 
 export class Usina {
-
     id: string;
     idUsina: string;
     nome: string;
+    franquia: string;
 }
 
 export enum TipoRegra {
