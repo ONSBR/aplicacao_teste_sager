@@ -48,8 +48,6 @@ function getUrlAppDomain(map, entity, verb) {
     if (verb) {
         url += verb;
     }
-    console.log('---------');
-    console.log(url);
     return url;
 }
 
@@ -89,7 +87,6 @@ Promise.all(dataLoad).then(results => {
     
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([usina])).then(result => {
         console.log("Usina incluída: " + usina.idUsina);
-        console.log(usina);
     }).catch(catch_error);
         
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify(uges)).then(result => {
