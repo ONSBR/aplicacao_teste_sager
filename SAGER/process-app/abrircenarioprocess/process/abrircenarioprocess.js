@@ -9,8 +9,8 @@ SDK.run((context, resolve, reject, fork) => {
     console.log(context.event);
     try {
         let cenario = new Cenario();
-        cenario.abrir(context.event.payload);    
-        cenario.aplicarCriterios(context.event.payload);
+        cenario.abrir(context.event.payload, fork);    
+        cenario.aplicarCriterios(context.event.payload, context.dataset);
         resolve();
     } catch (error) {
         console.log('error: ' + error.stack);

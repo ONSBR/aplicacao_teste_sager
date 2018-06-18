@@ -1,7 +1,7 @@
 class CriterioFranquia {
 
     aplicar(regra, dataset) {
-        dataset.usina.collection.filter(usina => {
+        dataset.usina.collection.toArray().filter(usina => {
             return usina.idUsina == regra.regraDe
         }).forEach(usinaToUpdate => {
             usinaToUpdate.franquia = regra.regraPara;

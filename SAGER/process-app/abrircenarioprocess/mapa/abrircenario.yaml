@@ -1,0 +1,61 @@
+unidadegeradora:
+  model: tb_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: pot_disp
+    dataInicioOperacao:
+      column: data_inicio_operacao
+    idUsina:
+      column: id_usina
+  filters:
+    all:
+    byIdUsina: "id_usina = :idUsina"
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+    franquia:
+      column: franquia
+      required: true      
+  filters:
+    all:
+    byIdUsina: "id_usina = :idUsina"
+
+eventomudancaestadooperativo:
+  model: tb_evt_estado_oper
+  fields:
+    idEvento:
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_class_origem
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+    idCondicaoOperativa:
+      column: id_cond_oper
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: pot_disp
+    numONS: 
+      column: numero_ons
+    eversao:
+      column: eversao  
+  filters:
+    menorQueData: "data_verificada < :data order by data_verificada"
+    maiorQueData: "data_verificada > :data order by data_verificada"
+    byIntervaloDatas: "data_verificada >= :dataInicial and data_verificada <= :dataFinal and id_uge in ($idsUges) order by data_verificada"
+    byIdsEventos:  "id_evento in ($idsEventos!)"
+    all:

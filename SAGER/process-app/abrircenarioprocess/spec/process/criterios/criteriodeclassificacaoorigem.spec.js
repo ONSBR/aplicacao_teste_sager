@@ -1,4 +1,5 @@
 const Criterios = require('../../../process/criterios/criterios');
+const Enumerable = require('linq');
 
 describe('Critério: ', function () {
 
@@ -13,13 +14,13 @@ describe('Critério: ', function () {
         let update = jasmine.createSpy('update');
         let dataset = {
             eventomudancaestadooperativo: {
-                collection: [
+                collection: Enumerable.from([
                     { id: '1', idClassificacaoOrigem: 'GOT' },
                     { id: '2', idClassificacaoOrigem: 'GUM' },
                     { id: '3', idClassificacaoOrigem: 'GUM' },
                     { id: '4', idClassificacaoOrigem: 'GAG' },
                     { id: '5', idClassificacaoOrigem: 'GCB' }
-                ],
+                ]),
                 update: update
             }
 
