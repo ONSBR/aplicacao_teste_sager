@@ -7,3 +7,5 @@ tb_unidade_geradora:
     - datetime
   id_usina:
     - string
+  franquia:
+    - double

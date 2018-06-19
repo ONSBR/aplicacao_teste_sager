@@ -27,9 +27,8 @@
           </div>
           <div>
             <span>Usina:
-              <select [(ngModel)]="data.usina" (change)="listarUges()">
-                <option></option>
-                <option *ngFor="let usina of usinas" [ngValue]="data.usina">
+              <select [(ngModel)]="idUsina">
+                <option *ngFor="let usina of usinas" [ngValue]="usina.idUsina">
                   {{usina.idUsina}}
                 </option>
               </select>
@@ -76,8 +75,14 @@
                 </option>
               </select>
               - {{getUge(regra.regraDe).potenciaDisponivel}}
+            </td>
             <td *ngIf="regra.tipoRegra == tiposRegras[1]">
-              {{data.usina.idUsina}} - {{data.usina.franquia}}              
+              <select [(ngModel)]="regra.regraDe">
+                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
+                  {{uge.idUge}}
+                </option>
+              </select>
+              - {{getUge(regra.regraDe).franquia}}
             </td>
             <td *ngIf="regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]">
               <select [(ngModel)]="regra.regraDe">

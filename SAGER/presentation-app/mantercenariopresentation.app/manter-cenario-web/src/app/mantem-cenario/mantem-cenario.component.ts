@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FiltroConsulta } from '../filtro/FiltroConsulta.model';
 import { environment } from '../../environments/environment';
-import { Cenario, SituacaoCenario, RegraCritica, Usina } from '../model/model';
+import { Cenario, SituacaoCenario, RegraCritica } from '../model/model';
 import { DialogCenarioComponent } from './dialog-cenario/dialog-cenario.component';
 
 import { MatDialog, MatDialogConfig, DialogPosition } from '@angular/material';
@@ -37,7 +37,6 @@ export class MantemCenarioComponent implements OnInit {
       this.cenarios.forEach(it => {
         it.dataInicioVigencia = this.ajustarDataCalendario(it.dataInicioVigencia);
         it.dataFimVigencia = this.ajustarDataCalendario(it.dataFimVigencia);
-        this.preencherUsina(it);
       });
     });
   }
@@ -69,13 +68,6 @@ export class MantemCenarioComponent implements OnInit {
   private ajustarDataCalendario(dataAjuste) {
     const idx = dataAjuste.indexOf('T');
     return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;
-  }
-
-  private preencherUsina(cenario: Cenario) {
-    const url = environment.urlServerPresentation + environment.pesquisarUsinaPorIdUsina;
-    this.http.post(url, { idUsina: cenario.idUsina }).subscribe(data => {
-      cenario.usina = data[0] as Usina;
-    });
   }
 
   alterar(cenario) {

@@ -50,6 +50,9 @@ unidadegeradora:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
+    franquia:
+      column: franquia
+      required: true 
   filters:
     byIdUsina: "id_usina = :idUsina"
 
@@ -65,9 +68,6 @@ usina:
     nome:
       column: nome
       required: true
-    franquia:
-      column: franquia
-      required: true      
   filters:
     all:
     byIdUsina: "id_usina = :idUsina"

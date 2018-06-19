@@ -83,8 +83,10 @@ Promise.all(dataLoad).then(results => {
 
     let usina = new Usina();
     usina.idUsina = usina.nome = usina.tipo = usina.agente = "ALUXG";
-    usina.franquia = 1000;
     
+    
+    uges.forEach(uge => uge.franquia = 1000);
+    console.log(uges);
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([usina])).then(result => {
         console.log("Usina incluída: " + usina.idUsina);
     }).catch(catch_error);

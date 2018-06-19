@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
 import { environment } from '../../../environments/environment';
 import { ClassificacaoOrigem, EstadoOperativo, CondicaoOperativa } from '../constants';
+import { log } from 'util';
 
 @Component({
   selector: 'app-dialog-cenario',
@@ -34,12 +35,22 @@ export class DialogCenarioComponent implements OnInit {
     return retorno;
   }
 
+  get idUsina() {
+    return this.data.idUsina;
+  }
+
+  set idUsina(value) {
+    this.data.idUsina = value;
+    this.listarUges();
+  }
+
   constructor(private dialogRef: MatDialogRef<DialogCenarioComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Cenario, private http: HttpClient) {
     this.data = data;
   }
 
   ngOnInit() {
+    console.log('ngOnInit');
     this.listarUsinas();
     this.listarUges();
   }
@@ -63,10 +74,10 @@ export class DialogCenarioComponent implements OnInit {
   listarUges() {
     console.log('listar uges');
     console.log(this.data);
-    if (this.data && this.data.usina && this.data.usina.idUsina) {
-      console.log('listar 2');
+    if (this.data && this.data.idUsina) {
       const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
-        '?idUsina=' + this.data.usina.idUsina;
+        '?idUsina=' + this.data.idUsina;
+      console.log(url);
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });
@@ -80,7 +91,6 @@ export class DialogCenarioComponent implements OnInit {
     if (this.data.nomeCenario && this.data.dataInicioVigencia && this.data.justificativa) {
 
       if (this.validarRegras()) {
-        this.data.idUsina = this.data.usina.idUsina;
         this.dialogRef.close(this.data);
       }
 
@@ -94,11 +104,6 @@ export class DialogCenarioComponent implements OnInit {
     let retorno = true;
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
-
-        if (it.tipoRegra == this.tiposRegras[1]) {
-          it.regraDe = this.data.usina.idUsina;
-        }
-
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
           alert('Informe os dados da regra!');
           retorno = false;

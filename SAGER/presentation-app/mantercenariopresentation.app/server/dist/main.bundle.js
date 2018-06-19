@@ -281,7 +281,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/mantem-cenario/dialog-cenario/dialog-cenario.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 mat-dialog-title>{{titulo}} Cenário</h2>\n\n<table border=\"0\">\n  <tr>\n    <td width=\"500\" style=\"vertical-align:top\">\n      <fieldset style=\"height: 170px\">\n        <mat-dialog-content>\n          <div>\n            <span>Nome do Cenário:\n              <input type=\"text\" [(ngModel)]=\"data.nomeCenario\" />\n            </span>\n          </div>\n          <div>\n            <span>Data Início Vigência:\n              <input type=\"date\" [(ngModel)]=\"data.dataInicioVigencia\" />\n            </span>\n          </div>\n          <div>\n            <span>Data Fim Vigência:\n              <input type=\"date\" [(ngModel)]=\"data.dataFimVigencia\" />\n            </span>\n          </div>\n          <div>\n            <span>Justificativa:\n              <input type=\"text\" [(ngModel)]=\"data.justificativa\" />\n            </span>\n          </div>\n          <div>\n            <span>Usina:\n              <select [(ngModel)]=\"data.usina\" (change)=\"listarUges()\">\n                <option></option>\n                <option *ngFor=\"let usina of usinas\" [ngValue]=\"data.usina\">\n                  {{usina.idUsina}}\n                </option>\n              </select>\n            </span>\n          </div>\n          <div>\n            <span>Situação: {{data.situacao}}\n            </span>\n          </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <span>\n            <button class=\"button\" (click)='confirmar()'>Confirmar</button>\n            <button class=\"button\" (click)='onNoClick()'>Fechar</button>\n            <button class=\"button\" (click)='incluirRegra()'>Incluir Critério</button>\n          </span>\n        </mat-dialog-actions>\n      </fieldset>\n      <span *ngIf=\"data.regras && data.regras.length > 0\">\n        <h3>Critérios</h3>\n        <table width=\"800\" class=\"grid-entidades\">\n          <tr>\n            <th width=\"100\">Nome</th>\n            <th width=\"200\">Tipo de Mudança</th>\n            <th>De</th>\n            <th>Para</th>\n            <th>Opção</th>\n          </tr>\n          <tr *ngFor=\"let regra of data.regras\">\n            <td>\n              <input type=\"text\" size=\"15\" [(ngModel)]=\"regra.nomeRegra\" />\n            </td>\n            <td>\n              <select [(ngModel)]=\"regra.tipoRegra\">\n                <option *ngFor=\"let tipoRegra of tiposRegras\" [ngValue]=\"tipoRegra\"> \n                  {{tipoRegra}}\n                </option>\n              </select>\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let uge of uges\" [ngValue]=\"uge.idUge\">\n                  {{uge.idUge}}\n                </option>\n              </select>\n              - {{getUge(regra.regraDe).potenciaDisponivel}}\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[1]\">\n              {{data.usina.idUsina}} - {{data.usina.franquia}}              \n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\n                  {{origem}}\n                </option>\n              </select>\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1]\">\n              <input type=\"text\" [(ngModel)]=\"regra.regraPara\" />\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]\">\n              <select [(ngModel)]=\"regra.regraPara\">\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\n                  {{origem}}\n                </option>\n              </select>\n            </td>\n            <td>\n              <button class=\"button\" (click)='excluirRegra(regra)'>Excluir</button>\n            </td>\n          </tr>\n        </table>\n      </span>\n\n    </td>\n  </tr>\n</table>"
+module.exports = "<h2 mat-dialog-title>{{titulo}} Cenário</h2>\n\n<table border=\"0\">\n  <tr>\n    <td width=\"500\" style=\"vertical-align:top\">\n      <fieldset style=\"height: 170px\">\n        <mat-dialog-content>\n          <div>\n            <span>Nome do Cenário:\n              <input type=\"text\" [(ngModel)]=\"data.nomeCenario\" />\n            </span>\n          </div>\n          <div>\n            <span>Data Início Vigência:\n              <input type=\"date\" [(ngModel)]=\"data.dataInicioVigencia\" />\n            </span>\n          </div>\n          <div>\n            <span>Data Fim Vigência:\n              <input type=\"date\" [(ngModel)]=\"data.dataFimVigencia\" />\n            </span>\n          </div>\n          <div>\n            <span>Justificativa:\n              <input type=\"text\" [(ngModel)]=\"data.justificativa\" />\n            </span>\n          </div>\n          <div>\n            <span>Usina:\n              <select [(ngModel)]=\"idUsina\">\n                <option *ngFor=\"let usina of usinas\" [ngValue]=\"usina.idUsina\">\n                  {{usina.idUsina}}\n                </option>\n              </select>\n            </span>\n          </div>\n          <div>\n            <span>Situação: {{data.situacao}}\n            </span>\n          </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <span>\n            <button class=\"button\" (click)='confirmar()'>Confirmar</button>\n            <button class=\"button\" (click)='onNoClick()'>Fechar</button>\n            <button class=\"button\" (click)='incluirRegra()'>Incluir Critério</button>\n          </span>\n        </mat-dialog-actions>\n      </fieldset>\n      <span *ngIf=\"data.regras && data.regras.length > 0\">\n        <h3>Critérios</h3>\n        <table width=\"800\" class=\"grid-entidades\">\n          <tr>\n            <th width=\"100\">Nome</th>\n            <th width=\"200\">Tipo de Mudança</th>\n            <th>De</th>\n            <th>Para</th>\n            <th>Opção</th>\n          </tr>\n          <tr *ngFor=\"let regra of data.regras\">\n            <td>\n              <input type=\"text\" size=\"15\" [(ngModel)]=\"regra.nomeRegra\" />\n            </td>\n            <td>\n              <select [(ngModel)]=\"regra.tipoRegra\">\n                <option *ngFor=\"let tipoRegra of tiposRegras\" [ngValue]=\"tipoRegra\"> \n                  {{tipoRegra}}\n                </option>\n              </select>\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let uge of uges\" [ngValue]=\"uge.idUge\">\n                  {{uge.idUge}}\n                </option>\n              </select>\n              - {{getUge(regra.regraDe).potenciaDisponivel}}\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[1]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let uge of uges\" [ngValue]=\"uge.idUge\">\n                  {{uge.idUge}}\n                </option>\n              </select>\n              - {{getUge(regra.regraDe).franquia}}\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\n                  {{origem}}\n                </option>\n              </select>\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1]\">\n              <input type=\"text\" [(ngModel)]=\"regra.regraPara\" />\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]\">\n              <select [(ngModel)]=\"regra.regraPara\">\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\n                  {{origem}}\n                </option>\n              </select>\n            </td>\n            <td>\n              <button class=\"button\" (click)='excluirRegra(regra)'>Excluir</button>\n            </td>\n          </tr>\n        </table>\n      </span>\n\n    </td>\n  </tr>\n</table>"
 
 /***/ }),
 
@@ -340,7 +340,19 @@ var DialogCenarioComponent = /** @class */ (function () {
         }
         return retorno;
     };
+    Object.defineProperty(DialogCenarioComponent.prototype, "idUsina", {
+        get: function () {
+            return this.data.idUsina;
+        },
+        set: function (value) {
+            this.data.idUsina = value;
+            this.listarUges();
+        },
+        enumerable: true,
+        configurable: true
+    });
     DialogCenarioComponent.prototype.ngOnInit = function () {
+        console.log('ngOnInit');
         this.listarUsinas();
         this.listarUges();
     };
@@ -363,10 +375,10 @@ var DialogCenarioComponent = /** @class */ (function () {
         var _this = this;
         console.log('listar uges');
         console.log(this.data);
-        if (this.data && this.data.usina && this.data.usina.idUsina) {
-            console.log('listar 2');
+        if (this.data && this.data.idUsina) {
             var url = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUnidadesGeradoras +
-                '?idUsina=' + this.data.usina.idUsina;
+                '?idUsina=' + this.data.idUsina;
+            console.log(url);
             this.http.get(url).subscribe(function (data) {
                 _this.uges = data;
             });
@@ -378,7 +390,6 @@ var DialogCenarioComponent = /** @class */ (function () {
     DialogCenarioComponent.prototype.confirmar = function () {
         if (this.data.nomeCenario && this.data.dataInicioVigencia && this.data.justificativa) {
             if (this.validarRegras()) {
-                this.data.idUsina = this.data.usina.idUsina;
                 this.dialogRef.close(this.data);
             }
         }
@@ -387,13 +398,9 @@ var DialogCenarioComponent = /** @class */ (function () {
         }
     };
     DialogCenarioComponent.prototype.validarRegras = function () {
-        var _this = this;
         var retorno = true;
         if (this.data.regras && this.data.regras.length > 0) {
             this.data.regras.forEach(function (it) {
-                if (it.tipoRegra == _this.tiposRegras[1]) {
-                    it.regraDe = _this.data.usina.idUsina;
-                }
                 if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
                     alert('Informe os dados da regra!');
                     retorno = false;
@@ -510,7 +517,6 @@ var MantemCenarioComponent = /** @class */ (function () {
             _this.cenarios.forEach(function (it) {
                 it.dataInicioVigencia = _this.ajustarDataCalendario(it.dataInicioVigencia);
                 it.dataFimVigencia = _this.ajustarDataCalendario(it.dataFimVigencia);
-                _this.preencherUsina(it);
             });
         });
     };
@@ -538,12 +544,6 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.ajustarDataCalendario = function (dataAjuste) {
         var idx = dataAjuste.indexOf('T');
         return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;
-    };
-    MantemCenarioComponent.prototype.preencherUsina = function (cenario) {
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarUsinaPorIdUsina;
-        this.http.post(url, { idUsina: cenario.idUsina }).subscribe(function (data) {
-            cenario.usina = data[0];
-        });
     };
     MantemCenarioComponent.prototype.alterar = function (cenario) {
         var _this = this;
