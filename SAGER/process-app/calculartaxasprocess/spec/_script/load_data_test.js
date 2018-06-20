@@ -42,6 +42,9 @@ function getUrlAppDomain(map, entity, verb) {
         map = MAPA;
     }
     var url = `http://localhost:${DOMAIN_PORT}/${map}/`;
+    console.log('-----------');
+    console.log(url);
+    console.log('-----------');
     if (entity) {
         url += `${entity}/`;
     }

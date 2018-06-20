@@ -21,6 +21,9 @@ class Criterios {
     }
 
     aplicar(regra, dataset) {
+        console.log('-----------');
+        console.log(regra);
+        console.log('-----------');
         this.tiposRegras.get(regra.tipoRegra).aplicar(regra, dataset);
     }
 }
