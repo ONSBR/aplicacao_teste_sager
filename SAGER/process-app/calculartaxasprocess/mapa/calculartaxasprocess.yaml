@@ -66,18 +66,28 @@ unidadegeradora:
   fields:
     idUge:
       column: id_uge
-    potenciaDisponivel:
-      column: pot_disp
     dataInicioOperacao:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
-    franquia:
-      column: franquia
-      required: true      
   filters:
     byIdUsina: "id_usina = :idUsina"
 
+potenciaunidadegeradora:
+  model: tb_potencia_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: pot_disp
+
+franquiaunidadegeradora:
+  model: tb_franquia_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    franquia:
+      column: franquia
 
 eventomudancaestadooperativo:
   model: tb_evt_estado_oper

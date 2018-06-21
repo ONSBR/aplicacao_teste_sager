@@ -2,6 +2,8 @@ const FileDataMass = require("../testmass/filedatamass");
 const HttpClient = require("plataforma-sdk/http/client");
 const FechamentoMensal = require("../../process/entities/fechamentomensal");
 const Usina = require("../../process/entities/usina");
+const FranquiaUnidadeGeradora = require("../../process/entities/franquiaunidadegeradora");
+const PotenciaUnidadeGeradora = require("../../process/entities/potenciaunidadegeradora");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
@@ -35,6 +37,38 @@ function loadFechamento() {
             return {idFechamento: it.id, mes: it.mes, ano: it.ano }}).toArray()));
     }).catch(catch_error);
 
+}
+
+function loadFranquiasUnidadesGeradoras(uges) {
+    let franquias = [];
+    uges.forEach(uge => {
+        let franquia = new FranquiaUnidadeGeradora();
+        franquia.idUge = uge.idUge;
+        franquia.franquia = 1000;
+        franquias.push(franquia);
+    });
+
+    let url = getUrlAppDomain(null, null, "persist");
+    httpClient.post(url, JSON.stringify(franquias)).then(results => {
+        console.log("Franquias incluídas:");
+        console.log(results);
+    }).catch(catch_error);
+}
+
+function loadPotenciasUnidadesGeradoras(uges) {
+    let potencias = [];
+    uges.forEach(uge => {
+        let potencia = new PotenciaUnidadeGeradora();
+        potencia.idUge = uge.idUge;
+        potencia.potenciaDisponivel = uge.potenciaDisponivel;
+        potencias.push(potencia);
+    });
+
+    let url = getUrlAppDomain(null, null, "persist");
+    httpClient.post(url, JSON.stringify(potencias)).then(results => {
+        console.log("Potências incluídas:");
+        console.log(results);
+    }).catch(catch_error);
 }
 
 function getUrlAppDomain(map, entity, verb) {
@@ -82,14 +116,13 @@ Promise.all(dataLoad).then(results => {
     let uges = results[0];
     let eventos = results[1].concat(results[2]);
 
+    loadFranquiasUnidadesGeradoras(uges);
+    loadPotenciasUnidadesGeradoras(uges);
     loadFechamento();
 
     let usina = new Usina();
     usina.idUsina = usina.nome = usina.tipo = usina.agente = "ALUXG";
     
-    
-    uges.forEach(uge => uge.franquia = 1000);
-    console.log(uges);
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([usina])).then(result => {
         console.log("Usina incluída: " + usina.idUsina);
     }).catch(catch_error);

@@ -8,42 +8,36 @@ const utils = require("../../utils");
 const formatDateExcel = "DD/MM/YYYY HH:mm";
 
 module.exports.file_mass_events_09_2014_ALUXG = function () {
-
     return FileCsvToJson.convert("mass_events_09_2014_ALUXG", (jsonObject) => {
         return mapCsvEvento(jsonObject);
     });
 }
 
 module.exports.file_mass_events_08_2014_ALUXG = function () {
-
     return FileCsvToJson.convert("mass_events_08_2014_ALUXG", (jsonObject) => {
         return mapCsvEvento(jsonObject);
     });
 }
 
 module.exports.file_mass_events_ALUXG_1 = function () {
-
     return FileCsvToJson.convert("mass_events_ALUXG_1", (jsonObject) => {
         return mapCsvEvento(jsonObject);
     });
 }
 
 module.exports.file_mass_events_ALUXG_2 = function () {
-
     return FileCsvToJson.convert("mass_events_ALUXG_2", (jsonObject) => {
         return mapCsvEvento(jsonObject);
     });
 }
 
 module.exports.file_mass_results_taxes_ALUXG = function () {
-
     return FileCsvToJson.convert("mass_results_taxes_ALUXG", (jsonObject) => {
         return mapCsvResultadoTaxaUsina(jsonObject);
     });
 }
 
 module.exports.file_mass_uge_ALUXG = function () {
-
     return FileCsvToJson.convert("mass_uge_ALUXG", (jsonObject) => {
         return mapCsvUge(jsonObject);
     });
@@ -69,7 +63,6 @@ function mapCsvEvento(jsonObject) {
     EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper);
 
     return evtEstOper;
-
 }
 
 function mapCsvUge(jsonObject) {
