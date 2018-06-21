@@ -14,16 +14,13 @@ class Criterios {
     constructor() {
         this.tiposRegras = new Map();
         this.tiposRegras.set(POTENCIA_DISPONIVEL, new CriterioPotencia());  
+        this.tiposRegras.set(FRANQUIA, new CriterioFranquia());
         this.tiposRegras.set(CLASSIFICACAO_ORIGEM, new CriterioClassificacaoOrigem());
         this.tiposRegras.set(ESTADO_OPERATIVO, new CriterioEstadoOperativo());
         this.tiposRegras.set(CONDICAO_OPERATIVA, new CriterioCondicaoOperativa());
-        this.tiposRegras.set(FRANQUIA, new CriterioFranquia());
     }
 
     aplicar(regra, dataset) {
-        console.log('-----------');
-        console.log(regra);
-        console.log('-----------');
         this.tiposRegras.get(regra.tipoRegra).aplicar(regra, dataset);
     }
 }

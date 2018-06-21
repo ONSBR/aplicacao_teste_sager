@@ -1,0 +1,5 @@
+tb_franquia_unidade_geradora:
+  id_uge:
+    - string
+  franquia:
+    - double 

@@ -1,0 +1,9 @@
+tb_cond_oper:
+  id_evento:
+    - string
+  id_uge:
+    - string
+  id_usina:
+    - string            
+  id_cond_oper:
+    - string

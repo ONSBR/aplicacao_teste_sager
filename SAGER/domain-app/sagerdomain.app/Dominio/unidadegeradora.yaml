@@ -1,11 +1,7 @@
 tb_unidade_geradora:
   id_uge:
     - string
-  pot_disp:
-    - double
   data_inicio_operacao:
     - datetime
   id_usina:
     - string
-  franquia:
-    - double

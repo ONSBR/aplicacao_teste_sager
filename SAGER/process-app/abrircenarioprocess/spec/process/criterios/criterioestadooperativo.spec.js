@@ -10,10 +10,10 @@ describe('Critério: ', function () {
     });
 
     it('Aplicar critério de estado operativo.', () => {
-        let regraClassificacaoOrigem = { tipoRegra: 'Estado Operativo do Evento', regraDe: 'DCA', regraPara: 'DES' };
+        let regraEstadoOperativo = { tipoRegra: 'Estado Operativo do Evento', regraDe: 'DCA', regraPara: 'DES' };
         let update = jasmine.createSpy('update');
         let dataset = {
-            eventomudancaestadooperativo: {
+            estadooperativoevento: {
                 collection: Enumerable.from([
                     { id: '1', idEstadoOperativo: 'DCA' },
                     { id: '2', idEstadoOperativo: 'RDP' },
@@ -25,7 +25,7 @@ describe('Critério: ', function () {
             }
 
         };
-        criterios.aplicar(regraClassificacaoOrigem, dataset);
+        criterios.aplicar(regraEstadoOperativo, dataset);
         expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith({ id: '1', idEstadoOperativo: 'DES' });
         expect(update).toHaveBeenCalledWith({ id: '5', idEstadoOperativo: 'DES' });

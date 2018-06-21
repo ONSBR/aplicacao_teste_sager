@@ -1,0 +1,5 @@
+tb_potencia_unidade_geradora:
+  id_uge:
+    - string
+  pot_disp:
+    - double

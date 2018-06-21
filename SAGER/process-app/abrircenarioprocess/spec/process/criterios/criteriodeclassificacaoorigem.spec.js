@@ -13,7 +13,7 @@ describe('Critério: ', function () {
         let regraClassificacaoOrigem = { tipoRegra: 'Classificação de Origem do Evento', regraDe: 'GUM', regraPara: 'GIC' };
         let update = jasmine.createSpy('update');
         let dataset = {
-            eventomudancaestadooperativo: {
+            classificacaoorigemevento: {
                 collection: Enumerable.from([
                     { id: '1', idClassificacaoOrigem: 'GOT' },
                     { id: '2', idClassificacaoOrigem: 'GUM' },

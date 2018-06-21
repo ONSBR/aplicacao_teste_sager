@@ -3,12 +3,6 @@ tb_evt_estado_oper:
     - string
   id_uge:
     - string
-  id_class_origem:
-    - string
-  id_tp_estado_oper:
-    - string
-  id_cond_oper:
-    - string
   data_verificada:
     - datetime
   pot_disp:

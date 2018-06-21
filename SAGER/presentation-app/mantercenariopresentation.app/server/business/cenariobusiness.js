@@ -1,5 +1,6 @@
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const utils = require('../utils');
+const eventPromiseHelper = new (require('../helpers/eventpromisehelper'))();
 
 const CHANGETRACK_UPDATE = "update";
 
@@ -58,7 +59,12 @@ class CenarioBusiness {
             }
         });
 
-        resolve();
+        
+        let evento = {
+            name: 'aplicar.criterio.cenario',
+            payload: {cenario}
+        };
+        eventPromiseHelper.putEventPromise(evento).then(resolve());
     }
 
     /**
@@ -85,7 +91,11 @@ class CenarioBusiness {
             });
         }
 
-        resolve(listapersist);
+        let evento = {
+            name: 'aplicar.criterio.cenario',
+            payload: {cenario}
+        };
+        eventPromiseHelper.putEventPromise(evento).then(resolve(cenario));
     }
 
     /**

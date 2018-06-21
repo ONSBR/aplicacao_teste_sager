@@ -10,10 +10,10 @@ describe('Critério: ', function () {
     });
 
     it('Aplicar critério de condição operativa.', () => {
-        let regraClassificacaoOrigem = { tipoRegra: 'Condição Operativa do Evento', regraDe: 'NOR', regraPara: 'NFO' };
+        let regraCondicaoOperativa = { tipoRegra: 'Condição Operativa do Evento', regraDe: 'NOR', regraPara: 'NFO' };
         let update = jasmine.createSpy('update');
         let dataset = {
-            eventomudancaestadooperativo: {
+            condicaooperativaevento: {
                 collection: Enumerable.from([
                     { id: '1', idCondicaoOperativa: 'NOT' },
                     { id: '2', idCondicaoOperativa: 'NOT' },
@@ -25,7 +25,7 @@ describe('Critério: ', function () {
             }
 
         };
-        criterios.aplicar(regraClassificacaoOrigem, dataset);
+        criterios.aplicar(regraCondicaoOperativa, dataset);
         expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith({ id: '4', idCondicaoOperativa: 'NFO' });
         expect(update).toHaveBeenCalledWith({ id: '5', idCondicaoOperativa: 'NFO' });

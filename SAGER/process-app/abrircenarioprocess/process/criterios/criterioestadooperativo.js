@@ -1,11 +1,11 @@
 class CriterioEstadoOperativo {
 
     aplicar(regra, dataset) {
-        dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
-            return evento.idEstadoOperativo == regra.regraDe
-        }).forEach(eventoToUpdate => {
-            eventoToUpdate.idEstadoOperativo = regra.regraPara;
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        dataset.estadooperativoevento.collection.toArray().filter(estadoOperativoEvento => {
+            return estadoOperativoEvento.idEstadoOperativo == regra.regraDe
+        }).forEach(estadoOperativoEventoToUpdate => {
+            estadoOperativoEventoToUpdate.idEstadoOperativo = regra.regraPara;
+            dataset.estadooperativoevento.update(estadoOperativoEventoToUpdate);
         });
     }
 

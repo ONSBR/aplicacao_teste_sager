@@ -13,13 +13,9 @@ describe('Critério: ', function () {
         let regraPotenciaDisponivel = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG1', regraPara: '500' };
         let update = jasmine.createSpy('update');
         let dataset = {
-            unidadegeradora: {
+            potenciaunidadegeradora: {
                 collection: Enumerable.from([
-                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' },
-                    { idUge: 'ALUXG-0UG2', potenciaDisponivel: '200' },
-                    { idUge: 'ALUXG-0UG3', potenciaDisponivel: '300' },
-                    { idUge: 'ALUXG-0UG4', potenciaDisponivel: '400' },
-                    { idUge: 'ALUXG-0UG5', potenciaDisponivel: '500' }
+                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' }
                 ]),
                 update: update
             }

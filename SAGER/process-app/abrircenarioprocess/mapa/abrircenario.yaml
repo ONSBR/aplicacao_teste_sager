@@ -1,19 +1,52 @@
-unidadegeradora:
-  model: tb_unidade_geradora
+potenciaunidadegeradora:
+  model: tb_potencia_unidade_geradora
   fields:
     idUge:
       column: id_uge
     potenciaDisponivel:
       column: pot_disp
-    dataInicioOperacao:
-      column: data_inicio_operacao
-    idUsina:
-      column: id_usina
+  filters:
+    byUnidadeGeradoraAndCreationDate: "created_at >= :startDate and id_uge=:idUge"
+
+franquiaunidadegeradora:
+  model: tb_franquia_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
     franquia:
       column: franquia
-      required: true 
   filters:
-    byCreationDate: "created_at >= :startDate"
+    byUnidadeGeradoraAndCreationDate: "created_at >= :startDate and id_uge=:idUge"
+
+estadooperativoevento:
+  model: tb_tp_estado_oper
+  fields:
+    idUsina:
+      column: id_usina
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+  filters:
+    byUsinaAndCreationDate: "created_at >= :startDate and id_usina=:idUsina"      
+
+classificacaoorigemevento:
+  model: tb_class_evt
+  fields:
+    idUsina:
+      column: id_usina
+    idClassificacaoOrigem:
+      column: id_class_origem
+  filters:
+    byUsinaAndCreationDate: "created_at >= :startDate and id_usina=:idUsina"
+
+condicaooperativaevento:
+  model: tb_cond_oper
+  fields:
+    idUsina:
+      column: id_usina
+    idCondicaoOperativa:
+      column: id_cond_oper
+  filters:
+    byUsinaAndCreationDate: "created_at >= :startDate and id_usina=:idUsina"
 
 usina:
   model: tb_usina
@@ -52,4 +85,4 @@ eventomudancaestadooperativo:
     eversao:
       column: eversao  
   filters:
-    byCreationDate: "created_at >= :startDate"
+    byUnidadeGeradoraAndCreationDate: "created_at >= :startDate and id_uge=:idUge"
