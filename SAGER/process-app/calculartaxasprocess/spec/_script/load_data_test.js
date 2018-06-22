@@ -4,6 +4,8 @@ const FechamentoMensal = require("../../process/entities/fechamentomensal");
 const Usina = require("../../process/entities/usina");
 const FranquiaUnidadeGeradora = require("../../process/entities/franquiaunidadegeradora");
 const PotenciaUnidadeGeradora = require("../../process/entities/potenciaunidadegeradora");
+const ClassificacaoOrigemEvento = require("../../process/entities/classificacaoorigemevento");
+const CondicaoOperativaEvento = require("../../process/entities/condicaooperativaevento");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
@@ -51,7 +53,6 @@ function loadFranquiasUnidadesGeradoras(uges) {
     let url = getUrlAppDomain(null, null, "persist");
     httpClient.post(url, JSON.stringify(franquias)).then(results => {
         console.log("Franquias incluídas:");
-        console.log(results);
     }).catch(catch_error);
 }
 
@@ -67,8 +68,32 @@ function loadPotenciasUnidadesGeradoras(uges) {
     let url = getUrlAppDomain(null, null, "persist");
     httpClient.post(url, JSON.stringify(potencias)).then(results => {
         console.log("Potências incluídas:");
-        console.log(results);
     }).catch(catch_error);
+}
+
+function createClassificacoesEventos(eventos) {
+    let classificacoes = [];
+    eventos.forEach(evento => {
+        let classificacaoEvento = new ClassificacaoOrigemEvento();
+        classificacaoEvento.idEvento = evento.idEvento;
+        classificacaoEvento.idUge = evento.idUge;
+        classificacaoEvento.idClassificacaoOrigem = evento.idClassificacaoOrigem;
+        classificacoes.push(classificacaoEvento);
+    });
+
+    return classificacoes;
+}
+
+function createCondicoesOperativasEvento(eventos) {
+    let condicoesOperativas = [];
+    eventos.forEach(evento => {
+        let condicaoOperativa = new CondicaoOperativaEvento();
+        condicaoOperativa.idEvento = evento.idEvento;
+        condicaoOperativa.idUge = evento.idUge;
+        condicaoOperativa.idCondicaoOperativa = evento.idCondicaoOperativa;
+        condicoesOperativas.push(condicaoOperativa);
+    });
+    return condicoesOperativas;
 }
 
 function getUrlAppDomain(map, entity, verb) {
@@ -76,9 +101,6 @@ function getUrlAppDomain(map, entity, verb) {
         map = MAPA;
     }
     var url = `http://localhost:${DOMAIN_PORT}/${map}/`;
-    console.log('-----------');
-    console.log(url);
-    console.log('-----------');
     if (entity) {
         url += `${entity}/`;
     }
@@ -89,6 +111,7 @@ function getUrlAppDomain(map, entity, verb) {
 }
 
 function postEventos() {
+    console.log('postEventos');
     if (posevt < eventosToSend.length) {
         var eventos = eventosToSend[posevt];
         if (eventos) {
@@ -108,8 +131,56 @@ function postEventos() {
     }
 }
 
+function postClassificacoes() {
+    console.log('postClassificacoes');
+    if (posClassificacoes < classificacoesToSend.length) {
+        let classificacoes = classificacoesToSend[posClassificacoes];
+        if (classificacoes) {
+            let url = getUrlAppDomain(null, null, "persist");
+            console.log('url: ' + url);
+            return httpClient.post(url, JSON.stringify(classificacoes)).then(result => {
+                console.log("Classificações incluídas[" + posClassificacoes + "]: " + result.length);
+                posClassificacoes++;
+                postClassificacoes();
+            }).catch(error => {
+                console.error("error[" + posClassificacoes + "]: " + error.stack);
+                posClassificacoes++;
+                postClassificacoes();
+            });
+
+        }
+    }
+}
+
+function postCondicoesOperativas() {
+    console.log('postCondicoesOperativas');
+    if (posCondicoesOperativas < condicoesOperativasToSend.length) {
+        let condicoesOperativas = condicoesOperativasToSend[posCondicoesOperativas];
+        if (condicoesOperativas) {
+            let url = getUrlAppDomain(null, null, "persist");
+            console.log('url: ' + url);
+            return httpClient.post(url, JSON.stringify(condicoesOperativas)).then(result => {
+                console.log("Condições operativas incluídas[" + posCondicoesOperativas + "]: " + result.length);
+                posCondicoesOperativas++;
+                postCondicoesOperativas();
+            }).catch(error => {
+                console.error("error[" + posClassiposCondicoesOperativasficacoes + "]: " + error.stack);
+                posCondicoesOperativas++;
+                postCondicoesOperativas();
+            });
+
+        }
+    }
+}
+
 var eventosToSend = [];
 var posevt = 0;
+var classificacoesToSend = [];
+var posClassificacoes = 0;
+var condicoesOperativasToSend = [];
+var posCondicoesOperativas = 0;
+var estadosOperativosToSend = [];
+var posEstadosOperativos = 0;
 
 Promise.all(dataLoad).then(results => {
 
@@ -136,9 +207,22 @@ Promise.all(dataLoad).then(results => {
         var pageslice = i+lenpage >= eventos.length? eventos.length: i+lenpage;
         eventosToSend.push(eventos.slice(i, pageslice));
     }
-    console.log("eventosToSend.length: "+eventosToSend.length);
-    postEventos();
 
+    let classificacoes = createClassificacoesEventos(eventos);
+    for(var i=0;i<classificacoes.length;i+=lenpage) {
+        var pageslice = i+lenpage >= classificacoes.length? classificacoes.length: i+lenpage;
+       classificacoesToSend.push(classificacoes.slice(i, pageslice));
+    }
+
+    let condicoesOperativas = createCondicoesOperativasEvento(eventos);
+    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
+        var pageslice = i+lenpage >= condicoesOperativas.length? condicoesOperativas.length: i+lenpage;
+       condicoesOperativasToSend.push(classificacoes.slice(i, pageslice));
+    }
+
+    postEventos();
+    postClassificacoes();
+    postCondicoesOperativas();
     
 /*
 eventos = [eventos[8144]];
