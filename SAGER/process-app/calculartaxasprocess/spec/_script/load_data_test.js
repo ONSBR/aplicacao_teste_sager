@@ -159,6 +159,7 @@ function postCondicoesOperativas() {
         if (condicoesOperativas) {
             let url = getUrlAppDomain(null, null, "persist");
             console.log('url: ' + url);
+            console.log(condicoesOperativas[0]);
             return httpClient.post(url, JSON.stringify(condicoesOperativas)).then(result => {
                 console.log("Condições operativas incluídas[" + posCondicoesOperativas + "]: " + result.length);
                 posCondicoesOperativas++;
@@ -217,7 +218,7 @@ Promise.all(dataLoad).then(results => {
     let condicoesOperativas = createCondicoesOperativasEvento(eventos);
     for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
         var pageslice = i+lenpage >= condicoesOperativas.length? condicoesOperativas.length: i+lenpage;
-       condicoesOperativasToSend.push(classificacoes.slice(i, pageslice));
+       condicoesOperativasToSend.push(condicoesOperativas.slice(i, pageslice));
     }
 
     postEventos();
