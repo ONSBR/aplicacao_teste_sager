@@ -3,7 +3,5 @@ tb_tp_estado_oper:
     - string
   id_uge:
     - string
-  id_usina:
-    - string
   id_tp_estado_oper:
     - string

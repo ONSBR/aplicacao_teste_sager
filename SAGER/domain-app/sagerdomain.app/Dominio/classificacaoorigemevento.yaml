@@ -3,7 +3,5 @@ tb_class_evt:
     - string
   id_uge:
     - string
-  id_usina:
-    - string    
   id_class_origem:
     - string

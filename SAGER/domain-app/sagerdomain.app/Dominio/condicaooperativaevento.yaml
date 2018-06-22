@@ -3,7 +3,5 @@ tb_cond_oper:
     - string
   id_uge:
     - string
-  id_usina:
-    - string            
   id_cond_oper:
     - string
