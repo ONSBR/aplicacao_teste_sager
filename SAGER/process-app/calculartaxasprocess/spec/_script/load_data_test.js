@@ -6,6 +6,7 @@ const FranquiaUnidadeGeradora = require("../../process/entities/franquiaunidadeg
 const PotenciaUnidadeGeradora = require("../../process/entities/potenciaunidadegeradora");
 const ClassificacaoOrigemEvento = require("../../process/entities/classificacaoorigemevento");
 const CondicaoOperativaEvento = require("../../process/entities/condicaooperativaevento");
+const EstadoOperativoEvento = require("../../process/entities/estadooperativoevento");
 const Enumerable = require("linq");
 
 var httpClient = new HttpClient();
@@ -96,6 +97,18 @@ function createCondicoesOperativasEvento(eventos) {
     return condicoesOperativas;
 }
 
+function createEstadosOperativos(eventos) {
+    let estadosOperativos = [];
+    eventos.forEach(evento => {
+        let estadoOperativo = new EstadoOperativoEvento();
+        estadoOperativo.idEvento = evento.idEvento;
+        estadoOperativo.idUge = evento.idUge;
+        estadoOperativo.idEstadoOperativo = evento.idEstadoOperativo;
+        estadosOperativos.push(estadoOperativo);
+    });
+    return estadosOperativos;
+}
+
 function getUrlAppDomain(map, entity, verb) {
     if (!map) {
         map = MAPA;
@@ -131,57 +144,8 @@ function postEventos() {
     }
 }
 
-function postClassificacoes() {
-    console.log('postClassificacoes');
-    if (posClassificacoes < classificacoesToSend.length) {
-        let classificacoes = classificacoesToSend[posClassificacoes];
-        if (classificacoes) {
-            let url = getUrlAppDomain(null, null, "persist");
-            console.log('url: ' + url);
-            return httpClient.post(url, JSON.stringify(classificacoes)).then(result => {
-                console.log("Classificações incluídas[" + posClassificacoes + "]: " + result.length);
-                posClassificacoes++;
-                postClassificacoes();
-            }).catch(error => {
-                console.error("error[" + posClassificacoes + "]: " + error.stack);
-                posClassificacoes++;
-                postClassificacoes();
-            });
-
-        }
-    }
-}
-
-function postCondicoesOperativas() {
-    console.log('postCondicoesOperativas');
-    if (posCondicoesOperativas < condicoesOperativasToSend.length) {
-        let condicoesOperativas = condicoesOperativasToSend[posCondicoesOperativas];
-        if (condicoesOperativas) {
-            let url = getUrlAppDomain(null, null, "persist");
-            console.log('url: ' + url);
-            console.log(condicoesOperativas[0]);
-            return httpClient.post(url, JSON.stringify(condicoesOperativas)).then(result => {
-                console.log("Condições operativas incluídas[" + posCondicoesOperativas + "]: " + result.length);
-                posCondicoesOperativas++;
-                postCondicoesOperativas();
-            }).catch(error => {
-                console.error("error[" + posClassiposCondicoesOperativasficacoes + "]: " + error.stack);
-                posCondicoesOperativas++;
-                postCondicoesOperativas();
-            });
-
-        }
-    }
-}
-
 var eventosToSend = [];
 var posevt = 0;
-var classificacoesToSend = [];
-var posClassificacoes = 0;
-var condicoesOperativasToSend = [];
-var posCondicoesOperativas = 0;
-var estadosOperativosToSend = [];
-var posEstadosOperativos = 0;
 
 Promise.all(dataLoad).then(results => {
 
@@ -212,18 +176,22 @@ Promise.all(dataLoad).then(results => {
     let classificacoes = createClassificacoesEventos(eventos);
     for(var i=0;i<classificacoes.length;i+=lenpage) {
         var pageslice = i+lenpage >= classificacoes.length? classificacoes.length: i+lenpage;
-       classificacoesToSend.push(classificacoes.slice(i, pageslice));
+        eventosToSend.push(classificacoes.slice(i, pageslice));
     }
 
     let condicoesOperativas = createCondicoesOperativasEvento(eventos);
     for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
         var pageslice = i+lenpage >= condicoesOperativas.length? condicoesOperativas.length: i+lenpage;
-       condicoesOperativasToSend.push(condicoesOperativas.slice(i, pageslice));
+        eventosToSend.push(condicoesOperativas.slice(i, pageslice));
+    }
+
+    let estadosOperativos = createEstadosOperativos(eventos);
+    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
+        var pageslice = i+lenpage >= estadosOperativos.length? estadosOperativos.length: i+lenpage;
+        eventosToSend.push(estadosOperativos.slice(i, pageslice));
     }
 
     postEventos();
-    postClassificacoes();
-    postCondicoesOperativas();
     
 /*
 eventos = [eventos[8144]];

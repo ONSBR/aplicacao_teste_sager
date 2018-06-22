@@ -129,6 +129,16 @@ condicaooperativaevento:
     idCondicaoOperativa:
       column: id_cond_oper  
 
+estadooperativoevento: 
+  model: tb_tp_estado_oper
+  fields: 
+    idEvento:
+      column: id_evento
+    idUge:
+      column: id_uge
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+
 parametrotaxa:
   model: tb_parametro_taxa
   fields:
