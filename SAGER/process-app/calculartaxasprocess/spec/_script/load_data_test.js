@@ -8,6 +8,7 @@ const ClassificacaoOrigemEvento = require("../../process/entities/classificacaoo
 const CondicaoOperativaEvento = require("../../process/entities/condicaooperativaevento");
 const EstadoOperativoEvento = require("../../process/entities/estadooperativoevento");
 const Enumerable = require("linq");
+const FRANQUIA = 1000;
 
 var httpClient = new HttpClient();
 const DOMAIN_PORT = 8087;
@@ -45,9 +46,11 @@ function loadFechamento() {
 function loadFranquiasUnidadesGeradoras(uges) {
     let franquias = [];
     uges.forEach(uge => {
+        uge.franquia = FRANQUIA;
+        
         let franquia = new FranquiaUnidadeGeradora();
         franquia.idUge = uge.idUge;
-        franquia.franquia = 1000;
+        franquia.franquia = FRANQUIA;
         franquias.push(franquia);
     });
 

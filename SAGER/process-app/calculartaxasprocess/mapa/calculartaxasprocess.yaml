@@ -70,6 +70,10 @@ unidadegeradora:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
+    potenciaDisponivel:
+      column: pot_disp
+    franquia:
+      column: franquia
   filters:
     byIdUsina: "id_usina = :idUsina"
 
@@ -98,6 +102,10 @@ eventomudancaestadooperativo:
       column: id_uge
     idEstadoOperativo:
       column: id_tp_estado_oper
+    idClassificacaoOrigem:
+      column: id_class_origem
+    idCondicaoOperativa:
+      column: id_cond_oper
     dataVerificada:
       column: data_verificada
     potenciaDisponivel:
@@ -105,7 +113,7 @@ eventomudancaestadooperativo:
     numONS:
       column: numero_ons
     eversao:
-      column: eversao  
+      column: eversao
   filters:
     byIntervaloDatas: "data_verificada >= :dataInicialEvento and data_verificada <= :dataFinalEvento"
 
