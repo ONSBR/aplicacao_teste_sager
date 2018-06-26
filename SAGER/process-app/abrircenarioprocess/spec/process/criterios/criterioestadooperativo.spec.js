@@ -16,6 +16,13 @@ describe('Critério: ', function () {
             estadooperativoevento: {
                 collection: Enumerable.from([
                     { id: '1', idEstadoOperativo: 'DCA' },
+                    { id: '5', idEstadoOperativo: 'DCA' }
+                ]),
+                update: update
+            },
+            eventomudancaestadooperativo: {
+                collection: Enumerable.from([
+                    { id: '1', idEstadoOperativo: 'DCA' },
                     { id: '2', idEstadoOperativo: 'RDP' },
                     { id: '3', idEstadoOperativo: 'DES' },
                     { id: '4', idEstadoOperativo: 'RDP' },
@@ -26,7 +33,7 @@ describe('Critério: ', function () {
 
         };
         criterios.aplicar(regraEstadoOperativo, dataset);
-        expect(update.calls.count()).toEqual(2);
+        expect(update.calls.count()).toEqual(4);
         expect(update).toHaveBeenCalledWith({ id: '1', idEstadoOperativo: 'DES' });
         expect(update).toHaveBeenCalledWith({ id: '5', idEstadoOperativo: 'DES' });
     });

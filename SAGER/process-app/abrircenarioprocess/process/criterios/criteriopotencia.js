@@ -5,6 +5,11 @@ class CriterioPotencia {
             potenciaUnidadeGeradoraToUpdate.potenciaDisponivel = regra.regraPara;
             dataset.potenciaunidadegeradora.update(potenciaUnidadeGeradoraToUpdate);
         });
+
+        dataset.unidadegeradora.collection.toArray().forEach(unidadeGeradoraToUpdate => {
+            unidadeGeradoraToUpdate.potenciaDisponivel = regra.regraPara;
+            dataset.unidadegeradora.update(unidadeGeradoraToUpdate);
+        });
     }
 
 }

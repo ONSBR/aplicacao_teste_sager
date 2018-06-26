@@ -18,11 +18,16 @@ describe('Critério: ', function () {
                     { idUge: 'ALUXG-0UG5', franquia: '500' }
                 ]),
                 update: update
+            },
+            unidadegeradora: {
+                collection: Enumerable.from([
+                    { idUge: 'ALUXG-0UG5', franquia: '500' }
+                ]),
+                update: update
             }
-
         };
         criterios.aplicar(regraFranquia, dataset);
-        expect(update.calls.count()).toEqual(1);
+        expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith( { idUge: 'ALUXG-0UG5', franquia: '200' });
     });
 

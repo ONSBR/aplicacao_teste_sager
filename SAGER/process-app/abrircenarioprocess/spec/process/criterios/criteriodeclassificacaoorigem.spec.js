@@ -15,6 +15,13 @@ describe('Critério: ', function () {
         let dataset = {
             classificacaoorigemevento: {
                 collection: Enumerable.from([
+                    { id: '2', idClassificacaoOrigem: 'GUM' },
+                    { id: '3', idClassificacaoOrigem: 'GUM' }
+                ]),
+                update: update
+            },
+            eventomudancaestadooperativo: {
+                collection: Enumerable.from([
                     { id: '1', idClassificacaoOrigem: 'GOT' },
                     { id: '2', idClassificacaoOrigem: 'GUM' },
                     { id: '3', idClassificacaoOrigem: 'GUM' },
@@ -26,7 +33,7 @@ describe('Critério: ', function () {
 
         };
         criterios.aplicar(regraClassificacaoOrigem, dataset);
-        expect(update.calls.count()).toEqual(2);
+        expect(update.calls.count()).toEqual(4);
         expect(update).toHaveBeenCalledWith({ id: '2', idClassificacaoOrigem: 'GIC' });
         expect(update).toHaveBeenCalledWith({ id: '3', idClassificacaoOrigem: 'GIC' });
     });

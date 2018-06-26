@@ -15,8 +15,13 @@ describe('Critério: ', function () {
         let dataset = {
             condicaooperativaevento: {
                 collection: Enumerable.from([
-                    { id: '1', idCondicaoOperativa: 'NOT' },
-                    { id: '2', idCondicaoOperativa: 'NOT' },
+                    { id: '4', idCondicaoOperativa: 'NOR' },
+                    { id: '5', idCondicaoOperativa: 'NOR' }
+                ]),
+                update: update
+            },
+            eventomudancaestadooperativo: {
+                collection: Enumerable.from([
                     { id: '3', idCondicaoOperativa: 'NOT' },
                     { id: '4', idCondicaoOperativa: 'NOR' },
                     { id: '5', idCondicaoOperativa: 'NOR' }
@@ -26,7 +31,7 @@ describe('Critério: ', function () {
 
         };
         criterios.aplicar(regraCondicaoOperativa, dataset);
-        expect(update.calls.count()).toEqual(2);
+        expect(update.calls.count()).toEqual(4);
         expect(update).toHaveBeenCalledWith({ id: '4', idCondicaoOperativa: 'NFO' });
         expect(update).toHaveBeenCalledWith({ id: '5', idCondicaoOperativa: 'NFO' });
     });

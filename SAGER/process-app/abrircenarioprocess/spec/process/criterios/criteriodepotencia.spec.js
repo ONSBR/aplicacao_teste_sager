@@ -18,11 +18,16 @@ describe('Critério: ', function () {
                     { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' }
                 ]),
                 update: update
+            }, 
+            unidadegeradora: {
+                collection: Enumerable.from([
+                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' }
+                ]),
+                update: update
             }
-
         };
         criterios.aplicar(regraPotenciaDisponivel, dataset);
-        expect(update.calls.count()).toEqual(1);
+        expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith({ idUge: 'ALUXG-0UG1', potenciaDisponivel: '500' });
     });
 
