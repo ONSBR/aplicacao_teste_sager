@@ -11,6 +11,6 @@
     "license": "ISC",
     "dependencies": {
         "jasmine": "^2.9.0",
-        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK"
+        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK.git"
     }
 }

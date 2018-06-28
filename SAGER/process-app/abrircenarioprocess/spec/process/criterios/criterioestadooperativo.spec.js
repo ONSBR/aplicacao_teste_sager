@@ -30,7 +30,6 @@ describe('Critério: ', function () {
                 ]),
                 update: update
             }
-
         };
         criterios.aplicar(regraEstadoOperativo, dataset);
         expect(update.calls.count()).toEqual(4);

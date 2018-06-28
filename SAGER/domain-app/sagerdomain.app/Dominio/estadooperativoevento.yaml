@@ -1,6 +1,8 @@
 tb_tp_estado_oper:
   id_evento:
     - string
+  id_usina:
+    - string
   id_uge:
     - string
   id_tp_estado_oper:

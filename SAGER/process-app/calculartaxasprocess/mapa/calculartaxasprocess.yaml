@@ -98,6 +98,8 @@ eventomudancaestadooperativo:
   fields:
     idEvento:
       column: id_evento
+    idUsina:
+      column: id_usina
     idUge:
       column: id_uge
     idEstadoOperativo:
@@ -122,6 +124,8 @@ classificacaoorigemevento:
   fields:
     idEvento:
       column: id_evento
+    idUsina:
+      column: id_usina      
     idUge:
       column: id_uge
     idClassificacaoOrigem:
@@ -132,6 +136,8 @@ condicaooperativaevento:
   fields: 
     idEvento:
       column: id_evento
+    idUsina:
+      column: id_usina
     idUge:
       column: id_uge
     idCondicaoOperativa:
@@ -142,6 +148,8 @@ estadooperativoevento:
   fields: 
     idEvento:
       column: id_evento
+    idUsina:
+      column: id_usina      
     idUge:
       column: id_uge
     idEstadoOperativo:

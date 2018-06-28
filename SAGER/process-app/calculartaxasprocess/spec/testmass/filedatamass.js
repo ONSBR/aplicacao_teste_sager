@@ -48,6 +48,7 @@ function mapCsvEvento(jsonObject) {
     var evtEstOper = new EventoMudancaEstadoOperativo();
     evtEstOper.idEvento = jsonObject.desger_id;
     evtEstOper.idUge = jsonObject.uge_id;
+    evtEstOper.idUsina = 'ALUXG';
     evtEstOper.idEstadoOperativo = jsonObject.tpestoper_id;
     evtEstOper.idCondicaoOperativa = jsonObject.panocr_id;
     evtEstOper.idClassificacaoOrigem = jsonObject.ogresdes_id;

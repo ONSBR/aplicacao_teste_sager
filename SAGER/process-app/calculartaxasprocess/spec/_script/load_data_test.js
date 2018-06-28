@@ -80,6 +80,7 @@ function createClassificacoesEventos(eventos) {
     eventos.forEach(evento => {
         let classificacaoEvento = new ClassificacaoOrigemEvento();
         classificacaoEvento.idEvento = evento.idEvento;
+        classificacaoEvento.idUsina = evento.idUsina;
         classificacaoEvento.idUge = evento.idUge;
         classificacaoEvento.idClassificacaoOrigem = evento.idClassificacaoOrigem;
         classificacoes.push(classificacaoEvento);
@@ -93,6 +94,7 @@ function createCondicoesOperativasEvento(eventos) {
     eventos.forEach(evento => {
         let condicaoOperativa = new CondicaoOperativaEvento();
         condicaoOperativa.idEvento = evento.idEvento;
+        condicaoOperativa.idUsina = evento.idUsina;
         condicaoOperativa.idUge = evento.idUge;
         condicaoOperativa.idCondicaoOperativa = evento.idCondicaoOperativa;
         condicoesOperativas.push(condicaoOperativa);
@@ -105,6 +107,7 @@ function createEstadosOperativos(eventos) {
     eventos.forEach(evento => {
         let estadoOperativo = new EstadoOperativoEvento();
         estadoOperativo.idEvento = evento.idEvento;
+        estadoOperativo.idUsina = evento.idUsina;
         estadoOperativo.idUge = evento.idUge;
         estadoOperativo.idEstadoOperativo = evento.idEstadoOperativo;
         estadosOperativos.push(estadoOperativo);

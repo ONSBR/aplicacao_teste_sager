@@ -33,32 +33,38 @@ franquiaunidadegeradora:
 estadooperativoevento:
   model: tb_tp_estado_oper
   fields:
+    idUsina:
+      column: id_usina  
     idUge:
       column: id_uge
     idEstadoOperativo:
       column: id_tp_estado_oper
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_uge=:idUge and id_tp_estado_oper = :estadoOperativo"
+    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina and id_tp_estado_oper =:estadoOperativo"
 
 classificacaoorigemevento:
   model: tb_class_evt
   fields:
+    idUsina:
+      column: id_usina  
     idUge:
       column: id_uge
     idClassificacaoOrigem:
       column: id_class_origem
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_uge=:idUge and id_class_origem = :classificacao"
+    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina and id_class_origem =:classificacao"
 
 condicaooperativaevento:
   model: tb_cond_oper
   fields:
     idUsina:
+      column: id_usina  
+    idUge:
       column: id_uge
     idCondicaoOperativa:
       column: id_cond_oper
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_uge=:idUge and id_cond_oper = :id_cond_oper"
+    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina and id_cond_oper = :condicaoOperativa"
 
 usina:
   model: tb_usina
@@ -97,4 +103,4 @@ eventomudancaestadooperativo:
     eversao:
       column: eversao  
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at >= :startDate and id_uge=:idUge"
+    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina"
