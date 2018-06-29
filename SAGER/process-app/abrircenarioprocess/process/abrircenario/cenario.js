@@ -7,7 +7,7 @@ class Cenario {
     }
 
     abrir(payload, fork) {
-        fork(payload.cenario.nome, payload.cenario.justificativa);
+        fork(payload.cenario.nomeCenario, payload.cenario.justificativa);
     }
 
     aplicarCriterios(payload, dataset) {

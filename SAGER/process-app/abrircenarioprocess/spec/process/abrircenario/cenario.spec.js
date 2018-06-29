@@ -13,7 +13,7 @@ describe('Cenário: ', function () {
     it('Abrir Cenário.', () => {
         let payload = {
             cenario: {
-                nome : NOME_CENARIO,
+                nomeCenario : NOME_CENARIO,
                 justificativa : JUSTIFICATIVA_CENARIO
             }
         };

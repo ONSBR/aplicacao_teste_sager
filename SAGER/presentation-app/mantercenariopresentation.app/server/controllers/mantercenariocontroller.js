@@ -131,6 +131,22 @@ class ManterCenarioController {
     ativarInativarCenario(request, response) {
         dispatcher.dispatch("presentation.ativarinativarcenario.cenario.request", { idCenario: request.body.idCenario }).then(result => { response.send(result) });
     }
+
+    /**
+     * @description Incopora o cenario ao branch principal.
+     * @param {Request} request 
+     * @param {Response} response 
+     */
+    incorporarCenario(request, response) {
+        console.log('cenario controller');
+        dispatcher.dispatch("presentation.incorporar.cenario.cenario.request", { idCenario: request.body.idCenario })
+            .then(result => { response.send(result) })
+            .catch(e => { 
+                console.log(e);
+                console.log(`Erro durante a incoporação do cenario: ${e.toString()}`);
+            });
+    }
+    
 }
 
 module.exports = ManterCenarioController;

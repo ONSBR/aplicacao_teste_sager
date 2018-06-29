@@ -18,7 +18,7 @@ potenciaunidadegeradora:
     potenciaDisponivel:
       column: pot_disp
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_uge=:idUge"
+    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_uge=:idUge"
 
 franquiaunidadegeradora:
   model: tb_franquia_unidade_geradora
@@ -28,7 +28,7 @@ franquiaunidadegeradora:
     franquia:
       column: franquia
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_uge=:idUge"
+    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_uge=:idUge"
 
 estadooperativoevento:
   model: tb_tp_estado_oper
@@ -40,7 +40,7 @@ estadooperativoevento:
     idEstadoOperativo:
       column: id_tp_estado_oper
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina and id_tp_estado_oper =:estadoOperativo"
+    byUsinaAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_tp_estado_oper =:estadoOperativo"
 
 classificacaoorigemevento:
   model: tb_class_evt
@@ -52,7 +52,7 @@ classificacaoorigemevento:
     idClassificacaoOrigem:
       column: id_class_origem
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina and id_class_origem =:classificacao"
+    byUsinaAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_class_origem =:classificacao"
 
 condicaooperativaevento:
   model: tb_cond_oper
@@ -64,7 +64,7 @@ condicaooperativaevento:
     idCondicaoOperativa:
       column: id_cond_oper
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina and id_cond_oper = :condicaoOperativa"
+    byUsinaAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_cond_oper = :condicaoOperativa"
 
 usina:
   model: tb_usina
@@ -79,7 +79,7 @@ usina:
       column: nome
       required: true
   filters:
-    byCreationDate: "created_at >= :startDate"
+    byCreationDate: "created_at >= :dataInicioVigencia"
 
 eventomudancaestadooperativo:
   model: tb_evt_estado_oper
@@ -103,4 +103,4 @@ eventomudancaestadooperativo:
     eversao:
       column: eversao  
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :startDate and :finalDate and id_usina=:idUsina"
+    byUsina: "id_usina=:idUsina"

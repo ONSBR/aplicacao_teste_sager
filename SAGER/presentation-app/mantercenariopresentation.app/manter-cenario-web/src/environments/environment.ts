@@ -10,6 +10,7 @@ export const environment = {
   inserirCenario: 'inserirCenario',
   alterarCenario: 'alterarCenario',
   excluirCenario: 'excluirCenario',
+  incorporarCenario: 'incorporarCenario',
   ativarInativarCenario: 'ativarInativarCenario',
   obterRegrasCriticas: 'obterRegrasCriticas',
   listarUsinas: 'listarUsinas',

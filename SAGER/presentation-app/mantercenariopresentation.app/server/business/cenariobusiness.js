@@ -41,8 +41,8 @@ class CenarioBusiness {
             let regrasUpdate = cenario.regras.filter(regra => {
                 return regra.id == regrabd.id;
             });
-            
-            if(regrasUpdate && regrasUpdate.length > 0) {
+
+            if (regrasUpdate && regrasUpdate.length > 0) {
                 regrabd.nomeRegra = regrasUpdate[0].nomeRegra;
                 regrabd.regraDe = regrasUpdate[0].regraDe;
                 regrabd.regraPara = regrasUpdate[0].regraPara;
@@ -54,17 +54,10 @@ class CenarioBusiness {
         });
 
         cenario.regras.forEach(regra => {
-            if(!regra.id) {
+            if (!regra.id) {
                 context.dataset.regracenario.insert(regra);
             }
         });
-
-        
-        let evento = {
-            name: 'aplicar.criterio.cenario',
-            payload: {cenario}
-        };
-        eventPromiseHelper.putEventPromise(evento).then(resolve());
     }
 
     /**
@@ -90,12 +83,66 @@ class CenarioBusiness {
                 listapersist.push(it);
             });
         }
+    }
 
-        let evento = {
-            name: 'aplicar.criterio.cenario',
-            payload: {cenario}
+    createAplicarCriteriosEvent(cenario) {
+        let event = {
+            name: 'aplicar.criterios.cenario',
+            payload: { cenario }
         };
-        eventPromiseHelper.putEventPromise(evento).then(resolve(cenario));
+
+        event.payload.dataInicioVigencia = cenario.dataInicioVigencia;
+        event.payload.dataFimVigencia = cenario.dataFimVigencia;
+        event.payload.idUsina = cenario.idUsina;
+        this.populateUge(cenario.regras, event);
+        this.populateEventoData(cenario.regras, event);
+
+        return event;
+    }
+
+    populateUge(regras, event) {
+        regras.forEach(regra => {
+            if (this.isRegraFranquia(regra) || this.isRegraPotenciaDisponivel(regra)) {
+                event.payload.idUge = regra.regraDe;
+            }
+        });
+    }
+
+    populateEventoData(regras, event) {
+        regras.forEach(regra => {
+
+            if (this.isRegraClassificacao(regra)) {
+                event.payload.classificacao = regra.regraDe;
+            }
+
+            if (this.isRegraCondicaoOperativa(regra)) {
+                event.payload.condicaoOperativa = regra.regraDe;
+            }
+
+            if (this.isRegraEstadoOperativo(regra)) {
+                event.payload.estadoOperativo = regra.regraDe;
+            }
+        });
+    }
+
+    isRegraFranquia(regra) {
+        return regra.tipoRegra == 'Franquia';
+    }
+
+    isRegraPotenciaDisponivel(regra) {
+        return regra.tipoRegra == 'Potência Disponível';
+    }
+
+    isRegraClassificacao(regra) {
+        return regra.tipoRegra == 'Classificação de Origem do Evento';
+    }
+
+    isRegraCondicaoOperativa(regra) {
+        return regra.tipoRegra == 'Condição Operativa do Evento';
+    }
+
+    isRegraEstadoOperativo(regra) {
+        return regra.tipoRegra == 'Estado Operativo do Evento';
     }
 
     /**
@@ -121,15 +168,51 @@ class CenarioBusiness {
      * @param {reject} reject
      */
     ativarInativarCenario(context, resolve, reject) {
+        let event = null;
         context.dataset.cenario.collection.forEach(cenario => {
             if (cenario.situacao == SituacaoCenario.Ativo) {
                 cenario.situacao = SituacaoCenario.Inativo;
+                let event = this.createAplicarCriteriosEvent(cenario);
+                console.log('----- Send aplicar.criterios.cenario event---------');
+                console.log(event);
+                console.log('---------');
+                eventPromiseHelper.putEventPromise(event).then(resolve(cenario)).catch(reject());
+
             } else if (cenario.situacao == SituacaoCenario.Inativo) {
                 cenario.situacao = SituacaoCenario.Ativo;
             }
+
             context.dataset.cenario.update(cenario);
         });
         resolve();
+    }
+
+    /**
+ * @description Ativa ou inativa um cenário.
+ * @param {context} context 
+ * @param {resolve} resolve 
+ * @param {reject} reject
+ */
+    incorporarCenario(context, resolve, reject) {
+        context.dataset.cenario.collection.forEach(cenario => {
+            cenario.situacao = SituacaoCenario.Incorporado;
+            context.dataset.cenario.update(cenario);
+            let event = this.createIncorporarCenarioEvent(cenario);
+            console.log('----- Send merge.request event---------');
+            console.log(event);
+            console.log('---------');
+            eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
+        });
+    }
+
+    createIncorporarCenarioEvent(cenario) {
+        let event = {
+            name: "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request",
+            payload: {
+                branch: cenario.nomeCenario
+            }
+        };
+        return event;
     }
 }
 

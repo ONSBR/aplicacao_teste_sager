@@ -1,6 +1,9 @@
 class CriterioEstadoOperativo {
 
     aplicar(regra, dataset) {
+
+        console.log('Aplicando critério de estado operativo');
+
         dataset.estadooperativoevento.collection.toArray().forEach(estadoOperativoEventoToUpdate => {
             estadoOperativoEventoToUpdate.idEstadoOperativo = regra.regraPara;
             dataset.estadooperativoevento.update(estadoOperativoEventoToUpdate);

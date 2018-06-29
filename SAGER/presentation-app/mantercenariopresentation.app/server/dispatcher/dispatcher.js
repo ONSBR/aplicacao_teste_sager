@@ -17,4 +17,9 @@ dispatcher.register("presentation.ativarinativarcenario.cenario.request", (conte
     cenarioBusiness.ativarInativarCenario(context, resolve, reject);
 });
 
+dispatcher.register("presentation.incorporar.cenario.cenario.request", (context, resolve, reject)=>{
+    console.log('dispatcher');
+    cenarioBusiness.incorporarCenario(context, resolve, reject);
+});
+
 module.exports = dispatcher;

@@ -55,6 +55,10 @@ app.post("/ativarInativarCenario", (req, res) => {
     manterCenarioController.ativarInativarCenario(req, res);
 });
 
+app.post("/incorporarCenario", (req, res) => {
+    manterCenarioController.incorporarCenario(req, res);
+});
+
 module.exports = function(){
     app.listen(PORT, function () {
         console.log("App listening on PORT " + PORT);

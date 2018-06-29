@@ -57,6 +57,18 @@ export class MantemCenarioComponent implements OnInit {
 
   }
 
+  incorporar(cenario) {
+
+    if (confirm('Confirma a incorporação do cenário?')) {
+      const url = environment.urlServerPresentation + environment.incorporarCenario + '?idCenario=' + cenario.idCenario;
+      this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
+        alert('Incorporação de cenário realizada com sucesso!');
+        this.pesquisar();
+      });
+    }
+
+  }
+
   ativarInativar(cenario) {
     const url = environment.urlServerPresentation + environment.ativarInativarCenario;
     this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
@@ -127,7 +139,7 @@ export class MantemCenarioComponent implements OnInit {
         if (!cenario) {
           cenario = result;
           cenario.idCenario = Guid.newGuid();
-          cenario.situacao = SituacaoCenario.Ativo;
+          cenario.situacao = SituacaoCenario.Inativo;
           this.confirmarInclusao(cenario);
         } else {
           this.confirmarAlteracao(result);

@@ -70,7 +70,7 @@
                 <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Ativo'" >Inativar</button>
               </td>
               <td>
-                <button class="button">Incorporar</button>
+                <button class="button" (click)='incorporar(cenario)' *ngIf="cenario.situacao != 'Incorporado'">Incorporar</button>
               </td>
             </tr>
           </table>

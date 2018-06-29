@@ -1,6 +1,9 @@
 class CriterioPotencia {
 
     aplicar(regra, dataset) {
+
+        console.log('Aplicando critério de potência');
+
         dataset.potenciaunidadegeradora.collection.toArray().forEach(potenciaUnidadeGeradoraToUpdate => {
             potenciaUnidadeGeradoraToUpdate.potenciaDisponivel = regra.regraPara;
             dataset.potenciaunidadegeradora.update(potenciaUnidadeGeradoraToUpdate);

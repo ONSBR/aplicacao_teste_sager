@@ -11,3 +11,6 @@ operations:
   - name: presentation.ativarinativarcenario.cenario.request
     event: presentation.ativarinativarcenario.cenario.request
     commit: true
+  - name: presentation.incorporar.cenario.cenario.request
+    event: presentation.incorporar.cenario.cenario.request
+    commit: true

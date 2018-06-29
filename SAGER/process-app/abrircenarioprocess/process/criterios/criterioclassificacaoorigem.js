@@ -1,6 +1,9 @@
 class CriterioClassificacaoOrigem {
 
     aplicar(regra, dataset) {
+
+        console.log('Aplicando critério de classificação de origem');
+
         dataset.classificacaoorigemevento.collection.toArray().forEach(classificacaoOrigemEventoToUpdate => {
             classificacaoOrigemEventoToUpdate.idClassificacaoOrigem = regra.regraPara;
             dataset.classificacaoorigemevento.update(classificacaoOrigemEventoToUpdate);
