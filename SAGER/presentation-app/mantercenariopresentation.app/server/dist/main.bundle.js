@@ -583,10 +583,15 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.confirmarAlteracao = function (cenario) {
         var _this = this;
         var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].alterarCenario;
-        this.http.post(url, cenario).subscribe(function (data) {
-            alert('Alteração de cenário realizada com sucesso!');
-            _this.pesquisar();
-        });
+        if (cenario.situacao === __WEBPACK_IMPORTED_MODULE_4__model_model__["c" /* SituacaoCenario */].Ativo) {
+            alert('Cenário ativo não pode ser alterado!');
+        }
+        else {
+            this.http.post(url, cenario).subscribe(function (data) {
+                alert('Alteração de cenário realizada com sucesso!');
+                _this.pesquisar();
+            });
+        }
     };
     MantemCenarioComponent.prototype.openDialog = function () {
         var _this = this;
@@ -602,7 +607,7 @@ var MantemCenarioComponent = /** @class */ (function () {
                 if (!cenario) {
                     cenario = result;
                     cenario.idCenario = Guid.newGuid();
-                    cenario.situacao = __WEBPACK_IMPORTED_MODULE_4__model_model__["c" /* SituacaoCenario */].Ativo;
+                    cenario.situacao = __WEBPACK_IMPORTED_MODULE_4__model_model__["c" /* SituacaoCenario */].Inativo;
                     _this.confirmarInclusao(cenario);
                 }
                 else {
@@ -622,8 +627,8 @@ var MantemCenarioComponent = /** @class */ (function () {
     return MantemCenarioComponent;
 }());
 
+var retorno;
 function findCenario(cenarios, cenario) {
-    var retorno;
     if (cenario && cenario.idCenario) {
         cenarios.forEach(function (it) {
             if (it.idCenario == cenario.idCenario) {

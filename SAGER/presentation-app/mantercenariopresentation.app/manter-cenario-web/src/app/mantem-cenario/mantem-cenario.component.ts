@@ -116,11 +116,14 @@ export class MantemCenarioComponent implements OnInit {
   confirmarAlteracao(cenario) {
 
     const url = environment.urlServerPresentation + environment.alterarCenario;
-
-    this.http.post(url, cenario).subscribe(data => {
-      alert('Alteração de cenário realizada com sucesso!');
-      this.pesquisar();
-    });
+    if (cenario.situacao === SituacaoCenario.Ativo) {
+      alert('Cenário ativo não pode ser alterado!');
+    } else {
+      this.http.post(url, cenario).subscribe(data => {
+        alert('Alteração de cenário realizada com sucesso!');
+        this.pesquisar();
+      });
+    }
   }
 
   openDialog() {
@@ -134,7 +137,6 @@ export class MantemCenarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
-
         let cenario = findCenario(this.cenarios, result);
         if (!cenario) {
           cenario = result;
@@ -150,8 +152,8 @@ export class MantemCenarioComponent implements OnInit {
 
 }
 
-function findCenario(cenarios: Array<Cenario>, cenario: Cenario) {
-  let retorno: Cenario;
+let retorno: Cenario;
+  function findCenario(cenarios: Array<Cenario>, cenario: Cenario) {
   if (cenario && cenario.idCenario) {
     cenarios.forEach((it) => {
       if (it.idCenario == cenario.idCenario) {
