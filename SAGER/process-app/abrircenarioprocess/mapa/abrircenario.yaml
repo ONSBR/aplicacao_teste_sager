@@ -39,8 +39,10 @@ estadooperativoevento:
       column: id_uge
     idEstadoOperativo:
       column: id_tp_estado_oper
+    dataVerificada:
+      column: data_verificada      
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_tp_estado_oper =:estadoOperativo"
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_tp_estado_oper =:estadoOperativo"
 
 classificacaoorigemevento:
   model: tb_class_evt
@@ -51,8 +53,10 @@ classificacaoorigemevento:
       column: id_uge
     idClassificacaoOrigem:
       column: id_class_origem
+    dataVerificada:
+      column: data_verificada
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_class_origem =:classificacao"
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_class_origem =:classificacao"
 
 condicaooperativaevento:
   model: tb_cond_oper
@@ -63,8 +67,10 @@ condicaooperativaevento:
       column: id_uge
     idCondicaoOperativa:
       column: id_cond_oper
+    dataVerificada:
+      column: data_verificada
   filters:
-    byUsinaAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_cond_oper = :condicaoOperativa"
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_cond_oper = :condicaoOperativa"
 
 usina:
   model: tb_usina

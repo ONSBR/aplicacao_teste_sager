@@ -83,6 +83,7 @@ function createClassificacoesEventos(eventos) {
         classificacaoEvento.idUsina = evento.idUsina;
         classificacaoEvento.idUge = evento.idUge;
         classificacaoEvento.idClassificacaoOrigem = evento.idClassificacaoOrigem;
+        classificacaoEvento.dataVerificada = evento.dataVerificada;
         classificacoes.push(classificacaoEvento);
     });
 
@@ -97,6 +98,7 @@ function createCondicoesOperativasEvento(eventos) {
         condicaoOperativa.idUsina = evento.idUsina;
         condicaoOperativa.idUge = evento.idUge;
         condicaoOperativa.idCondicaoOperativa = evento.idCondicaoOperativa;
+        condicaoOperativa.dataVerificada = evento.dataVerificada;
         condicoesOperativas.push(condicaoOperativa);
     });
     return condicoesOperativas;
@@ -110,6 +112,7 @@ function createEstadosOperativos(eventos) {
         estadoOperativo.idUsina = evento.idUsina;
         estadoOperativo.idUge = evento.idUge;
         estadoOperativo.idEstadoOperativo = evento.idEstadoOperativo;
+        estadoOperativo.dataVerificada = evento.dataVerificada;
         estadosOperativos.push(estadoOperativo);
     });
     return estadosOperativos;

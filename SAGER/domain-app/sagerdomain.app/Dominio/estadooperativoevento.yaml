@@ -7,3 +7,5 @@ tb_tp_estado_oper:
     - string
   id_tp_estado_oper:
     - string
+  data_verificada:
+    - datetime

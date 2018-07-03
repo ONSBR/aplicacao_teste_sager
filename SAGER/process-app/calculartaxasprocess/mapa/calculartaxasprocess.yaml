@@ -130,6 +130,8 @@ classificacaoorigemevento:
       column: id_uge
     idClassificacaoOrigem:
       column: id_class_origem
+    dataVerificada:
+      column: data_verificada
 
 condicaooperativaevento:
   model: tb_cond_oper
@@ -141,7 +143,9 @@ condicaooperativaevento:
     idUge:
       column: id_uge
     idCondicaoOperativa:
-      column: id_cond_oper  
+      column: id_cond_oper
+    dataVerificada:
+      column: data_verificada        
 
 estadooperativoevento: 
   model: tb_tp_estado_oper
@@ -154,6 +158,8 @@ estadooperativoevento:
       column: id_uge
     idEstadoOperativo:
       column: id_tp_estado_oper
+    dataVerificada:
+      column: data_verificada      
 
 parametrotaxa:
   model: tb_parametro_taxa

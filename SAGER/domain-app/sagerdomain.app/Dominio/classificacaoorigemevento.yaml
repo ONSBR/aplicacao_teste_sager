@@ -7,3 +7,5 @@ tb_class_evt:
     - string
   id_class_origem:
     - string
+  data_verificada:
+    - datetime
