@@ -10,9 +10,9 @@ class Cenario {
         fork(payload.cenario.nomeCenario, payload.cenario.justificativa);
     }
 
-    aplicarCriterios(payload, dataset) {
-        payload.cenario.regras.forEach(regra => {
-            this.criterios.aplicar(regra, dataset);
+    aplicarCriterios(context) {
+        context.event.payload.cenario.regras.forEach(regra => {
+            this.criterios.aplicar(regra, context.dataset, context.event.payload);
         });
     }
 

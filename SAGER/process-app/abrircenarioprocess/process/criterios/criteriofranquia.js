@@ -1,7 +1,6 @@
 class CriterioFranquia {
 
     aplicar(regra, dataset) {
-        
         console.log('Aplicando critério de franquia');
         
         dataset.franquiaunidadegeradora.collection.toArray().forEach(franquiaUnidadeGeradoraToUpdate => {

@@ -20,8 +20,8 @@ class Criterios {
         this.tiposRegras.set(CONDICAO_OPERATIVA, new CriterioCondicaoOperativa());
     }
 
-    aplicar(regra, dataset) {
-        this.tiposRegras.get(regra.tipoRegra).aplicar(regra, dataset);
+    aplicar(regra, dataset, payload) {
+        this.tiposRegras.get(regra.tipoRegra).aplicar(regra, dataset, payload);
     }
 }
 

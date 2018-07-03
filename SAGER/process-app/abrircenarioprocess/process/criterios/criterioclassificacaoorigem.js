@@ -1,6 +1,6 @@
 class CriterioClassificacaoOrigem {
 
-    aplicar(regra, dataset) {
+    aplicar(regra, dataset, payload) {
 
         console.log('Aplicando critério de classificação de origem');
 
@@ -10,7 +10,8 @@ class CriterioClassificacaoOrigem {
         });
 
         dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
-            return eventoToUpdate.idClassificacaoOrigem == regra.regraDe
+            return eventoToUpdate.idClassificacaoOrigem == regra.regraDe && (eventoToUpdate.dataVerificada >= payload.dataInicioVigencia && 
+                eventoToUpdate.dataVerificada <= payload.dataFimVigencia);
         }).forEach(eventoToUpdate => {
             eventoToUpdate.idClassificacaoOrigem = regra.regraPara;
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);

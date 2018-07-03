@@ -1,7 +1,7 @@
 const Cenario = require('../../../process/abrircenario/cenario');
 
 describe('Cenário: ', function () {
-    
+
     let cenario;
     const NOME_CENARIO = 'cenário de teste';
     const JUSTIFICATIVA_CENARIO = 'justificativa da abertura do cenário';
@@ -13,8 +13,8 @@ describe('Cenário: ', function () {
     it('Abrir Cenário.', () => {
         let payload = {
             cenario: {
-                nomeCenario : NOME_CENARIO,
-                justificativa : JUSTIFICATIVA_CENARIO
+                nomeCenario: NOME_CENARIO,
+                justificativa: JUSTIFICATIVA_CENARIO
             }
         };
         let fork = jasmine.createSpy('fork');
@@ -28,8 +28,8 @@ describe('Cenário: ', function () {
     it('Aplicar critérios.', () => {
         cenario.criterios = jasmine.createSpyObj('criterios', ['aplicar']);
 
-        let regraPotenciaDisponivel = {tipoRegra: 'Potência Disponível', regraDe:'ALUXG-0UG1', regraPara:'500'};
-        let regraFranquia = {tipoRegra: 'Franquia', regraDe:'ALUXG-0UG1', regraPara:'500'};
+        let regraPotenciaDisponivel = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG1', regraPara: '500' };
+        let regraFranquia = { tipoRegra: 'Franquia', regraDe: 'ALUXG-0UG1', regraPara: '500' };
         let payload = {
             cenario: {
                 regras: [regraPotenciaDisponivel, regraFranquia]
@@ -37,10 +37,15 @@ describe('Cenário: ', function () {
         };
         let dataset = {};
 
-        cenario.aplicarCriterios(payload, dataset);
+        let context = {
+            event: {
+                payload: payload
+            }, dataset: dataset
+        }
+        cenario.aplicarCriterios(context);
 
-        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraPotenciaDisponivel, dataset);
-        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraFranquia, dataset);
+        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraPotenciaDisponivel, dataset, payload);
+        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraFranquia, dataset, payload);
     });
 
 

@@ -12,14 +12,14 @@ SDK.run((context, resolve, reject, fork) => {
         let eventoBusiness = new EventosBusiness();
         let cenario = new Cenario();
         cenario.abrir(context.event.payload, fork);    
-        cenario.aplicarCriterios(context.event.payload, context.dataset);
-        // let eventos = context.dataset.eventomudancaestadooperativo.collection.toArray();
-        // eventoBusiness.aplicarRegrasCenario(eventos);
-        // eventos.filter(eventoToDelete => {
-        //     return eventoToDelete.operacao != undefined && eventoToDelete.operacao == 'E';
-        // }).forEach(eventoToDelete => {
-        //     dataset.eventomudancaestadooperativo.delete(eventoToDelete);
-        // });
+        cenario.aplicarCriterios(context);
+        let eventos = context.dataset.eventomudancaestadooperativo.collection.toArray();
+        eventoBusiness.aplicarRegrasCenario(eventos);
+        eventos.filter(eventoToDelete => {
+            return eventoToDelete.operacao != undefined && eventoToDelete.operacao == 'E';
+        }).forEach(eventoToDelete => {
+            dataset.eventomudancaestadooperativo.delete(eventoToDelete);
+        });
         resolve();
     } catch (error) {
         console.log('error: ' + error.stack);
