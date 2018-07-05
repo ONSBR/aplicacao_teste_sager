@@ -15,12 +15,14 @@ describe('Critério: ', function () {
         let dataset = {
             franquiaunidadegeradora: {
                 collection: Enumerable.from([
+                    { idUge: 'ALUXG-0UG4', franquia: '500' },
                     { idUge: 'ALUXG-0UG5', franquia: '500' }
                 ]),
                 update: update
             },
             unidadegeradora: {
                 collection: Enumerable.from([
+                    { idUge: 'ALUXG-0UG4', franquia: '500' },
                     { idUge: 'ALUXG-0UG5', franquia: '500' }
                 ]),
                 update: update

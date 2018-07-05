@@ -8,7 +8,7 @@ unidadegeradora:
     franquia:
       column: franquia
   filters:
-    byUnidadeGeradora: "id_uge=:idUge"
+    all: 
 
 potenciaunidadegeradora:
   model: tb_potencia_unidade_geradora
@@ -18,7 +18,7 @@ potenciaunidadegeradora:
     potenciaDisponivel:
       column: pot_disp
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_uge=:idUge"
+    byCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia"
 
 franquiaunidadegeradora:
   model: tb_franquia_unidade_geradora
@@ -28,7 +28,7 @@ franquiaunidadegeradora:
     franquia:
       column: franquia
   filters:
-    byUnidadeGeradoraAndCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia and id_uge=:idUge"
+    byCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia"
 
 estadooperativoevento:
   model: tb_tp_estado_oper

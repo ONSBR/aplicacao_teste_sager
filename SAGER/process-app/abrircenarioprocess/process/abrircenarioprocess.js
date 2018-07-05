@@ -14,7 +14,6 @@ SDK.run((context, resolve, reject, fork) => {
         cenario.abrir(context.event.payload, fork);
         cenario.aplicarCriterios(context);
 
-
         let eventos = context.dataset.eventomudancaestadooperativo.collection.toArray();
 
         let uges = new Set(eventos.map(evento => evento.idUge));
@@ -34,7 +33,6 @@ SDK.run((context, resolve, reject, fork) => {
             eventosByUge.filter(eventoToDelete => {
                 return eventoToDelete.operacao != undefined && eventoToDelete.operacao == 'E';
             }).forEach(eventoToDelete => {
-                // console.log('Id evento para exclusão=' + eventoToDelete.idEvento);
                 context.dataset.eventomudancaestadooperativo.delete(eventoToDelete);
             });
         });

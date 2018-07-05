@@ -15,19 +15,27 @@ describe('Critério: ', function () {
         let dataset = {
             potenciaunidadegeradora: {
                 collection: Enumerable.from([
-                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' }
+                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' },
+                    { idUge: 'ALUXG-0UG2', potenciaDisponivel: '100' }
                 ]),
                 update: update
             }, 
             unidadegeradora: {
                 collection: Enumerable.from([
-                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' }
+                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' },
+                    { idUge: 'ALUXG-0UG2', potenciaDisponivel: '100' }
+                ]),
+                update: update
+            }, eventomudancaestadooperativo: {
+                collection: Enumerable.from([
+                    { idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' },
+                    { idUge: 'ALUXG-0UG2', potenciaDisponivel: '100' }
                 ]),
                 update: update
             }
         };
         criterios.aplicar(regraPotenciaDisponivel, dataset);
-        expect(update.calls.count()).toEqual(2);
+        expect(update.calls.count()).toEqual(3);
         expect(update).toHaveBeenCalledWith({ idUge: 'ALUXG-0UG1', potenciaDisponivel: '500' });
     });
 
