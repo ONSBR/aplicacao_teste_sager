@@ -101,20 +101,9 @@ class CenarioBusiness {
         event.payload.dataInicioVigencia = cenario.dataInicioVigencia;
         event.payload.dataFimVigencia = cenario.dataFimVigencia;
         event.payload.idUsina = cenario.idUsina;
-        this.populateUge(cenario.regras, event);
         this.populateEventoData(cenario.regras, event);
 
         return event;
-    }
-
-    populateUge(regras, event) {
-        regras.forEach(regra => {
-            regra._metadata = undefined;
-            regra.id = undefined;
-            if (this.isRegraFranquia(regra) || this.isRegraPotenciaDisponivel(regra)) {
-                event.payload.idUge = regra.regraDe;
-            }
-        });
     }
 
     populateEventoData(regras, event) {
