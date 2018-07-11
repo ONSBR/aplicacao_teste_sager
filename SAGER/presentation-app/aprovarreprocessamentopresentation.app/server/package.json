@@ -9,7 +9,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "jasmine": "^2.9.0",
-    "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master"
+    "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK#master",
+    "node-rest-client": "^3.1.0"
   },
   "author": "",
   "license": "ISC"

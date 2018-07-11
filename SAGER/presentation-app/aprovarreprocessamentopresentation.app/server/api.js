@@ -24,6 +24,10 @@ app.get("/listarreprocessamentospendentes", (req, res) => {
     reprocessamentoController.listarReprocessamentosPendentes(req, res);
 });
 
+app.post("/aprovarreprocessamentopendente", (req, res) => {
+    reprocessamentoController.aprovarReprocessamentoPendente(req, res);
+});
+
 module.exports = function(){
     app.listen(PORT, function () {
         console.log("App listening on PORT " + PORT);

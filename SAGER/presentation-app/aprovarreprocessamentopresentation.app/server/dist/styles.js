@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* You can add global styles to this file, and also import other style files */\n"
+module.exports = "body {\n    font-family: \"Arial Narrow\",Arial, Helvetica, sans-serif;\n    font-size: 13px;\n\n}\n\ninput {\n    margin: 2px;\n}\n\n.button {\n    background-color: #4CAF50; /* Green */\n    border: none;\n    color: white;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    cursor: pointer;\n    margin: 2px;\n}\n\nh2 {\n    color: inherit;\n    display: block;\n    font-size: 20px;\n    background: #fff;\n    font-weight: 400;\n    padding: 8px 30px;\n}\n\nh3{\n    color: inherit;\n    display: block;\n    font-size: 16px;\n    background: #fff;\n    color: #636266;\n    font-weight: 400;\n    padding: 4px 4px;\n    margin-top: 14px;\n    margin-bottom: 4px;\n}\n\n.grid-entidades {\n    border: 1px solid #ddd;\n    border-spacing: 0px;\n    line-height: 1.42857143;\n}\n\n.grid-entidades th {\n    text-align: center;\n    background-color: #486018!important;\n    color: #fff!important;\n    padding: 8px;\n    line-height: 1.42857143;\n    border: 1px solid #ddd;\n}\n\n.grid-entidades td {\n    border: 1px solid #ddd;\n    color: #636266;\n}"
 
 /***/ }),
 
