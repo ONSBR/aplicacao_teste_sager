@@ -28,8 +28,12 @@ class PesquisarHistoricoTaxasController {
             then(fechamentosMensais => {
                 return this.pesquisarTaxas(request, this.filtrarFechamentos(request, fechamentosMensais));
             }).
-            then(taxas => { return this.pesquisarExecucoesCalculo(taxas); }).
-            then(historicoExecucoes => { response.send(historicoExecucoes); }).
+            then(taxas => { 
+                return this.pesquisarExecucoesCalculo(taxas); 
+            }).
+            then(historicoExecucoes => {
+                response.send(historicoExecucoes); 
+            }).
             catch(e => { console.log(`Erro durante a consulta de histórico de execuções: ${e.toString()}`) });
     }
 

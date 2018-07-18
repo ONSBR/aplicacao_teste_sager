@@ -1,9 +1,9 @@
 export class Reproducao {
-    
+
     original_id: string;
 
     instance_id: string;
-    
+
     owner: string;
 
     systemId: string;
@@ -11,5 +11,5 @@ export class Reproducao {
     processId: string;
 
     start_date: Date;
-    
+
 }
