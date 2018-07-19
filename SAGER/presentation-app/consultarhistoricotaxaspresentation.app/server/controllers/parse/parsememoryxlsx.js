@@ -15,10 +15,6 @@ class ParseMemoryFileTemplate {
 
         this.suffixNameFile = suffixNameFile;
 
-        console.log('----');
-        console.log(__dirname);
-        console.log('----');
-        
         var filePath = __dirname + "/../../templates/templatememoria_" + this.suffixNameFile + ".xlsx";
         this.workbook = XLSX.readFileSync(filePath);
 

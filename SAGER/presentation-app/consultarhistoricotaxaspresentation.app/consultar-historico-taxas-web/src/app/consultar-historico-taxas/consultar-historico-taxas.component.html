@@ -59,10 +59,10 @@
           <ul>
             <li (click)='expandirExecucao(execucao)' *ngFor="let execucao of execucoes">
               <b *ngIf="execucaoSelecionada.id == execucao.id">
-                Execução: {{ execucao.protocolo }} - {{ execucao.dataInicio | date: 'dd/MM/yyyy HH:mm:ss' }}
+                Execução: {{ execucao.protocolo }} - {{execucao._metadata.branch}} - {{ execucao.dataInicio | date: 'dd/MM/yyyy HH:mm:ss' }}
               </b>
               <span *ngIf="execucaoSelecionada.id != execucao.id" style="cursor: pointer">
-                Execução: {{ execucao.protocolo }} - {{ execucao.dataInicio | date: 'dd/MM/yyyy HH:mm:ss' }}
+                Execução: {{ execucao.protocolo }} - {{execucao._metadata.branch}} - {{ execucao.dataInicio | date: 'dd/MM/yyyy HH:mm:ss' }}
               </span>
             </li>
           </ul>
