@@ -31,12 +31,13 @@ describe('Critério: ', function () {
         cenarioBusiness.updatePotencia(regraPotenciaDisponivelMaior, evento, dataset);
 
         expect(update.calls.count()).toEqual(1);
-        expect(update).toHaveBeenCalledWith({ 
-            idEvento: 2, 
-            idUge: 'ALUXG-0UG1', 
-            potenciaDisponivel: '100', 
-            idCondicaoOperativa : 'NOR',
-            idClassificacaoOrigem: undefined });
+        expect(update).toHaveBeenCalledWith({
+            idEvento: 2,
+            idUge: 'ALUXG-0UG1',
+            potenciaDisponivel: '100',
+            idCondicaoOperativa: 'NOR',
+            idClassificacaoOrigem: undefined
+        });
     });
 
     it('RNI - 202  Alteração da potência para cálculo para um valor menor. ii', () => {
@@ -47,5 +48,24 @@ describe('Critério: ', function () {
             idEvento: 1, idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
         });
     });
+
+    it('RNI - 204  Exceção na alteração de classificação de origem.', () => {
+        let evento = { idEvento: 1, idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GGE', idEstadoOperativo: 'DCA' };
+        let regraAlteracaoClassificacao = { tipoRegra: 'Classificação de Origem do Evento', regraDe: 'GGE', regraPara: 'GUM' };
+        cenarioBusiness.validateClassificacaoOrigem(evento, regraAlteracaoClassificacao);
+
+        let evento2 = { idEvento: 1, idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GGE', idEstadoOperativo: 'LIG' };
+        let regraAlteracaoClassificacao2 = { tipoRegra: 'Classificação de Origem do Evento', regraDe: 'GGE', regraPara: 'GIM' };
+        cenarioBusiness.validateClassificacaoOrigem(evento2, regraAlteracaoClassificacao2);
+
+        let evento3 = { idEvento: 1, idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GGE', idEstadoOperativo: 'DCA' };
+        let regraAlteracaoClassificacao3 = { tipoRegra: 'Classificação de Origem do Evento', regraDe: 'GGE', regraPara: 'GIM' };
+
+        expect(
+            function() {
+                cenarioBusiness.validateClassificacaoOrigem(evento3, regraAlteracaoClassificacao3);
+            }
+        ).toThrowError('Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.');
+    })
 
 });
