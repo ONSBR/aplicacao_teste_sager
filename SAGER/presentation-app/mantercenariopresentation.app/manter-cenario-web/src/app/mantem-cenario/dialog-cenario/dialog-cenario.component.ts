@@ -25,11 +25,11 @@ export class DialogCenarioComponent implements OnInit {
 
   getOrigens(tipoRegra): string[] {
     let retorno = [];
-    if (tipoRegra == this.tiposRegras[2]) {
+    if (tipoRegra == this.tiposRegras[4]) {
       retorno = this.origens_type;
-    } else if (tipoRegra == this.tiposRegras[3]) {
+    } else if (tipoRegra == this.tiposRegras[5]) {
       retorno = this.estados_type;
-    } else if (tipoRegra == this.tiposRegras[4]) {
+    } else if (tipoRegra == this.tiposRegras[6]) {
       retorno = this.condicoes_type;
     }
     return retorno;
@@ -72,8 +72,6 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUges() {
-    console.log('listar uges');
-    console.log(this.data);
     if (this.data && this.data.idUsina) {
       const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
         '?idUsina=' + this.data.idUsina;

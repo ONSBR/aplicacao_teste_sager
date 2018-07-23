@@ -34,6 +34,8 @@ class CenarioBusiness {
             cenariobd.dataFimVigencia = cenario.dataFimVigencia;
             cenariobd.justificativa = cenario.justificativa;
             cenariobd.idUsina = cenario.idUsina;
+            console.log('cenario alterado=');
+            console.log(cenariobd);
             context.dataset.cenario.update(cenariobd);
         });
 
@@ -58,6 +60,8 @@ class CenarioBusiness {
                 context.dataset.regracenario.insert(regra);
             }
         });
+
+        resolve();
     }
 
     /**
@@ -151,10 +155,15 @@ class CenarioBusiness {
      * @param {reject} reject
      */
     excluirCenario(context, resolve, reject) {
+        console.log('Excluir cenario=');
         context.dataset.cenario.collection.forEach(cenario => {
+            console.log('---');
+            console.log(cenario);
             context.dataset.cenario.delete(cenario);
         });
         context.dataset.regracenario.collection.forEach(regra => {
+            console.log('---');
+            console.log(regra);
             context.dataset.regracenario.delete(regra);
         });
         resolve();
@@ -170,13 +179,13 @@ class CenarioBusiness {
         let event = null;
         context.dataset.cenario.collection.forEach(cenario => {
             if (cenario.situacao == SituacaoCenario.Ativo) {
-                cenario.situacao = SituacaoCenario.Inativo;
+                this.excluirCenario(context, resolve, reject);
             } else if (cenario.situacao == SituacaoCenario.Inativo) {
                 cenario.situacao = SituacaoCenario.Ativo;
                 cenario.regras = context.dataset.regracenario.collection.toArray();
                 event = this.createAplicarCriteriosEvent(Object.assign({}, cenario));
+                context.dataset.cenario.update(cenario);
             }
-            context.dataset.cenario.update(cenario);
         });
 
         if(event) {

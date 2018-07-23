@@ -37,7 +37,9 @@ export class Usina {
 
 export enum TipoRegra {
     PotenciaDisponivel = 'Potência Disponível',
-    Franquia = 'Franquia',
+    FranquiaGIC = 'Franquia GIC',
+    FranquiaGMT = 'Franquia GMT',
+    FranquiaGIM = 'Franquia GIM',
     OrigemEvento = 'Classificação de Origem do Evento',
     EstadoOperativo = 'Estado Operativo do Evento',
     CondicaoOperativo = 'Condição Operativa do Evento',

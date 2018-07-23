@@ -50,9 +50,12 @@ unidadegeradora:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
-    franquia:
-      column: franquia
-      required: true 
+    franquiaGIC:
+      column: franquia_gic
+    franquiaGMT:
+      column: franquia_gmt
+    franquiaGIM:
+      column: franquia_gim      
   filters:
     byIdUsina: "id_usina = :idUsina"
 

@@ -5,7 +5,11 @@ tb_unidade_geradora:
     - datetime
   id_usina:
     - string
-  franquia:
+  franquia_gmt:
     - double
+  franquia_gic:
+    - double
+  franquia_gim:
+    - double      
   pot_disp:
     - double

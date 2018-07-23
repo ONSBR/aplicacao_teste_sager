@@ -46,7 +46,9 @@ function loadFechamento() {
 function loadFranquiasUnidadesGeradoras(uges) {
     let franquias = [];
     uges.forEach(uge => {
-        uge.franquia = FRANQUIA;
+        uge.franquiaGMT = FRANQUIA;
+        uge.franquiaGIM = FRANQUIA;
+        uge.franquiaGIC = FRANQUIA;
         
         let franquia = new FranquiaUnidadeGeradora();
         franquia.idUge = uge.idUge;

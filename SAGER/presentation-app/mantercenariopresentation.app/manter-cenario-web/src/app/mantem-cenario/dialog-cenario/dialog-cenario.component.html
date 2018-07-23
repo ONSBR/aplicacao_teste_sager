@@ -82,19 +82,35 @@
                   {{uge.idUge}}
                 </option>
               </select>
-              - {{getUge(regra.regraDe).franquia}}
+              - {{getUge(regra.regraDe).franquiaGIC}}
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[2]">
+              <select [(ngModel)]="regra.regraDe">
+                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
+                  {{uge.idUge}}
+                </option>
+              </select>
+              - {{getUge(regra.regraDe).franquiaGMT}}
+            </td>
+            <td *ngIf="regra.tipoRegra == tiposRegras[3]">
+              <select [(ngModel)]="regra.regraDe">
+                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
+                  {{uge.idUge}}
+                </option>
+              </select>
+              - {{getUge(regra.regraDe).franquiaGIM}}
+            </td>
+            <td *ngIf="regra.tipoRegra == tiposRegras[4] || regra.tipoRegra == tiposRegras[5] || regra.tipoRegra == tiposRegras[6]">
               <select [(ngModel)]="regra.regraDe">
                 <option *ngFor="let origem of getOrigens(regra.tipoRegra)" [ngValue]="origem">
                   {{origem}}
                 </option>
               </select>
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1] || regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3]">
               <input type="text" [(ngModel)]="regra.regraPara" />
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3] || regra.tipoRegra == tiposRegras[4]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[4] || regra.tipoRegra == tiposRegras[5] || regra.tipoRegra == tiposRegras[6]">
               <select [(ngModel)]="regra.regraPara">
                 <option *ngFor="let origem of getOrigens(regra.tipoRegra)" [ngValue]="origem">
                   {{origem}}
