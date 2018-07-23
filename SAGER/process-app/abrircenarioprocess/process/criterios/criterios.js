@@ -1,8 +1,8 @@
-const CriterioPotencia = require('../criterios/criteriopotencia');
-const CriterioClassificacaoOrigem = require('../criterios/criterioclassificacaoorigem');
-const CriterioEstadoOperativo = require('../criterios/criterioestadooperativo');
-const CriterioCondicaoOperativa = require('../criterios/criteriocondicaooperativa');
-const CriterioFranquia = require('../criterios/criteriofranquia');
+const CriterioPotencia = require('./criteriopotencia');
+const CriterioClassificacaoOrigem = require('./criterioclassificacaoorigem');
+const CriterioEstadoOperativo = require('./criterioestadooperativo');
+const CriterioCondicaoOperativa = require('./criteriocondicaooperativa');
+const CriterioFranquia = require('./criteriofranquia');
 const POTENCIA_DISPONIVEL = 'Potência Disponível';
 const CLASSIFICACAO_ORIGEM = 'Classificação de Origem do Evento';
 const ESTADO_OPERATIVO = 'Estado Operativo do Evento';

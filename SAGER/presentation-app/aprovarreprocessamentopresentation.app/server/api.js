@@ -21,7 +21,7 @@ app.use(function (req, res, next) {
 let reprocessamentoController = new ReprocessamentoController();
 
 app.get("/listarreprocessamentospendentes", (req, res) => {
-    reprocessamentoController.listarReprocessamentosPendentes(req, res);
+    reprocessamentoController.listarReprocessamentosPendentes(res);
 });
 
 app.post("/aprovarreprocessamentopendente", (req, res) => {

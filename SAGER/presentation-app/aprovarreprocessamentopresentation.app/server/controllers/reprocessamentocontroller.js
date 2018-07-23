@@ -8,7 +8,7 @@ class ReprocessamentoController {
      * @param {Request} request 
      * @param {Response} response 
      */
-    listarReprocessamentosPendentes(request, response) {
+    listarReprocessamentosPendentes(response) {
         new ReprocessamentoBusiness().listarReprocessamentosPendentes().then(pendingEvents => {
             response.send(pendingEvents);
         }).catch(error => {

@@ -3,6 +3,7 @@ class CriterioPotencia {
     aplicar(regra, dataset) {
 
         console.log('Aplicando critério de potência');
+        
         dataset.potenciaunidadegeradora.collection.toArray().filter(potenciaunidadegeradora => {
             return potenciaunidadegeradora.idUge == regra.regraDe;
         }).forEach(potenciaUnidadeGeradoraToUpdate => {

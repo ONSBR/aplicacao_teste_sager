@@ -13,22 +13,24 @@ class CenarioBusiness {
             return eventoFilter.idEvento == eventoToUpdate.idEvento;
         });
 
-        if (eventoDB.potenciaDisponivel > regra.regraPara) {
+        if (eventoDB.potenciaDisponivel < regra.regraPara) {
             eventoToUpdate.potenciaDisponivel = regra.regraPara;
             this.updateCondicaoOperativaEOrigem(eventoToUpdate);
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        } else if (eventoDB.potenciaDisponivel < regra.regraPara) {
+        } else if (eventoDB.potenciaDisponivel > regra.regraPara) {
+
             let diferencaValores = regra.regraPara - eventoDB.potenciaDisponivel;
+            let cincoPorcento = eventoDB.potenciaDisponivel * 0.05;
 
-            let menorValor = Math.min(CINCO_MW, diferencaValores * 0.05);
-            console.log('menorValor=' + menorValor);
+            let menorValor = Math.min(CINCO_MW, cincoPorcento);
 
-            // let eventoAnterior = eventos.findIndex(eventoIndex => );
+            let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
 
+            let eventoAnterior = eventos[indexEventoAnterior];
             if (diferencaValores < menorValor && !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
                 eventoToUpdate.potenciaDisponivel = regra.regraPara;
                 this.updateCondicaoOperativaEOrigem(eventoToUpdate);
-            }
+            } 
 
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
         }
