@@ -35,7 +35,7 @@ describe('Critério: ', function () {
             }
         };
         criterios.aplicar(regraPotenciaDisponivel, dataset);
-        expect(update.calls.count()).toEqual(3);
+        expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith({ idUge: 'ALUXG-0UG1', potenciaDisponivel: '500' });
     });
 

@@ -1,9 +1,19 @@
+const CenarioBusiness = require('./cenariobusiness');
 class CriterioPotencia {
 
     aplicar(regra, dataset) {
 
         console.log('Aplicando critério de potência');
-        
+
+        let cenarioBusiness = new CenarioBusiness();
+
+        dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
+            return evento.idUge == regra.regraDe;
+        }).forEach(evento=>{
+            evento.potenciaDisponivel = regra.regraPara;
+            cenarioBusiness.updatePotencia(regra, evento, dataset);
+        });
+
         dataset.potenciaunidadegeradora.collection.toArray().filter(potenciaunidadegeradora => {
             return potenciaunidadegeradora.idUge == regra.regraDe;
         }).forEach(potenciaUnidadeGeradoraToUpdate => {
@@ -18,12 +28,6 @@ class CriterioPotencia {
             dataset.unidadegeradora.update(unidadeGeradoraToUpdate);
         });
 
-        dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
-            return evento.idUge == regra.regraDe;
-        }).forEach(evento=>{
-            evento.potenciaDisponivel = regra.regraPara;
-            dataset.eventomudancaestadooperativo.update(evento);
-        });
     }
 
 }
