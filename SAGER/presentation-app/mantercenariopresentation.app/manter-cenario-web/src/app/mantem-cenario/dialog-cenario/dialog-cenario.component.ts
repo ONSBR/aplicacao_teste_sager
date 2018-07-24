@@ -25,11 +25,11 @@ export class DialogCenarioComponent implements OnInit {
 
   getOrigens(tipoRegra): string[] {
     let retorno = [];
-    if (tipoRegra == this.tiposRegras[4]) {
+    if (tipoRegra == this.tiposRegras[9]) {
       retorno = this.origens_type;
-    } else if (tipoRegra == this.tiposRegras[5]) {
+    } else if (tipoRegra == this.tiposRegras[10]) {
       retorno = this.estados_type;
-    } else if (tipoRegra == this.tiposRegras[6]) {
+    } else if (tipoRegra == this.tiposRegras[11]) {
       retorno = this.condicoes_type;
     }
     return retorno;
@@ -50,7 +50,6 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
     this.listarUsinas();
     this.listarUges();
   }
@@ -78,6 +77,9 @@ export class DialogCenarioComponent implements OnInit {
       console.log(url);
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
+        console.log('-----------');
+        console.log(this.uges);
+        console.log('-----------');
       });
     } else {
       this.uges = [];

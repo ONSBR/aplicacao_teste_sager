@@ -2,7 +2,7 @@
 
 <table border="0">
   <tr>
-    <td width="500" style="vertical-align:top">
+    <td width="1000" style="vertical-align:top">
       <fieldset style="height: 170px">
         <mat-dialog-content>
           <div>
@@ -49,7 +49,7 @@
       </fieldset>
       <span *ngIf="data.regras && data.regras.length > 0">
         <h3>Critérios</h3>
-        <table width="800" class="grid-entidades">
+        <table width="1000" class="grid-entidades">
           <tr>
             <th width="100">Nome</th>
             <th width="200">Tipo de Mudança</th>
@@ -76,41 +76,47 @@
               </select>
               - {{getUge(regra.regraDe).potenciaDisponivel}}
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[1]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[1] || 
+                       regra.tipoRegra == tiposRegras[2] || 
+                       regra.tipoRegra == tiposRegras[3] ||
+                       regra.tipoRegra == tiposRegras[4] ||
+                       regra.tipoRegra == tiposRegras[5] ||
+                       regra.tipoRegra == tiposRegras[6] ||
+                       regra.tipoRegra == tiposRegras[7] ||
+                       regra.tipoRegra == tiposRegras[8]">
               <select [(ngModel)]="regra.regraDe">
                 <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
                   {{uge.idUge}}
                 </option>
               </select>
-              - {{getUge(regra.regraDe).franquiaGIC}}
+              <p *ngIf="regra.tipoRegra == tiposRegras[1]">- {{getUge(regra.regraDe).franquiaGICHorasLimite}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[2]">- {{getUge(regra.regraDe).franquiaGICTempoLimiteAntes102014}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[3]">- {{getUge(regra.regraDe).franquiaGICTempoLimiteApos102014}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[4]">- {{getUge(regra.regraDe).franquiaGMTHorasLimiteAntes01102014}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[5]">- {{getUge(regra.regraDe).franquiaGMTHorasLimiteAPartir01102014}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[6]">- {{getUge(regra.regraDe).franquiaGIMRestricaoTempo}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[7]">- {{getUge(regra.regraDe).franquiaGIMTempoLimiteAntes01102014}}</p>
+              <p *ngIf="regra.tipoRegra == tiposRegras[8]">- {{getUge(regra.regraDe).franquiaGIMTempoLimiteApos01102014}}</p>
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[2]">
-              <select [(ngModel)]="regra.regraDe">
-                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
-                  {{uge.idUge}}
-                </option>
-              </select>
-              - {{getUge(regra.regraDe).franquiaGMT}}
-            </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[3]">
-              <select [(ngModel)]="regra.regraDe">
-                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
-                  {{uge.idUge}}
-                </option>
-              </select>
-              - {{getUge(regra.regraDe).franquiaGIM}}
-            </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[4] || regra.tipoRegra == tiposRegras[5] || regra.tipoRegra == tiposRegras[6]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[9] || regra.tipoRegra == tiposRegras[10] || regra.tipoRegra == tiposRegras[11]">
               <select [(ngModel)]="regra.regraDe">
                 <option *ngFor="let origem of getOrigens(regra.tipoRegra)" [ngValue]="origem">
                   {{origem}}
                 </option>
               </select>
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[0] || regra.tipoRegra == tiposRegras[1] || regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[0] || 
+                       regra.tipoRegra == tiposRegras[1] || 
+                       regra.tipoRegra == tiposRegras[2] || 
+                       regra.tipoRegra == tiposRegras[3] ||
+                       regra.tipoRegra == tiposRegras[4] ||
+                       regra.tipoRegra == tiposRegras[5] ||
+                       regra.tipoRegra == tiposRegras[6] ||
+                       regra.tipoRegra == tiposRegras[7] ||
+                       regra.tipoRegra == tiposRegras[8]">
               <input type="text" [(ngModel)]="regra.regraPara" />
             </td>
-            <td *ngIf="regra.tipoRegra == tiposRegras[4] || regra.tipoRegra == tiposRegras[5] || regra.tipoRegra == tiposRegras[6]">
+            <td *ngIf="regra.tipoRegra == tiposRegras[9] || regra.tipoRegra == tiposRegras[10] || regra.tipoRegra == tiposRegras[11]">
               <select [(ngModel)]="regra.regraPara">
                 <option *ngFor="let origem of getOrigens(regra.tipoRegra)" [ngValue]="origem">
                   {{origem}}

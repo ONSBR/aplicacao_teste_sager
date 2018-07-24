@@ -130,7 +130,7 @@ export class MantemCenarioComponent implements OnInit {
     console.log('cenario selecionado');
     console.log(this.cenarioSelecionado);
     const dialogRef = this.dialog.open(DialogCenarioComponent, {
-      width: '1050px', height: '450px',
+      width: '1200px', height: '450px',
       data: this.cenarioSelecionado
     });
 
