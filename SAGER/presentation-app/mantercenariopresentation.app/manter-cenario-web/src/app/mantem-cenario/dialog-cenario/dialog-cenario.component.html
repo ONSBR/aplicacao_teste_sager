@@ -2,7 +2,7 @@
 
 <table border="0">
   <tr>
-    <td width="1000" style="vertical-align:top">
+    <td width="1200" style="vertical-align:top">
       <fieldset style="height: 170px">
         <mat-dialog-content>
           <div>
@@ -49,10 +49,12 @@
       </fieldset>
       <span *ngIf="data.regras && data.regras.length > 0">
         <h3>Critérios</h3>
-        <table width="1000" class="grid-entidades">
+        <table width="1200" class="grid-entidades">
           <tr>
             <th width="100">Nome</th>
             <th width="200">Tipo de Mudança</th>
+            <th>Data Início</th>
+            <th>Data Fim</th>
             <th>De</th>
             <th>Para</th>
             <th>Opção</th>
@@ -63,16 +65,18 @@
             </td>
             <td>
               <select [(ngModel)]="regra.tipoRegra">
-                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra"> 
-                  {{tipoRegra}}
-                </option>
+                <option *ngFor="let tipoRegra of tiposRegras" [ngValue]="tipoRegra">{{tipoRegra}}</option>
               </select>
+            </td>
+            <td>
+              <input type="date" [(ngModel)]="regra.dataInicioVigencia"/>
+            </td>
+            <td>
+              <input type="date" [(ngModel)]="regra.dataFimVigencia"/>
             </td>
             <td *ngIf="regra.tipoRegra == tiposRegras[0]">
               <select [(ngModel)]="regra.regraDe">
-                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">
-                  {{uge.idUge}}
-                </option>
+                <option *ngFor="let uge of uges" [ngValue]="uge.idUge">{{uge.idUge}}</option>
               </select>
               - {{getUge(regra.regraDe).potenciaDisponivel}}
             </td>

@@ -5,8 +5,12 @@ unidadegeradora:
       column: id_uge
     potenciaDisponivel:
       column: pot_disp
-    franquia:
-      column: franquia
+    franquiaGIC:
+      column: franquia_gic
+    franquiaGMT:
+      column: franquia_gmt
+    franquiaGIM:
+      column: franquia_gim
   filters:
     all: 
 

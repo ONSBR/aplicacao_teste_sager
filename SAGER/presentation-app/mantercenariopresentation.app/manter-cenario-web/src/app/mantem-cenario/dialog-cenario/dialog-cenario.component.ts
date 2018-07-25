@@ -46,7 +46,8 @@ export class DialogCenarioComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<DialogCenarioComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Cenario, private http: HttpClient) {
-    this.data = data;
+      this.data = data;
+      console.log(data);
   }
 
   ngOnInit() {
@@ -71,15 +72,11 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUges() {
-    if (this.data && this.data.idUsina) {
+    if (this.data && this.data.id Usina) {
       const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
         '?idUsina=' + this.data.idUsina;
-      console.log(url);
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
-        console.log('-----------');
-        console.log(this.uges);
-        console.log('-----------');
       });
     } else {
       this.uges = [];
@@ -104,7 +101,7 @@ export class DialogCenarioComponent implements OnInit {
     let retorno = true;
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
-        if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara) {
+        if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara || !it.dataInicioVigencia || !it.dataFimVigencia) {
           alert('Informe os dados da regra!');
           retorno = false;
         }

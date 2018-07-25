@@ -46,14 +46,19 @@ function loadFechamento() {
 function loadFranquiasUnidadesGeradoras(uges) {
     let franquias = [];
     uges.forEach(uge => {
-        uge.franquiaGMT = FRANQUIA;
-        uge.franquiaGIM = FRANQUIA;
-        uge.franquiaGIC = FRANQUIA;
-        
+        uge.franquiaGICHorasLimite = 960;
+        uge.franquiaGICTempoLimiteAntes102014 = 15000;
+        uge.franquiaGICTempoLimiteApos102014 = 24;
+        uge.franquiaGMTHorasLimiteAntes01102014 = 72;
+        uge.franquiaGMTHorasLimiteAPartir01102014 = 360;
+        uge.franquiaGIMRestricaoTempo = 120;
+        uge.franquiaGIMTempoLimiteAntes01102014 = 12;
+        uge.franquiaGIMTempoLimiteApos01102014 = 12;
+
         let franquia = new FranquiaUnidadeGeradora();
         franquia.idUge = uge.idUge;
         franquia.franquia = FRANQUIA;
-        franquias.push(franquia);
+        // franquias.push(franquia);
     });
 
     let url = getUrlAppDomain(null, null, "persist");
@@ -68,7 +73,7 @@ function loadPotenciasUnidadesGeradoras(uges) {
         let potencia = new PotenciaUnidadeGeradora();
         potencia.idUge = uge.idUge;
         potencia.potenciaDisponivel = uge.potenciaDisponivel;
-        potencias.push(potencia);
+        // potencias.push(potencia);
     });
 
     let url = getUrlAppDomain(null, null, "persist");

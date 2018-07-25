@@ -35,6 +35,10 @@ regracenario:
       column: tipo_regra
     idCenario:
       column: id_cenario
+    dataInicioVigencia:
+      column: data_inicio
+    dataFimVigencia:
+      column: data_fim
   filters:
     byIdCenario: "id_cenario = :idCenario"
     byId: "id = :id"

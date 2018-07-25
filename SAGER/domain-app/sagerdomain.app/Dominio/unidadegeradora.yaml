@@ -5,11 +5,21 @@ tb_unidade_geradora:
     - datetime
   id_usina:
     - string
-  franquia_gmt:
-    - double
-  franquia_gic:
-    - double
-  franquia_gim:
-    - double      
   pot_disp:
     - double
+  franq_gic_hor_lim:
+    - double
+  franq_gic_lim_ant_102014:
+    - double
+  franq_gic_lim_pos_102014:
+    - double
+  franq_gmt_hor_lim_ant_01102014:        
+    - double  
+  franq_gmt_hor_lim_apar_01102014:        
+    - double
+  franq_gim_rest:
+    - double
+  franq_gim_lim_ant_01102014:          
+    - double
+  franq_gim_lim_pos_01102014:          
+    - double      
