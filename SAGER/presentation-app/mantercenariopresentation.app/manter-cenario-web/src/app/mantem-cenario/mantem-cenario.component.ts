@@ -83,7 +83,6 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   alterar(cenario) {
-
     this.cenarioSelecionado = clone(cenario);
     this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
     this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
@@ -92,6 +91,10 @@ export class MantemCenarioComponent implements OnInit {
 
     this.http.get(url).subscribe(data => {
       this.cenarioSelecionado.regras = <RegraCritica[]>data;
+      this.cenarioSelecionado.regras.forEach(regra => {
+        regra.dataInicioVigencia = this.ajustarDataCalendario(regra.dataInicioVigencia);
+        regra.dataFimVigencia = this.ajustarDataCalendario(regra.dataFimVigencia);
+      });
       this.openDialog();
     });
   }

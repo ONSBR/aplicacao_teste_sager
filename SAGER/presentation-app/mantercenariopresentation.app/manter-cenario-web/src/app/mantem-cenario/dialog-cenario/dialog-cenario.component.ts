@@ -47,7 +47,6 @@ export class DialogCenarioComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<DialogCenarioComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Cenario, private http: HttpClient) {
       this.data = data;
-      console.log(data);
   }
 
   ngOnInit() {
@@ -72,9 +71,8 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUges() {
-    if (this.data && this.data.id Usina) {
-      const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras +
-        '?idUsina=' + this.data.idUsina;
+    if (this.data && this.data.idUsina) {
+      const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });
