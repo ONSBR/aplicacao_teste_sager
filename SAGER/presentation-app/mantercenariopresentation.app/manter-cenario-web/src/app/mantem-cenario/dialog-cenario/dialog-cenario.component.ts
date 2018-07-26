@@ -4,7 +4,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Cenario, TipoRegra, RegraCritica, UnidadeGeradora, Usina } from '../../model/model';
 import { environment } from '../../../environments/environment';
 import { ClassificacaoOrigem, EstadoOperativo, CondicaoOperativa } from '../constants';
-import { log } from 'util';
 
 @Component({
   selector: 'app-dialog-cenario',

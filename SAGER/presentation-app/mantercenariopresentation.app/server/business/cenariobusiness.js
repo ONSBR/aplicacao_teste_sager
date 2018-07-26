@@ -1,8 +1,6 @@
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
+const EventPromiseHelper = require('../helpers/eventpromisehelper');
 const utils = require('../utils');
-const eventPromiseHelper = new (require('../helpers/eventpromisehelper'))();
-
-const CHANGETRACK_UPDATE = "update";
 
 const SituacaoCenario = {
     Ativo: 'Ativo',
@@ -17,6 +15,8 @@ class CenarioBusiness {
 
     constructor() {
         this.domainPromiseHelper = new DomainPromiseHelper();
+        this.eventPromiseHelper = new EventPromiseHelper();
+
     }
 
     /**
@@ -34,8 +34,6 @@ class CenarioBusiness {
             cenariobd.dataFimVigencia = cenario.dataFimVigencia;
             cenariobd.justificativa = cenario.justificativa;
             cenariobd.idUsina = cenario.idUsina;
-            console.log('cenario alterado=');
-            console.log(cenariobd);
             context.dataset.cenario.update(cenariobd);
         });
 
@@ -73,9 +71,6 @@ class CenarioBusiness {
     inserirCenario(context, resolve, reject) {
         var listapersist = [];
         let cenario = context.event.payload.cenario;
-        console.log('-------');
-        console.log(cenario);
-        console.log('-------');
         
         if (!cenario.idCenario) {
             cenario.idCenario = utils.guid();
@@ -157,13 +152,9 @@ class CenarioBusiness {
     excluirCenario(context, resolve, reject) {
         console.log('Excluir cenario=');
         context.dataset.cenario.collection.forEach(cenario => {
-            console.log('---');
-            console.log(cenario);
             context.dataset.cenario.delete(cenario);
         });
         context.dataset.regracenario.collection.forEach(regra => {
-            console.log('---');
-            console.log(regra);
             context.dataset.regracenario.delete(regra);
         });
         resolve();
@@ -175,8 +166,8 @@ class CenarioBusiness {
      * @param {resolve} resolve 
      * @param {reject} reject
      */
-    ativarInativarCenario(context, resolve, reject) {
-        let event = null;
+    ativarInativarCenario(context, resolve, reject, fork) {
+        
         context.dataset.cenario.collection.forEach(cenario => {
             if (cenario.situacao == SituacaoCenario.Ativo) {
                 this.excluirCenario(context, resolve, reject);
@@ -188,14 +179,7 @@ class CenarioBusiness {
             }
         });
 
-        if(event) {
-            console.log('----- Send aplicar.criterios.cenario event---------');
-            console.log(JSON.stringify(event));
-            console.log('---------');
-            eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
-        } else {
-            resolve();
-        }
+        resolve();
     }
 
     /**
@@ -212,13 +196,14 @@ class CenarioBusiness {
             console.log('----- Send merge.request event---------');
             console.log(event);
             console.log('---------');
-            eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
+            
+            this.eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
         });
     }
 
     createIncorporarCenarioEvent(cenario) {
         let event = {
-            name: "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request",
+            name: 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request',
             payload: {
                 branch: cenario.nomeCenario
             }

@@ -27,7 +27,6 @@ class ManterCenarioController {
         if (request.body.dataFinal) {
             filtroDataFinal = new Date(request.body.dataFinal).toISOString().slice(0, 10);
         }
-        let filtroAtivo = request.body.ativo;
         let url = config.getUrlFiltroCenario(filtroNome, filtroDataInicial, filtroDataFinal);
 
         this.domainPromiseHelper.getDomainPromise(url).

@@ -357,7 +357,6 @@ var DialogCenarioComponent = /** @class */ (function () {
     };
     DialogCenarioComponent.prototype.getUge = function (idUge) {
         var retorno = {};
-        console.log(this.uges);
         this.uges.forEach(function (it) {
             if (it.idUge == idUge) {
                 retorno = it;
