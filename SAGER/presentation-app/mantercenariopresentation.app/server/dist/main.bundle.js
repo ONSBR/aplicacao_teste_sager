@@ -541,7 +541,13 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.ativarInativar = function (cenario) {
         var _this = this;
         var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].ativarInativarCenario;
-        this.http.post(url, { idCenario: cenario.idCenario }).subscribe(function (data) {
+        var body = {
+            idCenario: cenario.idCenario,
+            dataInicioVigencia: cenario.dataInicioVigencia,
+            dataFimVigencia: cenario.dataFimVigencia,
+            idUsina: cenario.idUsina
+        };
+        this.http.post(url, body).subscribe(function (data) {
             alert('Alteração de cenário realizada com sucesso!');
             _this.pesquisar();
         });

@@ -1,5 +1,6 @@
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
 const EventPromiseHelper = require('../helpers/eventpromisehelper');
+const AbrirCenario = require('./abrircenario');
 const utils = require('../utils');
 
 const SituacaoCenario = {
@@ -16,7 +17,7 @@ class CenarioBusiness {
     constructor() {
         this.domainPromiseHelper = new DomainPromiseHelper();
         this.eventPromiseHelper = new EventPromiseHelper();
-
+        this.abrirCenario = new AbrirCenario();
     }
 
     /**
@@ -167,7 +168,7 @@ class CenarioBusiness {
      * @param {reject} reject
      */
     ativarInativarCenario(context, resolve, reject, fork) {
-        
+        let event;
         context.dataset.cenario.collection.forEach(cenario => {
             if (cenario.situacao == SituacaoCenario.Ativo) {
                 this.excluirCenario(context, resolve, reject);
@@ -179,7 +180,14 @@ class CenarioBusiness {
             }
         });
 
-        resolve();
+        if(event) {
+            console.log('----- Send aplicar.criterios.cenario event---------');
+            console.log(JSON.stringify(event));
+            console.log('---------');
+            this.eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
+        } else {
+            resolve();
+        }
     }
 
     /**

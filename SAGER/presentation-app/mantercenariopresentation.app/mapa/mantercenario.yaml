@@ -88,4 +88,28 @@ usina:
   filters:
     all:
     byIdUsina: "id_usina = :idUsina"
+
+eventomudancaestadooperativo:
+  model: tb_evt_estado_oper
+  fields:
+    idEvento:
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_class_origem
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+    idCondicaoOperativa:
+      column: id_cond_oper
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: pot_disp
+    numONS: 
+      column: numero_ons
+    eversao:
+      column: eversao  
+  filters:
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina"
       
