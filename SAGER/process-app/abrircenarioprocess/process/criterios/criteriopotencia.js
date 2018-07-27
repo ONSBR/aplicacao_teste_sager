@@ -1,31 +1,27 @@
 const CenarioBusiness = require('./cenariobusiness');
+const CriterioLog = require('./criteriolog');
 class CriterioPotencia {
 
     aplicar(regra, dataset) {
 
-        console.log('Aplicando critério de potência');
+        CriterioLog.log(regra);
 
         let cenarioBusiness = new CenarioBusiness();
 
         dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
-            return evento.idUge == regra.regraDe;
+            console.log('-----------------');
+            console.log('Evento para filtro=');
+            console.log(evento);
+            console.log(evento.idUge == regra.regraDe);
+            console.log(evento.dataVerificada >= regra.dataInicioVigencia);
+            console.log(evento.dataVerificada <= regra.dataFimVigencia);
+            console.log('-----------------');
+            
+            return (evento.idUge == regra.regraDe && 
+                evento.dataVerificada >= regra.dataInicioVigencia && 
+                evento.dataVerificada <= regra.dataFimVigencia);
         }).forEach(evento=>{
-            evento.potenciaDisponivel = regra.regraPara;
             cenarioBusiness.updatePotencia(regra, evento, dataset);
-        });
-
-        dataset.potenciaunidadegeradora.collection.toArray().filter(potenciaunidadegeradora => {
-            return potenciaunidadegeradora.idUge == regra.regraDe;
-        }).forEach(potenciaUnidadeGeradoraToUpdate => {
-            potenciaUnidadeGeradoraToUpdate.potenciaDisponivel = regra.regraPara;
-            dataset.potenciaunidadegeradora.update(potenciaUnidadeGeradoraToUpdate);
-        });
-
-        dataset.unidadegeradora.collection.toArray().filter(unidadegeradora => {
-            return unidadegeradora.idUge == regra.regraDe;
-        }).forEach(unidadeGeradoraToUpdate => {
-            unidadeGeradoraToUpdate.potenciaDisponivel = regra.regraPara;
-            dataset.unidadegeradora.update(unidadeGeradoraToUpdate);
         });
 
     }

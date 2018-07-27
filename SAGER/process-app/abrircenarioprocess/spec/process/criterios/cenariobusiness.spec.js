@@ -33,13 +33,7 @@ describe('Critério: ', function () {
         cenarioBusiness.updatePotencia(regraPotenciaDisponivelMaior, evento, dataset);
 
         expect(update.calls.count()).toEqual(1);
-        expect(update).toHaveBeenCalledWith({
-            idEvento: 2,
-            idUge: 'ALUXG-0UG1',
-            potenciaDisponivel: '5000',
-            idCondicaoOperativa: 'NOR',
-            idClassificacaoOrigem: undefined
-        });
+        expect(update).toHaveBeenCalledWith({ idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: '5000' });
     });
 
     it('RNI - 202  Alteração da potência para cálculo para um valor menor. ii', () => {
@@ -49,18 +43,19 @@ describe('Critério: ', function () {
 
         expect(update.calls.count()).toEqual(1);
         expect(update).toHaveBeenCalledWith({
-            idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GUM'
+            idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
         });
     });
 
-    it('RNI - 202  Alteração da potência para cálculo para um valor menor com evento anterior RFO. ii', () => {
+    it('RNI - 202  Alteração da potência para cálculo para um valor maior com evento anterior RFO. ii', () => {
+        let regra = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG2', regraPara: '1003' };
         let evento2 = { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
 
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMenor, evento2, dataset);
+        cenarioBusiness.updatePotencia(regra, evento2, dataset);
 
         expect(update.calls.count()).toEqual(1);
         expect(update).toHaveBeenCalledWith({
-            idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
+            idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1003', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
         });
     });
 
@@ -77,7 +72,7 @@ describe('Critério: ', function () {
         let regraAlteracaoClassificacao3 = { tipoRegra: 'Classificação de Origem do Evento', regraDe: 'GGE', regraPara: 'GIM' };
 
         expect(
-            function() {
+            function () {
                 cenarioBusiness.validateClassificacaoOrigem(evento3, regraAlteracaoClassificacao3);
             }
         ).toThrowError('Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.');
