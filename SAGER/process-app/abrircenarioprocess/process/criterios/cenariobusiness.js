@@ -13,35 +13,26 @@ class CenarioBusiness {
             return eventoFilter.idEvento == eventoToUpdate.idEvento;
         });
 
-        console.log(regra.regraPara);
-        console.log(eventoDB);
-        console.log(regra.regraPara > eventoDB.potenciaDisponivel);
-        console.log(eventoDB.idCondicaoOperativa == 'NOR');
-        
         if (regra.regraPara > eventoDB.potenciaDisponivel && eventoDB.idCondicaoOperativa == 'NOR') {
             eventoToUpdate.potenciaDisponivel = regra.regraPara;
             this.updateCondicaoOperativaEOrigem(eventoToUpdate);
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        } 
-        
-        // else if (eventoDB.potenciaDisponivel < regra.regraPara) {
+        } else if (regra.regraPara < eventoDB.potenciaDisponivel) {
+            let cincoPorcento = eventoDB.potenciaDisponivel * 0.05;
+            let menorValor = Math.min(CINCO_MW, cincoPorcento);
+            let diferencaValores = eventoDB.potenciaDisponivel - menorValor;
 
-        //     let diferencaValores = regra.regraPara - eventoDB.potenciaDisponivel;
-        //     let cincoPorcento = eventoDB.potenciaDisponivel * 0.05;
+            let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
+            let eventoAnterior = eventos[indexEventoAnterior];
 
-        //     let menorValor = Math.min(CINCO_MW, cincoPorcento);
+            console.log("diferença valores=" + diferencaValores);
 
-        //     let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
-
-        //     let eventoAnterior = eventos[indexEventoAnterior];
-
-        //     if (diferencaValores < menorValor && !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
-        //         this.updateCondicaoOperativaEOrigem(eventoToUpdate);
-        //     } 
-            
-        //     eventoToUpdate.potenciaDisponivel = regra.regraPara;
-        //     dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        // }
+            if (diferencaValores < eventoDB.potenciaDisponivel && !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
+                this.updateCondicaoOperativaEOrigem(eventoToUpdate);
+                eventoToUpdate.potenciaDisponivel = regra.regraPara;
+                dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+            } 
+        }
 
     }
 
