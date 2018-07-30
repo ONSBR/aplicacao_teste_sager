@@ -18,7 +18,7 @@ describe('Critério: ', function () {
             eventomudancaestadooperativo: {
                 collection: Enumerable.from([
                     { idEvento: 1, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOT', idClassificacaoOrigem: 'GUM' },
-                    { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOT', idClassificacaoOrigem: 'GUM' },
+                    { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' },
                     { idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOT', idClassificacaoOrigem: 'GUM' },
                     { idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GUM' },
                     { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' }
@@ -28,36 +28,40 @@ describe('Critério: ', function () {
         };
     });
 
-    it('RNI - 202  Alteração da potência para cálculo para um valor menor. i', () => {
-        let evento = { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: '100' };
+    it('RNI - 203  Alteração da potência para cálculo para um valor maior. i', () => {
+        let evento = { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
         cenarioBusiness.updatePotencia(regraPotenciaDisponivelMaior, evento, dataset);
 
         expect(update.calls.count()).toEqual(1);
-        expect(update).toHaveBeenCalledWith({ idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: '5000' });
+        expect(update).toHaveBeenCalledWith({ idEvento: 2, 
+            idUge: 'ALUXG-0UG1', 
+            potenciaDisponivel: '5000', 
+            idCondicaoOperativa: 'NOR',  
+            idClassificacaoOrigem: ''});
     });
 
-    it('RNI - 202  Alteração da potência para cálculo para um valor menor. ii', () => {
-        let evento = { idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GUM' };
+    // it('RNI - 202  Alteração da potência para cálculo para um valor menor. i', () => {
+    //     let evento = { idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'RFO', idClassificacaoOrigem: 'GUM' };
 
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMenor, evento, dataset);
+    //     cenarioBusiness.updatePotencia(regraPotenciaDisponivelMenor, evento, dataset);
 
-        expect(update.calls.count()).toEqual(1);
-        expect(update).toHaveBeenCalledWith({
-            idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
-        });
-    });
+    //     expect(update.calls.count()).toEqual(1);
+    //     expect(update).toHaveBeenCalledWith({
+    //         idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
+    //     });
+    // });
 
-    it('RNI - 202  Alteração da potência para cálculo para um valor maior com evento anterior RFO. ii', () => {
-        let regra = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG2', regraPara: '1003' };
-        let evento2 = { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
+    // it('RNI - 202  Alteração da potência para cálculo para um valor maior com evento anterior RFO. ii', () => {
+    //     let regra = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG2', regraPara: '1003' };
+    //     let evento2 = { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1000', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
 
-        cenarioBusiness.updatePotencia(regra, evento2, dataset);
+    //     cenarioBusiness.updatePotencia(regra, evento2, dataset);
 
-        expect(update.calls.count()).toEqual(1);
-        expect(update).toHaveBeenCalledWith({
-            idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1003', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
-        });
-    });
+    //     expect(update.calls.count()).toEqual(1);
+    //     expect(update).toHaveBeenCalledWith({
+    //         idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: '1003', idCondicaoOperativa: 'NOR', idClassificacaoOrigem: undefined
+    //     });
+    // });
 
     it('RNI - 204  Exceção na alteração de classificação de origem.', () => {
         let evento = { idEvento: 1, idUge: 'ALUXG-0UG1', idClassificacaoOrigem: 'GGE', idEstadoOperativo: 'DCA' };

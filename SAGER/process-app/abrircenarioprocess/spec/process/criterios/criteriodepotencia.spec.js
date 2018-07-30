@@ -22,7 +22,7 @@ describe('Critério: ', function () {
             eventomudancaestadooperativo: {
                 collection: Enumerable.from([
                     { idEvento: '10', idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', dataVerificada: new Date(2018, 2, 1)},
-                    { idEvento: '11', idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', dataVerificada: new Date(2018, 3, 1)},
+                    { idEvento: '11', idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 3, 1)},
                     { idEvento: '12', idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', dataVerificada: new Date(2018, 4, 1)},
                     { idEvento: '13', idUge: 'ALUXG-0UG2', potenciaDisponivel: '100', dataVerificada: new Date(2018, 3, 30)}
                 ]),
@@ -37,6 +37,8 @@ describe('Critério: ', function () {
             idEvento: '11', 
             idUge: 'ALUXG-0UG1', 
             potenciaDisponivel: '500', 
+            idCondicaoOperativa: 'NOR',
+            idClassificacaoOrigem: '',
             dataVerificada: new Date(2018, 3, 1)
         });
     });

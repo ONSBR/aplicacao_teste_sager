@@ -13,34 +13,41 @@ class CenarioBusiness {
             return eventoFilter.idEvento == eventoToUpdate.idEvento;
         });
 
-        if (eventoDB.potenciaDisponivel > regra.regraPara) {
+        console.log(regra.regraPara);
+        console.log(eventoDB);
+        console.log(regra.regraPara > eventoDB.potenciaDisponivel);
+        console.log(eventoDB.idCondicaoOperativa == 'NOR');
+        
+        if (regra.regraPara > eventoDB.potenciaDisponivel && eventoDB.idCondicaoOperativa == 'NOR') {
             eventoToUpdate.potenciaDisponivel = regra.regraPara;
             this.updateCondicaoOperativaEOrigem(eventoToUpdate);
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        } else if (eventoDB.potenciaDisponivel < regra.regraPara) {
+        } 
+        
+        // else if (eventoDB.potenciaDisponivel < regra.regraPara) {
 
-            let diferencaValores = regra.regraPara - eventoDB.potenciaDisponivel;
-            let cincoPorcento = eventoDB.potenciaDisponivel * 0.05;
+        //     let diferencaValores = regra.regraPara - eventoDB.potenciaDisponivel;
+        //     let cincoPorcento = eventoDB.potenciaDisponivel * 0.05;
 
-            let menorValor = Math.min(CINCO_MW, cincoPorcento);
+        //     let menorValor = Math.min(CINCO_MW, cincoPorcento);
 
-            let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
+        //     let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
 
-            let eventoAnterior = eventos[indexEventoAnterior];
+        //     let eventoAnterior = eventos[indexEventoAnterior];
 
-            if (diferencaValores < menorValor && !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
-                this.updateCondicaoOperativaEOrigem(eventoToUpdate);
-            } 
+        //     if (diferencaValores < menorValor && !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
+        //         this.updateCondicaoOperativaEOrigem(eventoToUpdate);
+        //     } 
             
-            eventoToUpdate.potenciaDisponivel = regra.regraPara;
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        }
+        //     eventoToUpdate.potenciaDisponivel = regra.regraPara;
+        //     dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        // }
 
     }
 
     updateCondicaoOperativaEOrigem(eventoToUpdate) {
         eventoToUpdate.idCondicaoOperativa = 'NOR';
-        eventoToUpdate.idClassificacaoOrigem = undefined;
+        eventoToUpdate.idClassificacaoOrigem = '';
     }
 
     /**
