@@ -18,16 +18,15 @@ class CenarioBusiness {
             this.updateCondicaoOperativaEOrigem(eventoToUpdate);
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
         } else if (regra.regraPara < eventoDB.potenciaDisponivel) {
-            let cincoPorcento = eventoDB.potenciaDisponivel * 0.05;
+            let cincoPorcento = regra.regraPara * 0.05;
             let menorValor = Math.min(CINCO_MW, cincoPorcento);
-            let diferencaValores = eventoDB.potenciaDisponivel - menorValor;
+            let diferencaValores = regra.regraPara - menorValor;
 
             let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
             let eventoAnterior = eventos[indexEventoAnterior];
 
-            console.log("diferença valores=" + diferencaValores);
-
-            if (diferencaValores < eventoDB.potenciaDisponivel && !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
+            if (regra.regraPara > diferencaValores && 
+                    !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
                 this.updateCondicaoOperativaEOrigem(eventoToUpdate);
                 eventoToUpdate.potenciaDisponivel = regra.regraPara;
                 dataset.eventomudancaestadooperativo.update(eventoToUpdate);
