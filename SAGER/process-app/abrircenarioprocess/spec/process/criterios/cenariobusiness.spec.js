@@ -10,7 +10,7 @@ describe('Critério: ', function () {
 
     beforeEach(function () {
         cenarioBusiness = new CenarioBusiness();
-        regraPotenciaDisponivelMenor = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG2', regraPara: 400 };
+        regraPotenciaDisponivelMenor = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG1', regraPara: 400 };
         regraPotenciaDisponivelMaior = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG1', regraPara: 5000 };
         update = jasmine.createSpy('update');
 
@@ -31,7 +31,7 @@ describe('Critério: ', function () {
 
     it('RNI - 203  Alteração da potência para cálculo para um valor maior.  Evento NOR.', () => {
         let evento = { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMaior, evento, dataset);
+        cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, dataset);
 
         expect(update.calls.count()).toEqual(1);
 
@@ -47,14 +47,14 @@ describe('Critério: ', function () {
     it('RNI - 203  Alteração da potência para cálculo para um valor maior.  Evento RPR.', () => {
         let evento = { idEvento: 6, idUge: 'ALUXG-0UG1', potenciaDisponivel: 310, idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GIS' };
 
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMaior, evento, dataset);
-        
+        cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, dataset);
+
         expect(update.calls.count()).toEqual(0);
     });
 
     it('RNI - 203  Alteração da potência para cálculo para um valor maior com evento diferente de NOR', () => {
         let evento = { idEvento: 6, idUge: 'ALUXG-0UG1', potenciaDisponivel: 310, idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GIS' };
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMaior, evento, dataset);
+        cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, dataset);
 
         expect(update.calls.count()).toEqual(0);
     });
@@ -62,7 +62,7 @@ describe('Critério: ', function () {
     it('RNI - 202  Alteração da potência para cálculo para um valor menor. Sem evento anterior igual NOT ou TST', () => {
         let evento = { idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
 
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMenor, evento, dataset);
+        cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMenor, evento, dataset);
 
         expect(update.calls.count()).toEqual(1);
         expect(update).toHaveBeenCalledWith({
@@ -73,7 +73,7 @@ describe('Critério: ', function () {
     it('RNI - 202  Alteração da potência para cálculo para um valor menor. Com evento anterior igual NOT ou TST', () => {
         let evento = { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
 
-        cenarioBusiness.updatePotencia(regraPotenciaDisponivelMenor, evento, dataset);
+        cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMenor, evento, dataset);
 
         expect(update.calls.count()).toEqual(0);
     });

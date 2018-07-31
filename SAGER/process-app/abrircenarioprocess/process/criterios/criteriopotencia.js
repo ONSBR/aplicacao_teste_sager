@@ -13,7 +13,7 @@ class CriterioPotencia {
                 evento.dataVerificada >= regra.dataInicioVigencia && 
                 evento.dataVerificada <= regra.dataFimVigencia);
         }).forEach(evento=>{
-            cenarioBusiness.updatePotencia(regra, evento, dataset);
+            cenarioBusiness.updatePotenciaDisponivel(regra, evento, dataset);
         });
 
     }

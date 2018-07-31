@@ -32,7 +32,7 @@ describe('Critério: ', function () {
 
         criterios.aplicar(regraPotenciaDisponivel, dataset);
 
-        expect(update.calls.count()).toEqual(1);
+        expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith({
             idEvento: '11', 
             idUge: 'ALUXG-0UG1', 

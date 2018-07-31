@@ -6,38 +6,68 @@ class CenarioBusiness {
      * @param {*} evento 
      * @param {*} dataset 
      */
-    updatePotencia(regra, eventoToUpdate, dataset) {
+    updatePotenciaDisponivel(regra, eventoToUpdate, dataset) {
         const CINCO_MW = 5;
         let eventos = dataset.eventomudancaestadooperativo.collection.toArray();
-        let eventoDB = eventos.find(eventoFilter => {
-            return eventoFilter.idEvento == eventoToUpdate.idEvento;
-        });
-
+        let eventoDB = this.findByIdEvento(eventos, eventoToUpdate.idEvento);
         if (regra.regraPara > eventoDB.potenciaDisponivel && eventoDB.idCondicaoOperativa == 'NOR') {
-            eventoToUpdate.potenciaDisponivel = regra.regraPara;
-            this.updateCondicaoOperativaEOrigem(eventoToUpdate);
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+            this.updatePotenciaEvento(regra, eventoToUpdate, dataset);
         } else if (regra.regraPara < eventoDB.potenciaDisponivel) {
             let cincoPorcento = regra.regraPara * 0.05;
             let menorValor = Math.min(CINCO_MW, cincoPorcento);
             let diferencaValores = regra.regraPara - menorValor;
 
-            let indexEventoAnterior = eventos.findIndex(evento => evento.idEvento == eventoDB.idEvento) - 1;
+            let indexEventoAnterior = this.findIndexByIdEvento(eventos, eventoDB.idEvento) - 1;
             let eventoAnterior = eventos[indexEventoAnterior];
 
-            if (regra.regraPara > diferencaValores && 
-                    !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
-                this.updateCondicaoOperativaEOrigem(eventoToUpdate);
-                eventoToUpdate.potenciaDisponivel = regra.regraPara;
-                dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-            } 
+            if (regra.regraPara > diferencaValores &&
+                !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
+                this.updatePotenciaEvento(regra, eventoToUpdate, dataset);
+            }
         }
+    }
 
+    findByIdEvento(eventos, idEvento) {
+        return eventos.find(eventoFilter => {
+            return eventoFilter.idEvento == idEvento;
+        });
+    }
+
+    findIndexByIdEvento(eventos, idEvento) {
+        return eventos.findIndex(evento => evento.idEvento == idEvento)
+    }
+
+    updatePotenciaEvento(regra, eventoToUpdate, dataset) {
+        eventoToUpdate.potenciaDisponivel = regra.regraPara;
+        this.updateCondicaoOperativaEOrigem(eventoToUpdate);
+        dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        this.refletirParaEventoEspelho(eventoToUpdate, dataset);
     }
 
     updateCondicaoOperativaEOrigem(eventoToUpdate) {
         eventoToUpdate.idCondicaoOperativa = 'NOR';
         eventoToUpdate.idClassificacaoOrigem = '';
+    }
+
+    refletirParaEventoEspelho(eventoToUpdate, dataset) {
+        let eventos = dataset.eventomudancaestadooperativo.collection.toArray();
+        let indexEvento = this.findIndexByIdEvento(eventos, eventoToUpdate.idEvento);
+        let proximoEvento = eventos[indexEvento + 1];
+        if (proximoEvento != undefined && eventoToUpdate.dataVerificada != undefined &&
+            eventoToUpdate.dataVerificada.getMonth() != proximoEvento.dataVerificada.getMonth() &&
+            this.isEventoEspelho(proximoEvento)) {
+
+            proximoEvento.idClassificacaoOrigem = eventoToUpdate.idClassificacaoOrigem;
+            proximoEvento.idCondicaoOperativa = eventoToUpdate.idCondicaoOperativa;
+            proximoEvento.potenciaDisponivel = eventoToUpdate.potenciaDisponivel;
+            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        }
+    }
+
+    isEventoEspelho(evento) {
+        return evento.dataVerificada.getHours() == 0 &&
+            evento.dataVerificada.getMinutes() == 0 &&
+            evento.dataVerificada.getSeconds() == 0
     }
 
     /**
@@ -46,9 +76,9 @@ class CenarioBusiness {
      * @param {*} regra 
      */
     validateClassificacaoOrigem(eventoToUpdate, regra) {
-        if(eventoToUpdate.idEstadoOperativo == 'DCA') {
+        if (eventoToUpdate.idEstadoOperativo == 'DCA') {
             const classificacoesOrigensPermitidas = ['GOT', 'GGE', 'GUM', 'GCB', 'GTR', 'GAC', 'GAG', 'GCI'];
-            if(!classificacoesOrigensPermitidas.includes(regra.regraPara)) {
+            if (!classificacoesOrigensPermitidas.includes(regra.regraPara)) {
                 throw new Error('Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.');
             }
         }
