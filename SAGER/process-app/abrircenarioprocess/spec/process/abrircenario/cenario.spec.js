@@ -36,7 +36,6 @@ describe('Cenário: ', function () {
             }
         };
         let dataset = {};
-
         let context = {
             event: {
                 payload: payload

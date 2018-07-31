@@ -8,12 +8,13 @@ class CriterioPotencia {
 
         let cenarioBusiness = new CenarioBusiness();
 
-        dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
+        let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
             return (evento.idUge == regra.regraDe && 
                 evento.dataVerificada >= regra.dataInicioVigencia && 
                 evento.dataVerificada <= regra.dataFimVigencia);
-        }).forEach(evento=>{
-            cenarioBusiness.updatePotenciaDisponivel(regra, evento, dataset);
+        });
+        eventos.forEach(evento=>{
+            cenarioBusiness.updatePotenciaDisponivel(regra, evento, eventos, dataset);
         });
 
     }

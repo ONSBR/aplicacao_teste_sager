@@ -1,17 +1,17 @@
 class CenarioBusiness {
 
     /**
-     * RNI - 202  Alteração da potência para cálculo para um valor menor
+     * RNI202 - Alteração da potência para cálculo para um valor menor
+     * RNI203 - Alteração da potência para cálculo para um valor maior
      * @param {*} regra 
      * @param {*} evento 
      * @param {*} dataset 
      */
-    updatePotenciaDisponivel(regra, eventoToUpdate, dataset) {
+    updatePotenciaDisponivel(regra, eventoToUpdate, eventos, dataset) {
         const CINCO_MW = 5;
-        let eventos = dataset.eventomudancaestadooperativo.collection.toArray();
         let eventoDB = this.findByIdEvento(eventos, eventoToUpdate.idEvento);
         if (regra.regraPara > eventoDB.potenciaDisponivel && eventoDB.idCondicaoOperativa == 'NOR') {
-            this.updatePotenciaEvento(regra, eventoToUpdate, dataset);
+            this.updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset);
         } else if (regra.regraPara < eventoDB.potenciaDisponivel) {
             let cincoPorcento = regra.regraPara * 0.05;
             let menorValor = Math.min(CINCO_MW, cincoPorcento);
@@ -22,7 +22,7 @@ class CenarioBusiness {
 
             if (regra.regraPara > diferencaValores &&
                 !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
-                this.updatePotenciaEvento(regra, eventoToUpdate, dataset);
+                this.updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset);
             }
         }
     }
@@ -37,11 +37,11 @@ class CenarioBusiness {
         return eventos.findIndex(evento => evento.idEvento == idEvento)
     }
 
-    updatePotenciaEvento(regra, eventoToUpdate, dataset) {
+    updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset) {
         eventoToUpdate.potenciaDisponivel = regra.regraPara;
         this.updateCondicaoOperativaEOrigem(eventoToUpdate);
         dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        this.refletirParaEventoEspelho(eventoToUpdate, dataset);
+        this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
     }
 
     updateCondicaoOperativaEOrigem(eventoToUpdate) {
@@ -49,8 +49,7 @@ class CenarioBusiness {
         eventoToUpdate.idClassificacaoOrigem = '';
     }
 
-    refletirParaEventoEspelho(eventoToUpdate, dataset) {
-        let eventos = dataset.eventomudancaestadooperativo.collection.toArray();
+    refletirParaEventoEspelho(eventoToUpdate, eventos, dataset) {
         let indexEvento = this.findIndexByIdEvento(eventos, eventoToUpdate.idEvento);
         let proximoEvento = eventos[indexEvento + 1];
         if (proximoEvento != undefined && eventoToUpdate.dataVerificada != undefined &&
