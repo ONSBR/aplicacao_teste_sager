@@ -42,6 +42,14 @@ describe('Critério: ', function () {
             idClassificacaoOrigem: '',
             dataVerificada: new Date(2018, 0, 31)
         });
+        expect(update).toHaveBeenCalledWith({
+            idEvento: 6,
+            idUge: 'ALUXG-0UG1',
+            potenciaDisponivel: 5000,
+            idCondicaoOperativa: 'NOR',
+            idClassificacaoOrigem: '',
+            dataVerificada: new Date(2018, 1, 1, 0, 0, 0)
+        });
     });
 
 });

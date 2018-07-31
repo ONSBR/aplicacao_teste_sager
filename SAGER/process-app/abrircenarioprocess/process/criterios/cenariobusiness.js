@@ -60,7 +60,7 @@ class CenarioBusiness {
             proximoEvento.idClassificacaoOrigem = eventoToUpdate.idClassificacaoOrigem;
             proximoEvento.idCondicaoOperativa = eventoToUpdate.idCondicaoOperativa;
             proximoEvento.potenciaDisponivel = eventoToUpdate.potenciaDisponivel;
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+            dataset.eventomudancaestadooperativo.update(proximoEvento);
         }
     }
 
