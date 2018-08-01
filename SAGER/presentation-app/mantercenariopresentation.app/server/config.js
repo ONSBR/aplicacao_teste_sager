@@ -44,4 +44,8 @@ config.getUrlFiltroRegrasPorIdCenario = function (idCenario) {
     return `${config.URL_REGRA_SAGER}?filter=byIdCenario&idCenario=${idCenario}`;
 }
 
+config.getUrlFiltroUsina = function (idUsina) {
+    return `${config.URL_USINA_SAGER}?filter=byIdUsina&idUsina=${idUsina}`;
+}
+
 module.exports = config;

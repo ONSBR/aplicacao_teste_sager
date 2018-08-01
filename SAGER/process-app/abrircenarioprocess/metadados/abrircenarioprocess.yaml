@@ -1,0 +1,5 @@
+operations:
+  - name: aplicarCriterios
+    event: aplicar.criterios.cenario
+    commit: true
+   

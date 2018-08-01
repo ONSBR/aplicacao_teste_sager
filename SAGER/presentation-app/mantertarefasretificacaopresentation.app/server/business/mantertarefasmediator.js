@@ -44,7 +44,6 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.numONS = this.getSheetValue(planilha.Sheets.eventos, 'D', i);
             eventoMudancaEstadoOperativoTarefa.idEstadoOperativo = this.getSheetValue(planilha.Sheets.eventos, 'E', i);
             eventoMudancaEstadoOperativoTarefa.idCondicaoOperativa = this.getSheetValue(planilha.Sheets.eventos, 'F', i);
-            eventoMudancaEstadoOperativoTarefa.idClassificacaoOrigem = this.getSheetValue(planilha.Sheets.eventos, 'G', i);
             eventoMudancaEstadoOperativoTarefa.dataVerificada = Util.excelStrToDate(this.getSheetValue(planilha.Sheets.eventos, 'H', i));
             eventoMudancaEstadoOperativoTarefa.potenciaDisponivel = parseFloat(this.getSheetValue(planilha.Sheets.eventos, 'I', i));
             eventoMudancaEstadoOperativoTarefa.eversao = parseInt(this.getSheetValue(planilha.Sheets.eventos, 'J', i));
@@ -134,7 +133,7 @@ class ManterTarefasMediator {
     async concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventos) {
         let eventosMenorQueData = await this.eventoDAO.consultarEventosMenorQueData(minDataEventoAlterado);
         let eventosMaiorQueData = await this.eventoDAO.consultarEventosMaiorQueData(maxDataEventoAlterado);
-        return eventosMenorQueData.concat(eventos, eventosMaiorQueData);;
+        return eventosMenorQueData.concat(eventos, eventosMaiorQueData);
     }
 
     persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD) {
@@ -153,7 +152,6 @@ class ManterTarefasMediator {
 
     alterarEventoRetificacao(context, eventoRetificacaoComOperacao, eventoRetificaoBD) {
         eventoRetificaoBD.idEstadoOperativo = eventoRetificacaoComOperacao.idEstadoOperativo;
-        eventoRetificaoBD.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
         eventoRetificaoBD.idCondicaoOperativa = eventoRetificacaoComOperacao.idCondicaoOperativa;
         eventoRetificaoBD.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
         eventoRetificaoBD.eversao++;
@@ -171,7 +169,6 @@ class ManterTarefasMediator {
         novoEventoRetificacao.idEvento = eventoRetificacaoComOperacao.idEvento;
         novoEventoRetificacao.idEstadoOperativo = eventoRetificacaoComOperacao.idEstadoOperativo;
         novoEventoRetificacao.idCondicaoOperativa = eventoRetificacaoComOperacao.idCondicaoOperativa;
-        novoEventoRetificacao.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
         novoEventoRetificacao.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
         novoEventoRetificacao.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
         novoEventoRetificacao.numONS = eventoRetificacaoComOperacao.numONS;
@@ -198,9 +195,7 @@ class ManterTarefasMediator {
                     eventManager.emit(evento);
                 });
             }
-
             resolve({ msg: "OK" });
-
         }).catch(error => { this.catchError(error, 'retificação', '', reject) });
     }
 

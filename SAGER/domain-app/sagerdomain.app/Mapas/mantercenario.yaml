@@ -64,6 +64,9 @@ usina:
     nome:
       column: nome
       required: true
+    franquia:
+      column: franquia
+      required: true
   filters:
     all:
       

@@ -1,9 +1,25 @@
 tb_unidade_geradora:
   id_uge:
     - string
-  pot_disp:
-    - double
   data_inicio_operacao:
     - datetime
   id_usina:
     - string
+  pot_disp:
+    - double
+  franq_gic_hor_lim:
+    - double
+  franq_gic_lim_ant_102014:
+    - double
+  franq_gic_lim_pos_102014:
+    - double
+  franq_gmt_hor_lim_ant_01102014:        
+    - double  
+  franq_gmt_hor_lim_apar_01102014:        
+    - double
+  franq_gim_rest:
+    - double
+  franq_gim_lim_ant_01102014:          
+    - double
+  franq_gim_lim_pos_01102014:          
+    - double      

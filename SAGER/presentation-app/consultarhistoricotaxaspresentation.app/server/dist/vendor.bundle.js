@@ -125,7 +125,7 @@ var InnerSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return InnerSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */]));
-//# sourceMappingURL=InnerSubscriber.js.map
+//# sourceMappingURL=InnerSubscriber.js.map 
 
 
 /***/ }),
@@ -368,7 +368,7 @@ var Observable = /*@__PURE__*/ (/*@__PURE__*/ function () {
             }, reject, resolve);
         });
     };
-    /** @deprecated internal use only */ Observable.prototype._subscribe = function (subscriber) {
+    Observable.prototype._subscribe = function (subscriber) {
         return this.source.subscribe(subscriber);
     };
     /**
@@ -442,7 +442,7 @@ var Observable = /*@__PURE__*/ (/*@__PURE__*/ function () {
     };
     return Observable;
 }());
-//# sourceMappingURL=Observable.js.map
+//# sourceMappingURL=Observable.js.map 
 
 
 /***/ }),
@@ -459,7 +459,7 @@ var empty = {
     error: function (err) { throw err; },
     complete: function () { }
 };
-//# sourceMappingURL=Observer.js.map
+//# sourceMappingURL=Observer.js.map 
 
 
 /***/ }),
@@ -500,7 +500,7 @@ var OuterSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return OuterSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */]));
-//# sourceMappingURL=OuterSubscriber.js.map
+//# sourceMappingURL=OuterSubscriber.js.map 
 
 
 /***/ }),
@@ -618,7 +618,7 @@ var Subject = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
             return _super.prototype._trySubscribe.call(this, subscriber);
         }
     };
-    /** @deprecated internal use only */ Subject.prototype._subscribe = function (subscriber) {
+    Subject.prototype._subscribe = function (subscriber) {
         if (this.closed) {
             throw new __WEBPACK_IMPORTED_MODULE_3__util_ObjectUnsubscribedError__["a" /* ObjectUnsubscribedError */]();
         }
@@ -673,7 +673,7 @@ var AnonymousSubject = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
             this.destination.complete();
         }
     };
-    /** @deprecated internal use only */ AnonymousSubject.prototype._subscribe = function (subscriber) {
+    AnonymousSubject.prototype._subscribe = function (subscriber) {
         var source = this.source;
         if (source) {
             return this.source.subscribe(subscriber);
@@ -684,7 +684,7 @@ var AnonymousSubject = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return AnonymousSubject;
 }(Subject));
-//# sourceMappingURL=Subject.js.map
+//# sourceMappingURL=Subject.js.map 
 
 
 /***/ }),
@@ -735,7 +735,7 @@ var SubjectSubscription = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return SubjectSubscription;
 }(__WEBPACK_IMPORTED_MODULE_0__Subscription__["a" /* Subscription */]));
-//# sourceMappingURL=SubjectSubscription.js.map
+//# sourceMappingURL=SubjectSubscription.js.map 
 
 
 /***/ }),
@@ -797,13 +797,10 @@ var Subscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
                     break;
                 }
                 if (typeof destinationOrNext === 'object') {
-                    // HACK(benlesh): To resolve an issue where Node users may have multiple
-                    // copies of rxjs in their node_modules directory.
-                    if (isTrustedSubscriber(destinationOrNext)) {
-                        var trustedSubscriber = destinationOrNext[__WEBPACK_IMPORTED_MODULE_3__symbol_rxSubscriber__["a" /* rxSubscriber */]]();
-                        this.syncErrorThrowable = trustedSubscriber.syncErrorThrowable;
-                        this.destination = trustedSubscriber;
-                        trustedSubscriber.add(this);
+                    if (destinationOrNext instanceof Subscriber) {
+                        this.syncErrorThrowable = destinationOrNext.syncErrorThrowable;
+                        this.destination = destinationOrNext;
+                        this.destination.add(this);
                     }
                     else {
                         this.syncErrorThrowable = true;
@@ -889,7 +886,7 @@ var Subscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         this.destination.complete();
         this.unsubscribe();
     };
-    /** @deprecated internal use only */ Subscriber.prototype._unsubscribeAndRecycle = function () {
+    Subscriber.prototype._unsubscribeAndRecycle = function () {
         var _a = this, _parent = _a._parent, _parents = _a._parents;
         this._parent = null;
         this._parents = null;
@@ -1009,7 +1006,7 @@ var SafeSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         }
         return false;
     };
-    /** @deprecated internal use only */ SafeSubscriber.prototype._unsubscribe = function () {
+    SafeSubscriber.prototype._unsubscribe = function () {
         var _parentSubscriber = this._parentSubscriber;
         this._context = null;
         this._parentSubscriber = null;
@@ -1017,10 +1014,7 @@ var SafeSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return SafeSubscriber;
 }(Subscriber));
-function isTrustedSubscriber(obj) {
-    return obj instanceof Subscriber || ('syncErrorThrowable' in obj && obj[__WEBPACK_IMPORTED_MODULE_3__symbol_rxSubscriber__["a" /* rxSubscriber */]]);
-}
-//# sourceMappingURL=Subscriber.js.map
+//# sourceMappingURL=Subscriber.js.map 
 
 
 /***/ }),
@@ -1227,7 +1221,7 @@ var Subscription = /*@__PURE__*/ (/*@__PURE__*/ function () {
 function flattenUnsubscriptionErrors(errors) {
     return errors.reduce(function (errs, err) { return errs.concat((err instanceof __WEBPACK_IMPORTED_MODULE_5__util_UnsubscriptionError__["a" /* UnsubscriptionError */]) ? err.errors : err); }, []);
 }
-//# sourceMappingURL=Subscription.js.map
+//# sourceMappingURL=Subscription.js.map 
 
 
 /***/ }),
@@ -1344,7 +1338,7 @@ var ArrayObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         state.index = index + 1;
         this.schedule(state);
     };
-    /** @deprecated internal use only */ ArrayObservable.prototype._subscribe = function (subscriber) {
+    ArrayObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var array = this.array;
         var count = array.length;
@@ -1363,7 +1357,7 @@ var ArrayObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return ArrayObservable;
 }(__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */]));
-//# sourceMappingURL=ArrayObservable.js.map
+//# sourceMappingURL=ArrayObservable.js.map 
 
 
 /***/ }),
@@ -1397,18 +1391,17 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var ConnectableObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     __extends(ConnectableObservable, _super);
-    function ConnectableObservable(/** @deprecated internal use only */ source, 
-    /** @deprecated internal use only */ subjectFactory) {
+    function ConnectableObservable(source, subjectFactory) {
         _super.call(this);
         this.source = source;
         this.subjectFactory = subjectFactory;
-        /** @deprecated internal use only */ this._refCount = 0;
+        this._refCount = 0;
         this._isComplete = false;
     }
-    /** @deprecated internal use only */ ConnectableObservable.prototype._subscribe = function (subscriber) {
+    ConnectableObservable.prototype._subscribe = function (subscriber) {
         return this.getSubject().subscribe(subscriber);
     };
-    /** @deprecated internal use only */ ConnectableObservable.prototype.getSubject = function () {
+    ConnectableObservable.prototype.getSubject = function () {
         var subject = this._subject;
         if (!subject || subject.isStopped) {
             this._subject = this.subjectFactory();
@@ -1464,7 +1457,7 @@ var ConnectableSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         this._unsubscribe();
         _super.prototype._complete.call(this);
     };
-    /** @deprecated internal use only */ ConnectableSubscriber.prototype._unsubscribe = function () {
+    ConnectableSubscriber.prototype._unsubscribe = function () {
         var connectable = this.connectable;
         if (connectable) {
             this.connectable = null;
@@ -1501,7 +1494,7 @@ var RefCountSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         _super.call(this, destination);
         this.connectable = connectable;
     }
-    /** @deprecated internal use only */ RefCountSubscriber.prototype._unsubscribe = function () {
+    RefCountSubscriber.prototype._unsubscribe = function () {
         var connectable = this.connectable;
         if (!connectable) {
             this.connection = null;
@@ -1550,7 +1543,7 @@ var RefCountSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return RefCountSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_2__Subscriber__["a" /* Subscriber */]));
-//# sourceMappingURL=ConnectableObservable.js.map
+//# sourceMappingURL=ConnectableObservable.js.map 
 
 
 /***/ }),
@@ -1631,7 +1624,7 @@ var EmptyObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         var subscriber = arg.subscriber;
         subscriber.complete();
     };
-    /** @deprecated internal use only */ EmptyObservable.prototype._subscribe = function (subscriber) {
+    EmptyObservable.prototype._subscribe = function (subscriber) {
         var scheduler = this.scheduler;
         if (scheduler) {
             return scheduler.schedule(EmptyObservable.dispatch, 0, { subscriber: subscriber });
@@ -1642,7 +1635,7 @@ var EmptyObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return EmptyObservable;
 }(__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */]));
-//# sourceMappingURL=EmptyObservable.js.map
+//# sourceMappingURL=EmptyObservable.js.map 
 
 
 /***/ }),
@@ -1802,7 +1795,7 @@ var ForkJoinObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         }
         return new ForkJoinObservable(sources, resultSelector);
     };
-    /** @deprecated internal use only */ ForkJoinObservable.prototype._subscribe = function (subscriber) {
+    ForkJoinObservable.prototype._subscribe = function (subscriber) {
         return new ForkJoinSubscriber(subscriber, this.sources, this.resultSelector);
     };
     return ForkJoinObservable;
@@ -1859,7 +1852,7 @@ var ForkJoinSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return ForkJoinSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_4__OuterSubscriber__["a" /* OuterSubscriber */]));
-//# sourceMappingURL=ForkJoinObservable.js.map
+//# sourceMappingURL=ForkJoinObservable.js.map 
 
 
 /***/ }),
@@ -1922,7 +1915,7 @@ var PromiseObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     PromiseObservable.create = function (promise, scheduler) {
         return new PromiseObservable(promise, scheduler);
     };
-    /** @deprecated internal use only */ PromiseObservable.prototype._subscribe = function (subscriber) {
+    PromiseObservable.prototype._subscribe = function (subscriber) {
         var _this = this;
         var promise = this.promise;
         var scheduler = this.scheduler;
@@ -1992,7 +1985,7 @@ function dispatchError(arg) {
         subscriber.error(err);
     }
 }
-//# sourceMappingURL=PromiseObservable.js.map
+//# sourceMappingURL=PromiseObservable.js.map 
 
 
 /***/ }),
@@ -2044,7 +2037,7 @@ var ScalarObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         state.done = true;
         this.schedule(state);
     };
-    /** @deprecated internal use only */ ScalarObservable.prototype._subscribe = function (subscriber) {
+    ScalarObservable.prototype._subscribe = function (subscriber) {
         var value = this.value;
         var scheduler = this.scheduler;
         if (scheduler) {
@@ -2061,7 +2054,7 @@ var ScalarObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return ScalarObservable;
 }(__WEBPACK_IMPORTED_MODULE_0__Observable__["a" /* Observable */]));
-//# sourceMappingURL=ScalarObservable.js.map
+//# sourceMappingURL=ScalarObservable.js.map 
 
 
 /***/ }),
@@ -2075,7 +2068,7 @@ var ScalarObservable = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
 /** PURE_IMPORTS_START ._ForkJoinObservable PURE_IMPORTS_END */
 
 var forkJoin = __WEBPACK_IMPORTED_MODULE_0__ForkJoinObservable__["a" /* ForkJoinObservable */].create;
-//# sourceMappingURL=forkJoin.js.map
+//# sourceMappingURL=forkJoin.js.map 
 
 
 /***/ }),
@@ -2089,7 +2082,7 @@ var forkJoin = __WEBPACK_IMPORTED_MODULE_0__ForkJoinObservable__["a" /* ForkJoin
 /** PURE_IMPORTS_START ._PromiseObservable PURE_IMPORTS_END */
 
 var fromPromise = __WEBPACK_IMPORTED_MODULE_0__PromiseObservable__["a" /* PromiseObservable */].create;
-//# sourceMappingURL=fromPromise.js.map
+//# sourceMappingURL=fromPromise.js.map 
 
 
 /***/ }),
@@ -2191,7 +2184,7 @@ function merge() {
     }
     return Object(__WEBPACK_IMPORTED_MODULE_3__operators_mergeAll__["a" /* mergeAll */])(concurrent)(new __WEBPACK_IMPORTED_MODULE_1__ArrayObservable__["a" /* ArrayObservable */](observables, scheduler));
 }
-//# sourceMappingURL=merge.js.map
+//# sourceMappingURL=merge.js.map 
 
 
 /***/ }),
@@ -2205,7 +2198,7 @@ function merge() {
 /** PURE_IMPORTS_START ._ArrayObservable PURE_IMPORTS_END */
 
 var of = __WEBPACK_IMPORTED_MODULE_0__ArrayObservable__["a" /* ArrayObservable */].of;
-//# sourceMappingURL=of.js.map
+//# sourceMappingURL=of.js.map 
 
 
 /***/ }),
@@ -2281,7 +2274,7 @@ var of = __WEBPACK_IMPORTED_MODULE_0__ArrayObservable__["a" /* ArrayObservable *
 function concatMap(project, resultSelector) {
     return Object(__WEBPACK_IMPORTED_MODULE_0__operators_concatMap__["a" /* concatMap */])(project, resultSelector)(this);
 }
-//# sourceMappingURL=concatMap.js.map
+//# sourceMappingURL=concatMap.js.map 
 
 
 /***/ }),
@@ -2337,7 +2330,7 @@ function concatMap(project, resultSelector) {
 function filter(predicate, thisArg) {
     return Object(__WEBPACK_IMPORTED_MODULE_0__operators_filter__["a" /* filter */])(predicate, thisArg)(this);
 }
-//# sourceMappingURL=filter.js.map
+//# sourceMappingURL=filter.js.map 
 
 
 /***/ }),
@@ -2386,7 +2379,7 @@ function filter(predicate, thisArg) {
 function map(project, thisArg) {
     return Object(__WEBPACK_IMPORTED_MODULE_0__operators_map__["a" /* map */])(project, thisArg)(this);
 }
-//# sourceMappingURL=map.js.map
+//# sourceMappingURL=map.js.map 
 
 
 /***/ }),
@@ -2419,7 +2412,7 @@ function share() {
     return Object(__WEBPACK_IMPORTED_MODULE_0__operators_share__["a" /* share */])()(this);
 }
 ;
-//# sourceMappingURL=share.js.map
+//# sourceMappingURL=share.js.map 
 
 
 /***/ }),
@@ -2495,7 +2488,7 @@ function share() {
 function concatMap(project, resultSelector) {
     return Object(__WEBPACK_IMPORTED_MODULE_0__mergeMap__["a" /* mergeMap */])(project, resultSelector, 1);
 }
-//# sourceMappingURL=concatMap.js.map
+//# sourceMappingURL=concatMap.js.map 
 
 
 /***/ }),
@@ -2600,7 +2593,7 @@ var FilterSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return FilterSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */]));
-//# sourceMappingURL=filter.js.map
+//# sourceMappingURL=filter.js.map 
 
 
 /***/ }),
@@ -2700,7 +2693,7 @@ var MapSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return MapSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */]));
-//# sourceMappingURL=map.js.map
+//# sourceMappingURL=map.js.map 
 
 
 /***/ }),
@@ -2765,7 +2758,7 @@ function mergeAll(concurrent) {
     }
     return Object(__WEBPACK_IMPORTED_MODULE_0__mergeMap__["a" /* mergeMap */])(__WEBPACK_IMPORTED_MODULE_1__util_identity__["a" /* identity */], null, concurrent);
 }
-//# sourceMappingURL=mergeAll.js.map
+//# sourceMappingURL=mergeAll.js.map 
 
 
 /***/ }),
@@ -2956,7 +2949,7 @@ var MergeMapSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return MergeMapSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_1__OuterSubscriber__["a" /* OuterSubscriber */]));
-//# sourceMappingURL=mergeMap.js.map
+//# sourceMappingURL=mergeMap.js.map 
 
 
 /***/ }),
@@ -3024,7 +3017,7 @@ var MulticastOperator = /*@__PURE__*/ (/*@__PURE__*/ function () {
     };
     return MulticastOperator;
 }());
-//# sourceMappingURL=multicast.js.map
+//# sourceMappingURL=multicast.js.map 
 
 
 /***/ }),
@@ -3071,7 +3064,7 @@ var RefCountSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
         _super.call(this, destination);
         this.connectable = connectable;
     }
-    /** @deprecated internal use only */ RefCountSubscriber.prototype._unsubscribe = function () {
+    RefCountSubscriber.prototype._unsubscribe = function () {
         var connectable = this.connectable;
         if (!connectable) {
             this.connection = null;
@@ -3120,7 +3113,7 @@ var RefCountSubscriber = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     };
     return RefCountSubscriber;
 }(__WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */]));
-//# sourceMappingURL=refCount.js.map
+//# sourceMappingURL=refCount.js.map 
 
 
 /***/ }),
@@ -3156,7 +3149,7 @@ function share() {
     return function (source) { return Object(__WEBPACK_IMPORTED_MODULE_1__refCount__["a" /* refCount */])()(Object(__WEBPACK_IMPORTED_MODULE_0__multicast__["a" /* multicast */])(shareSubjectFactory)(source)); };
 }
 ;
-//# sourceMappingURL=share.js.map
+//# sourceMappingURL=share.js.map 
 
 
 /***/ }),
@@ -3205,7 +3198,7 @@ var iterator = /*@__PURE__*/ symbolIteratorPonyfill(__WEBPACK_IMPORTED_MODULE_0_
  * @deprecated use iterator instead
  */
 var $$iterator = iterator;
-//# sourceMappingURL=iterator.js.map
+//# sourceMappingURL=iterator.js.map 
 
 
 /***/ }),
@@ -3242,7 +3235,7 @@ var observable = /*@__PURE__*/ getSymbolObservable(__WEBPACK_IMPORTED_MODULE_0__
  * @deprecated use observable instead
  */
 var $$observable = observable;
-//# sourceMappingURL=observable.js.map
+//# sourceMappingURL=observable.js.map 
 
 
 /***/ }),
@@ -3263,7 +3256,7 @@ var rxSubscriber = (typeof Symbol === 'function' && typeof Symbol.for === 'funct
  * @deprecated use rxSubscriber instead
  */
 var $$rxSubscriber = rxSubscriber;
-//# sourceMappingURL=rxSubscriber.js.map
+//# sourceMappingURL=rxSubscriber.js.map 
 
 
 /***/ }),
@@ -3300,7 +3293,7 @@ var ObjectUnsubscribedError = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     }
     return ObjectUnsubscribedError;
 }(Error));
-//# sourceMappingURL=ObjectUnsubscribedError.js.map
+//# sourceMappingURL=ObjectUnsubscribedError.js.map 
 
 
 /***/ }),
@@ -3335,7 +3328,7 @@ var UnsubscriptionError = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
     }
     return UnsubscriptionError;
 }(Error));
-//# sourceMappingURL=UnsubscriptionError.js.map
+//# sourceMappingURL=UnsubscriptionError.js.map 
 
 
 /***/ }),
@@ -3348,7 +3341,7 @@ var UnsubscriptionError = /*@__PURE__*/ (/*@__PURE__*/ function (_super) {
 // typeof any so that it we don't have to cast when comparing a result to the error object
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var errorObject = { e: {} };
-//# sourceMappingURL=errorObject.js.map
+//# sourceMappingURL=errorObject.js.map 
 
 
 /***/ }),
@@ -3362,7 +3355,7 @@ var errorObject = { e: {} };
 function identity(x) {
     return x;
 }
-//# sourceMappingURL=identity.js.map
+//# sourceMappingURL=identity.js.map 
 
 
 /***/ }),
@@ -3374,7 +3367,7 @@ function identity(x) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return isArray; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var isArray = Array.isArray || (function (x) { return x && typeof x.length === 'number'; });
-//# sourceMappingURL=isArray.js.map
+//# sourceMappingURL=isArray.js.map 
 
 
 /***/ }),
@@ -3386,7 +3379,7 @@ var isArray = Array.isArray || (function (x) { return x && typeof x.length === '
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return isArrayLike; });
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var isArrayLike = (function (x) { return x && typeof x.length === 'number'; });
-//# sourceMappingURL=isArrayLike.js.map
+//# sourceMappingURL=isArrayLike.js.map 
 
 
 /***/ }),
@@ -3400,7 +3393,7 @@ var isArrayLike = (function (x) { return x && typeof x.length === 'number'; });
 function isFunction(x) {
     return typeof x === 'function';
 }
-//# sourceMappingURL=isFunction.js.map
+//# sourceMappingURL=isFunction.js.map 
 
 
 /***/ }),
@@ -3414,7 +3407,7 @@ function isFunction(x) {
 function isObject(x) {
     return x != null && typeof x === 'object';
 }
-//# sourceMappingURL=isObject.js.map
+//# sourceMappingURL=isObject.js.map 
 
 
 /***/ }),
@@ -3428,7 +3421,7 @@ function isObject(x) {
 function isPromise(value) {
     return value && typeof value.subscribe !== 'function' && typeof value.then === 'function';
 }
-//# sourceMappingURL=isPromise.js.map
+//# sourceMappingURL=isPromise.js.map 
 
 
 /***/ }),
@@ -3442,7 +3435,7 @@ function isPromise(value) {
 function isScheduler(value) {
     return value && typeof value.schedule === 'function';
 }
-//# sourceMappingURL=isScheduler.js.map
+//# sourceMappingURL=isScheduler.js.map 
 
 
 /***/ }),
@@ -3455,7 +3448,7 @@ function isScheduler(value) {
 /* tslint:disable:no-empty */
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 function noop() { }
-//# sourceMappingURL=noop.js.map
+//# sourceMappingURL=noop.js.map 
 
 
 /***/ }),
@@ -3489,7 +3482,7 @@ function pipeFromArray(fns) {
         return fns.reduce(function (prev, fn) { return fn(prev); }, input);
     };
 }
-//# sourceMappingURL=pipe.js.map
+//# sourceMappingURL=pipe.js.map 
 
 
 /***/ }),
@@ -3517,7 +3510,7 @@ var _root = __window || __global || __self;
     }
 })();
 
-//# sourceMappingURL=root.js.map
+//# sourceMappingURL=root.js.map 
 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("../../../../webpack/buildin/global.js")))
 
@@ -3613,7 +3606,7 @@ function subscribeToResult(outerSubscriber, result, outerValue, outerIndex) {
     }
     return null;
 }
-//# sourceMappingURL=subscribeToResult.js.map
+//# sourceMappingURL=subscribeToResult.js.map 
 
 
 /***/ }),
@@ -3644,7 +3637,7 @@ function toSubscriber(nextOrObserver, error, complete) {
     }
     return new __WEBPACK_IMPORTED_MODULE_0__Subscriber__["a" /* Subscriber */](nextOrObserver, error, complete);
 }
-//# sourceMappingURL=toSubscriber.js.map
+//# sourceMappingURL=toSubscriber.js.map 
 
 
 /***/ }),
@@ -3672,7 +3665,7 @@ function tryCatch(fn) {
     return tryCatcher;
 }
 ;
-//# sourceMappingURL=tryCatch.js.map
+//# sourceMappingURL=tryCatch.js.map 
 
 
 /***/ }),
@@ -4001,7 +3994,7 @@ module.exports = g;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_tslib__ = __webpack_require__("../../../../tslib/tslib.es6.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -6078,10 +6071,10 @@ var NgClass = /** @class */ (function () {
          * @return {?}
          */
         function (v) {
-            this._removeClasses(this._initialClasses);
+            this._applyInitialClasses(true);
             this._initialClasses = typeof v === 'string' ? v.split(/\s+/) : [];
-            this._applyClasses(this._initialClasses);
-            this._applyClasses(this._rawClass);
+            this._applyInitialClasses(false);
+            this._applyClasses(this._rawClass, false);
         },
         enumerable: true,
         configurable: true
@@ -6092,8 +6085,7 @@ var NgClass = /** @class */ (function () {
          * @return {?}
          */
         function (v) {
-            this._removeClasses(this._rawClass);
-            this._applyClasses(this._initialClasses);
+            this._cleanupClasses(this._rawClass);
             this._iterableDiffer = null;
             this._keyValueDiffer = null;
             this._rawClass = typeof v === 'string' ? v.split(/\s+/) : v;
@@ -6128,6 +6120,18 @@ var NgClass = /** @class */ (function () {
                 this._applyKeyValueChanges(keyValueChanges);
             }
         }
+    };
+    /**
+     * @param {?} rawClassVal
+     * @return {?}
+     */
+    NgClass.prototype._cleanupClasses = /**
+     * @param {?} rawClassVal
+     * @return {?}
+     */
+    function (rawClassVal) {
+        this._applyClasses(rawClassVal, true);
+        this._applyInitialClasses(false);
     };
     /**
      * @param {?} changes
@@ -6168,56 +6172,38 @@ var NgClass = /** @class */ (function () {
         changes.forEachRemovedItem(function (record) { return _this._toggleClass(record.item, false); });
     };
     /**
-     * Applies a collection of CSS classes to the DOM element.
-     *
-     * For argument of type Set and Array CSS class names contained in those collections are always
-     * added.
-     * For argument of type Map CSS class name in the map's key is toggled based on the value (added
-     * for truthy and removed for falsy).
+     * @param {?} isCleanup
+     * @return {?}
+     */
+    NgClass.prototype._applyInitialClasses = /**
+     * @param {?} isCleanup
+     * @return {?}
+     */
+    function (isCleanup) {
+        var _this = this;
+        this._initialClasses.forEach(function (klass) { return _this._toggleClass(klass, !isCleanup); });
+    };
+    /**
      * @param {?} rawClassVal
+     * @param {?} isCleanup
      * @return {?}
      */
     NgClass.prototype._applyClasses = /**
-     * Applies a collection of CSS classes to the DOM element.
-     *
-     * For argument of type Set and Array CSS class names contained in those collections are always
-     * added.
-     * For argument of type Map CSS class name in the map's key is toggled based on the value (added
-     * for truthy and removed for falsy).
      * @param {?} rawClassVal
+     * @param {?} isCleanup
      * @return {?}
      */
-    function (rawClassVal) {
+    function (rawClassVal, isCleanup) {
         var _this = this;
         if (rawClassVal) {
             if (Array.isArray(rawClassVal) || rawClassVal instanceof Set) {
-                (/** @type {?} */ (rawClassVal)).forEach(function (klass) { return _this._toggleClass(klass, true); });
+                (/** @type {?} */ (rawClassVal)).forEach(function (klass) { return _this._toggleClass(klass, !isCleanup); });
             }
             else {
-                Object.keys(rawClassVal).forEach(function (klass) { return _this._toggleClass(klass, !!rawClassVal[klass]); });
-            }
-        }
-    };
-    /**
-     * Removes a collection of CSS classes from the DOM element. This is mostly useful for cleanup
-     * purposes.
-     * @param {?} rawClassVal
-     * @return {?}
-     */
-    NgClass.prototype._removeClasses = /**
-     * Removes a collection of CSS classes from the DOM element. This is mostly useful for cleanup
-     * purposes.
-     * @param {?} rawClassVal
-     * @return {?}
-     */
-    function (rawClassVal) {
-        var _this = this;
-        if (rawClassVal) {
-            if (Array.isArray(rawClassVal) || rawClassVal instanceof Set) {
-                (/** @type {?} */ (rawClassVal)).forEach(function (klass) { return _this._toggleClass(klass, false); });
-            }
-            else {
-                Object.keys(rawClassVal).forEach(function (klass) { return _this._toggleClass(klass, false); });
+                Object.keys(rawClassVal).forEach(function (klass) {
+                    if (rawClassVal[klass] != null)
+                        _this._toggleClass(klass, !isCleanup);
+                });
             }
         }
     };
@@ -6402,7 +6388,6 @@ var NgComponentOutlet = /** @class */ (function () {
  */
 /**
  * \@stable
- * @template T
  */
 var NgForOfContext = /** @class */ (function () {
     function NgForOfContext($implicit, ngForOf, index, count) {
@@ -6514,7 +6499,6 @@ var NgForOfContext = /** @class */ (function () {
  * example.
  *
  * \@stable
- * @template T
  */
 var NgForOf = /** @class */ (function () {
     function NgForOf(_viewContainer, _template, _differs) {
@@ -6665,9 +6649,6 @@ var NgForOf = /** @class */ (function () {
     };
     return NgForOf;
 }());
-/**
- * @template T
- */
 var RecordViewTuple = /** @class */ (function () {
     function RecordViewTuple(record, view) {
         this.record = record;
@@ -7466,7 +7447,7 @@ var NgStyle = /** @class */ (function () {
  * `[ngTemplateOutletContext]` should be an object, the object's keys will be available for binding
  * by the local template `let` declarations.
  *
- * Note: using the key `$implicit` in the context object will set its value as default.
+ * Note: using the key `$implicit` in the context object will set it's value as default.
  *
  * ## Example
  *
@@ -10539,7 +10520,7 @@ function isPlatformWorkerUi(platformId) {
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["_2" /* Version */]('5.2.10');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["_2" /* Version */]('5.2.2');
 
 /**
  * @fileoverview added by tsickle
@@ -10621,11 +10602,10 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["_2" /* Version */
 /* unused harmony export ɵb */
 /* unused harmony export ɵc */
 /* unused harmony export ɵd */
-/* unused harmony export ɵe */
-/* unused harmony export ɵh */
-/* unused harmony export ɵi */
-/* unused harmony export ɵf */
 /* unused harmony export ɵg */
+/* unused harmony export ɵh */
+/* unused harmony export ɵe */
+/* unused harmony export ɵf */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_observable_of__ = __webpack_require__("../../../../rxjs/_esm5/observable/of.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_operator_concatMap__ = __webpack_require__("../../../../rxjs/_esm5/operator/concatMap.js");
@@ -10635,7 +10615,7 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["_2" /* Version */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_common__ = __webpack_require__("../../../common/esm5/common.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_Observable__ = __webpack_require__("../../../../rxjs/_esm5/Observable.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -11114,6 +11094,11 @@ function standardEncoding(v) {
         .replace(/%2F/gi, '/');
 }
 /**
+ * Options used to construct an `HttpParams` instance.
+ * @record
+ */
+
+/**
  * An HTTP request/response body that represents serialized parameters,
  * per the MIME type `application/x-www-form-urlencoded`.
  *
@@ -11299,7 +11284,7 @@ var HttpParams = /** @class */ (function () {
      * @return {?}
      */
     function (update) {
-        var /** @type {?} */ clone = new HttpParams({ encoder: this.encoder });
+        var /** @type {?} */ clone = new HttpParams(/** @type {?} */ ({ encoder: this.encoder }));
         clone.cloneFrom = this.cloneFrom || this;
         clone.updates = (this.updates || []).concat([update]);
         return clone;
@@ -11419,7 +11404,6 @@ function isFormData(value) {
  * method should be used.
  *
  * \@stable
- * @template T
  */
 var HttpRequest = /** @class */ (function () {
     function HttpRequest(method, url, third, fourth) {
@@ -11736,7 +11720,6 @@ HttpEventType[HttpEventType.User] = "User";
  *
  * \@stable
  * @record
- * @template T
  */
 
 /**
@@ -11833,7 +11816,6 @@ var HttpHeaderResponse = /** @class */ (function (_super) {
  * stream.
  *
  * \@stable
- * @template T
  */
 var HttpResponse = /** @class */ (function (_super) {
     Object(__WEBPACK_IMPORTED_MODULE_5_tslib__["b" /* __extends */])(HttpResponse, _super);
@@ -12080,7 +12062,7 @@ var HttpClient = /** @class */ (function () {
                     params = options.params;
                 }
                 else {
-                    params = new HttpParams({ fromObject: options.params });
+                    params = new HttpParams(/** @type {?} */ ({ fromObject: options.params }));
                 }
             }
             // Construct the request.
@@ -12619,7 +12601,7 @@ var JsonpClientBackend = /** @class */ (function () {
                     status: 200,
                     statusText: 'OK', url: url,
                 }));
-                // Complete the stream, the response is over.
+                // Complete the stream, the resposne is over.
                 observer.complete();
             };
             // onError() is the error callback, which runs if the script returned generates
@@ -13152,45 +13134,6 @@ var HttpXsrfInterceptor = /** @class */ (function () {
  * found in the LICENSE file at https://angular.io/license
  */
 /**
- * An `HttpHandler` that applies a bunch of `HttpInterceptor`s
- * to a request before passing it to the given `HttpBackend`.
- *
- * The interceptors are loaded lazily from the injector, to allow
- * interceptors to themselves inject classes depending indirectly
- * on `HttpInterceptingHandler` itself.
- */
-var HttpInterceptingHandler = /** @class */ (function () {
-    function HttpInterceptingHandler(backend, injector) {
-        this.backend = backend;
-        this.injector = injector;
-        this.chain = null;
-    }
-    /**
-     * @param {?} req
-     * @return {?}
-     */
-    HttpInterceptingHandler.prototype.handle = /**
-     * @param {?} req
-     * @return {?}
-     */
-    function (req) {
-        if (this.chain === null) {
-            var /** @type {?} */ interceptors = this.injector.get(HTTP_INTERCEPTORS, []);
-            this.chain = interceptors.reduceRight(function (next, interceptor) { return new HttpInterceptorHandler(next, interceptor); }, this.backend);
-        }
-        return this.chain.handle(req);
-    };
-    HttpInterceptingHandler.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* Injectable */] },
-    ];
-    /** @nocollapse */
-    HttpInterceptingHandler.ctorParameters = function () { return [
-        { type: HttpBackend, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* Injector */], },
-    ]; };
-    return HttpInterceptingHandler;
-}());
-/**
  * Constructs an `HttpHandler` that applies a bunch of `HttpInterceptor`s
  * to a request before passing it to the given `HttpBackend`.
  *
@@ -13319,7 +13262,13 @@ var HttpClientModule = /** @class */ (function () {
                     ],
                     providers: [
                         HttpClient,
-                        { provide: HttpHandler, useClass: HttpInterceptingHandler },
+                        // HttpHandler is the backend + interceptors and is constructed
+                        // using the interceptingHandler factory function.
+                        {
+                            provide: HttpHandler,
+                            useFactory: interceptingHandler,
+                            deps: [HttpBackend, [new __WEBPACK_IMPORTED_MODULE_0__angular_core__["J" /* Optional */](), new __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* Inject */](HTTP_INTERCEPTORS)]],
+                        },
                         HttpXhrBackend,
                         { provide: HttpBackend, useExisting: HttpXhrBackend },
                         BrowserXhr,
@@ -13608,7 +13557,7 @@ var HttpClientJsonpModule = /** @class */ (function () {
 /* unused harmony export removeSummaryDuplicates */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__("../../../../tslib/tslib.es6.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -13845,7 +13794,6 @@ MissingTranslationStrategy[MissingTranslationStrategy.Warning] = "Warning";
 MissingTranslationStrategy[MissingTranslationStrategy.Ignore] = "Ignore";
 /**
  * @record
- * @template T
  */
 function MetadataFactory() { }
 /**
@@ -14243,7 +14191,7 @@ var Version = /** @class */ (function () {
 /**
  * \@stable
  */
-var VERSION = new Version('5.2.10');
+var VERSION = new Version('5.2.2');
 
 /**
  * @fileoverview added by tsickle
@@ -15694,7 +15642,6 @@ function templateJitUrl(ngModuleType, compMeta) {
  * The path to the node at offset 9 would be `['+' at 1-10, '+' at 7-10,
  * 'c' at 9-10]` and the path the node at offset 1 would be
  * `['+' at 1-10, 'a' at 1-2]`.
- * @template T
  */
 var AstPath = /** @class */ (function () {
     function AstPath(path, position) {
@@ -20368,8 +20315,7 @@ var _ParseAST = /** @class */ (function () {
             switch (operator) {
                 case '+':
                     this.advance();
-                    result = this.parsePrefix();
-                    return new Binary(this.span(start), '-', result, new LiteralPrimitive(new ParseSpan(start, start), 0));
+                    return this.parsePrefix();
                 case '-':
                     this.advance();
                     result = this.parsePrefix();
@@ -25107,7 +25053,7 @@ var Declaration = /** @class */ (function () {
         var _this = this;
         this.attrs = {};
         Object.keys(unescapedAttrs).forEach(function (k) {
-            _this.attrs[k] = escapeXml(unescapedAttrs[k]);
+            _this.attrs[k] = _escapeXml(unescapedAttrs[k]);
         });
     }
     /**
@@ -25146,7 +25092,7 @@ var Tag = /** @class */ (function () {
         this.children = children;
         this.attrs = {};
         Object.keys(unescapedAttrs).forEach(function (k) {
-            _this.attrs[k] = escapeXml(unescapedAttrs[k]);
+            _this.attrs[k] = _escapeXml(unescapedAttrs[k]);
         });
     }
     /**
@@ -25162,7 +25108,7 @@ var Tag = /** @class */ (function () {
 }());
 var Text$2 = /** @class */ (function () {
     function Text(unescapedValue) {
-        this.value = escapeXml(unescapedValue);
+        this.value = _escapeXml(unescapedValue);
     }
     /**
      * @param {?} visitor
@@ -25194,7 +25140,7 @@ var _ESCAPED_CHARS = [
  * @param {?} text
  * @return {?}
  */
-function escapeXml(text) {
+function _escapeXml(text) {
     return _ESCAPED_CHARS.reduce(function (text, entry) { return text.replace(entry[0], entry[1]); }, text);
 }
 
@@ -27109,11 +27055,7 @@ var I18nToHtmlVisitor = /** @class */ (function () {
      * @param {?=} context
      * @return {?}
      */
-    function (text, context) {
-        // `convert()` uses an `HtmlParser` to return `html.Node`s
-        // we should then make sure that any special characters are escaped
-        return escapeXml(text.value);
-    };
+    function (text, context) { return text.value; };
     /**
      * @param {?} container
      * @param {?=} context
@@ -46554,12 +46496,10 @@ function createAotCompiler(compilerHost, options, errorCollector) {
  */
 /**
  * @record
- * @template T
  */
 
 /**
  * @abstract
- * @template T
  */
 var SummaryResolver = /** @class */ (function () {
     function SummaryResolver() {
@@ -49092,13 +49032,11 @@ var Extractor = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_observable_merge__ = __webpack_require__("../../../../rxjs/_esm5/observable/merge.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_operator_share__ = __webpack_require__("../../../../rxjs/_esm5/operator/share.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Subject__ = __webpack_require__("../../../../rxjs/_esm5/Subject.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subscription__ = __webpack_require__("../../../../rxjs/_esm5/Subscription.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
-
 
 
 
@@ -49137,7 +49075,6 @@ var Extractor = /** @class */ (function () {
  * {\@example core/di/ts/injector_spec.ts region='InjectionToken'}
  *
  * \@stable
- * @template T
  */
 var InjectionToken = /** @class */ (function () {
     function InjectionToken(_desc) {
@@ -49813,7 +49750,7 @@ var Version = /** @class */ (function () {
 /**
  * \@stable
  */
-var VERSION = new Version('5.2.10');
+var VERSION = new Version('5.2.2');
 
 /**
  * @fileoverview added by tsickle
@@ -49927,7 +49864,6 @@ var __self = typeof self !== 'undefined' && typeof WorkerGlobalScope !== 'undefi
     self instanceof WorkerGlobalScope && self;
 var __global = typeof global !== 'undefined' && global;
 var _global = __window || __global || __self;
-var promise = Promise.resolve(0);
 var _symbolIterator = null;
 /**
  * @return {?}
@@ -49957,13 +49893,7 @@ function getSymbolIterator() {
  * @return {?}
  */
 function scheduleMicroTask(fn) {
-    if (typeof Zone === 'undefined') {
-        // use promise to schedule microTask instead of use Zone
-        promise.then(function () { fn && fn.apply(null, null); });
-    }
-    else {
-        Zone.current.scheduleMicroTask('scheduleMicrotask', fn);
-    }
+    Zone.current.scheduleMicroTask('scheduleMicrotask', fn);
 }
 /**
  * @param {?} a
@@ -51060,11 +50990,9 @@ function isType(v) {
  * found in the LICENSE file at https://angular.io/license
  */
 /**
- * Attention: These regex has to hold even if the code is minified!
+ * Attention: This regex has to hold even if the code is minified!
  */
 var DELEGATE_CTOR = /^function\s+\S+\(\)\s*{[\s\S]+\.apply\(this,\s*arguments\)/;
-var INHERITED_CLASS = /^class\s+[A-Za-z\d$_]*\s*extends\s+[A-Za-z\d$_]+\s*{/;
-var INHERITED_CLASS_WITH_CTOR = /^class\s+[A-Za-z\d$_]*\s*extends\s+[A-Za-z\d$_]+\s*{[\s\S]*constructor\s*\(/;
 var ReflectionCapabilities = /** @class */ (function () {
     function ReflectionCapabilities(reflect) {
         this._reflect = reflect || _global['Reflect'];
@@ -51144,7 +51072,6 @@ var ReflectionCapabilities = /** @class */ (function () {
      * @return {?}
      */
     function (type, parentCtor) {
-        var /** @type {?} */ typeStr = type.toString();
         // If we have no decorators, we only have function.length as metadata.
         // In that case, to detect whether a child class declared an own constructor or not,
         // we need to look inside of that constructor to check whether it is
@@ -51152,8 +51079,7 @@ var ReflectionCapabilities = /** @class */ (function () {
         // This also helps to work around for https://github.com/Microsoft/TypeScript/issues/12439
         // that sets 'design:paramtypes' to []
         // if a class inherits from another class but has no ctor declared itself.
-        if (DELEGATE_CTOR.exec(typeStr) ||
-            (INHERITED_CLASS.exec(typeStr) && !INHERITED_CLASS_WITH_CTOR.exec(typeStr))) {
+        if (DELEGATE_CTOR.exec(type.toString())) {
             return null;
         }
         // Prefer the direct API.
@@ -51451,7 +51377,7 @@ function convertTsickleDecoratorIntoMetadata(decoratorInvocations) {
  * @return {?}
  */
 function getParentCtor(ctor) {
-    var /** @type {?} */ parentProto = ctor.prototype ? Object.getPrototypeOf(ctor.prototype) : null;
+    var /** @type {?} */ parentProto = Object.getPrototypeOf(ctor.prototype);
     var /** @type {?} */ parentCtor = parentProto ? parentProto.constructor : null;
     // Note: We always use `Object` as the null value
     // to simplify checking later on.
@@ -52609,7 +52535,7 @@ function isPromise(obj) {
  * @return {?}
  */
 function isObservable(obj) {
-    // TODO: use Symbol.observable when https://github.com/ReactiveX/rxjs/issues/2415 will be resolved
+    // TODO use Symbol.observable when https://github.com/ReactiveX/rxjs/issues/2415 will be resolved
     return !!obj && typeof obj.subscribe === 'function';
 }
 
@@ -52818,7 +52744,6 @@ var Console = /** @class */ (function () {
  * Combination of NgModuleFactory and ComponentFactorys.
  *
  * \@experimental
- * @template T
  */
 var ModuleWithComponentFactories = /** @class */ (function () {
     function ModuleWithComponentFactories(ngModuleFactory, componentFactories) {
@@ -52987,7 +52912,6 @@ var CompilerFactory = /** @class */ (function () {
  * method.
  * \@stable
  * @abstract
- * @template C
  */
 var ComponentRef = /** @class */ (function () {
     function ComponentRef() {
@@ -52997,7 +52921,6 @@ var ComponentRef = /** @class */ (function () {
 /**
  * \@stable
  * @abstract
- * @template C
  */
 var ComponentFactory = /** @class */ (function () {
     function ComponentFactory() {
@@ -53091,9 +53014,6 @@ var CodegenComponentFactoryResolver = /** @class */ (function () {
     };
     return CodegenComponentFactoryResolver;
 }());
-/**
- * @template C
- */
 var ComponentFactoryBoundToModule = /** @class */ (function (_super) {
     Object(__WEBPACK_IMPORTED_MODULE_0_tslib__["b" /* __extends */])(ComponentFactoryBoundToModule, _super);
     function ComponentFactoryBoundToModule(factory, ngModule) {
@@ -53146,7 +53066,6 @@ var ComponentFactoryBoundToModule = /** @class */ (function (_super) {
  *
  * \@stable
  * @abstract
- * @template T
  */
 var NgModuleRef = /** @class */ (function () {
     function NgModuleRef() {
@@ -53155,13 +53074,11 @@ var NgModuleRef = /** @class */ (function () {
 }());
 /**
  * @record
- * @template T
  */
 
 /**
  * \@experimental
  * @abstract
- * @template T
  */
 var NgModuleFactory = /** @class */ (function () {
     function NgModuleFactory() {
@@ -53389,7 +53306,6 @@ var wtfEndTimeRange = wtfEnabled ? endTimeRange : function (r) { return null; };
  *
  * Once a reference implementation of the spec is available, switch to it.
  * \@stable
- * @template T
  */
 var EventEmitter = /** @class */ (function (_super) {
     Object(__WEBPACK_IMPORTED_MODULE_0_tslib__["b" /* __extends */])(EventEmitter, _super);
@@ -53456,11 +53372,7 @@ var EventEmitter = /** @class */ (function (_super) {
                     this.__isAsync ? function () { setTimeout(function () { return complete(); }); } : function () { complete(); };
             }
         }
-        var /** @type {?} */ sink = _super.prototype.subscribe.call(this, schedulerFn, errorFn, completeFn);
-        if (generatorOrNext instanceof __WEBPACK_IMPORTED_MODULE_5_rxjs_Subscription__["a" /* Subscription */]) {
-            generatorOrNext.add(sink);
-        }
-        return sink;
+        return _super.prototype.subscribe.call(this, schedulerFn, errorFn, completeFn);
     };
     return EventEmitter;
 }(__WEBPACK_IMPORTED_MODULE_4_rxjs_Subject__["a" /* Subject */]));
@@ -55393,14 +55305,12 @@ function getModuleFactory(id) {
  * }
  * ```
  * \@stable
- * @template T
  */
 var QueryList = /** @class */ (function () {
     function QueryList() {
         this.dirty = true;
         this._results = [];
         this.changes = new EventEmitter();
-        this.length = 0;
     }
     /**
      * See
@@ -55732,7 +55642,6 @@ function checkNotEmpty(value, modulePath, exportName) {
  * createEmbeddedView}, which will create the View and attach it to the View Container.
  * \@stable
  * @abstract
- * @template C
  */
 var TemplateRef = /** @class */ (function () {
     function TemplateRef() {
@@ -55873,7 +55782,6 @@ var ViewRef = /** @class */ (function (_super) {
  * ```
  * \@experimental
  * @abstract
- * @template C
  */
 var EmbeddedViewRef = /** @class */ (function (_super) {
     Object(__WEBPACK_IMPORTED_MODULE_0_tslib__["b" /* __extends */])(EmbeddedViewRef, _super);
@@ -56207,7 +56115,6 @@ function removeDebugNodeFromIndex(node) {
  *
  * \@experimental All debugging apis are currently experimental.
  * @record
- * @template T
  */
 
 /**
@@ -56435,7 +56342,6 @@ var DefaultIterableDifferFactory = /** @class */ (function () {
 var trackByIdentity = function (index, item) { return item; };
 /**
  * @deprecated v4.0.0 - Should not be part of public API.
- * @template V
  */
 var DefaultIterableDiffer = /** @class */ (function () {
     function DefaultIterableDiffer(trackByFn) {
@@ -56742,7 +56648,7 @@ var DefaultIterableDiffer = /** @class */ (function () {
             this._movesHead = this._movesTail = null;
             this._removalsHead = this._removalsTail = null;
             this._identityChangesHead = this._identityChangesTail = null;
-            // TODO(vicb): when assert gets supported
+            // todo(vicb) when assert gets supported
             // assert(!this.isDirty);
         }
     };
@@ -57053,12 +56959,12 @@ var DefaultIterableDiffer = /** @class */ (function () {
     function (record, prevRecord, index) {
         this._insertAfter(record, prevRecord, index);
         if (this._additionsTail === null) {
-            // TODO(vicb):
+            // todo(vicb)
             // assert(this._additionsHead === null);
             this._additionsTail = this._additionsHead = record;
         }
         else {
-            // TODO(vicb):
+            // todo(vicb)
             // assert(_additionsTail._nextAdded === null);
             // assert(record._nextAdded === null);
             this._additionsTail = this._additionsTail._nextAdded = record;
@@ -57081,12 +56987,12 @@ var DefaultIterableDiffer = /** @class */ (function () {
      * @return {?}
      */
     function (record, prevRecord, index) {
-        // TODO(vicb):
+        // todo(vicb)
         // assert(record != prevRecord);
         // assert(record._next === null);
         // assert(record._prev === null);
         var /** @type {?} */ next = prevRecord === null ? this._itHead : prevRecord._next;
-        // TODO(vicb):
+        // todo(vicb)
         // assert(next != record);
         // assert(prevRecord != record);
         record._next = next;
@@ -57141,7 +57047,7 @@ var DefaultIterableDiffer = /** @class */ (function () {
         }
         var /** @type {?} */ prev = record._prev;
         var /** @type {?} */ next = record._next;
-        // TODO(vicb):
+        // todo(vicb)
         // assert((record._prev = null) === null);
         // assert((record._next = null) === null);
         if (prev === null) {
@@ -57172,18 +57078,18 @@ var DefaultIterableDiffer = /** @class */ (function () {
      * @return {?}
      */
     function (record, toIndex) {
-        // TODO(vicb):
+        // todo(vicb)
         // assert(record._nextMoved === null);
         if (record.previousIndex === toIndex) {
             return record;
         }
         if (this._movesTail === null) {
-            // TODO(vicb):
+            // todo(vicb)
             // assert(_movesHead === null);
             this._movesTail = this._movesHead = record;
         }
         else {
-            // TODO(vicb):
+            // todo(vicb)
             // assert(_movesTail._nextMoved === null);
             this._movesTail = this._movesTail._nextMoved = record;
         }
@@ -57205,13 +57111,13 @@ var DefaultIterableDiffer = /** @class */ (function () {
         record.currentIndex = null;
         record._nextRemoved = null;
         if (this._removalsTail === null) {
-            // TODO(vicb):
+            // todo(vicb)
             // assert(_removalsHead === null);
             this._removalsTail = this._removalsHead = record;
             record._prevRemoved = null;
         }
         else {
-            // TODO(vicb):
+            // todo(vicb)
             // assert(_removalsTail._nextRemoved === null);
             // assert(record._nextRemoved === null);
             record._prevRemoved = this._removalsTail;
@@ -57246,7 +57152,6 @@ var DefaultIterableDiffer = /** @class */ (function () {
 }());
 /**
  * \@stable
- * @template V
  */
 var IterableChangeRecord_ = /** @class */ (function () {
     function IterableChangeRecord_(item, trackById) {
@@ -57297,9 +57202,6 @@ var IterableChangeRecord_ = /** @class */ (function () {
     }
     return IterableChangeRecord_;
 }());
-/**
- * @template V
- */
 var _DuplicateItemRecordList = /** @class */ (function () {
     function _DuplicateItemRecordList() {
         /**
@@ -57338,7 +57240,7 @@ var _DuplicateItemRecordList = /** @class */ (function () {
         }
         else {
             /** @type {?} */ ((
-            // TODO(vicb):
+            // todo(vicb)
             // assert(record.item ==  _head.item ||
             //       record.item is num && record.item.isNaN && _head.item is num && _head.item.isNaN);
             this._tail))._nextDup = record;
@@ -57389,7 +57291,7 @@ var _DuplicateItemRecordList = /** @class */ (function () {
      * @return {?}
      */
     function (record) {
-        // TODO(vicb):
+        // todo(vicb)
         // assert(() {
         //  // verify that the record being removed is in the list.
         //  for (IterableChangeRecord_ cursor = _head; cursor != null; cursor = cursor._nextDup) {
@@ -57415,9 +57317,6 @@ var _DuplicateItemRecordList = /** @class */ (function () {
     };
     return _DuplicateItemRecordList;
 }());
-/**
- * @template V
- */
 var _DuplicateMap = /** @class */ (function () {
     function _DuplicateMap() {
         this.map = new Map();
@@ -57544,9 +57443,6 @@ function getPreviousIndex(item, addRemoveOffset, moveOffsets) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-/**
- * @template K, V
- */
 var DefaultKeyValueDifferFactory = /** @class */ (function () {
     function DefaultKeyValueDifferFactory() {
     }
@@ -57570,9 +57466,6 @@ var DefaultKeyValueDifferFactory = /** @class */ (function () {
     function () { return new DefaultKeyValueDiffer(); };
     return DefaultKeyValueDifferFactory;
 }());
-/**
- * @template K, V
- */
 var DefaultKeyValueDiffer = /** @class */ (function () {
     function DefaultKeyValueDiffer() {
         this._records = new Map();
@@ -57934,7 +57827,6 @@ var DefaultKeyValueDiffer = /** @class */ (function () {
 }());
 /**
  * \@stable
- * @template K, V
  */
 var KeyValueChangeRecord_ = /** @class */ (function () {
     function KeyValueChangeRecord_(key) {
@@ -57986,7 +57878,6 @@ var KeyValueChangeRecord_ = /** @class */ (function () {
  *
  * \@stable
  * @record
- * @template V
  */
 
 /**
@@ -57995,7 +57886,6 @@ var KeyValueChangeRecord_ = /** @class */ (function () {
  *
  * \@stable
  * @record
- * @template V
  */
 
 /**
@@ -58003,13 +57893,11 @@ var KeyValueChangeRecord_ = /** @class */ (function () {
  *
  * \@stable
  * @record
- * @template V
  */
 
 /**
  * @deprecated v4.0.0 - Use IterableChangeRecord instead.
  * @record
- * @template V
  */
 
 /**
@@ -58018,7 +57906,6 @@ var KeyValueChangeRecord_ = /** @class */ (function () {
  *
  * \@stable
  * @record
- * @template T
  */
 
 /**
@@ -58176,7 +58063,6 @@ function getTypeNameForDebugging(type) {
  *
  * \@stable
  * @record
- * @template K, V
  */
 
 /**
@@ -58185,7 +58071,6 @@ function getTypeNameForDebugging(type) {
  *
  * \@stable
  * @record
- * @template K, V
  */
 
 /**
@@ -58193,7 +58078,6 @@ function getTypeNameForDebugging(type) {
  *
  * \@stable
  * @record
- * @template K, V
  */
 
 /**
@@ -58586,14 +58470,12 @@ var Sanitizer = /** @class */ (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-// unsupported: template constraints.
 /**
  * Factory for ViewDefinitions/NgModuleDefinitions.
  * We use a function so we can reexeute it in case an error happens and use the given logger
  * function to log the error from the definition of the node, which is shown in all browser
  * logs.
  * @record
- * @template D
  */
 
 /**
@@ -58603,10 +58485,8 @@ var Sanitizer = /** @class */ (function () {
  * @record
  */
 
-// unsupported: template constraints.
 /**
  * @record
- * @template DF
  */
 
 /**
@@ -59053,7 +58933,7 @@ function checkAndUpdateBinding(view, def, bindingIdx, value) {
 function checkBindingNoChanges(view, def, bindingIdx, value) {
     var /** @type {?} */ oldValue = view.oldValues[def.bindingIndex + bindingIdx];
     if ((view.state & 1 /* BeforeFirstCheck */) || !devModeEqual(oldValue, value)) {
-        var /** @type {?} */ bindingName = def.bindings[bindingIdx].name;
+        var /** @type {?} */ bindingName = def.bindings[def.bindingIndex].name;
         throw expressionChangedAfterItHasBeenCheckedError(Services.createDebugContext(view, def.nodeIndex), bindingName + ": " + oldValue, bindingName + ": " + value, (view.state & 1 /* BeforeFirstCheck */) !== 0);
     }
 }
@@ -65465,12 +65345,8 @@ function bloomFindPossibleInjector(startInjector, bloomBit) {
 /**
  * A predicate which determines if a given element/directive should be included in the query
  * @record
- * @template T
  */
 
-/**
- * @template T
- */
 var QueryList_ = /** @class */ (function () {
     function QueryList_() {
         this.dirty = false;
@@ -67403,7 +67279,7 @@ function invertObject(obj) {
  * The `\@childAnimation` trigger will not animate because `\@.disabled` prevents it from happening
  * (when true).
  *
- * Note that `\@.disabled` will only disable all animations (this means any animations running on
+ * Note that `\@.disbled` will only disable all animations (this means any animations running on
  * the same element will also be disabled).
  *
  * ### Disabling Animations Application-wide
@@ -68517,7 +68393,7 @@ function transition$$1(stateChangeExpr, steps) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_operator_map__ = __webpack_require__("../../../../rxjs/_esm5/operator/map.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser__ = __webpack_require__("../../../platform-browser/esm5/platform-browser.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -71015,8 +70891,6 @@ function syncPendingControls(form, directives) {
 function selectValueAccessor(dir, valueAccessors) {
     if (!valueAccessors)
         return null;
-    if (!Array.isArray(valueAccessors))
-        _throwError(dir, 'Value accessor was not provided as an array for form control with');
     var /** @type {?} */ defaultAccessor = undefined;
     var /** @type {?} */ builtinAccessor = undefined;
     var /** @type {?} */ customAccessor = undefined;
@@ -71813,13 +71687,13 @@ var AbstractControl = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         (/** @type {?} */ (this)).status = DISABLED;
         (/** @type {?} */ (this)).errors = null;
-        this._forEachChild(function (control) { control.disable(Object(__WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */])({}, opts, { onlySelf: true })); });
+        this._forEachChild(function (control) { control.disable({ onlySelf: true }); });
         this._updateValue();
         if (opts.emitEvent !== false) {
             (/** @type {?} */ (this.valueChanges)).emit(this.value);
             (/** @type {?} */ (this.statusChanges)).emit(this.status);
         }
-        this._updateAncestors(opts);
+        this._updateAncestors(!!opts.onlySelf);
         this._onDisabledChange.forEach(function (changeFn) { return changeFn(true); });
     };
     /**
@@ -71850,22 +71724,22 @@ var AbstractControl = /** @class */ (function () {
     function (opts) {
         if (opts === void 0) { opts = {}; }
         (/** @type {?} */ (this)).status = VALID;
-        this._forEachChild(function (control) { control.enable(Object(__WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */])({}, opts, { onlySelf: true })); });
+        this._forEachChild(function (control) { control.enable({ onlySelf: true }); });
         this.updateValueAndValidity({ onlySelf: true, emitEvent: opts.emitEvent });
-        this._updateAncestors(opts);
+        this._updateAncestors(!!opts.onlySelf);
         this._onDisabledChange.forEach(function (changeFn) { return changeFn(false); });
     };
     /**
-     * @param {?} opts
+     * @param {?} onlySelf
      * @return {?}
      */
     AbstractControl.prototype._updateAncestors = /**
-     * @param {?} opts
+     * @param {?} onlySelf
      * @return {?}
      */
-    function (opts) {
-        if (this._parent && !opts.onlySelf) {
-            this._parent.updateValueAndValidity(opts);
+    function (onlySelf) {
+        if (this._parent && !onlySelf) {
+            this._parent.updateValueAndValidity();
             this._parent._updatePristine();
             this._parent._updateTouched();
         }
@@ -73545,7 +73419,9 @@ var FormArray = /** @class */ (function (_super) {
         this.updateValueAndValidity();
         this._onCollectionChange();
     };
-    /** Insert a new {@link AbstractControl} at the given `index` in the array. */
+    /**
+     * Insert a new {@link AbstractControl} at the given `index` in the array.
+     */
     /**
      * Insert a new {\@link AbstractControl} at the given `index` in the array.
      * @param {?} index
@@ -73562,8 +73438,11 @@ var FormArray = /** @class */ (function (_super) {
         this.controls.splice(index, 0, control);
         this._registerControl(control);
         this.updateValueAndValidity();
+        this._onCollectionChange();
     };
-    /** Remove the control at the given `index` in the array. */
+    /**
+     * Remove the control at the given `index` in the array.
+     */
     /**
      * Remove the control at the given `index` in the array.
      * @param {?} index
@@ -73579,6 +73458,7 @@ var FormArray = /** @class */ (function (_super) {
             this.controls[index]._registerOnCollectionChange(function () { });
         this.controls.splice(index, 1);
         this.updateValueAndValidity();
+        this._onCollectionChange();
     };
     /**
      * Replace an existing control.
@@ -76510,7 +76390,7 @@ var FormBuilder = /** @class */ (function () {
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_2" /* Version */]('5.2.10');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_2" /* Version */]('5.2.2');
 
 /**
  * @fileoverview added by tsickle
@@ -76712,7 +76592,7 @@ var ReactiveFormsModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_platform_browser__ = __webpack_require__("../../../platform-browser/esm5/platform-browser.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_tslib__ = __webpack_require__("../../../../tslib/tslib.es6.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -77364,7 +77244,7 @@ var CachedResourceLoader = /** @class */ (function (_super) {
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_2" /* Version */]('5.2.10');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_2" /* Version */]('5.2.2');
 
 /**
  * @fileoverview added by tsickle
@@ -77475,7 +77355,7 @@ var platformBrowserDynamic = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__[
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_tslib__ = __webpack_require__("../../../../tslib/tslib.es6.js");
 /**
- * @license Angular v5.2.10
+ * @license Angular v5.2.2
  * (c) 2010-2018 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -81206,207 +81086,6 @@ var KeyEventsPlugin = /** @class */ (function (_super) {
  * found in the LICENSE file at https://angular.io/license
  */
 /**
- * This helper class is used to get hold of an inert tree of DOM elements containing dirty HTML
- * that needs sanitizing.
- * Depending upon browser support we must use one of three strategies for doing this.
- * Support: Safari 10.x -> XHR strategy
- * Support: Firefox -> DomParser strategy
- * Default: InertDocument strategy
- */
-var InertBodyHelper = /** @class */ (function () {
-    function InertBodyHelper(defaultDoc, DOM) {
-        this.defaultDoc = defaultDoc;
-        this.DOM = DOM;
-        var /** @type {?} */ inertDocument = this.DOM.createHtmlDocument();
-        this.inertBodyElement = inertDocument.body;
-        if (this.inertBodyElement == null) {
-            // usually there should be only one body element in the document, but IE doesn't have any, so
-            // we need to create one.
-            var /** @type {?} */ inertHtml = this.DOM.createElement('html', inertDocument);
-            this.inertBodyElement = this.DOM.createElement('body', inertDocument);
-            this.DOM.appendChild(inertHtml, this.inertBodyElement);
-            this.DOM.appendChild(inertDocument, inertHtml);
-        }
-        this.DOM.setInnerHTML(this.inertBodyElement, '<svg><g onload="this.parentNode.remove()"></g></svg>');
-        if (this.inertBodyElement.querySelector && !this.inertBodyElement.querySelector('svg')) {
-            // We just hit the Safari 10.1 bug - which allows JS to run inside the SVG G element
-            // so use the XHR strategy.
-            this.getInertBodyElement = this.getInertBodyElement_XHR;
-            return;
-        }
-        this.DOM.setInnerHTML(this.inertBodyElement, '<svg><p><style><img src="</style><img src=x onerror=alert(1)//">');
-        if (this.inertBodyElement.querySelector && this.inertBodyElement.querySelector('svg img')) {
-            // We just hit the Firefox bug - which prevents the inner img JS from being sanitized
-            // so use the DOMParser strategy, if it is available.
-            // If the DOMParser is not available then we are not in Firefox (Server/WebWorker?) so we
-            // fall through to the default strategy below.
-            if (isDOMParserAvailable()) {
-                this.getInertBodyElement = this.getInertBodyElement_DOMParser;
-                return;
-            }
-        }
-        // None of the bugs were hit so it is safe for us to use the default InertDocument strategy
-        this.getInertBodyElement = this.getInertBodyElement_InertDocument;
-    }
-    /**
-     * Use XHR to create and fill an inert body element (on Safari 10.1)
-     * See
-     * https://github.com/cure53/DOMPurify/blob/a992d3a75031cb8bb032e5ea8399ba972bdf9a65/src/purify.js#L439-L449
-     * @param {?} html
-     * @return {?}
-     */
-    InertBodyHelper.prototype.getInertBodyElement_XHR = /**
-     * Use XHR to create and fill an inert body element (on Safari 10.1)
-     * See
-     * https://github.com/cure53/DOMPurify/blob/a992d3a75031cb8bb032e5ea8399ba972bdf9a65/src/purify.js#L439-L449
-     * @param {?} html
-     * @return {?}
-     */
-    function (html) {
-        // We add these extra elements to ensure that the rest of the content is parsed as expected
-        // e.g. leading whitespace is maintained and tags like `<meta>` do not get hoisted to the
-        // `<head>` tag.
-        html = '<body><remove></remove>' + html + '</body>';
-        try {
-            html = encodeURI(html);
-        }
-        catch (/** @type {?} */ e) {
-            return null;
-        }
-        var /** @type {?} */ xhr = new XMLHttpRequest();
-        xhr.responseType = 'document';
-        xhr.open('GET', 'data:text/html;charset=utf-8,' + html, false);
-        xhr.send(null);
-        var /** @type {?} */ body = xhr.response.body;
-        body.removeChild(/** @type {?} */ ((body.firstChild)));
-        return body;
-    };
-    /**
-     * Use DOMParser to create and fill an inert body element (on Firefox)
-     * See https://github.com/cure53/DOMPurify/releases/tag/0.6.7
-     *
-     * @param {?} html
-     * @return {?}
-     */
-    InertBodyHelper.prototype.getInertBodyElement_DOMParser = /**
-     * Use DOMParser to create and fill an inert body element (on Firefox)
-     * See https://github.com/cure53/DOMPurify/releases/tag/0.6.7
-     *
-     * @param {?} html
-     * @return {?}
-     */
-    function (html) {
-        // We add these extra elements to ensure that the rest of the content is parsed as expected
-        // e.g. leading whitespace is maintained and tags like `<meta>` do not get hoisted to the
-        // `<head>` tag.
-        html = '<body><remove></remove>' + html + '</body>';
-        try {
-            var /** @type {?} */ body = /** @type {?} */ (new (/** @type {?} */ (window))
-                .DOMParser()
-                .parseFromString(html, 'text/html')
-                .body);
-            body.removeChild(/** @type {?} */ ((body.firstChild)));
-            return body;
-        }
-        catch (/** @type {?} */ e) {
-            return null;
-        }
-    };
-    /**
-     * Use an HTML5 `template` element, if supported, or an inert body element created via
-     * `createHtmlDocument` to create and fill an inert DOM element.
-     * This is the default sane strategy to use if the browser does not require one of the specialised
-     * strategies above.
-     * @param {?} html
-     * @return {?}
-     */
-    InertBodyHelper.prototype.getInertBodyElement_InertDocument = /**
-     * Use an HTML5 `template` element, if supported, or an inert body element created via
-     * `createHtmlDocument` to create and fill an inert DOM element.
-     * This is the default sane strategy to use if the browser does not require one of the specialised
-     * strategies above.
-     * @param {?} html
-     * @return {?}
-     */
-    function (html) {
-        // Prefer using <template> element if supported.
-        var /** @type {?} */ templateEl = this.DOM.createElement('template');
-        if ('content' in templateEl) {
-            this.DOM.setInnerHTML(templateEl, html);
-            return templateEl;
-        }
-        this.DOM.setInnerHTML(this.inertBodyElement, html);
-        // Support: IE 9-11 only
-        // strip custom-namespaced attributes on IE<=11
-        if (this.defaultDoc.documentMode) {
-            this.stripCustomNsAttrs(this.inertBodyElement);
-        }
-        return this.inertBodyElement;
-    };
-    /**
-     * When IE9-11 comes across an unknown namespaced attribute e.g. 'xlink:foo' it adds 'xmlns:ns1'
-     * attribute to declare ns1 namespace and prefixes the attribute with 'ns1' (e.g.
-     * 'ns1:xlink:foo').
-     *
-     * This is undesirable since we don't want to allow any of these custom attributes. This method
-     * strips them all.
-     * @param {?} el
-     * @return {?}
-     */
-    InertBodyHelper.prototype.stripCustomNsAttrs = /**
-     * When IE9-11 comes across an unknown namespaced attribute e.g. 'xlink:foo' it adds 'xmlns:ns1'
-     * attribute to declare ns1 namespace and prefixes the attribute with 'ns1' (e.g.
-     * 'ns1:xlink:foo').
-     *
-     * This is undesirable since we don't want to allow any of these custom attributes. This method
-     * strips them all.
-     * @param {?} el
-     * @return {?}
-     */
-    function (el) {
-        var _this = this;
-        this.DOM.attributeMap(el).forEach(function (_, attrName) {
-            if (attrName === 'xmlns:ns1' || attrName.indexOf('ns1:') === 0) {
-                _this.DOM.removeAttribute(el, attrName);
-            }
-        });
-        for (var _i = 0, _a = this.DOM.childNodesAsList(el); _i < _a.length; _i++) {
-            var n = _a[_i];
-            if (this.DOM.isElementNode(n))
-                this.stripCustomNsAttrs(/** @type {?} */ (n));
-        }
-    };
-    return InertBodyHelper;
-}());
-/**
- * We need to determine whether the DOMParser exists in the global context.
- * The try-catch is because, on some browsers, trying to access this property
- * on window can actually throw an error.
- *
- * @suppress {uselessCode}
- * @return {?}
- */
-function isDOMParserAvailable() {
-    try {
-        return !!(/** @type {?} */ (window)).DOMParser;
-    }
-    catch (/** @type {?} */ e) {
-        return false;
-    }
-}
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * @license
- * Copyright Google Inc. All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
-/**
  * A pattern that recognizes a commonly useful subset of URLs that are safe.
  *
  * This regular expression matches a subset of URLs that will not cause script
@@ -81470,6 +81149,38 @@ function sanitizeSrcset(srcset) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A <body> element that can be safely used to parse untrusted HTML. Lazily initialized below.
+ */
+var inertElement = null;
+/**
+ * Lazily initialized to make sure the DOM adapter gets set before use.
+ */
+var DOM = /** @type {?} */ ((null));
+/**
+ * Returns an HTML element that is guaranteed to not execute code when creating elements in it.
+ * @return {?}
+ */
+function getInertElement() {
+    if (inertElement)
+        return inertElement;
+    DOM = getDOM();
+    // Prefer using <template> element if supported.
+    var /** @type {?} */ templateEl = DOM.createElement('template');
+    if ('content' in templateEl)
+        return templateEl;
+    var /** @type {?} */ doc = DOM.createHtmlDocument();
+    inertElement = DOM.querySelector(doc, 'body');
+    if (inertElement == null) {
+        // usually there should be only one body element in the document, but IE doesn't have any, so we
+        // need to create one.
+        var /** @type {?} */ html = DOM.createElement('html', doc);
+        inertElement = DOM.createElement('body', doc);
+        DOM.appendChild(html, inertElement);
+        DOM.appendChild(doc, html);
+    }
+    return inertElement;
+}
 /**
  * @param {?} tags
  * @return {?}
@@ -81545,7 +81256,6 @@ var SanitizingHtmlSerializer = /** @class */ (function () {
     function SanitizingHtmlSerializer() {
         this.sanitizedSomething = false;
         this.buf = [];
-        this.DOM = getDOM();
     }
     /**
      * @param {?} el
@@ -81559,33 +81269,33 @@ var SanitizingHtmlSerializer = /** @class */ (function () {
         // This cannot use a TreeWalker, as it has to run on Angular's various DOM adapters.
         // However this code never accesses properties off of `document` before deleting its contents
         // again, so it shouldn't be vulnerable to DOM clobbering.
-        var /** @type {?} */ current = /** @type {?} */ ((this.DOM.firstChild(el)));
+        var /** @type {?} */ current = /** @type {?} */ ((el.firstChild));
         while (current) {
-            if (this.DOM.isElementNode(current)) {
+            if (DOM.isElementNode(current)) {
                 this.startElement(/** @type {?} */ (current));
             }
-            else if (this.DOM.isTextNode(current)) {
-                this.chars(/** @type {?} */ ((this.DOM.nodeValue(current))));
+            else if (DOM.isTextNode(current)) {
+                this.chars(/** @type {?} */ ((DOM.nodeValue(current))));
             }
             else {
                 // Strip non-element, non-text nodes.
                 this.sanitizedSomething = true;
             }
-            if (this.DOM.firstChild(current)) {
-                current = /** @type {?} */ ((this.DOM.firstChild(current)));
+            if (DOM.firstChild(current)) {
+                current = /** @type {?} */ ((DOM.firstChild(current)));
                 continue;
             }
             while (current) {
                 // Leaving the element. Walk up and to the right, closing tags as we go.
-                if (this.DOM.isElementNode(current)) {
+                if (DOM.isElementNode(current)) {
                     this.endElement(/** @type {?} */ (current));
                 }
-                var /** @type {?} */ next = this.checkClobberedElement(current, /** @type {?} */ ((this.DOM.nextSibling(current))));
+                var /** @type {?} */ next = checkClobberedElement(current, /** @type {?} */ ((DOM.nextSibling(current))));
                 if (next) {
                     current = next;
                     break;
                 }
-                current = this.checkClobberedElement(current, /** @type {?} */ ((this.DOM.parentElement(current))));
+                current = checkClobberedElement(current, /** @type {?} */ ((DOM.parentElement(current))));
             }
         }
         return this.buf.join('');
@@ -81600,14 +81310,14 @@ var SanitizingHtmlSerializer = /** @class */ (function () {
      */
     function (element) {
         var _this = this;
-        var /** @type {?} */ tagName = this.DOM.nodeName(element).toLowerCase();
+        var /** @type {?} */ tagName = DOM.nodeName(element).toLowerCase();
         if (!VALID_ELEMENTS.hasOwnProperty(tagName)) {
             this.sanitizedSomething = true;
             return;
         }
         this.buf.push('<');
         this.buf.push(tagName);
-        this.DOM.attributeMap(element).forEach(function (value, attrName) {
+        DOM.attributeMap(element).forEach(function (value, attrName) {
             var /** @type {?} */ lower = attrName.toLowerCase();
             if (!VALID_ATTRS.hasOwnProperty(lower)) {
                 _this.sanitizedSomething = true;
@@ -81635,7 +81345,7 @@ var SanitizingHtmlSerializer = /** @class */ (function () {
      * @return {?}
      */
     function (current) {
-        var /** @type {?} */ tagName = this.DOM.nodeName(current).toLowerCase();
+        var /** @type {?} */ tagName = DOM.nodeName(current).toLowerCase();
         if (VALID_ELEMENTS.hasOwnProperty(tagName) && !VOID_ELEMENTS.hasOwnProperty(tagName)) {
             this.buf.push('</');
             this.buf.push(tagName);
@@ -81651,24 +81361,19 @@ var SanitizingHtmlSerializer = /** @class */ (function () {
      * @return {?}
      */
     function (chars) { this.buf.push(encodeEntities(chars)); };
-    /**
-     * @param {?} node
-     * @param {?} nextNode
-     * @return {?}
-     */
-    SanitizingHtmlSerializer.prototype.checkClobberedElement = /**
-     * @param {?} node
-     * @param {?} nextNode
-     * @return {?}
-     */
-    function (node, nextNode) {
-        if (nextNode && this.DOM.contains(node, nextNode)) {
-            throw new Error("Failed to sanitize html because the element is clobbered: " + this.DOM.getOuterHTML(node));
-        }
-        return nextNode;
-    };
     return SanitizingHtmlSerializer;
 }());
+/**
+ * @param {?} node
+ * @param {?} nextNode
+ * @return {?}
+ */
+function checkClobberedElement(node, nextNode) {
+    if (nextNode && DOM.contains(node, nextNode)) {
+        throw new Error("Failed to sanitize html because the element is clobbered: " + DOM.getOuterHTML(node));
+    }
+    return nextNode;
+}
 // Regular Expressions for parsing tags and attributes
 var SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
 // ! to ~ is the ASCII range.
@@ -81691,7 +81396,27 @@ function encodeEntities(value) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 }
-var inertBodyHelper;
+/**
+ * When IE9-11 comes across an unknown namespaced attribute e.g. 'xlink:foo' it adds 'xmlns:ns1'
+ * attribute to declare ns1 namespace and prefixes the attribute with 'ns1' (e.g. 'ns1:xlink:foo').
+ *
+ * This is undesirable since we don't want to allow any of these custom attributes. This method
+ * strips them all.
+ * @param {?} el
+ * @return {?}
+ */
+function stripCustomNsAttrs(el) {
+    DOM.attributeMap(el).forEach(function (_, attrName) {
+        if (attrName === 'xmlns:ns1' || attrName.indexOf('ns1:') === 0) {
+            DOM.removeAttribute(el, attrName);
+        }
+    });
+    for (var _i = 0, _a = DOM.childNodesAsList(el); _i < _a.length; _i++) {
+        var n = _a[_i];
+        if (DOM.isElementNode(n))
+            stripCustomNsAttrs(/** @type {?} */ (n));
+    }
+}
 /**
  * Sanitizes the given unsafe, untrusted HTML fragment, and returns HTML text that is safe to add to
  * the DOM in a browser environment.
@@ -81700,13 +81425,10 @@ var inertBodyHelper;
  * @return {?}
  */
 function sanitizeHtml(defaultDoc, unsafeHtmlInput) {
-    var /** @type {?} */ DOM = getDOM();
-    var /** @type {?} */ inertBodyElement = null;
     try {
-        inertBodyHelper = inertBodyHelper || new InertBodyHelper(defaultDoc, DOM);
+        var /** @type {?} */ containerEl = getInertElement();
         // Make sure unsafeHtml is actually a string (TypeScript types are not enforced at runtime).
         var /** @type {?} */ unsafeHtml = unsafeHtmlInput ? String(unsafeHtmlInput) : '';
-        inertBodyElement = inertBodyHelper.getInertBodyElement(unsafeHtml);
         // mXSS protection. Repeatedly parse the document to make sure it stabilizes, so that a browser
         // trying to auto-correct incorrect HTML cannot cause formerly inert HTML to become dangerous.
         var /** @type {?} */ mXSSAttempts = 5;
@@ -81717,25 +81439,30 @@ function sanitizeHtml(defaultDoc, unsafeHtmlInput) {
             }
             mXSSAttempts--;
             unsafeHtml = parsedHtml;
-            parsedHtml = DOM.getInnerHTML(inertBodyElement);
-            inertBodyElement = inertBodyHelper.getInertBodyElement(unsafeHtml);
+            DOM.setInnerHTML(containerEl, unsafeHtml);
+            if (defaultDoc.documentMode) {
+                // strip custom-namespaced attributes on IE<=11
+                stripCustomNsAttrs(containerEl);
+            }
+            parsedHtml = DOM.getInnerHTML(containerEl);
         } while (unsafeHtml !== parsedHtml);
         var /** @type {?} */ sanitizer = new SanitizingHtmlSerializer();
-        var /** @type {?} */ safeHtml = sanitizer.sanitizeChildren(DOM.getTemplateContent(inertBodyElement) || inertBodyElement);
+        var /** @type {?} */ safeHtml = sanitizer.sanitizeChildren(DOM.getTemplateContent(containerEl) || containerEl);
+        // Clear out the body element.
+        var /** @type {?} */ parent_1 = DOM.getTemplateContent(containerEl) || containerEl;
+        for (var _i = 0, _a = DOM.childNodesAsList(parent_1); _i < _a.length; _i++) {
+            var child = _a[_i];
+            DOM.removeChild(parent_1, child);
+        }
         if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["_10" /* isDevMode */])() && sanitizer.sanitizedSomething) {
             DOM.log('WARNING: sanitizing HTML stripped some content (see http://g.co/ng/security#xss).');
         }
         return safeHtml;
     }
-    finally {
+    catch (/** @type {?} */ e) {
         // In case anything goes wrong, clear out inertElement to reset the entire DOM structure.
-        if (inertBodyElement) {
-            var /** @type {?} */ parent_1 = DOM.getTemplateContent(inertBodyElement) || inertBodyElement;
-            for (var _i = 0, _a = DOM.childNodesAsList(parent_1); _i < _a.length; _i++) {
-                var child = _a[_i];
-                DOM.removeChild(parent_1, child);
-            }
-        }
+        inertElement = null;
+        throw e;
     }
 }
 
@@ -82546,9 +82273,7 @@ var TransferState = /** @class */ (function () {
      * @param {?} defaultValue
      * @return {?}
      */
-    function (key, defaultValue) {
-        return this.store[key] !== undefined ? /** @type {?} */ (this.store[key]) : defaultValue;
-    };
+    function (key, defaultValue) { return /** @type {?} */ (this.store[key]) || defaultValue; };
     /**
      * Set the value corresponding to a key.
      */
@@ -82822,7 +82547,7 @@ var By = /** @class */ (function () {
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_2" /* Version */]('5.2.10');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_2" /* Version */]('5.2.2');
 
 /**
  * @fileoverview added by tsickle

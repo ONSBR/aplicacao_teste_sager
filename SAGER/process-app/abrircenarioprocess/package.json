@@ -1,0 +1,17 @@
+{
+    "name": "abrircenarioprocess",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "nyc jasmine"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "jasmine": "^2.9.0",
+        "plataforma-sdk": "git+https://github.com/ONSBR/Plataforma-SDK.git",
+        "eventos_business_rules": "https://github.com/ONSBR/eventos_business_rules.git"
+    }
+}

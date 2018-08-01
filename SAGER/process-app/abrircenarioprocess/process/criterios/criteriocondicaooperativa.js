@@ -1,0 +1,23 @@
+class CriterioCondicaoOperativa {
+
+    aplicar(regra, dataset, payload) {
+
+        console.log('Aplicando critério de condição operativa');
+
+        dataset.condicaooperativaevento.collection.toArray().forEach(condicaoOperativaEventoToUpdate => {
+            condicaoOperativaEventoToUpdate.idCondicaoOperativa = regra.regraPara;
+            dataset.condicaooperativaevento.update(condicaoOperativaEventoToUpdate);
+        });
+
+        dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
+            return eventoToUpdate.idCondicaoOperativa == regra.regraDe && (eventoToUpdate.dataVerificada >= payload.dataInicioVigencia && 
+                eventoToUpdate.dataVerificada <= payload.dataFimVigencia)
+        }).forEach(eventoToUpdate => {
+            eventoToUpdate.idCondicaoOperativa = regra.regraPara;
+            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        });
+    }
+
+}
+
+module.exports = CriterioCondicaoOperativa

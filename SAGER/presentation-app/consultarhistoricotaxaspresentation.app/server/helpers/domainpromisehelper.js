@@ -6,7 +6,8 @@ class DomainPromiseHelper {
     getDomainPromise(url) {
         return new Promise((resolve, reject) => {
             let client = new Client();
-            let request = client.get(url, function (data) {
+            let args = {headers: {'Branch': 'All'}};
+            let request = client.get(url, args, function (data) {
                 resolve(data);
             });
             request.on('error', function (err) {

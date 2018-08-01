@@ -1,9 +1,6 @@
-const config = require('../config');
 const DomainPromiseHelper = require('../helpers/domainpromisehelper');
-const Enumerable = require('linq');
+const EventPromiseHelper = require('../helpers/eventpromisehelper');
 const utils = require('../utils');
-
-const CHANGETRACK_UPDATE = "update";
 
 const SituacaoCenario = {
     Ativo: 'Ativo',
@@ -18,6 +15,7 @@ class CenarioBusiness {
 
     constructor() {
         this.domainPromiseHelper = new DomainPromiseHelper();
+        this.eventPromiseHelper = new EventPromiseHelper();
     }
 
     /**
@@ -42,8 +40,8 @@ class CenarioBusiness {
             let regrasUpdate = cenario.regras.filter(regra => {
                 return regra.id == regrabd.id;
             });
-            
-            if(regrasUpdate && regrasUpdate.length > 0) {
+
+            if (regrasUpdate && regrasUpdate.length > 0) {
                 regrabd.nomeRegra = regrasUpdate[0].nomeRegra;
                 regrabd.regraDe = regrasUpdate[0].regraDe;
                 regrabd.regraPara = regrasUpdate[0].regraPara;
@@ -55,7 +53,7 @@ class CenarioBusiness {
         });
 
         cenario.regras.forEach(regra => {
-            if(!regra.id) {
+            if (!regra.id) {
                 context.dataset.regracenario.insert(regra);
             }
         });
@@ -72,7 +70,7 @@ class CenarioBusiness {
     inserirCenario(context, resolve, reject) {
         var listapersist = [];
         let cenario = context.event.payload.cenario;
-
+        
         if (!cenario.idCenario) {
             cenario.idCenario = utils.guid();
         }
@@ -87,7 +85,61 @@ class CenarioBusiness {
             });
         }
 
-        resolve(listapersist);
+        resolve();
+    }
+
+    createAplicarCriteriosEvent(cenario) {
+        cenario._metadata = undefined;
+        cenario.id = undefined;
+        let event = {
+            name: 'aplicar.criterios.cenario',
+            payload: { cenario }
+        };
+
+        event.payload.dataInicioVigencia = cenario.dataInicioVigencia;
+        event.payload.dataFimVigencia = cenario.dataFimVigencia;
+        event.payload.idUsina = cenario.idUsina;
+        this.populateEventoData(cenario.regras, event);
+
+        return event;
+    }
+
+    populateEventoData(regras, event) {
+        regras.forEach(regra => {
+            regra._metadata = undefined;
+            regra.id = undefined;
+            if (this.isRegraClassificacao(regra)) {
+                event.payload.classificacao = regra.regraDe;
+            }
+
+            if (this.isRegraCondicaoOperativa(regra)) {
+                event.payload.condicaoOperativa = regra.regraDe;
+            }
+
+            if (this.isRegraEstadoOperativo(regra)) {
+                event.payload.estadoOperativo = regra.regraDe;
+            }
+        });
+    }
+
+    isRegraFranquia(regra) {
+        return regra.tipoRegra == 'Franquia';
+    }
+
+    isRegraPotenciaDisponivel(regra) {
+        return regra.tipoRegra == 'Potência Disponível';
+    }
+
+    isRegraClassificacao(regra) {
+        return regra.tipoRegra == 'Classificação de Origem do Evento';
+    }
+
+    isRegraCondicaoOperativa(regra) {
+        return regra.tipoRegra == 'Condição Operativa do Evento';
+    }
+
+    isRegraEstadoOperativo(regra) {
+        return regra.tipoRegra == 'Estado Operativo do Evento';
     }
 
     /**
@@ -97,6 +149,7 @@ class CenarioBusiness {
      * @param {reject} reject
      */
     excluirCenario(context, resolve, reject) {
+        console.log('Excluir cenario=');
         context.dataset.cenario.collection.forEach(cenario => {
             context.dataset.cenario.delete(cenario);
         });
@@ -112,16 +165,56 @@ class CenarioBusiness {
      * @param {resolve} resolve 
      * @param {reject} reject
      */
-    ativarInativarCenario(context, resolve, reject) {
+    ativarInativarCenario(context, resolve, reject, fork) {
+        let event = undefined;
         context.dataset.cenario.collection.forEach(cenario => {
             if (cenario.situacao == SituacaoCenario.Ativo) {
-                cenario.situacao = SituacaoCenario.Inativo;
+                this.excluirCenario(context, resolve, reject);
             } else if (cenario.situacao == SituacaoCenario.Inativo) {
                 cenario.situacao = SituacaoCenario.Ativo;
+                cenario.regras = context.dataset.regracenario.collection.toArray();
+                event = this.createAplicarCriteriosEvent(Object.assign({}, cenario));
+                context.dataset.cenario.update(cenario);
             }
-            context.dataset.cenario.update(cenario);
         });
-        resolve();
+
+        if(event) {
+            console.log('----- Send aplicar.criterios.cenario event---------');
+            console.log(JSON.stringify(event));
+            console.log('---------');
+            this.eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
+        } else {
+            resolve();
+        }
+    }
+
+    /**
+     * @description Ativa ou inativa um cenário.
+     * @param {context} context 
+     * @param {resolve} resolve 
+     * @param {reject} reject
+     */
+    incorporarCenario(context, resolve, reject) {
+        context.dataset.cenario.collection.forEach(cenario => {
+            cenario.situacao = SituacaoCenario.Incorporado;
+            context.dataset.cenario.update(cenario);
+            let event = this.createIncorporarCenarioEvent(cenario);
+            console.log('----- Send merge.request event---------');
+            console.log(event);
+            console.log('---------');
+            
+            this.eventPromiseHelper.putEventPromise(event).then(resolve()).catch(reject());
+        });
+    }
+
+    createIncorporarCenarioEvent(cenario) {
+        let event = {
+            name: 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request',
+            payload: {
+                branch: cenario.nomeCenario
+            }
+        };
+        return event;
     }
 }
 
