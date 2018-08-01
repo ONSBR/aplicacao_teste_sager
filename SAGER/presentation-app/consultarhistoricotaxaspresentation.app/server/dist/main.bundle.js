@@ -465,7 +465,7 @@ var FiltroConsulta = /** @class */ (function () {
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost:8088/',
+    urlServerPresentation: 'http://localhost/consultarhistoricotaxaspresentation.app/',
     listarUsinas: 'listarusinas',
     listarTipoTaxa: 'listartipotaxa',
     consultaFiltroInicial: 'filtroinicial',
