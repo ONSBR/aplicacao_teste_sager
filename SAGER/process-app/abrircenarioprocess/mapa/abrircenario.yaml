@@ -1,0 +1,116 @@
+unidadegeradora:
+  model: tb_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    potenciaDisponivel:
+      column: pot_disp
+    franquiaGICHorasLimite:
+      column: franq_gic_hor_lim
+    franquiaGICTempoLimiteAntes102014:
+      column: franq_gic_lim_ant_102014
+    franquiaGICTempoLimiteApos102014:
+      column: franq_gic_lim_pos_102014
+    franquiaGMTHorasLimiteAntes01102014:
+      column: franq_gmt_hor_lim_ant_01102014
+    franquiaGMTHorasLimiteAPartir01102014:
+      column: franq_gmt_hor_lim_apar_01102014
+    franquiaGIMRestricaoTempo:
+      column: franq_gim_rest
+    franquiaGIMTempoLimiteAntes01102014:
+      column: franq_gim_lim_ant_01102014
+    franquiaGIMTempoLimiteApos01102014:
+      column: franq_gim_lim_pos_01102014
+  filters:
+    all: 
+
+franquiaunidadegeradora:
+  model: tb_franquia_unidade_geradora
+  fields:
+    idUge:
+      column: id_uge
+    franquia:
+      column: franquia
+  filters:
+    byCreationDate: "created_at BETWEEN :dataInicioVigencia and :dataFimVigencia"
+
+estadooperativoevento:
+  model: tb_tp_estado_oper
+  fields:
+    idUsina:
+      column: id_usina  
+    idUge:
+      column: id_uge
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+    dataVerificada:
+      column: data_verificada      
+  filters:
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_tp_estado_oper =:estadoOperativo"
+
+classificacaoorigemevento:
+  model: tb_class_evt
+  fields:
+    idUsina:
+      column: id_usina  
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_class_origem
+    dataVerificada:
+      column: data_verificada
+  filters:
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_class_origem =:classificacao"
+
+condicaooperativaevento:
+  model: tb_cond_oper
+  fields:
+    idUsina:
+      column: id_usina  
+    idUge:
+      column: id_uge
+    idCondicaoOperativa:
+      column: id_cond_oper
+    dataVerificada:
+      column: data_verificada
+  filters:
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina and id_cond_oper = :condicaoOperativa"
+
+usina:
+  model: tb_usina
+  fields:
+    id:
+      column: id
+      required: true
+    idUsina:
+      column: id_usina
+      required: true
+    nome:
+      column: nome
+      required: true
+  filters:
+    byCreationDate: "created_at >= :dataInicioVigencia"
+
+eventomudancaestadooperativo:
+  model: tb_evt_estado_oper
+  fields:
+    idEvento:
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_class_origem
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+    idCondicaoOperativa:
+      column: id_cond_oper
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: pot_disp
+    numONS: 
+      column: numero_ons
+    eversao:
+      column: eversao  
+  filters:
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina order by data_verificada"

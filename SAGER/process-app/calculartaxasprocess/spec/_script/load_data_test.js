@@ -2,8 +2,13 @@ const FileDataMass = require("../testmass/filedatamass");
 const HttpClient = require("plataforma-sdk/http/client");
 const FechamentoMensal = require("../../process/entities/fechamentomensal");
 const Usina = require("../../process/entities/usina");
-const utils = require("../../utils");
+const FranquiaUnidadeGeradora = require("../../process/entities/franquiaunidadegeradora");
+const PotenciaUnidadeGeradora = require("../../process/entities/potenciaunidadegeradora");
+const ClassificacaoOrigemEvento = require("../../process/entities/classificacaoorigemevento");
+const CondicaoOperativaEvento = require("../../process/entities/condicaooperativaevento");
+const EstadoOperativoEvento = require("../../process/entities/estadooperativoevento");
 const Enumerable = require("linq");
+const FRANQUIA = 1000;
 
 var httpClient = new HttpClient();
 const DOMAIN_PORT = 8087;
@@ -38,6 +43,88 @@ function loadFechamento() {
 
 }
 
+function loadFranquiasUnidadesGeradoras(uges) {
+    let franquias = [];
+    uges.forEach(uge => {
+        uge.franquiaGICHorasLimite = 960;
+        uge.franquiaGICTempoLimiteAntes102014 = 15000;
+        uge.franquiaGICTempoLimiteApos102014 = 24;
+        uge.franquiaGMTHorasLimiteAntes01102014 = 72;
+        uge.franquiaGMTHorasLimiteAPartir01102014 = 360;
+        uge.franquiaGIMRestricaoTempo = 120;
+        uge.franquiaGIMTempoLimiteAntes01102014 = 12;
+        uge.franquiaGIMTempoLimiteApos01102014 = 12;
+
+        let franquia = new FranquiaUnidadeGeradora();
+        franquia.idUge = uge.idUge;
+        franquia.franquia = FRANQUIA;
+        // franquias.push(franquia);
+    });
+
+    let url = getUrlAppDomain(null, null, "persist");
+    httpClient.post(url, JSON.stringify(franquias)).then(results => {
+        console.log("Franquias incluídas:");
+    }).catch(catch_error);
+}
+
+function loadPotenciasUnidadesGeradoras(uges) {
+    let potencias = [];
+    uges.forEach(uge => {
+        let potencia = new PotenciaUnidadeGeradora();
+        potencia.idUge = uge.idUge;
+        potencia.potenciaDisponivel = uge.potenciaDisponivel;
+        // potencias.push(potencia);
+    });
+
+    let url = getUrlAppDomain(null, null, "persist");
+    httpClient.post(url, JSON.stringify(potencias)).then(results => {
+        console.log("Potências incluídas:");
+    }).catch(catch_error);
+}
+
+function createClassificacoesEventos(eventos) {
+    let classificacoes = [];
+    eventos.forEach(evento => {
+        let classificacaoEvento = new ClassificacaoOrigemEvento();
+        classificacaoEvento.idEvento = evento.idEvento;
+        classificacaoEvento.idUsina = evento.idUsina;
+        classificacaoEvento.idUge = evento.idUge;
+        classificacaoEvento.idClassificacaoOrigem = evento.idClassificacaoOrigem;
+        classificacaoEvento.dataVerificada = evento.dataVerificada;
+        classificacoes.push(classificacaoEvento);
+    });
+
+    return classificacoes;
+}
+
+function createCondicoesOperativasEvento(eventos) {
+    let condicoesOperativas = [];
+    eventos.forEach(evento => {
+        let condicaoOperativa = new CondicaoOperativaEvento();
+        condicaoOperativa.idEvento = evento.idEvento;
+        condicaoOperativa.idUsina = evento.idUsina;
+        condicaoOperativa.idUge = evento.idUge;
+        condicaoOperativa.idCondicaoOperativa = evento.idCondicaoOperativa;
+        condicaoOperativa.dataVerificada = evento.dataVerificada;
+        condicoesOperativas.push(condicaoOperativa);
+    });
+    return condicoesOperativas;
+}
+
+function createEstadosOperativos(eventos) {
+    let estadosOperativos = [];
+    eventos.forEach(evento => {
+        let estadoOperativo = new EstadoOperativoEvento();
+        estadoOperativo.idEvento = evento.idEvento;
+        estadoOperativo.idUsina = evento.idUsina;
+        estadoOperativo.idUge = evento.idUge;
+        estadoOperativo.idEstadoOperativo = evento.idEstadoOperativo;
+        estadoOperativo.dataVerificada = evento.dataVerificada;
+        estadosOperativos.push(estadoOperativo);
+    });
+    return estadosOperativos;
+}
+
 function getUrlAppDomain(map, entity, verb) {
     if (!map) {
         map = MAPA;
@@ -53,6 +140,7 @@ function getUrlAppDomain(map, entity, verb) {
 }
 
 function postEventos() {
+    console.log('postEventos');
     if (posevt < eventosToSend.length) {
         var eventos = eventosToSend[posevt];
         if (eventos) {
@@ -77,12 +165,14 @@ var posevt = 0;
 
 Promise.all(dataLoad).then(results => {
 
-    var uges = results[0];
-    var eventos = results[1].concat(results[2]);
+    let uges = results[0];
+    let eventos = results[1].concat(results[2]);
 
+    loadFranquiasUnidadesGeradoras(uges);
+    loadPotenciasUnidadesGeradoras(uges);
     loadFechamento();
 
-    var usina = new Usina();
+    let usina = new Usina();
     usina.idUsina = usina.nome = usina.tipo = usina.agente = "ALUXG";
     
     httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([usina])).then(result => {
@@ -98,9 +188,26 @@ Promise.all(dataLoad).then(results => {
         var pageslice = i+lenpage >= eventos.length? eventos.length: i+lenpage;
         eventosToSend.push(eventos.slice(i, pageslice));
     }
-    console.log("eventosToSend.length: "+eventosToSend.length);
-    postEventos();
 
+    let classificacoes = createClassificacoesEventos(eventos);
+    for(var i=0;i<classificacoes.length;i+=lenpage) {
+        var pageslice = i+lenpage >= classificacoes.length? classificacoes.length: i+lenpage;
+        eventosToSend.push(classificacoes.slice(i, pageslice));
+    }
+
+    let condicoesOperativas = createCondicoesOperativasEvento(eventos);
+    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
+        var pageslice = i+lenpage >= condicoesOperativas.length? condicoesOperativas.length: i+lenpage;
+        eventosToSend.push(condicoesOperativas.slice(i, pageslice));
+    }
+
+    let estadosOperativos = createEstadosOperativos(eventos);
+    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
+        var pageslice = i+lenpage >= estadosOperativos.length? estadosOperativos.length: i+lenpage;
+        eventosToSend.push(estadosOperativos.slice(i, pageslice));
+    }
+
+    postEventos();
     
 /*
 eventos = [eventos[8144]];

@@ -7,10 +7,11 @@ const BaseEntity = require("./_baseentity");
  */
 module.exports = class EventoMudancaEstadoOperativo extends BaseEntity {
 
-    constructor(id, idEvento, idUge, idClassificacaoOrigem, idEstadoOperativo, idCondicaoOperativa, dataVerificada, potenciaDisponivel, numONS) {
+    constructor(id, idEvento, idUsina, idUge, idClassificacaoOrigem, idEstadoOperativo, idCondicaoOperativa, dataVerificada, potenciaDisponivel, numONS) {
         super();
         this.id = id;
         this.idEvento = idEvento;
+        this.idUsina = idUsina;
         this.idUge = idUge;
         this.idClassificacaoOrigem = idClassificacaoOrigem;
         this.idEstadoOperativo = idEstadoOperativo;

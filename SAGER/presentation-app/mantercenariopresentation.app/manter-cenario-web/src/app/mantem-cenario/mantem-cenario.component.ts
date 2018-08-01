@@ -37,20 +37,32 @@ export class MantemCenarioComponent implements OnInit {
       this.cenarios.forEach(it => {
         it.dataInicioVigencia = this.ajustarDataCalendario(it.dataInicioVigencia);
         it.dataFimVigencia = this.ajustarDataCalendario(it.dataFimVigencia);
-      })
+      });
     });
   }
 
   printIdentify(ident) {
-    return ident && ident.length > 20? ident.substring(0,20)+"...": ident;
+    return ident && ident.length > 20 ? ident.substring(0, 20) + '...' : ident;
   }
 
   excluir(cenario) {
 
     if (confirm('Confirma a exclusão do cenário?')) {
-      const url = environment.urlServerPresentation + environment.excluirCenario + "?idCenario=" + cenario.idCenario;
+      const url = environment.urlServerPresentation + environment.excluirCenario + '?idCenario=' + cenario.idCenario;
       this.http.delete(url).subscribe(data => {
-        alert("Exclusão de cenário realizada com sucesso!");
+        alert('Exclusão de cenário realizada com sucesso!');
+        this.pesquisar();
+      });
+    }
+
+  }
+
+  incorporar(cenario) {
+
+    if (confirm('Confirma a incorporação do cenário?')) {
+      const url = environment.urlServerPresentation + environment.incorporarCenario + '?idCenario=' + cenario.idCenario;
+      this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
+        alert('Incorporação de cenário realizada com sucesso!');
         this.pesquisar();
       });
     }
@@ -58,33 +70,39 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   ativarInativar(cenario) {
-   
     const url = environment.urlServerPresentation + environment.ativarInativarCenario;
-    this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
-      alert("Alteração de cenário realizada com sucesso!");
+    const body = {
+      idCenario: cenario.idCenario,
+      dataInicioVigencia: cenario.dataInicioVigencia,
+      dataFimVigencia: cenario.dataFimVigencia,
+      idUsina: cenario.idUsina
+    };
+    this.http.post(url, body).subscribe(data => {
+      alert('Alteração de cenário realizada com sucesso!');
       this.pesquisar();
     });
   }
 
   private ajustarDataCalendario(dataAjuste) {
-    var idx = dataAjuste.indexOf('T');
-    return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;    
+    const idx = dataAjuste.indexOf('T');
+    return idx > 0 ? dataAjuste.substring(0, idx) : dataAjuste;
   }
 
   alterar(cenario) {
-
     this.cenarioSelecionado = clone(cenario);
     this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
     this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
-
-    var url = environment.urlServerPresentation + environment.obterRegrasCriticas +
+    const url = environment.urlServerPresentation + environment.obterRegrasCriticas +
       '?idCenario=' + this.cenarioSelecionado.idCenario;
 
     this.http.get(url).subscribe(data => {
       this.cenarioSelecionado.regras = <RegraCritica[]>data;
+      this.cenarioSelecionado.regras.forEach(regra => {
+        regra.dataInicioVigencia = this.ajustarDataCalendario(regra.dataInicioVigencia);
+        regra.dataFimVigencia = this.ajustarDataCalendario(regra.dataFimVigencia);
+      });
       this.openDialog();
     });
-
   }
 
   incluir() {
@@ -99,7 +117,7 @@ export class MantemCenarioComponent implements OnInit {
     const url = environment.urlServerPresentation + environment.inserirCenario;
 
     this.http.put(url, cenario).subscribe(data => {
-      alert("Inclusão de cenário realizada com sucesso!");
+      alert('Inclusão de cenário realizada com sucesso!');
       this.pesquisar();
     });
   }
@@ -107,35 +125,32 @@ export class MantemCenarioComponent implements OnInit {
   confirmarAlteracao(cenario) {
 
     const url = environment.urlServerPresentation + environment.alterarCenario;
-
-    this.http.post(url, cenario).subscribe(data => {
-      alert("Alteração de cenário realizada com sucesso!");
-      this.pesquisar();
-    });
+    if (cenario.situacao === SituacaoCenario.Ativo) {
+      alert('Cenário ativo não pode ser alterado!');
+    } else {
+      this.http.post(url, cenario).subscribe(data => {
+        alert('Alteração de cenário realizada com sucesso!');
+        this.pesquisar();
+      });
+    }
   }
 
   openDialog() {
-
-    let dialogRef = this.dialog.open(DialogCenarioComponent, {
-      width: '1050px', height: '450px',
+    const dialogRef = this.dialog.open(DialogCenarioComponent, {
+      width: '1400px', height: '450px',
       data: this.cenarioSelecionado
     });
 
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
-
-        var cenario = findCenario(this.cenarios, result);
+        let cenario = findCenario(this.cenarios, result);
         if (!cenario) {
-          
           cenario = result;
           cenario.idCenario = Guid.newGuid();
-          cenario.situacao = SituacaoCenario.Ativo;
-
+          cenario.situacao = SituacaoCenario.Inativo;
           this.confirmarInclusao(cenario);
-
         } else {
-
           this.confirmarAlteracao(result);
         }
       }
@@ -144,8 +159,8 @@ export class MantemCenarioComponent implements OnInit {
 
 }
 
-function findCenario(cenarios: Array<Cenario>, cenario: Cenario) {
-  var retorno: Cenario;
+let retorno: Cenario;
+  function findCenario(cenarios: Array<Cenario>, cenario: Cenario) {
   if (cenario && cenario.idCenario) {
     cenarios.forEach((it) => {
       if (it.idCenario == cenario.idCenario) {
@@ -163,7 +178,7 @@ function clone(value) {
 class Guid {
   static newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }

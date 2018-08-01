@@ -35,6 +35,10 @@ regracenario:
       column: tipo_regra
     idCenario:
       column: id_cenario
+    dataInicioVigencia:
+      column: data_inicio
+    dataFimVigencia:
+      column: data_fim
   filters:
     byIdCenario: "id_cenario = :idCenario"
     byId: "id = :id"
@@ -50,6 +54,22 @@ unidadegeradora:
       column: data_inicio_operacao
     idUsina:
       column: id_usina
+    franquiaGICHorasLimite:
+      column: franq_gic_hor_lim
+    franquiaGICTempoLimiteAntes102014:
+      column: franq_gic_lim_ant_102014
+    franquiaGICTempoLimiteApos102014:
+      column: franq_gic_lim_pos_102014
+    franquiaGMTHorasLimiteAntes01102014:
+      column: franq_gmt_hor_lim_ant_01102014
+    franquiaGMTHorasLimiteAPartir01102014:
+      column: franq_gmt_hor_lim_apar_01102014
+    franquiaGIMRestricaoTempo:
+      column: franq_gim_rest
+    franquiaGIMTempoLimiteAntes01102014:
+      column: franq_gim_lim_ant_01102014
+    franquiaGIMTempoLimiteApos01102014:
+      column: franq_gim_lim_pos_01102014       
   filters:
     byIdUsina: "id_usina = :idUsina"
 
@@ -67,4 +87,29 @@ usina:
       required: true
   filters:
     all:
+    byIdUsina: "id_usina = :idUsina"
+
+eventomudancaestadooperativo:
+  model: tb_evt_estado_oper
+  fields:
+    idEvento:
+      column: id_evento
+    idUge:
+      column: id_uge
+    idClassificacaoOrigem:
+      column: id_class_origem
+    idEstadoOperativo:
+      column: id_tp_estado_oper
+    idCondicaoOperativa:
+      column: id_cond_oper
+    dataVerificada:
+      column: data_verificada
+    potenciaDisponivel:
+      column: pot_disp
+    numONS: 
+      column: numero_ons
+    eversao:
+      column: eversao  
+  filters:
+    byUsinaAndDataVerificada: "data_verificada BETWEEN :dataInicioVigencia and :dataFimVigencia and id_usina=:idUsina"
       

@@ -1,0 +1,11 @@
+tb_class_evt:
+  id_evento:
+    - string
+  id_usina:
+    - string
+  id_uge:
+    - string
+  id_class_origem:
+    - string
+  data_verificada:
+    - datetime

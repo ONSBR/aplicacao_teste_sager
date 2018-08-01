@@ -9,3 +9,7 @@ tb_regra_cenario:
     - string
   id_cenario:
     - string
+  data_inicio:
+    - date    
+  data_fim:
+    - date 

@@ -16,7 +16,7 @@ execucaocalculofechamento:
     idFechamento:
       column: id_fechamento
   filters:
-    byIdsFechamentos: "id_fechamento in ($idsFechamentos)"
+    byIdsFechamentos: "id_fechamento in ($idsFechamentos) order by protocolo, branch"
 
 fechamentomensal:
   model: tb_fechamento_mensal

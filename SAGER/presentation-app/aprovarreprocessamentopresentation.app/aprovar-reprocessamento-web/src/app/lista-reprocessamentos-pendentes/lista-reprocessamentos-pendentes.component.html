@@ -1,0 +1,22 @@
+<h3>Eventos pendentes</h3>
+<table border="0" width="1000">
+  <tr>
+    <th>Id</th>
+    <th>Status</th>
+    <th>System Id</th>
+  </tr>
+  <tr *ngFor="let evento of eventos">
+    <td>
+      <input type="text" [(ngModel)]="evento.id" />
+    </td>
+    <td>
+      <input type="text" [(ngModel)]="evento.status" />
+    </td>
+    <td>
+      <input type="text" [(ngModel)]="evento.systemId" />
+    </td>
+    <td>
+      <button class="button" (click)='aprovar(evento)'>Aprovar</button>
+    </td>
+  </tr>
+</table>

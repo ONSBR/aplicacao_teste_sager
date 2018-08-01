@@ -1,0 +1,16 @@
+{
+    "app": {
+        "type": "presentation",
+        "tecnology": "node",
+        "name": "aprovarreprocessamentopresentation.app",
+        "version": "1.0",
+        "description": "",
+        "author": "",
+        "id": "e664ac59-da25-4cb7-a20f-a70f8eb7a225"
+    },
+     "solution": {
+        "name": "sager",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
+    }
+}
