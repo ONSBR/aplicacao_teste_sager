@@ -232,7 +232,7 @@ __webpack_require__.r(__webpack_exports__);
 // The list of file replacements can be found in `angular.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost:8088/',
+    urlServerPresentation: 'http://localhost/aprovarreprocessamentopresentation.app/',
     listarReprocessamentosPendentes: 'listarreprocessamentospendentes',
     aprovarReprocessamentoPendente: 'aprovarreprocessamentopendente'
 };
@@ -280,7 +280,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/hebm/ons/aplicacao_teste_sager/SAGER/presentation-app/aprovarreprocessamentopresentation.app/aprovar-reprocessamento-web/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/philippe/Projetos/ONS/aplicacao_teste_sager/SAGER/presentation-app/aprovarreprocessamentopresentation.app/aprovar-reprocessamento-web/src/main.ts */"./src/main.ts");
 
 
 /***/ })

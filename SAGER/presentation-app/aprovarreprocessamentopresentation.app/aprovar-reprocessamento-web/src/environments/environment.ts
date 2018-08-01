@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  urlServerPresentation: 'http://localhost:8088/',
+  urlServerPresentation: 'http://localhost/aprovarreprocessamentopresentation.app/',
   listarReprocessamentosPendentes: 'listarreprocessamentospendentes',
   aprovarReprocessamentoPendente: 'aprovarreprocessamentopendente'
 };
