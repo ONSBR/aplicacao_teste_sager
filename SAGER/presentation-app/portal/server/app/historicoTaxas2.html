@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <title>ONS - SAGER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+
+
+    <!-- CSS Web Fonts -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    
+    <!-- Formatação / Alinhamentos e visual -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">  
+    <link rel="stylesheet" href="./css/sky-forms.css">
+    <link rel="stylesheet" href="./css/custom-sky-forms.css">
+    <!-- CSS com as cutomizações -->
+    <link rel="stylesheet" href="./css/custom.css">
+    
+    <!-- CSS MENU -->
+    <link rel="stylesheet" href="./css/menu-sliding.css">
+    
+
+    <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.css" />
+    <link rel="stylesheet" href="bower_components/angular-gantt/assets/angular-gantt.css" />
+    <link rel="stylesheet" href="bower_components/angular-gantt/assets/angular-gantt-plugins.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+
+    <!-- endbuild -->
+
+    <style>
+    .gantt-task.resumo .gantt-task-background {
+          background-color: #6FA8DC;
+          
+      }
+
+      .gantt-task.resumo .gantt-task-content {
+          weight: bolder;
+      }
+
+      .gantt-task.resumo .gantt-task-foreground {
+
+      }
+      .gantt-task.tarefa-ativa .gantt-task-background {
+          background-color: #93C47D;
+          
+      }
+
+      .gantt-task.tarefa-ativa .gantt-task-content {
+          weight: bolder;
+      }
+
+      .gantt-task.tarefa-ativa .gantt-task-foreground {
+
+      }
+      .gantt-task.tarefa-inativa .gantt-task-background {
+          background-color: #93C47D;
+          opacity: 0.3;
+      }
+
+      .gantt-task.tarefa-inativa .gantt-task-content {
+          weight: bolder;
+      }
+
+      .gantt-task.tarefa-inativa .gantt-task-foreground {
+
+      }
+      .taxaAtiva {
+        background-color: #93C47D;
+    }
+    .taxaDesativada {
+        color: #ACFFA3;
+        opacity: 0.4;
+    }
+    .desativada {
+        color:red;
+    }
+
+    #contextMenu {
+      position: absolute;
+      display:none;
+  }
+</style>
+
+</head>
+<body ng-app="angularGanttDemoApp">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<!--<a href="https://github.com/angular-gantt/angular-gantt" target="_blank"><img style="position: absolute; z-index:10000; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+-->
+
+
+<div ng-controller="MainCtrl2">
+    <!--=== Conteúdo ===-->
+    <div class="container content">
+
+        <div class="header">
+
+            <!-- LOGOS -->
+            <div id="cabecalho-logos">
+                <img src="./imagens/logo-4-full.jpg"/>
+                <div style="float:right;" class="img-torres-target">
+                    <img src="./imagens/bg-header.jpg">
+                </div>
+            </div>
+            <div class="row">
+                <!-- Inicio -->
+                <div class="col-md-9">
+                    <!-- bloco 1 -->
+                    <form action="#" id="associado-form" class="sky-form sky-form-campos">
+                        <header style="background-color: #486018;">
+                            <!-- MENU -->
+                            <div class="col-md-7">
+                                <a href="#" class="btn btn-u btn-u-yellow side-bar-left-menu-open" style="width:120px;" title="Abrir Menu">MENU</a>
+                                <div class="side-menu-overlay" style="width: 0px; opacity: 0;"></div>
+                                <div class="side-menu-wrapper">
+                                    <a href="#" class="menu-close">×</a><p></p>
+                                    <!-- ITENS DO MENU  -->
+                                    <div class="nav-side-menu">
+                                        <div class="menu-list">
+                                            <ul>
+                                                <li class="pai-nav-side-menu"><a href="index.html" title="Sistema de Gestão para o Desenvolvimento do Sistema de Apuração da Geração">Página Inicial</a></li>
+                                                <ul id="menu-content">
+                                                    <li data-toggle="collapse" data-target="#SAGER" class="pai-nav-side-menu">
+                                                        <a href="#">SAGER<span class="arrow"></span></a>
+                                                    </li>
+                                                    <ul class="sub-menu collapse" id="SAGER">
+                                                        <li class="active"><a href="solicitarcalculo.html">Solicitar Cálculo de Taxas</a></li>
+                                                        <li class="active"><a href="consultarTaxas.html">Consultar Taxas</a></li>
+                                                        <li class="active"><a href="consultarTaxasReferencia.html">Consultar Taxas de Referência</a></li>
+                                                        <li class="active"><a href="consultarParametrizacao.html">Manter Parametrização</a></li>
+                                                        <li class="active"><a href="consultarDisponibilidade.html">Consultar Disponibilidade</a></li>
+                                                        <li class="active"><a href="consultarEventos.html">Consultar Eventos (UC2407)</a></li>
+                                                        <li class="active"><a href="consultarEventosConsolidados.html">Consultar Eventos (UC0604)</a></li>
+                                                        <li class="active"><a href="gerarRelatorio.html">Gerar relatórios</a></li>
+                                                        <li class="active"><a href="consultarAgendamentos.html">Manter Agendamento</a></li>
+                                                        <li class="active"><a href="consultarCenarios.html">Manter Cenários</a></li>
+                                                        <li class="active"><a href="manterRegras.html">Manter Regras</a></li>
+                                                        <li class="active"><a href="manterWSRR.html">Manter Catálogo de Serviços</a></li>
+                                                    </ul>
+                                                </ul>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Dados do usuário -->
+                                <div class="col-md-5" style="font-size:15px; text-align: right;">
+                                    <ul class="list-inline badge-lists">
+                                        <li>
+                                            <span style="color:#fff;">Bem Vindo, <strong>jose.silva - Perfil CNOS</strong></span>    
+                                        </li>
+                                        <li>
+                                            <a class="btn-u btn-u-xs btn-u-default" href="index.html">Notificações</a>
+                                            <span class="badge badge-blue">7</span>
+                                        </li>
+                                        <li>
+                                            <a class="btn-u btn-u-xs btn-u-dark" href="tarefas.html">Tarefas</a>
+                                            <span class="badge badge-red rounded-2x">9</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div style="clear:both;"></div>
+
+                            </header>
+
+                            <!-- / breadcrumb -->
+                            <ol class="breadcrumb">
+                                <li><a href="#">SAGER</a></li>
+                                <li><a href="consultarTaxas.html">Consultar Taxas</a></li>
+                                <li class="active">Histórico de Taxas</li>
+                            </ol>
+
+                        </form>
+                        <!-- Fim Form -->
+
+                        <!-- Bloco 1 -->
+                        <form action="#" id="sky-form" class="sky-form sky-form-campos" style="border:0px;">
+                            <header>Histórico de Taxas</header>
+                            <fieldset>
+
+                                <div class="row">
+                                 <section class="col col-5">
+                                  <label class="label">Instalação</label>
+                                  <label class="input">
+                                    <i></i>
+                                    <input type="text" name="instalacao" value="USINA XINGO" disabled></input>
+                                </label>
+                            </section>
+                            <section class="col col-5">
+                                <label class="label">Tipo de Taxa</label>
+                                <label class="select">
+                                    <select name="status" ng-model="status">
+                                        <option value="0" selected>TEIP</option>
+                                        <option value="1">TEIP fc</option>
+                                        <option value="2">TEIP oper</option>
+                                        <option value="3">TEIFa</option>
+                                        <option value="4">TEIF fc</option>
+                                        <option value="5">TEIF oper</option>
+                                        <option value="6">TEIP mês</option>
+                                        <option value="7">TEIP fc mês</option>
+                                        <option value="8">TEIP oper mês</option>
+                                        <option value="9">TEIFa mês</option>
+                                        <option value="10">TEIF fc mês</option>
+                                        <option value="11">TEIF oper mês</option>
+                                        <option value="12">Indice de Indisponibilidade</option>
+                                    </select>
+                                    <i></i>
+                                </label>
+
+                            </section>
+                        </div>
+                        <div class="row">
+                            <section class="col col-5">
+                                <label class="label">Data inicial</label>
+                                <label class="input">
+                                    <i class="icon-append fa fa-calendar"></i>
+                                    <input type="text" class="form-control" ng-model="options.fromDate" max-date="{{options.toDate}}" start-date="{{options.currentDateValue.toString()}}" start-week="1" placeholder="From" bs-datepicker>
+                                </label>
+                            </section>
+                            <section class="col col-5">
+                                <label class="label">Data final</label>
+                                <label class="input">
+                                    <i class="icon-append fa fa-calendar"></i>
+                                    <input type="text" class="form-control" ng-model="options.toDate" min-date="{{options.fromDate}}" start-date="{{options.currentDateValue.toString()}}" start-week="1" placeholder="To" bs-datepicker>
+                                </label>
+                            </section>
+
+                            <section class="col col-11">
+                                <button class="btn-u" src="#" type="button">Pesquisar</button>
+                            </section>
+
+
+
+                        </div>
+
+                    </fieldset>
+
+                    <div class="margin-bottom-10"></div>
+
+                    <!-- Tabs resultado -->
+                    <header>Resultados da pesquisa</header>
+                    <fieldset>
+
+                       <div class="panel-group" bs-collapse>
+                        <div class="panel panel-default">
+                            <div class="panel-heading clearfix">
+                                <h4 class="panel-title">
+                                    <a href="" bs-collapse-toggle>Histórico de Taxas</a>
+                                    <!-- Legendas Histórico de taxas -->
+                                    <ul class="list-inline pull-right">
+                                    <li><i class="fa fa-circle"></i> Principal</li>
+                                    <li><i class="fa fa-circle-o"></i> Alternativo  </li>
+                                    <li class="desativada"><i class="fa fa-lock"></i> Desativado</li>
+                                    <li><i class="fa fa-cog"></i> A&ccedil;&atilde;o</li>
+                                    </ul>
+                                </h4>
+                            </div>
+                            <div class="panel-collapse" bs-collapse-target>
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div gantt
+                                        data="data"
+                                        timespans="timespans"
+                                        show-side="options.labelsEnabled"
+                                        daily="options.daily"
+                                        filter-task="{'name': options.filterTask}"
+                                        filter-row="{'name': options.filterRow}"
+                                        sort-mode="options.sortMode"
+                                        view-scale="options.scale"
+                                        column-width="80"
+                                        auto-expand="options.autoExpand"
+                                        task-out-of-range="options.taskOutOfRange"
+                                        from-date = "options.fromDate"
+                                        to-date = "options.toDate"
+                                        allow-side-resizing = "options.allowSideResizing"
+                                        task-content = "options.taskContentEnabled ? options.taskContent : undefined"
+                                        row-content = "options.rowContentEnabled ? options.rowContent : undefined"
+                                        current-date="options.currentDate"
+                                        current-date-value="options.currentDateValue"
+                                        headers="options.width && options.shortHeaders || options.longHeaders",
+                                        max-height="options.maxHeight && 300 || 0"
+                                        time-frames="options.timeFrames"
+                                        date-frames="options.dateFrames"
+                                        time-frames-working-mode="options.timeFramesWorkingMode"
+                                        time-frames-non-working-mode="options.timeFramesNonWorkingMode"
+                                        time-frames-magnet="options.timeFramesMagnet"
+                                        api="options.api"
+                                        column-magnet="options.columnMagnet">
+                                        <gantt-tree enabled="options.sideMode === 'Tree' || options.sideMode === 'TreeTable'"
+                                        header-content="options.treeHeaderContent"
+                                        keep-ancestor-on-filter-row="false"> <!-- alterado para realizar ordenação correta -->
+                                    </gantt-tree>
+                                    <gantt-table enabled="options.sideMode === 'Table' || options.sideMode === 'TreeTable'"
+                                    columns="options.sideMode === 'TreeTable' ? options.treeTableColumns : options.columns"
+                                    headers="options.columnsHeaders"
+                                    classes="options.columnsClasses"
+                                    formatters="options.columnsFormatters"
+                                    contents="options.columnsContents"
+                                    header-contents="options.columnsHeaderContents">
+                                </gantt-table>
+                                <!-- <gantt-groups enabled="options.groupDisplayMode === 'group' || options.groupDisplayMode === 'overview' || options.groupDisplayMode === 'promote'" display="options.groupDisplayMode"></gantt-groups>-->
+                                <!--<gantt-tooltips></gantt-tooltips>-->
+                                <!--<gantt-bounds></gantt-bounds>-->
+                                <!--<gantt-progress></gantt-progress>-->
+                                <!--<gantt-sortable></gantt-sortable>-->
+                                <!--<gantt-movable enabled="!options.readOnly"></gantt-movable>-->
+                                        <!--<gantt-draw-task
+                                        enabled="options.canDraw"
+                                        move-threshold="2"
+                                        task-factory="options.drawTaskFactory">
+                                    </gantt-draw-task>-->
+                                    <!--<gantt-overlap></gantt-overlap>-->
+                                    <!--<gantt-resize-sensor></gantt-resize-sensor>-->
+                                    <gantt-dependencies
+                                    enabled="options.dependencies.enabled"
+                                    conflict-checker="options.dependencies.conflictChecker"
+                                    read-only="options.readOnly">
+                                </gantt-dependencies>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </fieldset>
+    <!-- Final Resultado -->
+    <!-- Botões -->
+    <footer class="text-right">
+        <button type="submit" class="btn-u"><a href="consultarTaxas.html">Voltar</a></button>
+        <button type="submit" class="btn-u">Exportar Excel</button>
+        <button type="submit" class="btn-u">Gerar Gráfico</button>
+
+    </footer>
+</form>
+
+</div>
+</div>
+</div>
+<!--=== Final conteúdo ===-->
+</div>
+<!-- Incorporando algumas funções de validação -->
+<!-- <script type="text/javascript"> -->
+<!-- jQuery(document).ready(function() { -->
+<!-- AssociadoForm.initAssociadoForm(); -->
+<!-- EventosForm.initEventosForm(); -->
+<!-- }); -->
+<!-- </script> -->
+
+<div id="contextMenu" class="dropdown clearfix">
+    <ul class="dropdown-menu" role="menu" style="display:block;position:static;margin-bottom:5px;">
+        <li style="padding: 3px 20px;">versão XXX</li>
+        <li><a href="http://des-sswas-02.ons.org.br/onsportal/#/consulta-memoria-calculo"><i class="fa fa-info-circle"></i> Memória de Cálculo</a></li>
+        <li><a href="http://des-sswas-02.ons.org.br/onsportal/#/reproducao-calculo" onclick="waitingDialog.show();setTimeout(function () {waitingDialog.hide();}, 3000);"><i class="fa fa-play-circle-o"></i> Reproduzir Cálculo</a></li>
+        <li><a href="http://des-sswas-02.ons.org.br/onsportal/#/comparar-calculo"><i class="fa fa-exchange"></i> Comparar com Taxa Anterior</a></li>
+    </ul>
+
+</div>
+
+<!-- Incorporando as funções do menu-sliding -->
+
+<!-- <script type="text/javascript"> -->
+<!-- jQuery(document).ready(function() { -->
+<!-- App.init(); -->
+<!-- Masking.initMasking(); -->
+<!-- Datepicker.initDatepicker(); -->
+<!-- Validation.initValidation(); -->
+<!-- StyleSwitcher.initStyleSwitcher(); -->
+<!-- }); -->
+<!-- </script> -->
+
+
+<!-- build:js(.) scripts/oldieshim.js -->
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/json3/lib/json3.js"></script>
+<![endif]-->
+<!-- endbuild -->
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/json3/lib/json3.js"></script>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+<script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+<script src="bower_components/angular-native-dragdrop/draganddrop.js"></script>
+<script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/angular-gantt/assets/angular-gantt.js"></script>
+<script src="bower_components/angular-gantt/assets/angular-gantt-plugins.js"></script>
+<script src="bower_components/moment-range/dist/moment-range.js"></script>
+<script src="bower_components/css-element-queries/src/ElementQueries.js"></script>
+<script src="bower_components/css-element-queries/src/ResizeSensor.js"></script>
+<script src="bower_components/jsplumb/dist/js/jsPlumb-2.1.8.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/services/sample.js"></script>
+<!-- endbuild -->
+
+<script src="bower_components/moment/locale/pt-br.js"></script>
+
+<script type="text/javascript">
+
+    var slidebar_width  = 340; //slidebar width + padding size
+    var slide_bar       = $(".side-menu-wrapper"); //slidebar
+    var slide_open_btn  = $(".side-bar-left-menu-open"); //slidebar close btn
+    var slide_close_btn = $(".menu-close"); //slidebar close btn
+    var overlay         = $(".side-menu-overlay"); //slidebar close btn
+
+    slide_open_btn.click(function(e){
+        e.preventDefault();
+        slide_bar.css( {"left": "0px"}); //change to "right" for right positioned menu
+        overlay.css({"opacity":"1", "width":"100%"});
+    });
+    slide_close_btn.click(function(e){
+        e.preventDefault();
+        slide_bar.css({"left": "-"+ slidebar_width + "px"}); //change to "right" for right positioned menu
+        overlay.css({"opacity":"0", "width":"0"});  
+    });
+</script>
+<script>$('pre code').each(function(i, block) {hljs.initHighlightingOnLoad();});</script>
+
+</body>
+</html>

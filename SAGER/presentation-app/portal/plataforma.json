@@ -1,0 +1,16 @@
+{
+    "app": {
+        "type": "presentation",
+        "tecnology": "node",
+        "name": "portal",
+        "version": "1.0",
+        "description": "Portal",
+        "author": "Fernando Andrade",
+        "id": "2d8ef224-332e-4a4a-8623-8885de24f48b"
+    },
+    "solution": {
+        "name": "sager",
+        "description": "SAGER",
+        "id": "eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b"
+    }
+}
