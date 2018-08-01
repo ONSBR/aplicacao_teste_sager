@@ -58,24 +58,25 @@ describe('Critério: ', function () {
         });
     });
 
-    // it('RNI503 - Alterações impactando o evento espelho. Primeiro evento do critério sendo evento espelho.', () => {
-    //     let evento = { idEvento: 1,
-    //          idUge: 'ALUXG-0UG1', 
-    //          potenciaDisponivel: 1000, 
-    //          idCondicaoOperativa: 'NOR', 
-    //          dataVerificada: new Date(2018, 0, 1) };
+    it('RNI503 - Alterações impactando o evento espelho. Primeiro evento do critério sendo evento espelho.', () => {
+        let evento = {
+             idEvento: 1,
+             idUge: 'ALUXG-0UG1', 
+             potenciaDisponivel: 1000, 
+             idCondicaoOperativa: 'NOR', 
+             dataVerificada: new Date(2018, 0, 1) };
 
-    //     cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, dataset);
+        cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, eventos, dataset);
 
-    //     expect(update.calls.count()).toEqual(0);
-    //     expect(insert.calls.count()).toEqual(1);
-    //     expect(update).toHaveBeenCalledWith({
-    //         idUge: 'ALUXG-0UG1',
-    //         potenciaDisponivel: 5000,
-    //         idCondicaoOperativa: 'NOR',
-    //         idClassificacaoOrigem: '',
-    //         dataVerificada: new Date(2018, 1, 1, 0, 1, 0)
-    //     });
-    // });
+        expect(update.calls.count()).toEqual(0);
+        expect(insert.calls.count()).toEqual(1);
+        expect(insert).toHaveBeenCalledWith({
+            idEvento: '1B',
+            idUge: 'ALUXG-0UG1',
+            potenciaDisponivel: 5000,
+            idCondicaoOperativa: 'NOR',
+            dataVerificada: new Date(2018, 0, 1, 0, 1, 0)
+        });
+    });
 
 });

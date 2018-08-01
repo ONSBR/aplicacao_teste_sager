@@ -17,6 +17,13 @@ class CriterioPotencia {
             cenarioBusiness.updatePotenciaDisponivel(regra, evento, eventos, dataset);
         });
 
+        dataset.unidadegeradora.collection.toArray().filter(uge => {
+            return uge.idUge == regra.regraDe;
+        }).forEach(uge => {
+            uge.potenciaDisponivel = regra.regraPara;
+            dataset.unidadegeradora.update(uge);             
+        });
+
     }
 
 }

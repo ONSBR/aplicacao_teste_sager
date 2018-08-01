@@ -25,16 +25,22 @@ describe('Critério: ', function () {
             { idEvento: '12', idUge: 'ALUXG-0UG1', potenciaDisponivel: '100', dataVerificada: new Date(2018, 4, 1)},
             { idEvento: '13', idUge: 'ALUXG-0UG2', potenciaDisponivel: '100', dataVerificada: new Date(2018, 3, 30)}
         ];
+
+        uges = [{idUge: 'ALUXG-0UG1', potenciaDisponivel:'100'}]
         let dataset = {
             eventomudancaestadooperativo: {
                 collection: Enumerable.from(eventos),
+                update: update
+            },
+            unidadegeradora: {
+                collection: Enumerable.from(uges),
                 update: update
             }
         };
 
         criterios.aplicar(regraPotenciaDisponivel, dataset);
 
-        expect(update.calls.count()).toEqual(1);
+        expect(update.calls.count()).toEqual(2);
         expect(update).toHaveBeenCalledWith({
             idEvento: '11', 
             idUge: 'ALUXG-0UG1', 
@@ -43,6 +49,7 @@ describe('Critério: ', function () {
             idClassificacaoOrigem: '',
             dataVerificada: new Date(2018, 3, 1, 11)
         });
+        expect(update).toHaveBeenCalledWith({idUge: 'ALUXG-0UG1', potenciaDisponivel:'500'});
     });
 
 });

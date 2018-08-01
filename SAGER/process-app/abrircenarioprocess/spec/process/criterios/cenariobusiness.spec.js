@@ -16,9 +16,12 @@ describe('Critério: ', function () {
         update = jasmine.createSpy('update');
         eventos = [
             { idEvento: 1, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOT', idClassificacaoOrigem: 'GUM' },
-            { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' },
-            { idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' },
-            { idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOT', idClassificacaoOrigem: 'GUM' },
+            { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, 
+              idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM', dataVerificada: new Date(2018, 2, 2) },
+            { idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, 
+              idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM', dataVerificada: new Date(2018, 2, 2, 1) },
+            { idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, 
+              idCondicaoOperativa: 'NOT', idClassificacaoOrigem: 'GUM', dataVerificada: new Date(2018, 2, 2, 2) },
             { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' },
             { idEvento: 6, idUge: 'ALUXG-0UG1', potenciaDisponivel: 310, idCondicaoOperativa: 'RPR', idClassificacaoOrigem: 'GIS' }
         ];
@@ -32,7 +35,13 @@ describe('Critério: ', function () {
     });
 
     it('RNI - 203  Alteração da potência para cálculo para um valor maior.  Evento NOR.', () => {
-        let evento = { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
+        let evento = { idEvento: 2, 
+            idUge: 'ALUXG-0UG1', 
+            potenciaDisponivel: 1000, 
+            idCondicaoOperativa: 'NOR', 
+            idClassificacaoOrigem: 'GUM',
+            dataVerificada: new Date(2018, 2, 2) 
+        };
         cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, eventos, dataset);
 
         expect(update.calls.count()).toEqual(1);
@@ -42,7 +51,8 @@ describe('Critério: ', function () {
             idUge: 'ALUXG-0UG1',
             potenciaDisponivel: 5000,
             idCondicaoOperativa: 'NOR',
-            idClassificacaoOrigem: ''
+            idClassificacaoOrigem: '',
+            dataVerificada: new Date(2018, 2, 2) 
         });
     });
 
@@ -62,13 +72,23 @@ describe('Critério: ', function () {
     });
 
     it('RNI - 202  Alteração da potência para cálculo para um valor menor. Sem evento anterior igual NOT ou TST', () => {
-        let evento = { idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: 'GUM' };
+        let evento = { idEvento: 3, 
+                       idUge: 'ALUXG-0UG1', 
+                       potenciaDisponivel: 1000, 
+                       idCondicaoOperativa: 'NOR', 
+                       idClassificacaoOrigem: 'GUM',
+                       dataVerificada: new Date(2018, 2, 2, 1) };
 
         cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMenor, evento, eventos, dataset);
 
         expect(update.calls.count()).toEqual(1);
         expect(update).toHaveBeenCalledWith({
-            idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: 400, idCondicaoOperativa: 'NOR', idClassificacaoOrigem: ''
+            idEvento: 3, 
+            idUge: 'ALUXG-0UG1', 
+            potenciaDisponivel: 400, 
+            idCondicaoOperativa: 'NOR', 
+            idClassificacaoOrigem: '', 
+            dataVerificada: new Date(2018, 2, 2, 1) 
         });
     });
 

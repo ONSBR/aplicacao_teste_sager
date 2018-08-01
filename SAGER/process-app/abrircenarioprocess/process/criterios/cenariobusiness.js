@@ -4,7 +4,8 @@ class CenarioBusiness {
      * RNI202 - Alteração da potência para cálculo para um valor menor
      * RNI203 - Alteração da potência para cálculo para um valor maior
      * @param {*} regra 
-     * @param {*} evento 
+     * @param {*} eventoToUpdate 
+     * @param {*} eventos
      * @param {*} dataset 
      */
     updatePotenciaDisponivel(regra, eventoToUpdate, eventos, dataset) {
@@ -27,21 +28,25 @@ class CenarioBusiness {
         }
     }
 
-    findByIdEvento(eventos, idEvento) {
-        return eventos.find(eventoFilter => {
-            return eventoFilter.idEvento == idEvento;
-        });
-    }
-
-    findIndexByIdEvento(eventos, idEvento) {
-        return eventos.findIndex(evento => evento.idEvento == idEvento)
-    }
-
     updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset) {
-        eventoToUpdate.potenciaDisponivel = regra.regraPara;
-        this.updateCondicaoOperativaEOrigem(eventoToUpdate);
-        dataset.eventomudancaestadooperativo.update(eventoToUpdate);
-        this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
+        if(this.isEventoEspelhoEPrimeiroEvento(eventoToUpdate, eventos)) {
+            let novoEvento = Object.assign({}, eventoToUpdate);
+            novoEvento.dataVerificada.setMinutes(1);
+            //FIXME
+            novoEvento.idEvento = novoEvento.idEvento + 'B';
+            novoEvento.potenciaDisponivel = regra.regraPara;
+            dataset.eventomudancaestadooperativo.insert(novoEvento);
+        } else if(!this.isEventoEspelho(eventoToUpdate)){
+            eventoToUpdate.potenciaDisponivel = regra.regraPara;
+            this.updateCondicaoOperativaEOrigem(eventoToUpdate);
+            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+            this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
+        }
+
+    }
+
+    isEventoEspelhoEPrimeiroEvento(evento, eventos) {
+        return this.findIndexByIdEvento(eventos, evento.idEvento) == 0 && this.isEventoEspelho(evento);
     }
 
     updateCondicaoOperativaEOrigem(eventoToUpdate) {
@@ -64,7 +69,8 @@ class CenarioBusiness {
     }
 
     isEventoEspelho(evento) {
-        return evento.dataVerificada.getHours() == 0 &&
+        return evento.dataVerificada.getDate() == 1 && 
+            evento.dataVerificada.getHours() == 0 &&
             evento.dataVerificada.getMinutes() == 0 &&
             evento.dataVerificada.getSeconds() == 0
     }
@@ -81,6 +87,16 @@ class CenarioBusiness {
                 throw new Error('Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.Os eventos com Estado Operativo igual a “DCA” só deverão ter sua origem alterada se  a nova origem for “GOT”, “GGE”, “GUM”, “GCB”, “GTR”, “GAC”, “GAG” ou “GCI”.');
             }
         }
+    }
+
+    findByIdEvento(eventos, idEvento) {
+        return eventos.find(eventoFilter => {
+            return eventoFilter.idEvento == idEvento;
+        });
+    }
+
+    findIndexByIdEvento(eventos, idEvento) {
+        return eventos.findIndex(evento => evento.idEvento == idEvento)
     }
 
 }
