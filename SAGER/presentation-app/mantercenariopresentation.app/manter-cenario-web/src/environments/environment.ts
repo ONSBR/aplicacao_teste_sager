@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  urlServerPresentation: 'http://localhost:8088/',
+  urlServerPresentation: 'http://localhost/mantercenariopresentation.app/',
   pesquisarCenarios: 'pesquisarCenarios',
   inserirCenario: 'inserirCenario',
   alterarCenario: 'alterarCenario',
