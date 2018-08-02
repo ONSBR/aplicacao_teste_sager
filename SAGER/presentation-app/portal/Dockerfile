@@ -1,5 +1,8 @@
 FROM node:carbon
-WORKDIR /usr/src/server/
+WORKDIR /usr/src/
 COPY . .
-ENTRYPOINT [ "node", "./portal.js" ]
+WORKDIR /usr/src/server/
+ENV PORT 8088
+EXPOSE $PORT
+ENTRYPOINT [ "node", "--inspect=0.0.0.0", "./portal.js" ]
             
