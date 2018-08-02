@@ -70,13 +70,6 @@ describe('Critério: ', function () {
 
         expect(update.calls.count()).toEqual(0);
         expect(insert.calls.count()).toEqual(1);
-        expect(insert).toHaveBeenCalledWith({
-            idEvento: '1B',
-            idUge: 'ALUXG-0UG1',
-            potenciaDisponivel: 5000,
-            idCondicaoOperativa: 'NOR',
-            dataVerificada: new Date(2018, 0, 1, 0, 1, 0)
-        });
     });
 
 });
