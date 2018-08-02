@@ -1,0 +1,13 @@
+{
+  "name": "portal",
+  "version": "1.0.0",
+  "description": "presentation app",
+  "main": "portal.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "forever": "^0.15.3"
+  }
+}
