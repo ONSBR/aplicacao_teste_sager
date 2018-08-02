@@ -21,7 +21,7 @@ class CenarioBusiness {
             let indexEventoAnterior = this.findIndexByIdEvento(eventos, eventoDB.idEvento) - 1;
             let eventoAnterior = eventos[indexEventoAnterior];
 
-            if (regra.regraPara > diferencaValores &&
+            if (regra.regraPara > diferencaValores && eventoAnterior != undefined &&
                 !(eventoAnterior.idCondicaoOperativa == 'NOT' || eventoAnterior.idCondicaoOperativa == 'TST')) {
                 this.updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset);
             }
@@ -31,10 +31,10 @@ class CenarioBusiness {
     updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset) {
         if(this.isEventoEspelhoEPrimeiroEvento(eventoToUpdate, eventos)) {
             let novoEvento = Object.assign({}, eventoToUpdate);
-            novoEvento.dataVerificada.setMinutes(1);
-            //FIXME
-            novoEvento.idEvento = novoEvento.idEvento + 'B';
             novoEvento.potenciaDisponivel = regra.regraPara;
+            novoEvento.dataVerificada.setMinutes(1);
+            novoEvento.idEvento = this.guid();
+            this.updateCondicaoOperativaEOrigem(novoEvento);
             dataset.eventomudancaestadooperativo.insert(novoEvento);
         } else if(!this.isEventoEspelho(eventoToUpdate)){
             eventoToUpdate.potenciaDisponivel = regra.regraPara;
@@ -42,7 +42,6 @@ class CenarioBusiness {
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
             this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
         }
-
     }
 
     isEventoEspelhoEPrimeiroEvento(evento, eventos) {
@@ -97,6 +96,16 @@ class CenarioBusiness {
 
     findIndexByIdEvento(eventos, idEvento) {
         return eventos.findIndex(evento => evento.idEvento == idEvento)
+    }
+
+    guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
     }
 
 }
