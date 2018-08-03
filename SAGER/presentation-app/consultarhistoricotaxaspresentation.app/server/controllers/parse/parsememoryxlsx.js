@@ -64,7 +64,7 @@ class ParseMemoryFileTemplate {
         if (!val) return '0';
         if (!round) round = 2;
         val = parseFloat(val.toFixed(round));
-        return (""+val).replace('.', ',');
+        return ("" + val).replace('.', ',');
     }
 
     parseContent() {
@@ -82,7 +82,11 @@ class ParseMemoryFileTemplate {
 
         this.sheet["B6"] = { v: (this.fechamento.mes.zeroFillLeft(2) + "/" + this.fechamento.ano) };
 
-        // TODO this.sheet["B7"] info de cenário, quando tiver o caso de uso de cenário.
+        if(this.taxa._metadata.branch != undefined) {
+            this.sheet["B7"] = { v: this.taxa._metadata.branch };
+        } else {
+            this.sheet["B7"] = { v: 'master' };
+        }
 
         // indica se a taxa se trata de taxa acumulada
         if (this.taxa.idTipoTaxa == TipoTaxa.TEIPacum || this.taxa.idTipoTaxa == TipoTaxa.TEIFAacum) {
@@ -128,8 +132,8 @@ class ParseMemoryFileTemplate {
             var containTipo = it.tiposParametrosComputados && it.tiposParametrosComputados.length > 0;
             var qtdTipos = containTipo ? it.tiposParametrosComputados.length : 1;
 
-            for (var i = 0; i < qtdTipos; i++, curRow++) {
-                
+            for (var i = 0; i < qtdTipos; i++ , curRow++) {
+
                 this.sheet[this.colsEvent[0] + curRow] = { v: it.numONS };
                 this.sheet[this.colsEvent[1] + curRow] = { v: it.idUge };
                 this.sheet[this.colsEvent[2] + curRow] = { v: util.textToExcel(it.idEstadoOperativo) };
