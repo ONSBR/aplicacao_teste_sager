@@ -99,47 +99,8 @@ class CenarioBusiness {
         event.payload.dataInicioVigencia = cenario.dataInicioVigencia;
         event.payload.dataFimVigencia = cenario.dataFimVigencia;
         event.payload.idUsina = cenario.idUsina;
-        this.populateEventoData(cenario.regras, event);
 
         return event;
-    }
-
-    populateEventoData(regras, event) {
-        regras.forEach(regra => {
-            regra._metadata = undefined;
-            regra.id = undefined;
-            if (this.isRegraClassificacao(regra)) {
-                event.payload.classificacao = regra.regraDe;
-            }
-
-            if (this.isRegraCondicaoOperativa(regra)) {
-                event.payload.condicaoOperativa = regra.regraDe;
-            }
-
-            if (this.isRegraEstadoOperativo(regra)) {
-                event.payload.estadoOperativo = regra.regraDe;
-            }
-        });
-    }
-
-    isRegraFranquia(regra) {
-        return regra.tipoRegra == 'Franquia';
-    }
-
-    isRegraPotenciaDisponivel(regra) {
-        return regra.tipoRegra == 'Potência Disponível';
-    }
-
-    isRegraClassificacao(regra) {
-        return regra.tipoRegra == 'Classificação de Origem do Evento';
-    }
-
-    isRegraCondicaoOperativa(regra) {
-        return regra.tipoRegra == 'Condição Operativa do Evento';
-    }
-
-    isRegraEstadoOperativo(regra) {
-        return regra.tipoRegra == 'Estado Operativo do Evento';
     }
 
     /**
