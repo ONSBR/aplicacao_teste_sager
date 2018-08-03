@@ -3,10 +3,6 @@ const HttpClient = require("plataforma-sdk/http/client");
 const FechamentoMensal = require("../../process/entities/fechamentomensal");
 const Usina = require("../../process/entities/usina");
 const FranquiaUnidadeGeradora = require("../../process/entities/franquiaunidadegeradora");
-const PotenciaUnidadeGeradora = require("../../process/entities/potenciaunidadegeradora");
-const ClassificacaoOrigemEvento = require("../../process/entities/classificacaoorigemevento");
-const CondicaoOperativaEvento = require("../../process/entities/condicaooperativaevento");
-const EstadoOperativoEvento = require("../../process/entities/estadooperativoevento");
 const Enumerable = require("linq");
 const FRANQUIA = 1000;
 
@@ -57,27 +53,11 @@ function loadFranquiasUnidadesGeradoras(uges) {
         let franquia = new FranquiaUnidadeGeradora();
         franquia.idUge = uge.idUge;
         franquia.franquia = FRANQUIA;
-        // franquias.push(franquia);
     });
 
     let url = getUrlAppDomain(null, null, "persist");
     httpClient.post(url, JSON.stringify(franquias)).then(results => {
         console.log("Franquias incluídas:");
-    }).catch(catch_error);
-}
-
-function loadPotenciasUnidadesGeradoras(uges) {
-    let potencias = [];
-    uges.forEach(uge => {
-        let potencia = new PotenciaUnidadeGeradora();
-        potencia.idUge = uge.idUge;
-        potencia.potenciaDisponivel = uge.potenciaDisponivel;
-        // potencias.push(potencia);
-    });
-
-    let url = getUrlAppDomain(null, null, "persist");
-    httpClient.post(url, JSON.stringify(potencias)).then(results => {
-        console.log("Potências incluídas:");
     }).catch(catch_error);
 }
 
@@ -124,8 +104,6 @@ Promise.all(dataLoad).then(results => {
     let uges = results[0];
     let eventos = results[1].concat(results[2]);
 
-    loadFranquiasUnidadesGeradoras(uges);
-    loadPotenciasUnidadesGeradoras(uges);
     loadFechamento();
 
     let usina = new Usina();
