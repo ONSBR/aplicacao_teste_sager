@@ -11,7 +11,6 @@ const Enumerable = require("linq");
 const FRANQUIA = 1000;
 
 var httpClient = new HttpClient();
-const DOMAIN_PORT = 8087;
 
 const MAPA = "calculartaxasprocess";
 
@@ -82,54 +81,11 @@ function loadPotenciasUnidadesGeradoras(uges) {
     }).catch(catch_error);
 }
 
-function createClassificacoesEventos(eventos) {
-    let classificacoes = [];
-    eventos.forEach(evento => {
-        let classificacaoEvento = new ClassificacaoOrigemEvento();
-        classificacaoEvento.idEvento = evento.idEvento;
-        classificacaoEvento.idUsina = evento.idUsina;
-        classificacaoEvento.idUge = evento.idUge;
-        classificacaoEvento.idClassificacaoOrigem = evento.idClassificacaoOrigem;
-        classificacaoEvento.dataVerificada = evento.dataVerificada;
-        classificacoes.push(classificacaoEvento);
-    });
-
-    return classificacoes;
-}
-
-function createCondicoesOperativasEvento(eventos) {
-    let condicoesOperativas = [];
-    eventos.forEach(evento => {
-        let condicaoOperativa = new CondicaoOperativaEvento();
-        condicaoOperativa.idEvento = evento.idEvento;
-        condicaoOperativa.idUsina = evento.idUsina;
-        condicaoOperativa.idUge = evento.idUge;
-        condicaoOperativa.idCondicaoOperativa = evento.idCondicaoOperativa;
-        condicaoOperativa.dataVerificada = evento.dataVerificada;
-        condicoesOperativas.push(condicaoOperativa);
-    });
-    return condicoesOperativas;
-}
-
-function createEstadosOperativos(eventos) {
-    let estadosOperativos = [];
-    eventos.forEach(evento => {
-        let estadoOperativo = new EstadoOperativoEvento();
-        estadoOperativo.idEvento = evento.idEvento;
-        estadoOperativo.idUsina = evento.idUsina;
-        estadoOperativo.idUge = evento.idUge;
-        estadoOperativo.idEstadoOperativo = evento.idEstadoOperativo;
-        estadoOperativo.dataVerificada = evento.dataVerificada;
-        estadosOperativos.push(estadoOperativo);
-    });
-    return estadosOperativos;
-}
-
 function getUrlAppDomain(map, entity, verb) {
     if (!map) {
         map = MAPA;
     }
-    var url = `http://localhost:${DOMAIN_PORT}/${map}/`;
+    var url = `http://localhost/domain/${map}/`;
     if (entity) {
         url += `${entity}/`;
     }
@@ -183,55 +139,12 @@ Promise.all(dataLoad).then(results => {
         console.log("Uges incluídas: " + Enumerable.from(uges).select(it => { return it.idUge }).toArray());
     }).catch(catch_error);
 
-    const lenpage = 10000;
+    const lenpage = 1000;
     for(var i=0;i<eventos.length;i+=lenpage) {
         var pageslice = i+lenpage >= eventos.length? eventos.length: i+lenpage;
         eventosToSend.push(eventos.slice(i, pageslice));
     }
 
-    let classificacoes = createClassificacoesEventos(eventos);
-    for(var i=0;i<classificacoes.length;i+=lenpage) {
-        var pageslice = i+lenpage >= classificacoes.length? classificacoes.length: i+lenpage;
-        eventosToSend.push(classificacoes.slice(i, pageslice));
-    }
-
-    let condicoesOperativas = createCondicoesOperativasEvento(eventos);
-    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
-        var pageslice = i+lenpage >= condicoesOperativas.length? condicoesOperativas.length: i+lenpage;
-        eventosToSend.push(condicoesOperativas.slice(i, pageslice));
-    }
-
-    let estadosOperativos = createEstadosOperativos(eventos);
-    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
-        var pageslice = i+lenpage >= estadosOperativos.length? estadosOperativos.length: i+lenpage;
-        eventosToSend.push(estadosOperativos.slice(i, pageslice));
-    }
-
     postEventos();
     
-/*
-eventos = [eventos[8144]];
-
-    var oj = [];
-    var proevt = [];
-    for(var i =0;i< eventos.length;i++) {
-        proevt.push(httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([eventos[i]])).then(result => {
-            console.log("Eventos incluídos: " + eventos.length);
-            //oj.push(result[0].idEvento);
-        }).catch(error => { console.log(error) }));//.catch(catch_error);
-    }
-    
-    Promise.all(proevt).then(data => {
-        var total = 0;
-        console.log('oj: ' + JSON.stringify(oj))
-        for(var i =0;i< eventos.length;i++) {
-            var evento = eventos[i];
-            if (oj.indexOf(evento.idEvento)<0) {
-                total++;
-                console.log('error['+i+']: ' +evento.idEvento  );
-            }
-        }
-        console.log('total: ' +total );
-    });
-*/
 }).catch(catch_error);
