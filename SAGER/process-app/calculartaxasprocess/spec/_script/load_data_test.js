@@ -67,21 +67,6 @@ function loadFranquiasUnidadesGeradoras(uges) {
     }).catch(catch_error);
 }
 
-function loadPotenciasUnidadesGeradoras(uges) {
-    let potencias = [];
-    uges.forEach(uge => {
-        let potencia = new PotenciaUnidadeGeradora();
-        potencia.idUge = uge.idUge;
-        potencia.potenciaDisponivel = uge.potenciaDisponivel;
-        // potencias.push(potencia);
-    });
-
-    let url = getUrlAppDomain(null, null, "persist");
-    httpClient.post(url, JSON.stringify(potencias)).then(results => {
-        console.log("Potências incluídas:");
-    }).catch(catch_error);
-}
-
 function createClassificacoesEventos(eventos) {
     let classificacoes = [];
     eventos.forEach(evento => {
@@ -168,8 +153,6 @@ Promise.all(dataLoad).then(results => {
     let uges = results[0];
     let eventos = results[1].concat(results[2]);
 
-    loadFranquiasUnidadesGeradoras(uges);
-    loadPotenciasUnidadesGeradoras(uges);
     loadFechamento();
 
     let usina = new Usina();
@@ -183,55 +166,12 @@ Promise.all(dataLoad).then(results => {
         console.log("Uges incluídas: " + Enumerable.from(uges).select(it => { return it.idUge }).toArray());
     }).catch(catch_error);
 
-    const lenpage = 10000;
+    const lenpage = 100;
     for(var i=0;i<eventos.length;i+=lenpage) {
         var pageslice = i+lenpage >= eventos.length? eventos.length: i+lenpage;
         eventosToSend.push(eventos.slice(i, pageslice));
     }
 
-    let classificacoes = createClassificacoesEventos(eventos);
-    for(var i=0;i<classificacoes.length;i+=lenpage) {
-        var pageslice = i+lenpage >= classificacoes.length? classificacoes.length: i+lenpage;
-        eventosToSend.push(classificacoes.slice(i, pageslice));
-    }
-
-    let condicoesOperativas = createCondicoesOperativasEvento(eventos);
-    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
-        var pageslice = i+lenpage >= condicoesOperativas.length? condicoesOperativas.length: i+lenpage;
-        eventosToSend.push(condicoesOperativas.slice(i, pageslice));
-    }
-
-    let estadosOperativos = createEstadosOperativos(eventos);
-    for(var i=0;i<condicoesOperativas.length;i+=lenpage) {
-        var pageslice = i+lenpage >= estadosOperativos.length? estadosOperativos.length: i+lenpage;
-        eventosToSend.push(estadosOperativos.slice(i, pageslice));
-    }
-
     postEventos();
     
-/*
-eventos = [eventos[8144]];
-
-    var oj = [];
-    var proevt = [];
-    for(var i =0;i< eventos.length;i++) {
-        proevt.push(httpClient.post(getUrlAppDomain(null, null, "persist"), JSON.stringify([eventos[i]])).then(result => {
-            console.log("Eventos incluídos: " + eventos.length);
-            //oj.push(result[0].idEvento);
-        }).catch(error => { console.log(error) }));//.catch(catch_error);
-    }
-    
-    Promise.all(proevt).then(data => {
-        var total = 0;
-        console.log('oj: ' + JSON.stringify(oj))
-        for(var i =0;i< eventos.length;i++) {
-            var evento = eventos[i];
-            if (oj.indexOf(evento.idEvento)<0) {
-                total++;
-                console.log('error['+i+']: ' +evento.idEvento  );
-            }
-        }
-        console.log('total: ' +total );
-    });
-*/
 }).catch(catch_error);
