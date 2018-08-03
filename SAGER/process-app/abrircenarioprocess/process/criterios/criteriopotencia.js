@@ -1,5 +1,5 @@
 const CenarioBusiness = require('./cenariobusiness');
-const CriterioLog = require('./criteriolog');
+const CriterioLog = require('./criteriologutil');
 class CriterioPotencia {
 
     aplicar(regra, dataset) {
@@ -9,10 +9,9 @@ class CriterioPotencia {
         let cenarioBusiness = new CenarioBusiness();
 
         let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
-            return (evento.idUge == regra.regraDe && 
-                evento.dataVerificada >= regra.dataInicioVigencia && 
-                evento.dataVerificada <= regra.dataFimVigencia);
+            return cenarioBusiness.filterByIdUgeAndDataVigencia(evento, regra);
         });
+
         eventos.forEach(evento=>{
             cenarioBusiness.updatePotenciaDisponivel(regra, evento, eventos, dataset);
         });
@@ -23,7 +22,7 @@ class CriterioPotencia {
             uge.potenciaDisponivel = regra.regraPara;
             dataset.unidadegeradora.update(uge);             
         });
-
+ 
     }
 
 }

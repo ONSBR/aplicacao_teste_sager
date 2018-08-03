@@ -1,24 +1,18 @@
 const CenarioBusiness = require('./cenariobusiness');
+const CriterioLogUtil = require('./criteriologutil');
 class CriterioClassificacaoOrigem {
 
-    aplicar(regra, dataset, payload) {
-
+    aplicar(regra, dataset) {
         let cenarioBusiness = new CenarioBusiness();
 
-        console.log('Aplicando critério de classificação de origem');
+        CriterioLogUtil.log(regra);
 
-        dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
-            return eventoToUpdate.idClassificacaoOrigem == regra.regraDe && (eventoToUpdate.dataVerificada >= payload.dataInicioVigencia && 
-                eventoToUpdate.dataVerificada <= payload.dataFimVigencia);
-        }).forEach(eventoToUpdate => {
-            cenarioBusiness.validateClassificacaoOrigem(eventoToUpdate, regra);
-            eventoToUpdate.idClassificacaoOrigem = regra.regraPara;
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
+            return cenarioBusiness.filterByIdEventoAndDataVigencia(evento, regra);
         });
 
-        dataset.classificacaoorigemevento.collection.toArray().forEach(classificacaoOrigemEventoToUpdate => {
-            classificacaoOrigemEventoToUpdate.idClassificacaoOrigem = regra.regraPara;
-            dataset.classificacaoorigemevento.update(classificacaoOrigemEventoToUpdate);
+        eventos.forEach(eventoToUpdate => {
+            cenarioBusiness.updateClassificacaoOrigem(regra, eventoToUpdate, eventos, dataset);
         });
 
     }
