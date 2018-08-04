@@ -119,7 +119,6 @@ class CenarioBusiness {
         context.dataset.regracenario.collection.forEach(regra => {
             context.dataset.regracenario.delete(regra);
         });
-
         resolve();
     }
 

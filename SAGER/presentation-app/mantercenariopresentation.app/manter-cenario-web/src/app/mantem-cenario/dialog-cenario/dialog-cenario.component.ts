@@ -24,11 +24,11 @@ export class DialogCenarioComponent implements OnInit {
 
   getOrigens(tipoRegra): string[] {
     let retorno = [];
-    if (tipoRegra == this.tiposRegras[9]) {
+    if (tipoRegra == this.tiposRegras[1]) {
       retorno = this.origens_type;
-    } else if (tipoRegra == this.tiposRegras[10]) {
+    } else if (tipoRegra == this.tiposRegras[2]) {
       retorno = this.estados_type;
-    } else if (tipoRegra == this.tiposRegras[11]) {
+    } else if (tipoRegra == this.tiposRegras[3]) {
       retorno = this.condicoes_type;
     }
     return retorno;
