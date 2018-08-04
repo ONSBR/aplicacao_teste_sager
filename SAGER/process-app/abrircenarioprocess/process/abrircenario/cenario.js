@@ -12,7 +12,7 @@ class Cenario {
 
     aplicarCriterios(context) {
         context.event.payload.cenario.regras.forEach(regra => {
-            this.criterios.aplicar(regra, context.dataset, context.event.payload);
+            this.criterios.aplicar(regra, context.dataset);
         });
     }
 

@@ -44,7 +44,8 @@ class CenarioBusiness {
         }
     }
 
-        updateClassificacaoOrigem(regra, eventoToUpdate, eventos, dataset) {
+    updateClassificacaoOrigem(regra, eventoToUpdate, eventos, dataset) {
+        this.validateClassificacaoOrigem(eventoToUpdate, regra);
         if(this.isEventoEspelhoEPrimeiroEvento(eventoToUpdate, eventos)) {
             let novoEvento = Object.assign({}, eventoToUpdate);
             novoEvento.idClassificacaoOrigem = regra.regraPara;
@@ -57,6 +58,35 @@ class CenarioBusiness {
             this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
         }
     }
+    
+    updateEstadoOperativo(regra, eventoToUpdate, eventos, dataset) {
+        if(this.isEventoEspelhoEPrimeiroEvento(eventoToUpdate, eventos)) {
+            let novoEvento = Object.assign({}, eventoToUpdate);
+            novoEvento.idEstadoOperativo = regra.regraPara;
+            novoEvento.dataVerificada.setMinutes(1);
+            novoEvento.idEvento = this.guid();
+            dataset.eventomudancaestadooperativo.insert(novoEvento);
+        } else if(!this.isEventoEspelho(eventoToUpdate)){
+            eventoToUpdate.idEstadoOperativo = regra.regraPara;
+            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+            this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
+        }
+    }
+
+    updateCondicaoOperativa(regra, eventoToUpdate, eventos, dataset) {
+        if(this.isEventoEspelhoEPrimeiroEvento(eventoToUpdate, eventos)) {
+            let novoEvento = Object.assign({}, eventoToUpdate);
+            novoEvento.idCondicaoOperativa = regra.regraPara;
+            novoEvento.dataVerificada.setMinutes(1);
+            novoEvento.idEvento = this.guid();
+            dataset.eventomudancaestadooperativo.insert(novoEvento);
+        } else if(!this.isEventoEspelho(eventoToUpdate)){
+            eventoToUpdate.idCondicaoOperativa = regra.regraPara;
+            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+            this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
+        }
+    }
+    
 
     isEventoEspelhoEPrimeiroEvento(evento, eventos) {
         return this.findIndexByIdEvento(eventos, evento.idEvento) == 0 && this.isEventoEspelho(evento);
@@ -113,10 +143,27 @@ class CenarioBusiness {
     }
 
     filterByIdUgeAndDataVigencia(evento, regra) {
-        return (evento.idUge == regra.regraDe && 
-            evento.dataVerificada >= regra.dataInicioVigencia && 
-            evento.dataVerificada <= regra.dataFimVigencia);
+        return (evento.idUge == regra.regraDe && this.filterByDataVigencia(evento, regra));
     }
+
+    filterByIdClassificacaoOrigemAndDataVigencia(evento, regra) {
+        return (evento.idClassificacaoOrigem == regra.regraDe && this.filterByDataVigencia(evento, regra));
+    }
+
+    filterByIdCondicaoOperativaAndDataVigencia(evento, regra) {
+        return (evento.idCondicaoOperativa == regra.regraDe && this.filterByDataVigencia(evento, regra));
+    }
+    
+    filterByIdEstadoOperativoAndDataVigencia(evento, regra) {
+        return (evento.idEstadoOperativo == regra.regraDe && this.filterByDataVigencia(evento, regra));
+    }
+
+    filterByDataVigencia(evento, regra) {
+        return evento.dataVerificada >= regra.dataInicioVigencia && 
+            evento.dataVerificada <= regra.dataFimVigencia;
+    }
+
+
 
     guid() {
         function s4() {

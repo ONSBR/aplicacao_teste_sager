@@ -1,5 +1,6 @@
 const CenarioBusiness = require('./cenariobusiness');
 const CriterioLogUtil = require('./criteriologutil');
+
 class CriterioClassificacaoOrigem {
 
     aplicar(regra, dataset) {
@@ -8,7 +9,7 @@ class CriterioClassificacaoOrigem {
         CriterioLogUtil.log(regra);
 
         let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
-            return cenarioBusiness.filterByIdEventoAndDataVigencia(evento, regra);
+            return cenarioBusiness.filterByIdClassificacaoOrigemAndDataVigencia(evento, regra);
         });
 
         eventos.forEach(eventoToUpdate => {

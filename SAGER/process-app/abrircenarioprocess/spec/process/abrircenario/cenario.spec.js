@@ -29,10 +29,9 @@ describe('Cenário: ', function () {
         cenario.criterios = jasmine.createSpyObj('criterios', ['aplicar']);
 
         let regraPotenciaDisponivel = { tipoRegra: 'Potência Disponível', regraDe: 'ALUXG-0UG1', regraPara: '500' };
-        let regraFranquia = { tipoRegra: 'Franquia', regraDe: 'ALUXG-0UG1', regraPara: '500' };
         let payload = {
             cenario: {
-                regras: [regraPotenciaDisponivel, regraFranquia]
+                regras: [regraPotenciaDisponivel]
             }
         };
         let dataset = {};
@@ -43,8 +42,7 @@ describe('Cenário: ', function () {
         }
         cenario.aplicarCriterios(context);
 
-        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraPotenciaDisponivel, dataset, payload);
-        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraFranquia, dataset, payload);
+        expect(cenario.criterios.aplicar).toHaveBeenCalledWith(regraPotenciaDisponivel, dataset);
     });
 
 
