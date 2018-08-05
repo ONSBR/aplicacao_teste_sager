@@ -100,8 +100,6 @@ class ManterTarefasMediator {
         let minDataEventoAlterado = this.getDataMinimaEventoAlterado(eventosPlanilha);
         let maxDataEventoAlterado = this.getDataMaximaEventoAlterado(eventosPlanilha);
         this.concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventosPlanilha).then(eventosParaValidacao => {
-            this.aplicarRegras(eventosParaValidacao);
-
             let eventosRetificacao = context.dataset.eventomudancaestadooperativo.collection.toArray();
             this.validarEventos(eventosRetificacao);
 
@@ -111,6 +109,7 @@ class ManterTarefasMediator {
                 });
                 this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
             });
+
             let tarefas = context.dataset.tarefaretificacao.collection.toArray();
             if (tarefas.length > 0) {
                 let tarefa = context.dataset.tarefaretificacao.collection.toArray()[0];
@@ -119,15 +118,6 @@ class ManterTarefasMediator {
             }
             resolve(minDataEventoAlterado);
         }).catch(error => { this.catchError(error, 'aplicação da tarefa', '', reject) });
-    }
-
-    aplicarRegras(eventos) {
-        eventos.forEach(evento => {
-            if(!evento.potenciaDisponivel) {
-                throw new Error('Potencia disponivel vazia!');
-            }
-        });
-        // this.eventoMudancaEstadoOperativoBusiness.aplicarRegras(eventos);
     }
 
     async concatenarListaDeEventos(minDataEventoAlterado, maxDataEventoAlterado, eventos) {
