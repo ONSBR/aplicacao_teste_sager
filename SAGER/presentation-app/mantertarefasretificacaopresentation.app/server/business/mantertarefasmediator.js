@@ -94,6 +94,27 @@ class ManterTarefasMediator {
         };
     }
 
+    aplicarTarefa() {
+        let eventosPlanilha = context.dataset.eventomudancaestadooperativotarefa.collection.toArray();
+        this.validarEventos(eventosPlanilha);
+
+        eventosPlanilha.filter(this.filterByOperacaoNotNull).forEach(eventoRetificacaoComOperacao => {
+            let eventosRetificaoBD = eventosRetificacao.filter(eventoRetificacao => {
+                return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
+            });
+            this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
+        });
+
+        let tarefas = context.dataset.tarefaretificacao.collection.toArray();
+        if (tarefas.length > 0) {
+            let tarefa = context.dataset.tarefaretificacao.collection.toArray()[0];
+            tarefa.situacao = 'aplicado';
+            context.dataset.tarefaretificacao.update(tarefa);
+        }
+        resolve();
+    }
+
+
     aplicarTarefa(context, resolve, reject) {
         let eventosPlanilha = context.dataset.eventomudancaestadooperativotarefa.collection.toArray();
         this.validarEventos(eventosPlanilha);
