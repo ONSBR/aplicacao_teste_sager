@@ -97,10 +97,8 @@ class ManterTarefasController {
     aplicarTarefa(request, response) {
         let nomeTarefa = request.query.nomeTarefa;
         dispatcher.dispatch("presentation.aplica.tarefa.request", { nomeTarefa: nomeTarefa }).
-            then(menorDataEventoAlterado => {
-                dispatcher.dispatch("presentation.executaretificacao.tarefa.request", { menorDataEventoAlterado: menorDataEventoAlterado }).then(data => {
+            then(data => {
                     response.send(data);
-                });
             }).catch(e => {
                 this.responseError('Erro durante a aplicação da tarefa', e, response);
             });

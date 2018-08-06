@@ -11,6 +11,7 @@ unidadegeradora:
       column: id_usina
   filters:
     byIdUsina:  "id_usina in ($idsUsinas)"
+    all:
 
 eventomudancaestadooperativo:
   model: tb_evt_estado_oper
