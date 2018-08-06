@@ -1,20 +1,18 @@
+const CriterioLogUtil = require('./criteriologutil');
+const CenarioBusiness = require('./cenariobusiness');
 class CriterioCondicaoOperativa {
 
     aplicar(regra, dataset, payload) {
+        let cenarioBusiness = new CenarioBusiness();
 
-        console.log('Aplicando critério de condição operativa');
+        CriterioLogUtil.log(regra);
 
-        dataset.condicaooperativaevento.collection.toArray().forEach(condicaoOperativaEventoToUpdate => {
-            condicaoOperativaEventoToUpdate.idCondicaoOperativa = regra.regraPara;
-            dataset.condicaooperativaevento.update(condicaoOperativaEventoToUpdate);
-        });
-
-        dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
-            return eventoToUpdate.idCondicaoOperativa == regra.regraDe && (eventoToUpdate.dataVerificada >= payload.dataInicioVigencia && 
-                eventoToUpdate.dataVerificada <= payload.dataFimVigencia)
-        }).forEach(eventoToUpdate => {
-            eventoToUpdate.idCondicaoOperativa = regra.regraPara;
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
+            return cenarioBusiness.filterByIdCondicaoOperativaAndDataVigencia(eventoToUpdate, regra);
+        })
+        
+        eventos.forEach(eventoToUpdate => {
+            cenarioBusiness.updateCondicaoOperativa(regra, eventoToUpdate, eventos, dataset);
         });
     }
 

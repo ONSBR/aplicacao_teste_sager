@@ -58,7 +58,7 @@ function mapCsvEvento(jsonObject) {
 
     var dataVerificada = jsonObject.dtini_verif;
     if (dataVerificada) {
-        evtEstOper.dataVerificada = moment(dataVerificada, formatDateExcel).toDate();
+        evtEstOper.dataVerificada = moment(dataVerificada, formatDateExcel).utc(true).toDate();
     }
 
     EventoMudancaEstadoOperativo.gerarDataVerificadaEmSegundos(evtEstOper);

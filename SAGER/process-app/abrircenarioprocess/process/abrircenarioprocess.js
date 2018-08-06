@@ -10,12 +10,33 @@ SDK.run((context, resolve, reject, fork) => {
     console.log(context.event);
     try {
         let cenario = new Cenario();
-        cenario.abrir(context.event.payload, fork);
+        let eventosBusiness = new EventosBusiness();
+        let payload = context.event.payload;
+
+        cenario.abrir(payload, fork);
         let eventos = context.dataset.eventomudancaestadooperativo.collection.toArray();
-        eventos.forEach(evento => {
+
+        eventos.filter(evento => {
+            return evento.dataVerificada >= payload.cenario.dataInicioVigencia && evento.dataVerificada <= payload.cenario.dataFimVigencia;
+        }).forEach(evento => {
             context.dataset.eventomudancaestadooperativo.update(evento);                      
         });
+
         cenario.aplicarCriterios(context);
+
+        let uges = new Set();
+        eventos.forEach(evento => {
+            uges.add(evento.idUge);
+        });
+
+        uges.forEach(idUge => {
+            console.log(`Filtrando por UGE:${idUge}`);
+            
+            let eventosPorUge = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
+                return evento.idUge == idUge;
+            });
+            eventosBusiness.aplicarRegrasCenario(eventosPorUge);
+        });
         resolve();
     } catch (error) {
         console.log('error: ' + error.stack);

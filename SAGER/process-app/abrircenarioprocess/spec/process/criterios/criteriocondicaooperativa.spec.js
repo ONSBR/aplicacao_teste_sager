@@ -10,38 +10,36 @@ describe('Critério: ', function () {
     });
 
     it('Aplicar critério de condição operativa.', () => {
-        let regraCondicaoOperativa = { tipoRegra: 'Condição Operativa do Evento', regraDe: 'NOR', regraPara: 'NFO' };
-        let update = jasmine.createSpy('update');
-        let dataJaneiro = new Date(2018, 0, 1);
-        let data5Junho = new Date(2018, 5, 5);
+        let regraCondicaoOperativa = {
+            tipoRegra: 'Condição Operativa do Evento',
+            regraDe: 'NOR', 
+            regraPara: 'NFO',
+            dataInicioVigencia: new Date(2018, 3, 1),
+            dataFimVigencia: new Date(2018, 3, 30)
+        };
 
-        let payload = {
-            dataInicioVigencia: new Date(2018, 5, 1),
-            dataFimVigencia: new Date(2018, 5, 15)
-        }
+        let update = jasmine.createSpy('update');
+        let insert = jasmine.createSpy('insert');
 
         let dataset = {
-            condicaooperativaevento: {
-                collection: Enumerable.from([
-                    { id: '2', idCondicaoOperativa: 'NOR' },
-                    { id: '3', idCondicaoOperativa: 'NOR' }
-                ]),
-                update: update
-            },
             eventomudancaestadooperativo: {
                 collection: Enumerable.from([
-                    { id: '1', idCondicaoOperativa: 'NOR', dataVerificada: dataJaneiro},
-                    { id: '2', idCondicaoOperativa: 'NOR', dataVerificada: data5Junho},
-                    { id: '3', idCondicaoOperativa: 'NOR', dataVerificada: data5Junho}
+                    { id: '1', idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 1, 1) },
+                    { id: '2', idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 3, 1) },
+                    { id: '3', idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 3, 2) },
+                    { id: '4', idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 3, 30) },
+                    { id: '5', idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 4, 30) }
                 ]),
-                update: update
+                update: update,
+                insert: insert
             }
 
         };
-        criterios.aplicar(regraCondicaoOperativa, dataset, payload);
-        expect(update.calls.count()).toEqual(4);
-        expect(update).toHaveBeenCalledWith({ id: '2', idCondicaoOperativa: 'NFO' });
-        expect(update).toHaveBeenCalledWith({ id: '3', idCondicaoOperativa: 'NFO' });
+        criterios.aplicar(regraCondicaoOperativa, dataset);
+        expect(update.calls.count()).toEqual(2);
+        expect(insert.calls.count()).toEqual(1);
+        expect(update).toHaveBeenCalledWith({ id: '3', idCondicaoOperativa: 'NFO', dataVerificada: new Date(2018, 3, 2) });
+        expect(update).toHaveBeenCalledWith({ id: '4', idCondicaoOperativa: 'NFO', dataVerificada: new Date(2018, 3, 30) });
     });
 
 });

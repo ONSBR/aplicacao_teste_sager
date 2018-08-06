@@ -1,20 +1,19 @@
+const CenarioBusiness = require('./cenariobusiness');
+const CriterioLogUtil = require('./criteriologutil');
 class CriterioEstadoOperativo {
 
-    aplicar(regra, dataset, payload) {
+    aplicar(regra, dataset) {
 
-        console.log('Aplicando critério de estado operativo');
+        let cenarioBusiness = new CenarioBusiness();
 
-        dataset.estadooperativoevento.collection.toArray().forEach(estadoOperativoEventoToUpdate => {
-            estadoOperativoEventoToUpdate.idEstadoOperativo = regra.regraPara;
-            dataset.estadooperativoevento.update(estadoOperativoEventoToUpdate);
-        });
+        CriterioLogUtil.log(regra);
 
-        dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
-            return eventoToUpdate.idEstadoOperativo == regra.regraDe && (eventoToUpdate.dataVerificada >= payload.dataInicioVigencia && 
-                eventoToUpdate.dataVerificada <= payload.dataFimVigencia);
-        }).forEach(eventoToUpdate => {
-            eventoToUpdate.idEstadoOperativo = regra.regraPara;
-            dataset.eventomudancaestadooperativo.update(eventoToUpdate);
+        let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
+            return cenarioBusiness.filterByIdEstadoOperativoAndDataVigencia(eventoToUpdate, regra);
+        })
+        
+        eventos.forEach(eventoToUpdate => {
+            cenarioBusiness.updateEstadoOperativo(regra, eventoToUpdate, eventos, dataset);
         });
     }
 
