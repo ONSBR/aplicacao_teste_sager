@@ -20,7 +20,7 @@ config.URL_REGRA_SAGER = `http://${DOMAIN_HOST}:${DOMAIN_PORT}/mantercenario/reg
 config.getUrlFiltroCenario = function (nomeCenario, dataInicial, dataFinal) {
     let url = `${config.URL_CENARIO_SAGER}?filter=byNomeAndData`;
     if(nomeCenario) {
-        url = url.concat(`&nomeCenario=${nomeCenario}`);
+        url = url.concat(`&nomeCenario=%${nomeCenario}%`);
     }
     if(dataInicial) {
         url = url.concat(`&dataInicial=${dataInicial}`);

@@ -99,6 +99,11 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   pesquisar() {
+    if (!this.filtroConsulta.usina || !this.filtroConsulta.mesInicial || !this.filtroConsulta.anoInicial 
+        || !this.filtroConsulta.mesFinal || !this.filtroConsulta.anoFinal || !this.filtroConsulta.tipoTaxa) {
+      alert("Informe todos os filtros da pesquisa!");
+      return;
+    }
     const url = environment.urlServerPresentation + environment.pesquisarHistorico;
     const body = { 'filtroConsulta': this.filtroConsulta };
     this.http.post(url, body).subscribe(data => {
