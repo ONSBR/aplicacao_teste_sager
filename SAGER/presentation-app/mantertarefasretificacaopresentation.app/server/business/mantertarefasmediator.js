@@ -6,6 +6,7 @@ const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestado
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 const Util = require('../helpers/util');
 const EventoMudancaEstadoOperativoBusiness = require('eventos_business_rules/business/eventomudancaestadooperativobusiness');
+const extensions = require("./extensions");
 
 class ManterTarefasMediator {
 
@@ -110,7 +111,6 @@ class ManterTarefasMediator {
                 }).forEach(ugeBd => {
                     uges.add(ugeBd);
                 });    
-
             }
         });
 
@@ -136,7 +136,7 @@ class ManterTarefasMediator {
             context.dataset.tarefaretificacao.update(tarefa);
         }
 
-        // this.validarEventosPos(uges, context.dataset, tarefas, reject);
+        this.validarEventosPos(uges, context.dataset, tarefas, reject);
 
         resolve();
     }
@@ -161,13 +161,11 @@ class ManterTarefasMediator {
     validarEventosPos(uges, dataset, tarefas, reject) {
         uges.forEach(uge => {
             console.log('Validar UGE POS');
-            console.log(uge);
+            console.log(uge.idUge);
             
             let eventosPorUge = this.groupByUge(dataset, uge);
-            this.eventoMudancaEstadoOperativoBusiness.excluirEventosConsecutivosSemelhantes(eventosPorUge, dataset);
-            eventosPorUge = this.groupByUge(dataset, uge);
             try {
-                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, dataset);
+                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
             }
@@ -183,20 +181,24 @@ class ManterTarefasMediator {
     }
 
     sortByData(eventoA, eventoB) {
-        if(eventoA.dataVerificada < eventoB.dataVerificada){
+        if(eventoA.dataVerificada.getTotalSeconds() < eventoB.dataVerificada.getTotalSeconds()){
             return -1;
         }
 
-        if(eventoA.dataVerificada > eventoB.dataVerificada){
+        if(eventoA.dataVerificada.getTotalSeconds() > eventoB.dataVerificada.getTotalSeconds()){
             return 1;
         }
 
-        if(eventoA.dataVerificada == eventoB.dataVerificada) {
-            if(eventoA.idEvento < eventoB.idEvento) {
+        if(eventoA.dataVerificada.getTotalSeconds() == eventoB.dataVerificada.getTotalSeconds()) {
+            console.log('Evento mesma data hora');
+            console.log(eventoA.dataVerificada);
+            console.log(eventoB.dataVerificada);
+
+            if(parseInt(eventoA.idEvento) < parseInt(eventoB.idEvento)) {
                 return -1;
             }
 
-            if(eventoA.idEvento > eventoB.idEvento) {
+            if(parseInt(eventoA.idEvento) > parseInt(eventoB.idEvento)) {
                 return 1;
             }
         }
