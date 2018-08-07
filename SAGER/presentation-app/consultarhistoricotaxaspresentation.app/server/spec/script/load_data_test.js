@@ -1,8 +1,6 @@
 const HttpClient = require("plataforma-sdk/http/client");
 var httpClient = new HttpClient(); 
 
-const DOMAIN_PORT = 8087;
-
 var dataLoad = [];
 dataLoad.push(tipoTaxaInitialLoad());
 
@@ -11,7 +9,7 @@ function catch_error(error) {
 }
 
 function getUrlAppDomain() {
-    return `http://localhost:${DOMAIN_PORT}/consultarhistoricotaxas/persist`;
+    return `http://localhost/domain/consultarhistoricotaxas/persist`;
 }
 
 Promise.all(dataLoad).then(results => {

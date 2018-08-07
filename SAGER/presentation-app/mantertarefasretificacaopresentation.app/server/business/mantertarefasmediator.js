@@ -114,13 +114,18 @@ class ManterTarefasMediator {
             }
         });
 
-
         let eventosRetificacaoComOperacao = eventosPlanilha.filter(this.filterByOperacaoNotNull);
-        this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, reject);
+        // this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, reject);
+        
         eventosRetificacaoComOperacao.forEach(eventoRetificacaoComOperacao => {
+            console.log('eventoRetificacaoComOperacao =' + eventoRetificacaoComOperacao.idEvento);
+            
             let eventosRetificaoBD = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoRetificacao => {
                 return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
             });
+
+            console.log('eventosRetificaoBD=');
+            console.log(eventosRetificaoBD);
 
             this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
         });
@@ -131,7 +136,7 @@ class ManterTarefasMediator {
             context.dataset.tarefaretificacao.update(tarefa);
         }
 
-        this.validarEventosPos(uges, context.dataset, tarefas, reject);
+        // this.validarEventosPos(uges, context.dataset, tarefas, reject);
 
         resolve();
     }
@@ -143,8 +148,9 @@ class ManterTarefasMediator {
             let eventosPorUge = eventosRetificacaoBD.filter(eventoFiltro => {
                 return uge.idUge == eventoFiltro.idUge;
             });
-            eventosPorUge.sort(this.sortByIdEvento);
+            eventosPorUge.sort(this.sortByData);
             try {
+
                 this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPre(eventosPorUge, uge);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
@@ -156,10 +162,10 @@ class ManterTarefasMediator {
         uges.forEach(uge => {
             console.log('Validar UGE POS');
             console.log(uge);
-            let eventosPorUge = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoFiltro => {
-                return uge.idUge == eventoFiltro.idUge;
-            });
-            eventosPorUge.sort(this.sortByIdEvento);
+            
+            let eventosPorUge = this.groupByUge(dataset, uge);
+            this.eventoMudancaEstadoOperativoBusiness.excluirEventosConsecutivosSemelhantes(eventosPorUge, dataset);
+            eventosPorUge = this.groupByUge(dataset, uge);
             try {
                 this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, dataset);
             } catch(error) {
@@ -168,13 +174,31 @@ class ManterTarefasMediator {
         });
     }
 
-    sortByIdEvento(eventoA, eventoB) {
-        if(eventoA.idEvento < eventoB.idEvento) {
+    groupByUge(dataset, uge) {
+        let eventosPorUge = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoFiltro => {
+            return uge.idUge == eventoFiltro.idUge;
+        });
+        eventosPorUge.sort(this.sortByData);
+        return eventosPorUge;
+    }
+
+    sortByData(eventoA, eventoB) {
+        if(eventoA.dataVerificada < eventoB.dataVerificada){
             return -1;
         }
 
-        if(eventoA.idEvento > eventoB.idEvento) {
+        if(eventoA.dataVerificada > eventoB.dataVerificada){
             return 1;
+        }
+
+        if(eventoA.dataVerificada == eventoB.dataVerificada) {
+            if(eventoA.idEvento < eventoB.idEvento) {
+                return -1;
+            }
+
+            if(eventoA.idEvento > eventoB.idEvento) {
+                return 1;
+            }
         }
 
         return 0;
@@ -268,7 +292,7 @@ class ManterTarefasMediator {
 
     validarQuantidadeEventos(eventos) {
         if (!eventos || eventos.length == 0) {
-            let error = new Error('Eventos de mudança de estado não encontrados.')
+            let error = new Error('Eventos de retificação de mudança de estado não encontrados.')
             throw error;
         }
     }
