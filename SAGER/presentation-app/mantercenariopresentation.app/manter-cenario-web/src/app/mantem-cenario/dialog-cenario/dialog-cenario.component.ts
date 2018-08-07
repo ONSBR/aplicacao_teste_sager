@@ -99,7 +99,26 @@ export class DialogCenarioComponent implements OnInit {
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara || !it.dataInicioVigencia || !it.dataFimVigencia) {
-          alert('Informe os dados da regra!');
+          var camposInvalidos = '';
+          if (!it.nomeRegra) {
+            camposInvalidos += "Nome da Regra";
+          }
+          if (!it.tipoRegra) {
+            camposInvalidos += "Tipo da Regra";
+          }
+          if (!it.regraDe) {
+            camposInvalidos += "Valor Origem";
+          }
+          if (!it.regraPara) {
+            camposInvalidos += "Valor Destino";
+          }
+          if (!it.dataInicioVigencia) {
+            camposInvalidos += "Data Início da Vigência";
+          }
+          if (!it.dataFimVigencia) {
+            camposInvalidos += "Data Fim da Vigência";
+          }
+          alert('Informe os dados da regra! Campos Inválidos: ' + camposInvalidos);
           retorno = false;
         }
       });
