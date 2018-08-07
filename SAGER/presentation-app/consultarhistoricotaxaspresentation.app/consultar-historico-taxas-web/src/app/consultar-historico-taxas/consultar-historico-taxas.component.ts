@@ -42,6 +42,14 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.environment = environment;
   }
 
+  get urlServerPresentation() {
+    var url = window.location.href;
+    if (!url.startsWith("/")) {
+      url += "/";
+    }
+    return url;
+  }
+
   ngOnInit() {
     this.meses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     this.listarUsinas();
@@ -104,7 +112,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
       alert("Informe todos os filtros da pesquisa!");
       return;
     }
-    const url = environment.urlServerPresentation + environment.pesquisarHistorico;
+    const url = this.urlServerPresentation + environment.pesquisarHistorico;
     const body = { 'filtroConsulta': this.filtroConsulta };
     this.http.post(url, body).subscribe(data => {
       this.execucoes = data;
@@ -169,7 +177,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   enviarSolicitacaoCalculoTaxa(mes, ano) {
-    const url = environment.urlServerPresentation + environment.calcularTaxas;
+    const url = this.urlServerPresentation + environment.calcularTaxas;
     const body = { presentationId: this.presentationId, mesFechamento: mes, anoFechamento: ano };
 
     return this.http.post(url, body).toPromise();
@@ -217,12 +225,12 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   linkMemoriaTaxa(taxa) {
-    return environment.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx +
+    return this.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx +
       '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
   }
 
   linkResultadoReproducao(reproducao) {
-    return environment.urlServerPresentation + environment.downloadComparacaoReproducaoXlsx +
+    return this.urlServerPresentation + environment.downloadComparacaoReproducaoXlsx +
       '?instance_id=' + reproducao.instanceId +
       '&original_id=' + reproducao.originalId +
       '&taxa_id=' + reproducao.externalId;
@@ -230,7 +238,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   reproduzirCalculoTaxa(taxa) {
     this.http.post(
-      environment.urlServerPresentation + environment.reproduzirCalculoTaxa,
+      this.urlServerPresentation + environment.reproduzirCalculoTaxa,
       { instance_id: taxa._metadata.instance_id, presentationId: this.presentationId, taxa_id: taxa.id }
     ).subscribe(data => {
       alert('Solicitação de reprodução do cálculo da taxa realizada com sucesso.');
@@ -243,7 +251,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   listarReproducoes(self) {
 
-    self.http.get(environment.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
+    self.http.get(this.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
       
       var reprods = <Reproducao[]>data;
       
@@ -258,7 +266,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   listarBusinessEvents(self) {
 
-    var url = environment.urlServerPresentation + environment.listarBusinessEvents;
+    var url = this.urlServerPresentation + environment.listarBusinessEvents;
     url += "?horas=" + self.filterEvts.horas;
 
     var qtd = self.converterInt(self.filterEvts.qtd);
@@ -280,7 +288,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   listarUsinas() {
-    this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
+    this.http.get(this.urlServerPresentation + environment.listarUsinas).subscribe(data => {
       this.usinas = <Usina[]>data;
     });
   }
@@ -293,7 +301,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
   
   listarTipoTaxa() {
-    this.http.get(environment.urlServerPresentation + environment.listarTipoTaxa).subscribe(data => {
+    this.http.get(this.urlServerPresentation + environment.listarTipoTaxa).subscribe(data => {
       this.tiposTaxa = data;
     });
   }
@@ -302,11 +310,11 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     this.execucaoSelecionada = execucaoSelecionada;
     const body = { 'idFechamentoMensal': this.execucaoSelecionada.idFechamento, 'filtroConsulta': this.filtroConsulta };
     this.http.post(
-      environment.urlServerPresentation + environment.pesquisarFechamentoMensalPorId, body).
+      this.urlServerPresentation + environment.pesquisarFechamentoMensalPorId, body).
       toPromise().then(fechamentoMensal => {
         this.fechamentoMensal = fechamentoMensal[0];
       });
-    this.http.post(environment.urlServerPresentation + environment.pesquisarTaxaPorId, body).
+    this.http.post(this.urlServerPresentation + environment.pesquisarTaxaPorId, body).
       toPromise().then(taxas => {
         this.taxas = taxas;
       });
@@ -319,7 +327,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   getUrlDownloadMemoriaDeProcessamento(taxa) {
-    return environment.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx +
+    return this.urlServerPresentation + environment.downloadMemoriaProcessamentoXlsx +
       '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
   }
 

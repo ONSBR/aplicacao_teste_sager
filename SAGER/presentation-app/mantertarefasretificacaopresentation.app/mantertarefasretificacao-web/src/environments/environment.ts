@@ -5,7 +5,6 @@
 
 export const environment = {
   production: false,
-  urlServerPresentation: 'http://localhost/mantertarefasretificacaopresentation.app/',
   listarUsinas: 'listarusinas',
   listarTarefas: 'listartarefas',
   pesquisarEventos: 'pesquisareventos',

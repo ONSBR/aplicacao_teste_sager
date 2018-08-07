@@ -22,6 +22,14 @@ export class DialogCenarioComponent implements OnInit {
   estados_type: string[] = Object.values(EstadoOperativo);
   condicoes_type: string[] = Object.values(CondicaoOperativa);
 
+  get urlServerPresentation() {
+    var url = window.location.href;
+    if (!url.startsWith("/")) {
+      url += "/";
+    }
+    return url;
+  }
+
   getOrigens(tipoRegra): string[] {
     let retorno = [];
     if (tipoRegra == this.tiposRegras[1]) {
@@ -64,14 +72,14 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUsinas() {
-    this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
+    this.http.get(this.urlServerPresentation + environment.listarUsinas).subscribe(data => {
       this.usinas = <Usina[]>data;
     });
   }
 
   listarUges() {
     if (this.data && this.data.idUsina) {
-      const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
+      const url = this.urlServerPresentation + environment.listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });

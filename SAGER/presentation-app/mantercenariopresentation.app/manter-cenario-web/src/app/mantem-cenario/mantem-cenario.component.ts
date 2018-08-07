@@ -25,12 +25,20 @@ export class MantemCenarioComponent implements OnInit {
     this.environment = environment;
   }
 
+  get urlServerPresentation() {
+    var url = window.location.href;
+    if (!url.startsWith("/")) {
+      url += "/";
+    }
+    return url;
+  }
+
   ngOnInit() {
   }
 
   pesquisar() {
     this.cenarioSelecionado = new Cenario();
-    const url = environment.urlServerPresentation + environment.pesquisarCenarios;
+    const url = this.urlServerPresentation + environment.pesquisarCenarios;
     const body = this.filtroConsulta;
     this.http.post(url, body).subscribe(data => {
       this.cenarios = <Cenario[]>data;
@@ -48,7 +56,7 @@ export class MantemCenarioComponent implements OnInit {
   excluir(cenario) {
 
     if (confirm('Confirma a exclusão do cenário?')) {
-      const url = environment.urlServerPresentation + environment.excluirCenario + '?idCenario=' + cenario.idCenario;
+      const url = this.urlServerPresentation + environment.excluirCenario + '?idCenario=' + cenario.idCenario;
       this.http.delete(url).subscribe(data => {
         alert('Exclusão de cenário realizada com sucesso!');
         this.pesquisar();
@@ -60,7 +68,7 @@ export class MantemCenarioComponent implements OnInit {
   incorporar(cenario) {
 
     if (confirm('Confirma a incorporação do cenário?')) {
-      const url = environment.urlServerPresentation + environment.incorporarCenario + '?idCenario=' + cenario.idCenario;
+      const url = this.urlServerPresentation + environment.incorporarCenario + '?idCenario=' + cenario.idCenario;
       this.http.post(url, { idCenario: cenario.idCenario }).subscribe(data => {
         alert('Incorporação de cenário realizada com sucesso!');
         this.pesquisar();
@@ -70,7 +78,7 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   ativarInativar(cenario) {
-    const url = environment.urlServerPresentation + environment.ativarInativarCenario;
+    const url = this.urlServerPresentation + environment.ativarInativarCenario;
     const body = {
       idCenario: cenario.idCenario,
       dataInicioVigencia: cenario.dataInicioVigencia,
@@ -92,7 +100,7 @@ export class MantemCenarioComponent implements OnInit {
     this.cenarioSelecionado = clone(cenario);
     this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
     this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
-    const url = environment.urlServerPresentation + environment.obterRegrasCriticas +
+    const url = this.urlServerPresentation + environment.obterRegrasCriticas +
       '?idCenario=' + this.cenarioSelecionado.idCenario;
 
     this.http.get(url).subscribe(data => {
@@ -114,7 +122,7 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   confirmarInclusao(cenario) {
-    const url = environment.urlServerPresentation + environment.inserirCenario;
+    const url = this.urlServerPresentation + environment.inserirCenario;
 
     this.http.put(url, cenario).subscribe(data => {
       alert('Inclusão de cenário realizada com sucesso!');
@@ -124,7 +132,7 @@ export class MantemCenarioComponent implements OnInit {
 
   confirmarAlteracao(cenario) {
 
-    const url = environment.urlServerPresentation + environment.alterarCenario;
+    const url = this.urlServerPresentation + environment.alterarCenario;
     if (cenario.situacao === SituacaoCenario.Ativo) {
       alert('Cenário ativo não pode ser alterado!');
     } else {

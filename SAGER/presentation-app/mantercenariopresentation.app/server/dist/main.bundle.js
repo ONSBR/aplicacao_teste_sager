@@ -327,6 +327,17 @@ var DialogCenarioComponent = /** @class */ (function () {
         this.condicoes_type = Object.values(__WEBPACK_IMPORTED_MODULE_5__constants__["b" /* CondicaoOperativa */]);
         this.data = data;
     }
+    Object.defineProperty(DialogCenarioComponent.prototype, "urlServerPresentation", {
+        get: function () {
+            var url = window.location.href;
+            if (!url.startsWith("/")) {
+                url += "/";
+            }
+            return url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     DialogCenarioComponent.prototype.getOrigens = function (tipoRegra) {
         var retorno = [];
         if (tipoRegra == this.tiposRegras[1]) {
@@ -366,14 +377,14 @@ var DialogCenarioComponent = /** @class */ (function () {
     };
     DialogCenarioComponent.prototype.listarUsinas = function () {
         var _this = this;
-        this.http.get(__WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
+        this.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
             _this.usinas = data;
         });
     };
     DialogCenarioComponent.prototype.listarUges = function () {
         var _this = this;
         if (this.data && this.data.idUsina) {
-            var url = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
+            var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
             this.http.get(url).subscribe(function (data) {
                 _this.uges = data;
             });
@@ -519,12 +530,23 @@ var MantemCenarioComponent = /** @class */ (function () {
         this.cenarioSelecionado = new __WEBPACK_IMPORTED_MODULE_4__model_model__["a" /* Cenario */]();
         this.environment = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */];
     }
+    Object.defineProperty(MantemCenarioComponent.prototype, "urlServerPresentation", {
+        get: function () {
+            var url = window.location.href;
+            if (!url.startsWith("/")) {
+                url += "/";
+            }
+            return url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     MantemCenarioComponent.prototype.ngOnInit = function () {
     };
     MantemCenarioComponent.prototype.pesquisar = function () {
         var _this = this;
         this.cenarioSelecionado = new __WEBPACK_IMPORTED_MODULE_4__model_model__["a" /* Cenario */]();
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarCenarios;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarCenarios;
         var body = this.filtroConsulta;
         this.http.post(url, body).subscribe(function (data) {
             _this.cenarios = data;
@@ -540,7 +562,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.excluir = function (cenario) {
         var _this = this;
         if (confirm('Confirma a exclusão do cenário?')) {
-            var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirCenario + '?idCenario=' + cenario.idCenario;
+            var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirCenario + '?idCenario=' + cenario.idCenario;
             this.http.delete(url).subscribe(function (data) {
                 alert('Exclusão de cenário realizada com sucesso!');
                 _this.pesquisar();
@@ -550,7 +572,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.incorporar = function (cenario) {
         var _this = this;
         if (confirm('Confirma a incorporação do cenário?')) {
-            var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].incorporarCenario + '?idCenario=' + cenario.idCenario;
+            var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].incorporarCenario + '?idCenario=' + cenario.idCenario;
             this.http.post(url, { idCenario: cenario.idCenario }).subscribe(function (data) {
                 alert('Incorporação de cenário realizada com sucesso!');
                 _this.pesquisar();
@@ -559,7 +581,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     };
     MantemCenarioComponent.prototype.ativarInativar = function (cenario) {
         var _this = this;
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].ativarInativarCenario;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].ativarInativarCenario;
         var body = {
             idCenario: cenario.idCenario,
             dataInicioVigencia: cenario.dataInicioVigencia,
@@ -580,7 +602,7 @@ var MantemCenarioComponent = /** @class */ (function () {
         this.cenarioSelecionado = clone(cenario);
         this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
         this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].obterRegrasCriticas +
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].obterRegrasCriticas +
             '?idCenario=' + this.cenarioSelecionado.idCenario;
         this.http.get(url).subscribe(function (data) {
             _this.cenarioSelecionado.regras = data;
@@ -598,7 +620,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     };
     MantemCenarioComponent.prototype.confirmarInclusao = function (cenario) {
         var _this = this;
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirCenario;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirCenario;
         this.http.put(url, cenario).subscribe(function (data) {
             alert('Inclusão de cenário realizada com sucesso!');
             _this.pesquisar();
@@ -606,7 +628,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     };
     MantemCenarioComponent.prototype.confirmarAlteracao = function (cenario) {
         var _this = this;
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].alterarCenario;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].alterarCenario;
         if (cenario.situacao === __WEBPACK_IMPORTED_MODULE_4__model_model__["c" /* SituacaoCenario */].Ativo) {
             alert('Cenário ativo não pode ser alterado!');
         }
@@ -748,7 +770,6 @@ var SituacaoCenario;
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost/mantercenariopresentation.app/',
     pesquisarCenarios: 'pesquisarCenarios',
     inserirCenario: 'inserirCenario',
     alterarCenario: 'alterarCenario',

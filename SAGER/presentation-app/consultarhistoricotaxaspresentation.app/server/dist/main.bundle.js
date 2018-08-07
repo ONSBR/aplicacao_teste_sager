@@ -182,6 +182,17 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         this.filtroConsulta = new __WEBPACK_IMPORTED_MODULE_2__filtro_FiltroConsulta_model__["a" /* FiltroConsulta */](null, null, null, null, null, null);
         this.environment = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */];
     }
+    Object.defineProperty(ConsultarHistoricoTaxasComponent.prototype, "urlServerPresentation", {
+        get: function () {
+            var url = window.location.href;
+            if (!url.startsWith("/")) {
+                url += "/";
+            }
+            return url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ConsultarHistoricoTaxasComponent.prototype.ngOnInit = function () {
         this.meses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         this.listarUsinas();
@@ -237,7 +248,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
             alert("Informe todos os filtros da pesquisa!");
             return;
         }
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarHistorico;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarHistorico;
         var body = { 'filtroConsulta': this.filtroConsulta };
         this.http.post(url, body).subscribe(function (data) {
             _this.execucoes = data;
@@ -292,7 +303,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         return retorno;
     };
     ConsultarHistoricoTaxasComponent.prototype.enviarSolicitacaoCalculoTaxa = function (mes, ano) {
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].calcularTaxas;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].calcularTaxas;
         var body = { presentationId: this.presentationId, mesFechamento: mes, anoFechamento: ano };
         return this.http.post(url, body).toPromise();
     };
@@ -326,17 +337,17 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         }
     };
     ConsultarHistoricoTaxasComponent.prototype.linkMemoriaTaxa = function (taxa) {
-        return __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadMemoriaProcessamentoXlsx +
+        return this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadMemoriaProcessamentoXlsx +
             '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
     };
     ConsultarHistoricoTaxasComponent.prototype.linkResultadoReproducao = function (reproducao) {
-        return __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadComparacaoReproducaoXlsx +
+        return this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadComparacaoReproducaoXlsx +
             '?instance_id=' + reproducao.instanceId +
             '&original_id=' + reproducao.originalId +
             '&taxa_id=' + reproducao.externalId;
     };
     ConsultarHistoricoTaxasComponent.prototype.reproduzirCalculoTaxa = function (taxa) {
-        this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].reproduzirCalculoTaxa, { instance_id: taxa._metadata.instance_id, presentationId: this.presentationId, taxa_id: taxa.id }).subscribe(function (data) {
+        this.http.post(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].reproduzirCalculoTaxa, { instance_id: taxa._metadata.instance_id, presentationId: this.presentationId, taxa_id: taxa.id }).subscribe(function (data) {
             alert('Solicitação de reprodução do cálculo da taxa realizada com sucesso.');
         });
     };
@@ -344,7 +355,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         return ident && ident.length > 20 ? ident.substring(0, 20) + "..." : ident;
     };
     ConsultarHistoricoTaxasComponent.prototype.listarReproducoes = function (self) {
-        self.http.get(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarReproducoes).subscribe(function (data) {
+        self.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarReproducoes).subscribe(function (data) {
             var reprods = data;
             var newlist = [];
             for (var i = reprods.length - 1; i >= reprods.length - self.maxViewReproduction && i >= 0; i--) {
@@ -354,7 +365,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         });
     };
     ConsultarHistoricoTaxasComponent.prototype.listarBusinessEvents = function (self) {
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarBusinessEvents;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarBusinessEvents;
         url += "?horas=" + self.filterEvts.horas;
         var qtd = self.converterInt(self.filterEvts.qtd);
         if (qtd <= 0) {
@@ -372,7 +383,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
     };
     ConsultarHistoricoTaxasComponent.prototype.listarUsinas = function () {
         var _this = this;
-        this.http.get(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
+        this.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
             _this.usinas = data;
         });
     };
@@ -386,7 +397,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
     };
     ConsultarHistoricoTaxasComponent.prototype.listarTipoTaxa = function () {
         var _this = this;
-        this.http.get(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarTipoTaxa).subscribe(function (data) {
+        this.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarTipoTaxa).subscribe(function (data) {
             _this.tiposTaxa = data;
         });
     };
@@ -394,11 +405,11 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         var _this = this;
         this.execucaoSelecionada = execucaoSelecionada;
         var body = { 'idFechamentoMensal': this.execucaoSelecionada.idFechamento, 'filtroConsulta': this.filtroConsulta };
-        this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarFechamentoMensalPorId, body).
+        this.http.post(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarFechamentoMensalPorId, body).
             toPromise().then(function (fechamentoMensal) {
             _this.fechamentoMensal = fechamentoMensal[0];
         });
-        this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarTaxaPorId, body).
+        this.http.post(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarTaxaPorId, body).
             toPromise().then(function (taxas) {
             _this.taxas = taxas;
         });
@@ -409,7 +420,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         });
     };
     ConsultarHistoricoTaxasComponent.prototype.getUrlDownloadMemoriaDeProcessamento = function (taxa) {
-        return __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadMemoriaProcessamentoXlsx +
+        return this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadMemoriaProcessamentoXlsx +
             '?idinstance=' + taxa._metadata.instance_id + '&idtaxa=' + taxa.id;
     };
     ConsultarHistoricoTaxasComponent = __decorate([
@@ -470,7 +481,6 @@ var FiltroConsulta = /** @class */ (function () {
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost/consultarhistoricotaxaspresentation.app/',
     listarUsinas: 'listarusinas',
     listarTipoTaxa: 'listartipotaxa',
     consultaFiltroInicial: 'filtroinicial',

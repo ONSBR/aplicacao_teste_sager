@@ -23,6 +23,14 @@ export class MantertarefaComponent implements OnInit {
   public mensagemSucesso: string;
   public mensagemErro: string;
 
+  get urlServerPresentation() {
+    var url = window.location.href;
+    if (!url.startsWith("/")) {
+      url += "/";
+    }
+    return url;
+  }
+
   constructor(private http: HttpClient) {
     this.filtroEvento = new FiltroEvento();
     this.filtroEvento.usinas = [];
@@ -36,14 +44,14 @@ export class MantertarefaComponent implements OnInit {
   }
 
   listarUsinas() {
-    this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
+    this.http.get(this.urlServerPresentation + environment.listarUsinas).subscribe(data => {
       this.usinas = <Usina[]>data;
     });
   }
 
   listarTarefas() {
     this.nomeTarefa = '';
-    this.http.get(environment.urlServerPresentation + environment.listarTarefas).subscribe(data => {
+    this.http.get(this.urlServerPresentation + environment.listarTarefas).subscribe(data => {
       this.tarefas = <TarefaRetificacao[]>data;
     });
   }
@@ -52,7 +60,7 @@ export class MantertarefaComponent implements OnInit {
     this.limparMensagens();
     if (this.validarTarefa()) {
       const body = { 'nomeTarefa': this.nomeTarefa };
-      this.http.post(environment.urlServerPresentation + environment.inserirTarefa, body).subscribe(
+      this.http.post(this.urlServerPresentation + environment.inserirTarefa, body).subscribe(
         data => {
           this.mensagemSucesso = 'Tarefa inserida com sucesso!';
           this.listarTarefas();
@@ -104,7 +112,7 @@ export class MantertarefaComponent implements OnInit {
   uploadPlanilha(tarefa: TarefaRetificacao, files: FileList) {
     this.limparMensagens();
     tarefa.planilha = files.item(0);
-    const urlUploadPlanilha = environment.urlServerPresentation + environment.uploadPlanilha;
+    const urlUploadPlanilha = this.urlServerPresentation + environment.uploadPlanilha;
     const formData: FormData = new FormData();
     formData.append('planilha', tarefa.planilha, tarefa.planilha.name);
     formData.append('nomeTarefa', tarefa.nome);
@@ -123,11 +131,11 @@ export class MantertarefaComponent implements OnInit {
   }
 
   getUrlDownloadPlanilha(nomeTarefa) {
-    return `${environment.urlServerPresentation}${environment.downloadplanilha}?nomeTarefa=${nomeTarefa}`;
+    return `${this.urlServerPresentation}${environment.downloadplanilha}?nomeTarefa=${nomeTarefa}`;
   }
 
   getUrlPesquisarEventos() {
-    return `${environment.urlServerPresentation}${environment.pesquisarEventos}` +
+    return `${this.urlServerPresentation}${environment.pesquisarEventos}` +
       `?idsUsinas=${this.filtroEvento.usinas.join(';')}&dataInicial=${this.filtroEvento.dataInicial}` +
       `&dataFinal=${this.filtroEvento.dataFinal}`;
   }
@@ -144,7 +152,7 @@ export class MantertarefaComponent implements OnInit {
   excluir(tarefa) {
     this.limparMensagens();
     const body = { 'tarefa': tarefa };
-    this.http.post(environment.urlServerPresentation + environment.excluirTarefa, body).subscribe(
+    this.http.post(this.urlServerPresentation + environment.excluirTarefa, body).subscribe(
       data => {
         this.mensagemSucesso = 'Tarefa excluída com sucesso!';
         this.listarTarefas();
@@ -154,7 +162,7 @@ export class MantertarefaComponent implements OnInit {
 
   aplicar(tarefa) {
     this.limparMensagens();
-    const url = environment.urlServerPresentation + environment.aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
+    const url = this.urlServerPresentation + environment.aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
     this.http.get(url).subscribe(
       data => {
         this.mensagemSucesso = 'Retificação aplicada com sucesso!';

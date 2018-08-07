@@ -5,7 +5,6 @@
 
 export const environment = {
   production: false,
-  urlServerPresentation: 'http://localhost/consultarhistoricotaxaspresentation.app/',
   listarUsinas: 'listarusinas',
   listarTipoTaxa: 'listartipotaxa',
   consultaFiltroInicial: 'filtroinicial',

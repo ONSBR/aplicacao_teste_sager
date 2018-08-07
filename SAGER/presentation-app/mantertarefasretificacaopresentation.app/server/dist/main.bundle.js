@@ -154,20 +154,31 @@ var MantertarefaComponent = /** @class */ (function () {
         this.camposObrigatoriosPesquisaEventos = [];
         this.camposObrigatoriosTarefa = [];
     }
+    Object.defineProperty(MantertarefaComponent.prototype, "urlServerPresentation", {
+        get: function () {
+            var url = window.location.href;
+            if (!url.startsWith("/")) {
+                url += "/";
+            }
+            return url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     MantertarefaComponent.prototype.ngOnInit = function () {
         this.listarUsinas();
         this.listarTarefas();
     };
     MantertarefaComponent.prototype.listarUsinas = function () {
         var _this = this;
-        this.http.get(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
+        this.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
             _this.usinas = data;
         });
     };
     MantertarefaComponent.prototype.listarTarefas = function () {
         var _this = this;
         this.nomeTarefa = '';
-        this.http.get(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarTarefas).subscribe(function (data) {
+        this.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarTarefas).subscribe(function (data) {
             _this.tarefas = data;
         });
     };
@@ -176,7 +187,7 @@ var MantertarefaComponent = /** @class */ (function () {
         this.limparMensagens();
         if (this.validarTarefa()) {
             var body = { 'nomeTarefa': this.nomeTarefa };
-            this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirTarefa, body).subscribe(function (data) {
+            this.http.post(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirTarefa, body).subscribe(function (data) {
                 _this.mensagemSucesso = 'Tarefa inserida com sucesso!';
                 _this.listarTarefas();
             }, function (error) {
@@ -220,7 +231,7 @@ var MantertarefaComponent = /** @class */ (function () {
         var _this = this;
         this.limparMensagens();
         tarefa.planilha = files.item(0);
-        var urlUploadPlanilha = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].uploadPlanilha;
+        var urlUploadPlanilha = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].uploadPlanilha;
         var formData = new FormData();
         formData.append('planilha', tarefa.planilha, tarefa.planilha.name);
         formData.append('nomeTarefa', tarefa.nome);
@@ -237,10 +248,10 @@ var MantertarefaComponent = /** @class */ (function () {
         window.location.href = url;
     };
     MantertarefaComponent.prototype.getUrlDownloadPlanilha = function (nomeTarefa) {
-        return "" + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadplanilha + "?nomeTarefa=" + nomeTarefa;
+        return "" + this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].downloadplanilha + "?nomeTarefa=" + nomeTarefa;
     };
     MantertarefaComponent.prototype.getUrlPesquisarEventos = function () {
-        return "" + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarEventos +
+        return "" + this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarEventos +
             ("?idsUsinas=" + this.filtroEvento.usinas.join(';') + "&dataInicial=" + this.filtroEvento.dataInicial) +
             ("&dataFinal=" + this.filtroEvento.dataFinal);
     };
@@ -257,7 +268,7 @@ var MantertarefaComponent = /** @class */ (function () {
         var _this = this;
         this.limparMensagens();
         var body = { 'tarefa': tarefa };
-        this.http.post(__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirTarefa, body).subscribe(function (data) {
+        this.http.post(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirTarefa, body).subscribe(function (data) {
             _this.mensagemSucesso = 'Tarefa excluída com sucesso!';
             _this.listarTarefas();
         });
@@ -265,7 +276,7 @@ var MantertarefaComponent = /** @class */ (function () {
     MantertarefaComponent.prototype.aplicar = function (tarefa) {
         var _this = this;
         this.limparMensagens();
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
         this.http.get(url).subscribe(function (data) {
             _this.mensagemSucesso = 'Retificação aplicada com sucesso!';
             _this.listarTarefas();
@@ -315,7 +326,6 @@ var FiltroEvento = /** @class */ (function () {
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost/mantertarefasretificacaopresentation.app/',
     listarUsinas: 'listarusinas',
     listarTarefas: 'listartarefas',
     pesquisarEventos: 'pesquisareventos',
