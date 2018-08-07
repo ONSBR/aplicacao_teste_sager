@@ -56,13 +56,13 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   pollingConsultaBusinessEvents(self) {
     var listarBusinessEvents = this.listarBusinessEvents;
     listarBusinessEvents(self);
-    setInterval(function () { listarBusinessEvents(self) }, 5000);
+    setInterval(function () { listarBusinessEvents(self) }, 10000);
   }
 
   pollingConsultaReproducao(self) {
     var listarReproducoes = this.listarReproducoes;
     listarReproducoes(self);
-    setInterval(function () { listarReproducoes(self) }, 5000);
+    setInterval(function () { listarReproducoes(self) }, 10000);
   }
 
   descBusinessEvent(businessEvent) {
@@ -82,14 +82,14 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
     else if (businessEvent.name == "calculate.tax.done" ) {
       retorno.msg = "Solicitado cálculo de taxas do fechamento.";
     }
-    else if (businessEvent.name == "calculate.tax.by.done" ) {
+    else if (businessEvent.name == "calculate.tax.by.usina.done" ) {
       retorno.msg = "Cálculo de taxas da usina realizado com sucesso.";
     }
     else if (businessEvent.name == "calculate.tax.error" ) {
       retorno.msg = "Error na solicitação de cálculo de " + 
         "taxas, error: " + businessEvent.payload.message;
     }
-    else if (businessEvent.name == "calculate.tax.by.error" ) {
+    else if (businessEvent.name == "calculate.tax.by.usina.error" ) {
       retorno.msg = "Error na solicitação de cálculo de " + 
         "taxas da usina, error: " + businessEvent.payload.message;
     }
@@ -99,6 +99,11 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
   }
 
   pesquisar() {
+    if (!this.filtroConsulta.usina || !this.filtroConsulta.mesInicial || !this.filtroConsulta.anoInicial 
+        || !this.filtroConsulta.mesFinal || !this.filtroConsulta.anoFinal || !this.filtroConsulta.tipoTaxa) {
+      alert("Informe todos os filtros da pesquisa!");
+      return;
+    }
     const url = environment.urlServerPresentation + environment.pesquisarHistorico;
     const body = { 'filtroConsulta': this.filtroConsulta };
     this.http.post(url, body).subscribe(data => {

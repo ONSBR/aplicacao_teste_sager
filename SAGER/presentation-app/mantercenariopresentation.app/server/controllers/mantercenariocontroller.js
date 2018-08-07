@@ -28,7 +28,7 @@ class ManterCenarioController {
             filtroDataFinal = new Date(request.body.dataFinal).toISOString().slice(0, 10);
         }
         let url = config.getUrlFiltroCenario(filtroNome, filtroDataInicial, filtroDataFinal);
-
+        console.log(`Pesquisa de cenarios: ${url}`);
         this.domainPromiseHelper.getDomainPromise(url).
             then(data => { response.send(data); }).
             catch(e => { console.log(`Erro durante a consulta de cenários: ${e.toString()}`) });

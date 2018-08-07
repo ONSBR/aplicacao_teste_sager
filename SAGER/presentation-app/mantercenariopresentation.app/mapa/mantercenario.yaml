@@ -21,6 +21,7 @@ cenario:
     byNome: "nome like :nomeCenario"
     byId: "id = :id"
     byIdCenario: "id_cenario = :idCenario"
+    byNomeAndData: "1=1 [and nome like :nomeCenario] [and data_inicio >= :dataInicial] [and data_fim <= :dataFinal]"
 
 regracenario:
   model: tb_regra_cenario
