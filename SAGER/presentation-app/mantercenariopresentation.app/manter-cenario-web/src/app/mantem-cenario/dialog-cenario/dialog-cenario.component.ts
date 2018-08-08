@@ -22,6 +22,14 @@ export class DialogCenarioComponent implements OnInit {
   estados_type: string[] = Object.values(EstadoOperativo);
   condicoes_type: string[] = Object.values(CondicaoOperativa);
 
+  get urlServerPresentation() {
+    var url = window.location.href;
+    if (!url.startsWith("/")) {
+      url += "/";
+    }
+    return url;
+  }
+
   getOrigens(tipoRegra): string[] {
     let retorno = [];
     if (tipoRegra == this.tiposRegras[1]) {
@@ -64,14 +72,14 @@ export class DialogCenarioComponent implements OnInit {
   }
 
   listarUsinas() {
-    this.http.get(environment.urlServerPresentation + environment.listarUsinas).subscribe(data => {
+    this.http.get(this.urlServerPresentation + environment.listarUsinas).subscribe(data => {
       this.usinas = <Usina[]>data;
     });
   }
 
   listarUges() {
     if (this.data && this.data.idUsina) {
-      const url = environment.urlServerPresentation + environment.listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
+      const url = this.urlServerPresentation + environment.listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
       this.http.get(url).subscribe(data => {
         this.uges = <UnidadeGeradora[]>data;
       });
@@ -99,7 +107,26 @@ export class DialogCenarioComponent implements OnInit {
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara || !it.dataInicioVigencia || !it.dataFimVigencia) {
-          alert('Informe os dados da regra!');
+          var camposInvalidos = '';
+          if (!it.nomeRegra) {
+            camposInvalidos += "Nome da Regra";
+          }
+          if (!it.tipoRegra) {
+            camposInvalidos += "Tipo da Regra";
+          }
+          if (!it.regraDe) {
+            camposInvalidos += "Valor Origem";
+          }
+          if (!it.regraPara) {
+            camposInvalidos += "Valor Destino";
+          }
+          if (!it.dataInicioVigencia) {
+            camposInvalidos += "Data Início da Vigência";
+          }
+          if (!it.dataFimVigencia) {
+            camposInvalidos += "Data Fim da Vigência";
+          }
+          alert('Informe os dados da regra! Campos Inválidos: ' + camposInvalidos);
           retorno = false;
         }
       });

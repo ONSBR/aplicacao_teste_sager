@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div>\n  <app-mantem-cenario></app-mantem-cenario>\n</div>\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n<div>\r\n  <app-mantem-cenario></app-mantem-cenario>\r\n</div>\r\n\r\n"
 
 /***/ }),
 
@@ -281,7 +281,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/mantem-cenario/dialog-cenario/dialog-cenario.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 mat-dialog-title>{{titulo}} Cenário</h2>\n\n<table border=\"0\">\n  <tr>\n    <td width=\"1200\" style=\"vertical-align:top\">\n      <fieldset style=\"height: 170px\">\n        <mat-dialog-content>\n          <div>\n            <span>Nome do Cenário:\n              <input type=\"text\" [(ngModel)]=\"data.nomeCenario\" />\n            </span>\n          </div>\n          <div>\n            <span>Data Início Vigência:\n              <input type=\"date\" [(ngModel)]=\"data.dataInicioVigencia\" />\n            </span>\n          </div>\n          <div>\n            <span>Data Fim Vigência:\n              <input type=\"date\" [(ngModel)]=\"data.dataFimVigencia\" />\n            </span>\n          </div>\n          <div>\n            <span>Justificativa:\n              <input type=\"text\" [(ngModel)]=\"data.justificativa\" />\n            </span>\n          </div>\n          <div>\n            <span>Usina:\n              <select [(ngModel)]=\"idUsina\">\n                <option *ngFor=\"let usina of usinas\" [ngValue]=\"usina.idUsina\">\n                  {{usina.idUsina}}\n                </option>\n              </select>\n            </span>\n          </div>\n          <div>\n            <span>Situação: {{data.situacao}}\n            </span>\n          </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <span>\n            <button class=\"button\" (click)='confirmar()'>Confirmar</button>\n            <button class=\"button\" (click)='onNoClick()'>Fechar</button>\n            <button class=\"button\" (click)='incluirRegra()'>Incluir Critério</button>\n          </span>\n        </mat-dialog-actions>\n      </fieldset>\n      <span *ngIf=\"data.regras && data.regras.length > 0\">\n        <h3>Critérios</h3>\n        <table width=\"1200\" class=\"grid-entidades\">\n          <tr>\n            <th width=\"100\">Nome</th>\n            <th width=\"200\">Tipo de Mudança</th>\n            <th>Data Início</th>\n            <th>Data Fim</th>\n            <th>De</th>\n            <th>Para</th>\n            <th>Opção</th>\n          </tr>\n          <tr *ngFor=\"let regra of data.regras\">\n            <td>\n              <input type=\"text\" size=\"15\" [(ngModel)]=\"regra.nomeRegra\" />\n            </td>\n            <td>\n              <select [(ngModel)]=\"regra.tipoRegra\">\n                <option *ngFor=\"let tipoRegra of tiposRegras\" [ngValue]=\"tipoRegra\">{{tipoRegra}}</option>\n              </select>\n            </td>\n            <td>\n              <input type=\"date\" [(ngModel)]=\"regra.dataInicioVigencia\"/>\n            </td>\n            <td>\n              <input type=\"date\" [(ngModel)]=\"regra.dataFimVigencia\"/>\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let uge of uges\" [ngValue]=\"uge.idUge\">{{uge.idUge}}</option>\n              </select>\n              - {{getUge(regra.regraDe).potenciaDisponivel}}\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[1] || regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3]\">\n              <select [(ngModel)]=\"regra.regraDe\">\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\n                  {{origem}}\n                </option>\n              </select>\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0]\">\n              <input type=\"text\" [(ngModel)]=\"regra.regraPara\" />\n            </td>\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[1] || regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3]\">\n              <select [(ngModel)]=\"regra.regraPara\">\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\n                  {{origem}}\n                </option>\n              </select>\n            </td>\n            <td>\n              <button class=\"button\" (click)='excluirRegra(regra)'>Excluir</button>\n            </td>\n          </tr>\n        </table>\n      </span>\n\n    </td>\n  </tr>\n</table>"
+module.exports = "<h2 mat-dialog-title>{{titulo}} Cenário</h2>\r\n\r\n<table border=\"0\">\r\n  <tr>\r\n    <td width=\"1200\" style=\"vertical-align:top\">\r\n      <fieldset style=\"height: 170px\">\r\n        <mat-dialog-content>\r\n          <div>\r\n            <span>Nome do Cenário:\r\n              <input type=\"text\" [(ngModel)]=\"data.nomeCenario\" />\r\n            </span>\r\n          </div>\r\n          <div>\r\n            <span>Data Início Vigência:\r\n              <input type=\"date\" [(ngModel)]=\"data.dataInicioVigencia\" />\r\n            </span>\r\n          </div>\r\n          <div>\r\n            <span>Data Fim Vigência:\r\n              <input type=\"date\" [(ngModel)]=\"data.dataFimVigencia\" />\r\n            </span>\r\n          </div>\r\n          <div>\r\n            <span>Justificativa:\r\n              <input type=\"text\" [(ngModel)]=\"data.justificativa\" />\r\n            </span>\r\n          </div>\r\n          <div>\r\n            <span>Usina:\r\n              <select [(ngModel)]=\"idUsina\">\r\n                <option *ngFor=\"let usina of usinas\" [ngValue]=\"usina.idUsina\">\r\n                  {{usina.idUsina}}\r\n                </option>\r\n              </select>\r\n            </span>\r\n          </div>\r\n          <div>\r\n            <span>Situação: {{data.situacao}}\r\n            </span>\r\n          </div>\r\n        </mat-dialog-content>\r\n        <mat-dialog-actions>\r\n          <span>\r\n            <button class=\"button\" (click)='confirmar()'>Confirmar</button>\r\n            <button class=\"button\" (click)='onNoClick()'>Fechar</button>\r\n            <button class=\"button\" (click)='incluirRegra()'>Incluir Critério</button>\r\n          </span>\r\n        </mat-dialog-actions>\r\n      </fieldset>\r\n      <span *ngIf=\"data.regras && data.regras.length > 0\">\r\n        <h3>Critérios</h3>\r\n        <table width=\"1200\" class=\"grid-entidades\">\r\n          <tr>\r\n            <th width=\"100\">Nome</th>\r\n            <th width=\"200\">Tipo de Mudança</th>\r\n            <th>Data Início</th>\r\n            <th>Data Fim</th>\r\n            <th>De</th>\r\n            <th>Para</th>\r\n            <th>Opção</th>\r\n          </tr>\r\n          <tr *ngFor=\"let regra of data.regras\">\r\n            <td>\r\n              <input type=\"text\" size=\"15\" [(ngModel)]=\"regra.nomeRegra\" />\r\n            </td>\r\n            <td>\r\n              <select [(ngModel)]=\"regra.tipoRegra\">\r\n                <option *ngFor=\"let tipoRegra of tiposRegras\" [ngValue]=\"tipoRegra\">{{tipoRegra}}</option>\r\n              </select>\r\n            </td>\r\n            <td>\r\n              <input type=\"date\" [(ngModel)]=\"regra.dataInicioVigencia\"/>\r\n            </td>\r\n            <td>\r\n              <input type=\"date\" [(ngModel)]=\"regra.dataFimVigencia\"/>\r\n            </td>\r\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0]\">\r\n              <select [(ngModel)]=\"regra.regraDe\">\r\n                <option *ngFor=\"let uge of uges\" [ngValue]=\"uge.idUge\">{{uge.idUge}}</option>\r\n              </select>\r\n              - {{getUge(regra.regraDe).potenciaDisponivel}}\r\n            </td>\r\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[1] || regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3]\">\r\n              <select [(ngModel)]=\"regra.regraDe\">\r\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\r\n                  {{origem}}\r\n                </option>\r\n              </select>\r\n            </td>\r\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[0]\">\r\n              <input type=\"text\" [(ngModel)]=\"regra.regraPara\" />\r\n            </td>\r\n            <td *ngIf=\"regra.tipoRegra == tiposRegras[1] || regra.tipoRegra == tiposRegras[2] || regra.tipoRegra == tiposRegras[3]\">\r\n              <select [(ngModel)]=\"regra.regraPara\">\r\n                <option *ngFor=\"let origem of getOrigens(regra.tipoRegra)\" [ngValue]=\"origem\">\r\n                  {{origem}}\r\n                </option>\r\n              </select>\r\n            </td>\r\n            <td>\r\n              <button class=\"button\" (click)='excluirRegra(regra)'>Excluir</button>\r\n            </td>\r\n          </tr>\r\n        </table>\r\n      </span>\r\n\r\n    </td>\r\n  </tr>\r\n</table>"
 
 /***/ }),
 
@@ -327,6 +327,17 @@ var DialogCenarioComponent = /** @class */ (function () {
         this.condicoes_type = Object.values(__WEBPACK_IMPORTED_MODULE_5__constants__["b" /* CondicaoOperativa */]);
         this.data = data;
     }
+    Object.defineProperty(DialogCenarioComponent.prototype, "urlServerPresentation", {
+        get: function () {
+            var url = window.location.href;
+            if (!url.startsWith("/")) {
+                url += "/";
+            }
+            return url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     DialogCenarioComponent.prototype.getOrigens = function (tipoRegra) {
         var retorno = [];
         if (tipoRegra == this.tiposRegras[1]) {
@@ -366,14 +377,14 @@ var DialogCenarioComponent = /** @class */ (function () {
     };
     DialogCenarioComponent.prototype.listarUsinas = function () {
         var _this = this;
-        this.http.get(__WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
+        this.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUsinas).subscribe(function (data) {
             _this.usinas = data;
         });
     };
     DialogCenarioComponent.prototype.listarUges = function () {
         var _this = this;
         if (this.data && this.data.idUsina) {
-            var url = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
+            var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].listarUnidadesGeradoras + '?idUsina=' + this.data.idUsina;
             this.http.get(url).subscribe(function (data) {
                 _this.uges = data;
             });
@@ -397,7 +408,26 @@ var DialogCenarioComponent = /** @class */ (function () {
         if (this.data.regras && this.data.regras.length > 0) {
             this.data.regras.forEach(function (it) {
                 if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara || !it.dataInicioVigencia || !it.dataFimVigencia) {
-                    alert('Informe os dados da regra!');
+                    var camposInvalidos = '';
+                    if (!it.nomeRegra) {
+                        camposInvalidos += "Nome da Regra";
+                    }
+                    if (!it.tipoRegra) {
+                        camposInvalidos += "Tipo da Regra";
+                    }
+                    if (!it.regraDe) {
+                        camposInvalidos += "Valor Origem";
+                    }
+                    if (!it.regraPara) {
+                        camposInvalidos += "Valor Destino";
+                    }
+                    if (!it.dataInicioVigencia) {
+                        camposInvalidos += "Data Início da Vigência";
+                    }
+                    if (!it.dataFimVigencia) {
+                        camposInvalidos += "Data Fim da Vigência";
+                    }
+                    alert('Informe os dados da regra! Campos Inválidos: ' + camposInvalidos);
                     retorno = false;
                 }
             });
@@ -458,7 +488,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/mantem-cenario/mantem-cenario.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Manter Cenário</h2>\n\n<table border=\"0\">\n  <tr>\n    <td width=\"1000\" style=\"vertical-align:top\">\n      <fieldset style=\"height: 120px\">\n        <div>\n          <span>Nome do Cenário:\n            <input type=\"text\" [(ngModel)]=\"filtroConsulta.nome\" />\n          </span>\n        </div>\n        <div>\n          <span>Data Inicial:\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataInicial\" />\n          </span>\n        </div>\n        <div>\n          <span>Data Final:\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataFinal\" />\n          </span>\n        </div>\n        <div>\n          <span>Ativo:\n            <input type=\"checkbox\" [(ngModel)]=\"filtroConsulta.ativo\" />\n          </span>\n        </div>\n        <div>\n          <span>\n            <button class=\"button\" (click)='pesquisar($event)'>Pesquisar</button>\n            <button class=\"button\" (click)='incluir($event)'>Incluir</button>\n          </span>\n        </div>\n      </fieldset>\n      <div>\n        <span>\n          <h3>Cenários:</h3>\n          <table border=\"0\" width=\"1000\" class=\"grid-entidades\">\n            <tr>\n              <th width=\"130\">Id</th>\n              <th width=\"150\">Nome</th>\n              <th width=\"90\">Dt.Ini Vig.</th>\n              <th width=\"90\">Dt.Fim Vig.</th>\n              <th>Justificativa</th>\n              <th width=\"50\">Usina</th>\n              <th width=\"80\">Situação</th>\n              <th width=\"150\" colspan=\"3\">Opções</th>\n            </tr>\n            <tr *ngFor=\"let cenario of cenarios\" style=\"cursor: pointer\">\n              <td (click)='alterar(cenario)' [title]=\"cenario.idCenario\">\n                {{printIdentify(cenario.idCenario)}}\n              </td>\n              <td (click)='alterar(cenario)'>\n                <b *ngIf=\"cenarioSelecionado.idCenario == cenario.idCenario\">\n                  {{ cenario.nomeCenario }}\n                </b>\n                <span *ngIf=\"cenarioSelecionado.idCenario != cenario.idCenario\">\n                  {{ cenario.nomeCenario }}\n                </span>\n              </td>\n              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia | date: 'dd/MM/yyyy' }}</td>\n              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia | date: 'dd/MM/yyyy' }}</td>\n              <td (click)='alterar(cenario)'>{{cenario.justificativa}}</td>\n              <td (click)='alterar(cenario)'>{{cenario.idUsina}}</td>\n              <td>{{cenario.situacao}}</td>\n              <td>\n                <button class=\"button\" (click)='excluir(cenario)'>Excluir</button>\n              </td>\n              <td>\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Inativo'\" >Ativar</button>\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Ativo'\" >Inativar</button>\n              </td>\n              <td>\n                <button class=\"button\" (click)='incorporar(cenario)' *ngIf=\"cenario.situacao != 'Incorporado'\">Incorporar</button>\n              </td>\n            </tr>\n          </table>\n        </span>\n      </div>\n    </td>\n  </tr>\n</table>"
+module.exports = "<h2>Manter Cenário</h2>\r\n\r\n<table border=\"0\">\r\n  <tr>\r\n    <td width=\"1000\" style=\"vertical-align:top\">\r\n      <fieldset style=\"height: 120px\">\r\n        <div>\r\n          <span>Nome do Cenário:\r\n            <input type=\"text\" [(ngModel)]=\"filtroConsulta.nome\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Data Inicial:\r\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataInicial\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Data Final:\r\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataFinal\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Ativo:\r\n            <input type=\"checkbox\" [(ngModel)]=\"filtroConsulta.ativo\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>\r\n            <button class=\"button\" (click)='pesquisar($event)'>Pesquisar</button>\r\n            <button class=\"button\" (click)='incluir($event)'>Incluir</button>\r\n          </span>\r\n        </div>\r\n      </fieldset>\r\n      <div>\r\n        <span>\r\n          <h3>Cenários:</h3>\r\n          <table border=\"0\" width=\"1000\" class=\"grid-entidades\">\r\n            <tr>\r\n              <th width=\"130\">Id</th>\r\n              <th width=\"150\">Nome</th>\r\n              <th width=\"90\">Dt.Ini Vig.</th>\r\n              <th width=\"90\">Dt.Fim Vig.</th>\r\n              <th>Justificativa</th>\r\n              <th width=\"50\">Usina</th>\r\n              <th width=\"80\">Situação</th>\r\n              <th width=\"150\" colspan=\"3\">Opções</th>\r\n            </tr>\r\n            <tr *ngFor=\"let cenario of cenarios\" style=\"cursor: pointer\">\r\n              <td (click)='alterar(cenario)' [title]=\"cenario.idCenario\">\r\n                {{printIdentify(cenario.idCenario)}}\r\n              </td>\r\n              <td (click)='alterar(cenario)'>\r\n                <b *ngIf=\"cenarioSelecionado.idCenario == cenario.idCenario\">\r\n                  {{ cenario.nomeCenario }}\r\n                </b>\r\n                <span *ngIf=\"cenarioSelecionado.idCenario != cenario.idCenario\">\r\n                  {{ cenario.nomeCenario }}\r\n                </span>\r\n              </td>\r\n              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia | date: 'dd/MM/yyyy' }}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia | date: 'dd/MM/yyyy' }}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.justificativa}}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.idUsina}}</td>\r\n              <td>{{cenario.situacao}}</td>\r\n              <td>\r\n                <button class=\"button\" (click)='excluir(cenario)'>Excluir</button>\r\n              </td>\r\n              <td>\r\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Inativo'\" >Ativar</button>\r\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Ativo'\" >Inativar</button>\r\n              </td>\r\n              <td>\r\n                <button class=\"button\" (click)='incorporar(cenario)' *ngIf=\"cenario.situacao != 'Incorporado'\">Incorporar</button>\r\n              </td>\r\n            </tr>\r\n          </table>\r\n        </span>\r\n      </div>\r\n    </td>\r\n  </tr>\r\n</table>"
 
 /***/ }),
 
@@ -500,12 +530,23 @@ var MantemCenarioComponent = /** @class */ (function () {
         this.cenarioSelecionado = new __WEBPACK_IMPORTED_MODULE_4__model_model__["a" /* Cenario */]();
         this.environment = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */];
     }
+    Object.defineProperty(MantemCenarioComponent.prototype, "urlServerPresentation", {
+        get: function () {
+            var url = window.location.href;
+            if (!url.startsWith("/")) {
+                url += "/";
+            }
+            return url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     MantemCenarioComponent.prototype.ngOnInit = function () {
     };
     MantemCenarioComponent.prototype.pesquisar = function () {
         var _this = this;
         this.cenarioSelecionado = new __WEBPACK_IMPORTED_MODULE_4__model_model__["a" /* Cenario */]();
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarCenarios;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].pesquisarCenarios;
         var body = this.filtroConsulta;
         this.http.post(url, body).subscribe(function (data) {
             _this.cenarios = data;
@@ -521,7 +562,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.excluir = function (cenario) {
         var _this = this;
         if (confirm('Confirma a exclusão do cenário?')) {
-            var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirCenario + '?idCenario=' + cenario.idCenario;
+            var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].excluirCenario + '?idCenario=' + cenario.idCenario;
             this.http.delete(url).subscribe(function (data) {
                 alert('Exclusão de cenário realizada com sucesso!');
                 _this.pesquisar();
@@ -531,7 +572,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     MantemCenarioComponent.prototype.incorporar = function (cenario) {
         var _this = this;
         if (confirm('Confirma a incorporação do cenário?')) {
-            var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].incorporarCenario + '?idCenario=' + cenario.idCenario;
+            var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].incorporarCenario + '?idCenario=' + cenario.idCenario;
             this.http.post(url, { idCenario: cenario.idCenario }).subscribe(function (data) {
                 alert('Incorporação de cenário realizada com sucesso!');
                 _this.pesquisar();
@@ -540,7 +581,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     };
     MantemCenarioComponent.prototype.ativarInativar = function (cenario) {
         var _this = this;
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].ativarInativarCenario;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].ativarInativarCenario;
         var body = {
             idCenario: cenario.idCenario,
             dataInicioVigencia: cenario.dataInicioVigencia,
@@ -561,7 +602,7 @@ var MantemCenarioComponent = /** @class */ (function () {
         this.cenarioSelecionado = clone(cenario);
         this.cenarioSelecionado.dataInicioVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataInicioVigencia);
         this.cenarioSelecionado.dataFimVigencia = this.ajustarDataCalendario(this.cenarioSelecionado.dataFimVigencia);
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].obterRegrasCriticas +
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].obterRegrasCriticas +
             '?idCenario=' + this.cenarioSelecionado.idCenario;
         this.http.get(url).subscribe(function (data) {
             _this.cenarioSelecionado.regras = data;
@@ -579,7 +620,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     };
     MantemCenarioComponent.prototype.confirmarInclusao = function (cenario) {
         var _this = this;
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirCenario;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].inserirCenario;
         this.http.put(url, cenario).subscribe(function (data) {
             alert('Inclusão de cenário realizada com sucesso!');
             _this.pesquisar();
@@ -587,7 +628,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     };
     MantemCenarioComponent.prototype.confirmarAlteracao = function (cenario) {
         var _this = this;
-        var url = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].alterarCenario;
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].alterarCenario;
         if (cenario.situacao === __WEBPACK_IMPORTED_MODULE_4__model_model__["c" /* SituacaoCenario */].Ativo) {
             alert('Cenário ativo não pode ser alterado!');
         }
@@ -729,7 +770,6 @@ var SituacaoCenario;
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    urlServerPresentation: 'http://localhost/mantercenariopresentation.app/',
     pesquisarCenarios: 'pesquisarCenarios',
     inserirCenario: 'inserirCenario',
     alterarCenario: 'alterarCenario',
