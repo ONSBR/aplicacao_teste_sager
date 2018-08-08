@@ -355,7 +355,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         return ident && ident.length > 20 ? ident.substring(0, 20) + "..." : ident;
     };
     ConsultarHistoricoTaxasComponent.prototype.listarReproducoes = function (self) {
-        self.http.get(this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarReproducoes).subscribe(function (data) {
+        self.http.get(self.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarReproducoes).subscribe(function (data) {
             var reprods = data;
             var newlist = [];
             for (var i = reprods.length - 1; i >= reprods.length - self.maxViewReproduction && i >= 0; i--) {
@@ -365,7 +365,7 @@ var ConsultarHistoricoTaxasComponent = /** @class */ (function () {
         });
     };
     ConsultarHistoricoTaxasComponent.prototype.listarBusinessEvents = function (self) {
-        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarBusinessEvents;
+        var url = self.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarBusinessEvents;
         url += "?horas=" + self.filterEvts.horas;
         var qtd = self.converterInt(self.filterEvts.qtd);
         if (qtd <= 0) {

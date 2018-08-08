@@ -251,7 +251,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   listarReproducoes(self) {
 
-    self.http.get(this.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
+    self.http.get(self.urlServerPresentation + environment.listarReproducoes).subscribe(data => {
       
       var reprods = <Reproducao[]>data;
       
@@ -266,7 +266,7 @@ export class ConsultarHistoricoTaxasComponent implements OnInit {
 
   listarBusinessEvents(self) {
 
-    var url = this.urlServerPresentation + environment.listarBusinessEvents;
+    var url = self.urlServerPresentation + environment.listarBusinessEvents;
     url += "?horas=" + self.filterEvts.horas;
 
     var qtd = self.converterInt(self.filterEvts.qtd);
