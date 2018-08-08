@@ -37,13 +37,19 @@ cd ..
 ./run.sh
 
 echo 'Deploy Process'
-cd ../../process-app/abrircenarioprocess/
+cd ../../../process-app/abrircenarioprocess/
+rm -r -f node_modules
+npm install
 plataforma --deploy local
 
-cd ../executartaxasprocess/
+cd ../executarcalculotaxas/
+rm -r -f node_modules
+npm install
 plataforma --deploy local
 
 cd ../calculartaxasprocess/
+rm -r -f node_modules
+npm install
 plataforma --deploy local
 
 node spec/_script/load_data_test.js
