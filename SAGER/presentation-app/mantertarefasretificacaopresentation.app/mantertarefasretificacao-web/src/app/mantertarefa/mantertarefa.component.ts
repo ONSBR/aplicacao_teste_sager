@@ -4,8 +4,6 @@ import { Usina } from '../model/Usina';
 import { TarefaRetificacao } from '../model/TarefaRetificacao';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { ResponseContentType } from '@angular/http';
-import { RequestOptions } from '@angular/http/src/base_request_options';
 
 @Component({
   selector: 'app-mantertarefa',
@@ -120,6 +118,7 @@ export class MantertarefaComponent implements OnInit {
     this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => {
       console.log(data);
       this.mensagemSucesso = 'Upload executado com sucesso';
+      this.listarTarefas();
     }, error => {
       console.log(`Erro ao realizar upload da planilha: ${error}`);
     });

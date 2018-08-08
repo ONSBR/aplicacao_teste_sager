@@ -6,6 +6,7 @@ const EventoMudancaEstadoOperativoTarefa = require('../model/eventomudancaestado
 const parseEventosXlsx = require('../helpers/parseeventosxlsx');
 const Util = require('../helpers/util');
 const EventoMudancaEstadoOperativoBusiness = require('eventos_business_rules/business/eventomudancaestadooperativobusiness');
+const extensions = require("./extensions");
 
 class ManterTarefasMediator {
 
@@ -17,7 +18,8 @@ class ManterTarefasMediator {
     }
 
     inserirTarefa(context, resolve, reject) {
-        var entity = new TarefaRetificacao(context.event.payload.nomeTarefa);
+        let entity = new TarefaRetificacao(context.event.payload.nomeTarefa);
+        entity.situacao = 'pendente';
         context.dataset.tarefaretificacao.insert(entity);
         resolve(entity);
     }
@@ -51,6 +53,13 @@ class ManterTarefasMediator {
             eventoMudancaEstadoOperativoTarefa.operacao = this.getSheetValue(planilha.Sheets.eventos, 'K', i)
             context.dataset.eventomudancaestadooperativotarefa.insert(eventoMudancaEstadoOperativoTarefa);
             retificacoes.push(eventoMudancaEstadoOperativoTarefa);
+        }
+
+        let tarefas = context.dataset.tarefaretificacao.collection.toArray();
+
+        if(tarefas.length > 0) {
+            tarefas[0].situacao = 'iniciada';
+            context.dataset.tarefaretificacao.update(tarefas[0]);
         }
 
         resolve(retificacoes);
@@ -110,17 +119,21 @@ class ManterTarefasMediator {
                 }).forEach(ugeBd => {
                     uges.add(ugeBd);
                 });    
-
             }
         });
 
-
         let eventosRetificacaoComOperacao = eventosPlanilha.filter(this.filterByOperacaoNotNull);
-        this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, reject);
+        this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, context.dataset, reject);
+        
         eventosRetificacaoComOperacao.forEach(eventoRetificacaoComOperacao => {
+            console.log('eventoRetificacaoComOperacao =' + eventoRetificacaoComOperacao.idEvento);
+            
             let eventosRetificaoBD = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoRetificacao => {
                 return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
             });
+
+            console.log('eventosRetificaoBD=');
+            console.log(eventosRetificaoBD);
 
             this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
         });
@@ -136,16 +149,22 @@ class ManterTarefasMediator {
         resolve();
     }
 
-    validarEventosPre(uges, eventosRetificacaoBD, tarefas, reject) {
+    validarEventosPre(uges, eventosRetificacaoBD, tarefas, dataset, reject) {
         uges.forEach(uge => {
             console.log('Validar UGE PRE');
             console.log(uge);
+
             let eventosPorUge = eventosRetificacaoBD.filter(eventoFiltro => {
                 return uge.idUge == eventoFiltro.idUge;
             });
-            eventosPorUge.sort(this.sortByIdEvento);
+            eventosPorUge.sort(this.sortByData);
+                        
+            let eventosBD = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoFiltro => {
+                return uge.idUge == eventoFiltro.idUge;
+            });
+            eventosBD.sort(this.sortByData);
             try {
-                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPre(eventosPorUge, uge);
+                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPre(eventosPorUge, eventosBD, uge, dataset);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
             }
@@ -155,26 +174,42 @@ class ManterTarefasMediator {
     validarEventosPos(uges, dataset, tarefas, reject) {
         uges.forEach(uge => {
             console.log('Validar UGE POS');
-            console.log(uge);
-            let eventosPorUge = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoFiltro => {
-                return uge.idUge == eventoFiltro.idUge;
-            });
-            eventosPorUge.sort(this.sortByIdEvento);
+            console.log(uge.idUge);
+            
+            let eventosPorUge = this.groupByUge(dataset, uge);
             try {
-                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, dataset);
+                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
             }
         });
     }
 
-    sortByIdEvento(eventoA, eventoB) {
-        if(eventoA.idEvento < eventoB.idEvento) {
+    groupByUge(dataset, uge) {
+        let eventosPorUge = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoFiltro => {
+            return uge.idUge == eventoFiltro.idUge;
+        });
+        eventosPorUge.sort(this.sortByData);
+        return eventosPorUge;
+    }
+
+    sortByData(eventoA, eventoB) {
+        if(eventoA.dataVerificada.getTotalSeconds() < eventoB.dataVerificada.getTotalSeconds()){
             return -1;
         }
 
-        if(eventoA.idEvento > eventoB.idEvento) {
+        if(eventoA.dataVerificada.getTotalSeconds() > eventoB.dataVerificada.getTotalSeconds()){
             return 1;
+        }
+
+        if(eventoA.dataVerificada.getTotalSeconds() == eventoB.dataVerificada.getTotalSeconds()) {
+            if(parseInt(eventoA.idEvento) < parseInt(eventoB.idEvento)) {
+                return -1;
+            }
+
+            if(parseInt(eventoA.idEvento) > parseInt(eventoB.idEvento)) {
+                return 1;
+            }
         }
 
         return 0;
@@ -201,9 +236,14 @@ class ManterTarefasMediator {
     }
 
     alterarEventoRetificacao(context, eventoRetificacaoComOperacao, eventoRetificaoBD) {
+        eventoRetificaoBD.idUsina = eventoRetificacaoComOperacao.idUsina;
+        eventoRetificaoBD.idUge = eventoRetificacaoComOperacao.idUge;
+        eventoRetificaoBD.idEvento = eventoRetificacaoComOperacao.idEvento;
         eventoRetificaoBD.idEstadoOperativo = eventoRetificacaoComOperacao.idEstadoOperativo;
         eventoRetificaoBD.idCondicaoOperativa = eventoRetificacaoComOperacao.idCondicaoOperativa;
+        eventoRetificaoBD.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
         eventoRetificaoBD.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
+        eventoRetificaoBD.numONS = eventoRetificacaoComOperacao.numONS;
         eventoRetificaoBD.eversao++;
         context.dataset.eventomudancaestadooperativo.update(eventoRetificaoBD);
     }
@@ -216,6 +256,7 @@ class ManterTarefasMediator {
                 type: "eventomudancaestadooperativo"
             }
         };
+        
         novoEventoRetificacao.idUsina = eventoRetificacaoComOperacao.idUsina;
         novoEventoRetificacao.idUge = eventoRetificacaoComOperacao.idUge;
         novoEventoRetificacao.idEvento = eventoRetificacaoComOperacao.idEvento;
@@ -268,7 +309,7 @@ class ManterTarefasMediator {
 
     validarQuantidadeEventos(eventos) {
         if (!eventos || eventos.length == 0) {
-            let error = new Error('Eventos de mudança de estado não encontrados.')
+            let error = new Error('Eventos de retificação de mudança de estado não encontrados.')
             throw error;
         }
     }
