@@ -110,6 +110,7 @@ export class MantertarefaComponent implements OnInit {
     this.http.post(urlUploadPlanilha, formData, { 'headers': headers }).subscribe(data => {
       console.log(data);
       this.mensagemSucesso = 'Upload executado com sucesso';
+      this.listarTarefas();
     }, error => {
       console.log(`Erro ao realizar upload da planilha: ${error}`);
     });
