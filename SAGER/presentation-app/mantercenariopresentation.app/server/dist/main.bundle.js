@@ -330,7 +330,7 @@ var DialogCenarioComponent = /** @class */ (function () {
     Object.defineProperty(DialogCenarioComponent.prototype, "urlServerPresentation", {
         get: function () {
             var url = window.location.href;
-            if (!url.startsWith("/")) {
+            if (!url.endsWith("/")) {
                 url += "/";
             }
             return url;
@@ -533,7 +533,7 @@ var MantemCenarioComponent = /** @class */ (function () {
     Object.defineProperty(MantemCenarioComponent.prototype, "urlServerPresentation", {
         get: function () {
             var url = window.location.href;
-            if (!url.startsWith("/")) {
+            if (!url.endsWith("/")) {
                 url += "/";
             }
             return url;

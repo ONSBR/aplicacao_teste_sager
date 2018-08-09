@@ -35,7 +35,8 @@ SDK.run((context, resolve, reject, fork) => {
             let eventosPorUge = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
                 return evento.idUge == idUge;
             });
-            eventosBusiness.aplicarRegrasCenario(eventosPorUge);
+            // TODO retiradas regras de consistências para teste
+            //eventosBusiness.aplicarRegrasCenario(eventosPorUge);
         });
         resolve();
     } catch (error) {
