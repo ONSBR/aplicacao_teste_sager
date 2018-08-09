@@ -115,7 +115,7 @@ class CenarioBusiness {
         context.dataset.cenario.collection.forEach(cenario => {
             context.dataset.cenario.delete(cenario);
             if(cenario.situacao == 'Ativo') {
-                SDK.dropgBranch(cenario.nomeCenario);
+                SDK.dropBranch(cenario.nomeCenario);
             }
         });
         context.dataset.regracenario.collection.forEach(regra => {
