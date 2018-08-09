@@ -54,4 +54,4 @@ plataforma --deploy local
 
 node spec/_script/load_data_test.js
 
-
+docker start maestro-sager-domain
