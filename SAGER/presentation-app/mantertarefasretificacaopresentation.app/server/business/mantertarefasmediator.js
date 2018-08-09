@@ -152,7 +152,7 @@ class ManterTarefasMediator {
     validarEventosPre(uges, eventosRetificacaoBD, tarefas, dataset, reject) {
         uges.forEach(uge => {
             console.log('Validar UGE PRE');
-            console.log(uge);
+            console.log(uge.idUge);
 
             let eventosPorUge = eventosRetificacaoBD.filter(eventoFiltro => {
                 return uge.idUge == eventoFiltro.idUge;
@@ -244,6 +244,7 @@ class ManterTarefasMediator {
         eventoRetificaoBD.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
         eventoRetificaoBD.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
         eventoRetificaoBD.numONS = eventoRetificacaoComOperacao.numONS;
+        eventoRetificaoBD.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
         eventoRetificaoBD.eversao++;
         context.dataset.eventomudancaestadooperativo.update(eventoRetificaoBD);
     }
