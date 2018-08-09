@@ -23,7 +23,7 @@ export class MantertarefaComponent implements OnInit {
 
   get urlServerPresentation() {
     var url = window.location.href;
-    if (!url.startsWith("/")) {
+    if (!url.endsWith("/")) {
       url += "/";
     }
     return url;
