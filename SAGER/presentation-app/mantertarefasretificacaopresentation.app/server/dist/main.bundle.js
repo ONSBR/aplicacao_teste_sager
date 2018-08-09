@@ -157,7 +157,7 @@ var MantertarefaComponent = /** @class */ (function () {
     Object.defineProperty(MantertarefaComponent.prototype, "urlServerPresentation", {
         get: function () {
             var url = window.location.href;
-            if (!url.startsWith("/")) {
+            if (!url.endsWith("/")) {
                 url += "/";
             }
             return url;
