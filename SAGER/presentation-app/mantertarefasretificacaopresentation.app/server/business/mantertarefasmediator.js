@@ -126,14 +126,9 @@ class ManterTarefasMediator {
         this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, context.dataset, reject);
         
         eventosRetificacaoComOperacao.forEach(eventoRetificacaoComOperacao => {
-            console.log('eventoRetificacaoComOperacao =' + eventoRetificacaoComOperacao.idEvento);
-            
             let eventosRetificaoBD = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoRetificacao => {
                 return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
             });
-
-            console.log('eventosRetificaoBD=');
-            console.log(eventosRetificaoBD);
 
             this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
         });
@@ -178,7 +173,7 @@ class ManterTarefasMediator {
             
             let eventosPorUge = this.groupByUge(dataset, uge);
             try {
-                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge);
+                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge, dataset);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
             }

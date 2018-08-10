@@ -95,10 +95,9 @@ class ManterTarefasController {
       * @description aplica a tarefa de retificação
       */
     aplicarTarefa(request, response) {
-        let nomeTarefa = request.query.nomeTarefa;
-        dispatcher.dispatch("presentation.aplica.tarefa.request", { nomeTarefa: nomeTarefa }).
+        dispatcher.dispatch("presentation.aplica.tarefa.request", { nomeTarefa: request.body.tarefa.nome }).
             then(data => {
-                    response.send(data);
+                response.send(data);
             }).catch(e => {
                 this.responseError('Erro durante a aplicação da tarefa', e, response);
             });

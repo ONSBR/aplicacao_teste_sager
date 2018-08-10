@@ -161,10 +161,16 @@ export class MantertarefaComponent implements OnInit {
 
   aplicar(tarefa) {
     this.limparMensagens();
-    const url = this.urlServerPresentation + environment.aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
-    this.http.get(url).subscribe(
+    const url = this.urlServerPresentation + environment.aplicarTarefa;
+    this.http.post(url, { 'tarefa': tarefa }).subscribe(
       data => {
-        this.mensagemSucesso = 'Retificação aplicada com sucesso!';
+        const response: any = data;
+        if (response.meta.status === 'commited') {
+          this.mensagemSucesso = 'Retificação aplicada com sucesso!';
+        } else if (response.meta.status === 'reprocessing_request') {
+          this.mensagemSucesso = `Retificação pendente de aprovação. O reprocessamento ${response.meta.reprocessing.id} foi gerado e precisa ser aprovado.`;
+        }
+
         this.listarTarefas();
       }, error => {
         console.log(`Erro ao aplicar tarefa: ${error}`);

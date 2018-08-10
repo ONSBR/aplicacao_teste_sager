@@ -2,12 +2,15 @@ operations:
   - name: presentation.insere.tarefa.request
     event: presentation.insere.tarefa.request
     commit: true
+    skip_reprocessing: true
   - name: presentation.uploadplanilha.tarefa.request
     event: presentation.uploadplanilha.tarefa.request
     commit: true
+    skip_reprocessing: true
   - name: presentation.exclui.tarefa.request
     event: presentation.exclui.tarefa.request
     commit: true
+    skip_reprocessing: true
   - name: presentation.aplica.tarefa.request
     event: presentation.aplica.tarefa.request
     commit: true
