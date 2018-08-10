@@ -261,6 +261,7 @@ class ManterTarefasMediator {
         novoEventoRetificacao.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
         novoEventoRetificacao.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
         novoEventoRetificacao.numONS = eventoRetificacaoComOperacao.numONS;
+        novoEventoRetificacao.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
         novoEventoRetificacao.eversao = 1;
         context.dataset.eventomudancaestadooperativo.insert(novoEventoRetificacao);
     }
