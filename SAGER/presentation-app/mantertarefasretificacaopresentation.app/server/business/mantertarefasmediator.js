@@ -126,14 +126,9 @@ class ManterTarefasMediator {
         this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, context.dataset, reject);
         
         eventosRetificacaoComOperacao.forEach(eventoRetificacaoComOperacao => {
-            console.log('eventoRetificacaoComOperacao =' + eventoRetificacaoComOperacao.idEvento);
-            
             let eventosRetificaoBD = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoRetificacao => {
                 return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
             });
-
-            console.log('eventosRetificaoBD=');
-            console.log(eventosRetificaoBD);
 
             this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
         });
