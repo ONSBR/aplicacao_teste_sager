@@ -403,29 +403,33 @@ var DialogCenarioComponent = /** @class */ (function () {
             alert('Informe os campos: Nome do Cenário, Data Inicial, Data Final e Justificativa!');
         }
     };
+    DialogCenarioComponent.prototype.addCampoInvalido = function (camposInvalidos, campo) {
+        return camposInvalidos + (camposInvalidos && camposInvalidos != "" ? ", " : "") + campo;
+    };
     DialogCenarioComponent.prototype.validarRegras = function () {
+        var _this = this;
         var retorno = true;
         if (this.data.regras && this.data.regras.length > 0) {
             this.data.regras.forEach(function (it) {
                 if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara || !it.dataInicioVigencia || !it.dataFimVigencia) {
-                    var camposInvalidos = '';
+                    var camposInvalidos = "";
                     if (!it.nomeRegra) {
-                        camposInvalidos += "Nome da Regra";
+                        camposInvalidos = _this.addCampoInvalido(camposInvalidos, "Nome da Regra");
                     }
                     if (!it.tipoRegra) {
-                        camposInvalidos += "Tipo da Regra";
+                        camposInvalidos = _this.addCampoInvalido(camposInvalidos, "Tipo da Regra");
                     }
                     if (!it.regraDe) {
-                        camposInvalidos += "Valor Origem";
+                        camposInvalidos = _this.addCampoInvalido(camposInvalidos, "Valor Origem");
                     }
                     if (!it.regraPara) {
-                        camposInvalidos += "Valor Destino";
+                        camposInvalidos = _this.addCampoInvalido(camposInvalidos, "Valor Destino");
                     }
                     if (!it.dataInicioVigencia) {
-                        camposInvalidos += "Data Início da Vigência";
+                        camposInvalidos = _this.addCampoInvalido(camposInvalidos, "Data Início da Vigência");
                     }
                     if (!it.dataFimVigencia) {
-                        camposInvalidos += "Data Fim da Vigência";
+                        camposInvalidos = _this.addCampoInvalido(camposInvalidos, "Data Fim da Vigência");
                     }
                     alert('Informe os dados da regra! Campos Inválidos: ' + camposInvalidos);
                     retorno = false;
