@@ -67,6 +67,7 @@ class CenarioBusiness {
             novoEvento.idEvento = this.guid();
             dataset.eventomudancaestadooperativo.insert(novoEvento);
         } else if(!this.isEventoEspelho(eventoToUpdate)){
+            console.log("update.eventoToUpdate: " + eventoToUpdate.id);
             eventoToUpdate.idEstadoOperativo = regra.regraPara;
             dataset.eventomudancaestadooperativo.update(eventoToUpdate);
             this.refletirParaEventoEspelho(eventoToUpdate, eventos, dataset);
@@ -155,12 +156,14 @@ class CenarioBusiness {
     }
     
     filterByIdEstadoOperativoAndDataVigencia(evento, regra) {
-        return (evento.idEstadoOperativo == regra.regraDe && this.filterByDataVigencia(evento, regra));
+        return (evento.idEstadoOperativo === regra.regraDe && this.filterByDataVigencia(evento, regra));
     }
 
     filterByDataVigencia(evento, regra) {
-        return evento.dataVerificada >= regra.dataInicioVigencia && 
-            evento.dataVerificada <= regra.dataFimVigencia;
+        var timeEvt = evento.dataVerificada.getTime();
+        var timeRegraIni = regra.dataInicioVigencia.getTime();
+        var timeRegraFim = regra.dataFimVigencia.getTime();
+        return timeEvt >= timeRegraIni && timeEvt <= timeRegraFim;
     }
 
 

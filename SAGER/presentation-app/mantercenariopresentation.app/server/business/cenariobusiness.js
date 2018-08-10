@@ -111,7 +111,7 @@ class CenarioBusiness {
      * @param {reject} reject
      */
     excluirCenario(context, resolve, reject) {
-        console.log('Excluir cenario='+cenario.nomeCenario);
+        console.log('Excluir cenario');
         context.dataset.cenario.collection.forEach(cenario => {
             context.dataset.cenario.delete(cenario);
             if(cenario.situacao == 'Ativo') {
