@@ -173,7 +173,7 @@ class ManterTarefasMediator {
             
             let eventosPorUge = this.groupByUge(dataset, uge);
             try {
-                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge);
+                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge, dataset);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
             }
