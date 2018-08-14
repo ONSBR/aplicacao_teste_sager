@@ -1,5 +1,6 @@
 const SDK = require('plataforma-sdk/worker/sdk');
 const Cenario = require('./abrircenario/cenario');
+const CenarioBusiness = require('./criterios/cenariobusiness');
 const EventosBusiness = require('eventos_business_rules/business/eventomudancaestadooperativobusiness');
 
 /**
@@ -35,12 +36,13 @@ SDK.run((context, resolve, reject, fork) => {
             let eventosPorUge = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(evento => {
                 return evento.idUge == idUge;
             });
-            // TODO retiradas regras de consistências para teste
-            //eventosBusiness.aplicarRegrasCenario(eventosPorUge);
+            eventosPorUge.sort(CenarioBusiness.sortByData);
+            eventosBusiness.aplicarRegrasCenario(eventosPorUge, context.dataset);
         });
         resolve();
     } catch (error) {
         console.log('error: ' + error.stack);
         reject(error);
     }
+
 });

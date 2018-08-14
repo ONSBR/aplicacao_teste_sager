@@ -1,3 +1,4 @@
+const extensions = require("./extensions");
 class CenarioBusiness {
 
     /**
@@ -172,7 +173,27 @@ class CenarioBusiness {
         return timeEvt >= timeRegraIni && timeEvt <= timeRegraFim;
     }
 
+    static sortByData(eventoA, eventoB) {
+        if(eventoA.dataVerificada.getTotalSeconds() < eventoB.dataVerificada.getTotalSeconds()){
+            return -1;
+        }
 
+        if(eventoA.dataVerificada.getTotalSeconds() > eventoB.dataVerificada.getTotalSeconds()){
+            return 1;
+        }
+
+        if(eventoA.dataVerificada.getTotalSeconds() == eventoB.dataVerificada.getTotalSeconds()) {
+            if(parseInt(eventoA.idEvento) < parseInt(eventoB.idEvento)) {
+                return -1;
+            }
+
+            if(parseInt(eventoA.idEvento) > parseInt(eventoB.idEvento)) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
 
     guid() {
         function s4() {
