@@ -21,8 +21,8 @@ describe('Critério: ', function () {
             { idEvento: 2, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 0, 2) },
             { idEvento: 3, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 0, 3) },
             { idEvento: 4, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOT', dataVerificada: new Date(2018, 0, 4) },
-            { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 0, 31)},
-            { idEvento: 6, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 1, 1, 0, 0, 0)}
+            { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idEstadoOperativo: 'LIG', dataVerificada: new Date(2018, 0, 31)},
+            { idEvento: 6, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', idEstadoOperativo: 'LIG', dataVerificada: new Date(2018, 1, 1, 0, 0, 0)}
         ];
 
         dataset = {
@@ -35,7 +35,12 @@ describe('Critério: ', function () {
     });
 
     it('RNH064 - Reflexão de alteração de último evento em evento espelho.', () => {
-        let evento = { idEvento: 5, idUge: 'ALUXG-0UG1', potenciaDisponivel: 1000, idCondicaoOperativa: 'NOR', dataVerificada: new Date(2018, 0, 31)};
+        let evento = { idEvento: 5, 
+            idUge: 'ALUXG-0UG1', 
+            potenciaDisponivel: 1000, 
+            idCondicaoOperativa: 'NOR', 
+            idEstadoOperativo: 'LIG', 
+            dataVerificada: new Date(2018, 0, 31)};
         cenarioBusiness.updatePotenciaDisponivel(regraPotenciaDisponivelMaior, evento, eventos, dataset);
 
         expect(update.calls.count()).toEqual(2);
@@ -45,6 +50,7 @@ describe('Critério: ', function () {
             idUge: 'ALUXG-0UG1',
             potenciaDisponivel: 5000,
             idCondicaoOperativa: 'NOR',
+            idEstadoOperativo: 'LIG',
             idClassificacaoOrigem: '',
             dataVerificada: new Date(2018, 0, 31)
         });
@@ -53,6 +59,7 @@ describe('Critério: ', function () {
             idUge: 'ALUXG-0UG1',
             potenciaDisponivel: 5000,
             idCondicaoOperativa: 'NOR',
+            idEstadoOperativo: 'LIG',
             idClassificacaoOrigem: '',
             dataVerificada: new Date(2018, 1, 1, 0, 0, 0)
         });

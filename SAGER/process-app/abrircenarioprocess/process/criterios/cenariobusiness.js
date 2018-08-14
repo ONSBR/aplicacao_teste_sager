@@ -29,6 +29,11 @@ class CenarioBusiness {
     }
 
     updatePotenciaEvento(regra, eventoToUpdate, eventos, dataset) {
+        console.log('-----');
+        console.log(dataset);
+        console.log('-----');
+        
+        
         if(this.isEventoEspelhoEPrimeiroEvento(eventoToUpdate, eventos)) {
             let novoEvento = Object.assign({}, eventoToUpdate);
             novoEvento.potenciaDisponivel = regra.regraPara;
@@ -108,6 +113,7 @@ class CenarioBusiness {
             proximoEvento.idClassificacaoOrigem = eventoToUpdate.idClassificacaoOrigem;
             proximoEvento.idCondicaoOperativa = eventoToUpdate.idCondicaoOperativa;
             proximoEvento.potenciaDisponivel = eventoToUpdate.potenciaDisponivel;
+            proximoEvento.idEstadoOperativo = eventoToUpdate.idEstadoOperativo;
             dataset.eventomudancaestadooperativo.update(proximoEvento);
         }
     }
