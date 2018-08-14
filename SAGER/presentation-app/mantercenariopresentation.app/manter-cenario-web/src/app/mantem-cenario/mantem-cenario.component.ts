@@ -16,9 +16,13 @@ export class MantemCenarioComponent implements OnInit {
 
   private presentationId: string = Guid.newGuid();
 
+  maxViewBusinessEvents = 20;
+  filterEvts = { horas: 1, qtd: 20};
+
   public filtroConsulta = new FiltroConsulta();
   public cenarios: Cenario[] = [];
   public cenarioSelecionado: Cenario = new Cenario();
+  public businessEvents = [];
   public environment;
 
   constructor(private http: HttpClient, private dialog: MatDialog) {
@@ -34,6 +38,8 @@ export class MantemCenarioComponent implements OnInit {
   }
 
   ngOnInit() {
+    const self = this;
+    this.pollingConsultaBusinessEvents(self);
   }
 
   pesquisar() {
@@ -165,6 +171,58 @@ export class MantemCenarioComponent implements OnInit {
     });
   }
 
+  pollingConsultaBusinessEvents(self) {
+    const listarBusinessEvents = this.listarBusinessEvents;
+    listarBusinessEvents(self);
+    setInterval(function () { listarBusinessEvents(self)}, 10000);
+  }
+
+  converterInt(valor) {
+    let retorno = 0;
+    try {
+      retorno = parseInt(valor);
+    } catch (error) { }
+    return retorno;
+  }
+
+  listarBusinessEvents(self) {
+
+    let url = self.urlServerPresentation + environment.listarBusinessEvents;
+    url += '?horas=' + self.filterEvts.horas;
+
+    let qtd = self.converterInt(self.filterEvts.qtd);
+    if (qtd <= 0) {
+      qtd = self.maxViewBusinessEvents;
+    }
+
+    self.http.get(url).subscribe(data => {
+      const newlist = [];
+      if (data && data.length > 0) {
+        for (let i = data.length - 1; i >= data.length - qtd && i >= 0; i--) {
+          newlist.push( self.descBusinessEvent(data[i]));
+        }
+      }
+      self.businessEvents = newlist;
+    });
+  }
+
+  descBusinessEvent(businessEvent) {
+    let retorno = { data: new Date(businessEvent.timestamp), msg: '' };
+
+    if (businessEvent.name == 'aplicar.criterios.cenario') {
+      retorno.msg = 'Solicitação de abertura de cenário ' + businessEvent.payload.cenario.nomeCenario + ' recebida.';
+    } else if (businessEvent.name == 'aplicar.criterios.cenario.done' ) {
+      retorno.msg = 'Cenário aberto com sucesso.';
+    } else if (businessEvent.name == 'aplicar.criterios.error') {
+      retorno.msg = 'Erro na abertura do cenário: ' + businessEvent.payload.message;
+    } else if (businessEvent.name == 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request') {
+      retorno.msg = 'Solicitação de incorporação recebida: ' + businessEvent.payload.branch  + ' recebida.';
+    } else if (businessEvent.name == 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request.done') {
+      retorno.msg = 'Cenário incorporado com sucesso.';
+    }
+
+    return retorno;
+  }
 }
 
 let retorno: Cenario;
@@ -182,6 +240,8 @@ let retorno: Cenario;
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
+
+
 
 class Guid {
   static newGuid() {

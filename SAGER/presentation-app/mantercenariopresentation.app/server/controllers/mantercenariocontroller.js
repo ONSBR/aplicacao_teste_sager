@@ -145,6 +145,36 @@ class ManterCenarioController {
                 console.log(`Erro durante a incoporação do cenario: ${e.toString()}`);
             });
     }
+
+    listarBusinessEvents(request, response, next) {
+
+        let filters = {};
+
+        let horas = request.query.horas;
+        let qtd = request.query.qtd;
+
+        filters["last"] = horas ? horas+"h": "1h";
+
+        let url = config.getUrlFiltroEvents(filters);
+
+        this.domainPromiseHelper.getDomainPromise(url).then(result => {
+            
+            var retorno = [];
+            if (result && result.result && result.result.length > 0) {
+
+                retorno = result.result.filter(it => { return it.name.startsWith('aplicar.criterios.cenario') 
+                                || it.name.startsWith('eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request')
+                                || it.name.startsWith('aplicar.criterios.error') });
+            }
+
+            response.send(retorno);
+        }).catch(e => { 
+            console.log(`Erro durante a consulta de eventos de negócio: ${e.toString()}`); 
+            response.statusCode = 400;
+            if (next) next(e);
+        });
+    }
+
     
 }
 

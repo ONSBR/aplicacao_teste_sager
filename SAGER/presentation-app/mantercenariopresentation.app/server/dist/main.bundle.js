@@ -492,7 +492,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/mantem-cenario/mantem-cenario.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Manter Cenário</h2>\r\n\r\n<table border=\"0\">\r\n  <tr>\r\n    <td width=\"1000\" style=\"vertical-align:top\">\r\n      <fieldset style=\"height: 120px\">\r\n        <div>\r\n          <span>Nome do Cenário:\r\n            <input type=\"text\" [(ngModel)]=\"filtroConsulta.nome\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Data Inicial:\r\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataInicial\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Data Final:\r\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataFinal\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Ativo:\r\n            <input type=\"checkbox\" [(ngModel)]=\"filtroConsulta.ativo\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>\r\n            <button class=\"button\" (click)='pesquisar($event)'>Pesquisar</button>\r\n            <button class=\"button\" (click)='incluir($event)'>Incluir</button>\r\n          </span>\r\n        </div>\r\n      </fieldset>\r\n      <div>\r\n        <span>\r\n          <h3>Cenários:</h3>\r\n          <table border=\"0\" width=\"1000\" class=\"grid-entidades\">\r\n            <tr>\r\n              <th width=\"130\">Id</th>\r\n              <th width=\"150\">Nome</th>\r\n              <th width=\"90\">Dt.Ini Vig.</th>\r\n              <th width=\"90\">Dt.Fim Vig.</th>\r\n              <th>Justificativa</th>\r\n              <th width=\"50\">Usina</th>\r\n              <th width=\"80\">Situação</th>\r\n              <th width=\"150\" colspan=\"3\">Opções</th>\r\n            </tr>\r\n            <tr *ngFor=\"let cenario of cenarios\" style=\"cursor: pointer\">\r\n              <td (click)='alterar(cenario)' [title]=\"cenario.idCenario\">\r\n                {{printIdentify(cenario.idCenario)}}\r\n              </td>\r\n              <td (click)='alterar(cenario)'>\r\n                <b *ngIf=\"cenarioSelecionado.idCenario == cenario.idCenario\">\r\n                  {{ cenario.nomeCenario }}\r\n                </b>\r\n                <span *ngIf=\"cenarioSelecionado.idCenario != cenario.idCenario\">\r\n                  {{ cenario.nomeCenario }}\r\n                </span>\r\n              </td>\r\n              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia | date: 'dd/MM/yyyy' }}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia | date: 'dd/MM/yyyy' }}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.justificativa}}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.idUsina}}</td>\r\n              <td>{{cenario.situacao}}</td>\r\n              <td>\r\n                <button class=\"button\" (click)='excluir(cenario)'>Excluir</button>\r\n              </td>\r\n              <td>\r\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Inativo'\" >Ativar</button>\r\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Ativo'\" >Inativar</button>\r\n              </td>\r\n              <td>\r\n                <button class=\"button\" (click)='incorporar(cenario)' *ngIf=\"cenario.situacao != 'Incorporado'\">Incorporar</button>\r\n              </td>\r\n            </tr>\r\n          </table>\r\n        </span>\r\n      </div>\r\n    </td>\r\n  </tr>\r\n</table>"
+module.exports = "<h2>Manter Cenário</h2>\r\n\r\n<table border=\"0\">\r\n  <tr>\r\n    <td width=\"1000\" style=\"vertical-align:top\">\r\n      <fieldset style=\"height: 120px\">\r\n        <div>\r\n          <span>Nome do Cenário:\r\n            <input type=\"text\" [(ngModel)]=\"filtroConsulta.nome\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Data Inicial:\r\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataInicial\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Data Final:\r\n            <input type=\"date\" [(ngModel)]=\"filtroConsulta.dataFinal\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>Ativo:\r\n            <input type=\"checkbox\" [(ngModel)]=\"filtroConsulta.ativo\" />\r\n          </span>\r\n        </div>\r\n        <div>\r\n          <span>\r\n            <button class=\"button\" (click)='pesquisar($event)'>Pesquisar</button>\r\n            <button class=\"button\" (click)='incluir($event)'>Incluir</button>\r\n          </span>\r\n        </div>\r\n      </fieldset>\r\n      <div>\r\n        <span>\r\n          <h3>Cenários:</h3>\r\n          <table border=\"0\" width=\"1000\" class=\"grid-entidades\">\r\n            <tr>\r\n              <th width=\"130\">Id</th>\r\n              <th width=\"150\">Nome</th>\r\n              <th width=\"90\">Dt.Ini Vig.</th>\r\n              <th width=\"90\">Dt.Fim Vig.</th>\r\n              <th>Justificativa</th>\r\n              <th width=\"50\">Usina</th>\r\n              <th width=\"80\">Situação</th>\r\n              <th width=\"150\" colspan=\"3\">Opções</th>\r\n            </tr>\r\n            <tr *ngFor=\"let cenario of cenarios\" style=\"cursor: pointer\">\r\n              <td (click)='alterar(cenario)' [title]=\"cenario.idCenario\">\r\n                {{printIdentify(cenario.idCenario)}}\r\n              </td>\r\n              <td (click)='alterar(cenario)'>\r\n                <b *ngIf=\"cenarioSelecionado.idCenario == cenario.idCenario\">\r\n                  {{ cenario.nomeCenario }}\r\n                </b>\r\n                <span *ngIf=\"cenarioSelecionado.idCenario != cenario.idCenario\">\r\n                  {{ cenario.nomeCenario }}\r\n                </span>\r\n              </td>\r\n              <td (click)='alterar(cenario)'>{{cenario.dataInicioVigencia | date: 'dd/MM/yyyy' }}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.dataFimVigencia | date: 'dd/MM/yyyy' }}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.justificativa}}</td>\r\n              <td (click)='alterar(cenario)'>{{cenario.idUsina}}</td>\r\n              <td>{{cenario.situacao}}</td>\r\n              <td>\r\n                <button class=\"button\" (click)='excluir(cenario)'>Excluir</button>\r\n              </td>\r\n              <td>\r\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Inativo'\">Ativar</button>\r\n                <button class=\"button\" (click)='ativarInativar(cenario)' *ngIf=\"cenario.situacao == 'Ativo'\">Inativar</button>\r\n              </td>\r\n              <td>\r\n                <button class=\"button\" (click)='incorporar(cenario)' *ngIf=\"cenario.situacao != 'Incorporado'\">Incorporar</button>\r\n              </td>\r\n            </tr>\r\n          </table>\r\n        </span>\r\n      </div>\r\n    </td>\r\n  </tr>\r\n  <tr>\r\n    <h3>Eventos de Negócio:</h3>\r\n    <fieldset>\r\n      <div>\r\n        <span>\r\n          <b>Eventos de Negócio</b>&nbsp;\r\n          <input size=\"1\" type=\"text\" [(ngModel)]=\"filterEvts.horas\" />h &nbsp;/&nbsp; Qtd.Evts:&nbsp;\r\n          <input size=\"1\" type=\"text\" [(ngModel)]=\"filterEvts.qtd\" />\r\n          <br>\r\n        </span>\r\n      </div>\r\n      <div>\r\n        <span>\r\n          <ul>\r\n            <li *ngFor=\"let bevent of businessEvents\">\r\n              <b>{{bevent.data | date: 'dd/MM/yyyy HH:mm:ss'}}:</b> {{bevent.msg}}\r\n            </li>\r\n          </ul>\r\n        </span>\r\n      </div>\r\n    </fieldset>\r\n  </tr>\r\n</table>"
 
 /***/ }),
 
@@ -529,9 +529,12 @@ var MantemCenarioComponent = /** @class */ (function () {
         this.http = http;
         this.dialog = dialog;
         this.presentationId = Guid.newGuid();
+        this.maxViewBusinessEvents = 20;
+        this.filterEvts = { horas: 1, qtd: 20 };
         this.filtroConsulta = new __WEBPACK_IMPORTED_MODULE_2__filtro_FiltroConsulta_model__["a" /* FiltroConsulta */]();
         this.cenarios = [];
         this.cenarioSelecionado = new __WEBPACK_IMPORTED_MODULE_4__model_model__["a" /* Cenario */]();
+        this.businessEvents = [];
         this.environment = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */];
     }
     Object.defineProperty(MantemCenarioComponent.prototype, "urlServerPresentation", {
@@ -546,6 +549,8 @@ var MantemCenarioComponent = /** @class */ (function () {
         configurable: true
     });
     MantemCenarioComponent.prototype.ngOnInit = function () {
+        var self = this;
+        this.pollingConsultaBusinessEvents(self);
     };
     MantemCenarioComponent.prototype.pesquisar = function () {
         var _this = this;
@@ -663,6 +668,52 @@ var MantemCenarioComponent = /** @class */ (function () {
                 }
             }
         });
+    };
+    MantemCenarioComponent.prototype.pollingConsultaBusinessEvents = function (self) {
+        var listarBusinessEvents = this.listarBusinessEvents;
+        listarBusinessEvents(self);
+        setInterval(function () { listarBusinessEvents(self); }, 10000);
+    };
+    MantemCenarioComponent.prototype.converterInt = function (valor) {
+        var retorno = 0;
+        try {
+            retorno = parseInt(valor);
+        }
+        catch (error) { }
+        return retorno;
+    };
+    MantemCenarioComponent.prototype.listarBusinessEvents = function (self) {
+        var url = self.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].listarBusinessEvents;
+        url += '?horas=' + self.filterEvts.horas;
+        var qtd = self.converterInt(self.filterEvts.qtd);
+        if (qtd <= 0) {
+            qtd = self.maxViewBusinessEvents;
+        }
+        self.http.get(url).subscribe(function (data) {
+            var newlist = [];
+            if (data && data.length > 0) {
+                for (var i = data.length - 1; i >= data.length - qtd && i >= 0; i--) {
+                    newlist.push(self.descBusinessEvent(data[i]));
+                }
+            }
+            self.businessEvents = newlist;
+        });
+    };
+    MantemCenarioComponent.prototype.descBusinessEvent = function (businessEvent) {
+        var retorno = { data: new Date(businessEvent.timestamp), msg: '' };
+        if (businessEvent.name == 'aplicar.criterios.cenario') {
+            retorno.msg = 'Solicitação de abertura de cenário ' + businessEvent.payload.cenario.nomeCenario + ' recebida.';
+        }
+        else if (businessEvent.name == 'aplicar.criterios.cenario.done') {
+            retorno.msg = 'Cenário aberto com sucesso.';
+        }
+        else if (businessEvent.name == 'aplicar.criterios.error') {
+            retorno.msg = 'Erro na abertura do cenário: ' + businessEvent.payload.message;
+        }
+        else if (businessEvent.name == 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request') {
+            retorno.msg = 'Solicitação de incorporação recebida: ' + businessEvent.payload.branch + ' recebida.';
+        }
+        return retorno;
     };
     MantemCenarioComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
@@ -783,7 +834,8 @@ var environment = {
     obterRegrasCriticas: 'obterRegrasCriticas',
     listarUsinas: 'listarUsinas',
     pesquisarUsinaPorIdUsina: 'pesquisarUsinaPorIdUsina',
-    listarUnidadesGeradoras: 'listarUnidadesGeradoras'
+    listarUnidadesGeradoras: 'listarUnidadesGeradoras',
+    listarBusinessEvents: 'listarBusinessEvents'
 };
 
 

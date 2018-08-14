@@ -66,8 +66,8 @@
                 <button class="button" (click)='excluir(cenario)'>Excluir</button>
               </td>
               <td>
-                <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Inativo'" >Ativar</button>
-                <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Ativo'" >Inativar</button>
+                <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Inativo'">Ativar</button>
+                <button class="button" (click)='ativarInativar(cenario)' *ngIf="cenario.situacao == 'Ativo'">Inativar</button>
               </td>
               <td>
                 <button class="button" (click)='incorporar(cenario)' *ngIf="cenario.situacao != 'Incorporado'">Incorporar</button>
@@ -77,5 +77,27 @@
         </span>
       </div>
     </td>
+  </tr>
+  <tr>
+    <h3>Eventos de Negócio:</h3>
+    <fieldset>
+      <div>
+        <span>
+          <b>Eventos de Negócio</b>&nbsp;
+          <input size="1" type="text" [(ngModel)]="filterEvts.horas" />h &nbsp;/&nbsp; Qtd.Evts:&nbsp;
+          <input size="1" type="text" [(ngModel)]="filterEvts.qtd" />
+          <br>
+        </span>
+      </div>
+      <div>
+        <span>
+          <ul>
+            <li *ngFor="let bevent of businessEvents">
+              <b>{{bevent.data | date: 'dd/MM/yyyy HH:mm:ss'}}:</b> {{bevent.msg}}
+            </li>
+          </ul>
+        </span>
+      </div>
+    </fieldset>
   </tr>
 </table>

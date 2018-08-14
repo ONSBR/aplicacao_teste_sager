@@ -14,5 +14,6 @@ export const environment = {
   obterRegrasCriticas: 'obterRegrasCriticas',
   listarUsinas: 'listarUsinas',
   pesquisarUsinaPorIdUsina: 'pesquisarUsinaPorIdUsina',
-  listarUnidadesGeradoras: 'listarUnidadesGeradoras'
+  listarUnidadesGeradoras: 'listarUnidadesGeradoras',
+  listarBusinessEvents: 'listarBusinessEvents'
 };

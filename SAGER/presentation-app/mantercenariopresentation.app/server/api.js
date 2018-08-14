@@ -59,6 +59,10 @@ app.post("/incorporarCenario", (req, res) => {
     manterCenarioController.incorporarCenario(req, res);
 });
 
+app.get("/listarBusinessEvents", (req, res, next) => {
+    manterCenarioController.listarBusinessEvents(req, res, next);
+});
+
 module.exports = function(){
     app.listen(PORT, function () {
         console.log("App listening on PORT " + PORT);

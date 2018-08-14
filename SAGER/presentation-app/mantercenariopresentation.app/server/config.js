@@ -2,6 +2,7 @@ var config = {};
 
 const DOMAIN_PORT = 9110;
 const DOMAIN_HOST = 'sager-domain';
+const EVENT_MANAGER_HOST = 'event_manager';
 
 config.DOMAIN_PORT = DOMAIN_PORT;
 config.DOMAIN_HOST = DOMAIN_HOST;
@@ -46,6 +47,26 @@ config.getUrlFiltroRegrasPorIdCenario = function (idCenario) {
 
 config.getUrlFiltroUsina = function (idUsina) {
     return `${config.URL_USINA_SAGER}?filter=byIdUsina&idUsina=${idUsina}`;
+}
+
+config.getUrlFiltroEvents = function (filtersArray) {
+    return `http://${EVENT_MANAGER_HOST}:8081/events` + objFilterToQueryString(filtersArray);
+}
+
+function objFilterToQueryString(filtersArray) {
+    var queryString = "";
+    var keys = Object.keys(filtersArray);
+    for(var i=0; i < keys.length; i++) {
+        if (queryString) {
+            queryString += "&";
+        }
+        var key = keys[i];
+        queryString += key + "=" + filtersArray[key];
+    }
+    if (queryString) {
+        queryString = "?" + queryString;
+    }
+    return queryString;
 }
 
 module.exports = config;
