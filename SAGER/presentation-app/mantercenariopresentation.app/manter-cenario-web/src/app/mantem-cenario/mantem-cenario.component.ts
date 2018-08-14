@@ -216,7 +216,7 @@ export class MantemCenarioComponent implements OnInit {
     } else if (businessEvent.name == 'aplicar.criterios.error') {
       retorno.msg = 'Erro na abertura do cenário: ' + businessEvent.payload.message;
     } else if (businessEvent.name == 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request') {
-      retorno.msg = 'Solicitação de incorporação recebida: ' + businessEvent.payload.branch  + ' recebida.';
+      retorno.msg = 'Solicitação de incorporação: ' + businessEvent.payload.branch  + ' recebida.';
     } else if (businessEvent.name == 'eb60a12f-130d-4b8b-8b0d-a5f94d39cb0b.merge.request.done') {
       retorno.msg = 'Cenário incorporado com sucesso.';
     }
