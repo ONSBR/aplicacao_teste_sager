@@ -56,7 +56,7 @@ app.get("/downloadplanilha", (req, res) => {
     manterTarefasController.downloadPlanilha(req, res);
 });
 
-app.get("/aplicartarefa", (req, res) => {
+app.post("/aplicartarefa", (req, res) => {
     manterTarefasController.aplicarTarefa(req, res);
 });
 

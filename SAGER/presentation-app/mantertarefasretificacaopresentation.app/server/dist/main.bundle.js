@@ -157,7 +157,7 @@ var MantertarefaComponent = /** @class */ (function () {
     Object.defineProperty(MantertarefaComponent.prototype, "urlServerPresentation", {
         get: function () {
             var url = window.location.href;
-            if (!url.startsWith("/")) {
+            if (!url.endsWith("/")) {
                 url += "/";
             }
             return url;
@@ -277,9 +277,15 @@ var MantertarefaComponent = /** @class */ (function () {
     MantertarefaComponent.prototype.aplicar = function (tarefa) {
         var _this = this;
         this.limparMensagens();
-        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].aplicarTarefa + '?nomeTarefa=' + tarefa.nome;
-        this.http.get(url).subscribe(function (data) {
-            _this.mensagemSucesso = 'Retificação aplicada com sucesso!';
+        var url = this.urlServerPresentation + __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].aplicarTarefa;
+        this.http.post(url, { 'tarefa': tarefa }).subscribe(function (data) {
+            var response = data;
+            if (response.meta.status === 'commited') {
+                _this.mensagemSucesso = 'Retificação aplicada com sucesso!';
+            }
+            else if (response.meta.status === 'reprocessing_request') {
+                _this.mensagemSucesso = "Retifica\u00E7\u00E3o pendente de aprova\u00E7\u00E3o. O reprocessamento " + response.meta.reprocessing.id + " foi gerado e precisa ser aprovado.";
+            }
             _this.listarTarefas();
         }, function (error) {
             console.log("Erro ao aplicar tarefa: " + error);

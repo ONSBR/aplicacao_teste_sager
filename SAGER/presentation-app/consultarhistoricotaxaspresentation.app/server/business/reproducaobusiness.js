@@ -88,9 +88,12 @@ class ReproducaoBusiness {
         var execucaoOriginal = Enumerable.from(contextOriginal.dataset.entities.execucaocalculofechamento).firstOrDefault();
         var execucaoReproducao = Enumerable.from(contextReproducao.dataset.entities.execucaocalculofechamento).firstOrDefault();
         
+        var equalsReprod = execucaoOriginal != null && execucaoReproducao != null && execucaoOriginal.protocolo === execucaoReproducao.protocolo 
+            && (""+execucaoOriginal.dataInicio) == (""+execucaoReproducao.dataInicio);
+
         return new ResultadoComparacaoMemoriaCalculoTaxa(
             contextOriginal,
-            execucaoOriginal, execucaoReproducao,
+            execucaoOriginal, equalsReprod?null:execucaoReproducao,
             this.compararTaxa(contextOriginal, contextReproducao, taxaId),
             this.compararParametros(contextOriginal, contextReproducao),
             this.compararEventos(contextOriginal, contextReproducao)
@@ -162,7 +165,7 @@ class ReproducaoBusiness {
         var parametrosOriginais = Enumerable.from(contextOriginal.dataset.entities.parametrotaxa);
         var parametrosReproducao = Enumerable.from(contextReproducao.dataset.entities.parametrotaxa);
 
-        var propertiesCompare = ['idTipoParametro', 'idUge', 'idFechamento'];
+        var propertiesCompare = ['idTipoParametro', 'idUge', 'idFechamento', 'mes', 'ano'];
 
         var comparacoes = [];
 

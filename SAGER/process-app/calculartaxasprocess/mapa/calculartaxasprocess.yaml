@@ -192,5 +192,3 @@ parametrotaxa:
       column: mes
     ano:
       column: ano
-  filters:
-    byUsinaEFechamento: "id_fechamento = :idFechamento and id_exec_calc_fech = :idExecucaoCalculo"

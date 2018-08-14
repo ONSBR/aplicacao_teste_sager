@@ -11,6 +11,8 @@ class CriterioEstadoOperativo {
         let eventos = dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoToUpdate => {
             return cenarioBusiness.filterByIdEstadoOperativoAndDataVigencia(eventoToUpdate, regra);
         })
+
+        console.log("eventos.count: " + eventos.length);
         
         eventos.forEach(eventoToUpdate => {
             cenarioBusiness.updateEstadoOperativo(regra, eventoToUpdate, eventos, dataset);

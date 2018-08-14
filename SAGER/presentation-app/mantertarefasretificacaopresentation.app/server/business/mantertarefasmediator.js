@@ -126,14 +126,9 @@ class ManterTarefasMediator {
         this.validarEventosPre(uges, eventosRetificacaoComOperacao, tarefas, context.dataset, reject);
         
         eventosRetificacaoComOperacao.forEach(eventoRetificacaoComOperacao => {
-            console.log('eventoRetificacaoComOperacao =' + eventoRetificacaoComOperacao.idEvento);
-            
             let eventosRetificaoBD = context.dataset.eventomudancaestadooperativo.collection.toArray().filter(eventoRetificacao => {
                 return eventoRetificacaoComOperacao.idEvento == eventoRetificacao.idEvento;
             });
-
-            console.log('eventosRetificaoBD=');
-            console.log(eventosRetificaoBD);
 
             this.persistirEventos(context, eventoRetificacaoComOperacao, eventosRetificaoBD);
         });
@@ -152,7 +147,7 @@ class ManterTarefasMediator {
     validarEventosPre(uges, eventosRetificacaoBD, tarefas, dataset, reject) {
         uges.forEach(uge => {
             console.log('Validar UGE PRE');
-            console.log(uge);
+            console.log(uge.idUge);
 
             let eventosPorUge = eventosRetificacaoBD.filter(eventoFiltro => {
                 return uge.idUge == eventoFiltro.idUge;
@@ -178,7 +173,7 @@ class ManterTarefasMediator {
             
             let eventosPorUge = this.groupByUge(dataset, uge);
             try {
-                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge);
+                this.eventoMudancaEstadoOperativoBusiness.aplicarRegrasPos(eventosPorUge, uge, dataset);
             } catch(error) {
                 this.catchError(error, 'aplicar', tarefas[0].nome, reject);
             }
@@ -244,6 +239,7 @@ class ManterTarefasMediator {
         eventoRetificaoBD.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
         eventoRetificaoBD.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
         eventoRetificaoBD.numONS = eventoRetificacaoComOperacao.numONS;
+        eventoRetificaoBD.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
         eventoRetificaoBD.eversao++;
         context.dataset.eventomudancaestadooperativo.update(eventoRetificaoBD);
     }
@@ -265,6 +261,7 @@ class ManterTarefasMediator {
         novoEventoRetificacao.dataVerificada = eventoRetificacaoComOperacao.dataVerificada;
         novoEventoRetificacao.potenciaDisponivel = eventoRetificacaoComOperacao.potenciaDisponivel;
         novoEventoRetificacao.numONS = eventoRetificacaoComOperacao.numONS;
+        novoEventoRetificacao.idClassificacaoOrigem = eventoRetificacaoComOperacao.idClassificacaoOrigem;
         novoEventoRetificacao.eversao = 1;
         context.dataset.eventomudancaestadooperativo.insert(novoEventoRetificacao);
     }

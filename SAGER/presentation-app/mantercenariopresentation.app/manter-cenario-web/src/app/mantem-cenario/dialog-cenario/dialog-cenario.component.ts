@@ -24,7 +24,7 @@ export class DialogCenarioComponent implements OnInit {
 
   get urlServerPresentation() {
     var url = window.location.href;
-    if (!url.startsWith("/")) {
+    if (!url.endsWith("/")) {
       url += "/";
     }
     return url;
@@ -102,29 +102,33 @@ export class DialogCenarioComponent implements OnInit {
 
   }
 
+  addCampoInvalido(camposInvalidos, campo) {
+    return camposInvalidos + (camposInvalidos && camposInvalidos != ""? ", ":"") + campo;
+  }
+
   validarRegras() {
     let retorno = true;
     if (this.data.regras && this.data.regras.length > 0) {
       this.data.regras.forEach(it => {
         if (!it.nomeRegra || !it.tipoRegra || !it.regraDe || !it.regraPara || !it.dataInicioVigencia || !it.dataFimVigencia) {
-          var camposInvalidos = '';
+          var camposInvalidos = "";
           if (!it.nomeRegra) {
-            camposInvalidos += "Nome da Regra";
+            camposInvalidos = this.addCampoInvalido(camposInvalidos, "Nome da Regra");
           }
           if (!it.tipoRegra) {
-            camposInvalidos += "Tipo da Regra";
+            camposInvalidos = this.addCampoInvalido(camposInvalidos, "Tipo da Regra");
           }
           if (!it.regraDe) {
-            camposInvalidos += "Valor Origem";
+            camposInvalidos = this.addCampoInvalido(camposInvalidos, "Valor Origem");
           }
           if (!it.regraPara) {
-            camposInvalidos += "Valor Destino";
+            camposInvalidos = this.addCampoInvalido(camposInvalidos, "Valor Destino");
           }
           if (!it.dataInicioVigencia) {
-            camposInvalidos += "Data Início da Vigência";
+            camposInvalidos = this.addCampoInvalido(camposInvalidos, "Data Início da Vigência");
           }
           if (!it.dataFimVigencia) {
-            camposInvalidos += "Data Fim da Vigência";
+            camposInvalidos = this.addCampoInvalido(camposInvalidos, "Data Fim da Vigência");
           }
           alert('Informe os dados da regra! Campos Inválidos: ' + camposInvalidos);
           retorno = false;

@@ -2,12 +2,15 @@ operations:
   - name: presentation.insere.cenario.request
     event: presentation.insere.cenario.request
     commit: true
+    skip_reprocessing: true
   - name: presentation.atualiza.cenario.request
     event: presentation.atualiza.cenario.request
     commit: true
+    skip_reprocessing: true
   - name: presentation.exclui.cenario.request
     event: presentation.exclui.cenario.request
     commit: true
+    skip_reprocessing: true
   - name: presentation.ativarinativarcenario.cenario.request
     event: presentation.ativarinativarcenario.cenario.request
     commit: true
