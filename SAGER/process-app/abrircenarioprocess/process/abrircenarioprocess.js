@@ -39,6 +39,7 @@ SDK.run((context, resolve, reject, fork) => {
             eventosPorUge.sort(CenarioBusiness.sortByData);
             eventosBusiness.aplicarRegrasCenario(eventosPorUge, context.dataset);
         });
+        console.log('Sucesso ao executar o processo de abertura de cenário:');
         resolve();
     } catch (error) {
         console.log('error: ' + error.stack);

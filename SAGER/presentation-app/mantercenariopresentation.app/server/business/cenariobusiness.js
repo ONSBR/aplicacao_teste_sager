@@ -115,7 +115,9 @@ class CenarioBusiness {
         context.dataset.cenario.collection.forEach(cenario => {
             context.dataset.cenario.delete(cenario);
             if(cenario.situacao == 'Ativo') {
+                console.log('Excluindo Branch na Plataforma');
                 SDK.dropBranch(cenario.nomeCenario);
+                console.log('Excluido Branch na Plataforma');
             }
         });
         context.dataset.regracenario.collection.forEach(regra => {
